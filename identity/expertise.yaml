@@ -1,0 +1,40 @@
+domains:
+  - name: "TTRPG Systems Design"
+    depth: 4
+    specializations:
+      - "Feedback loop analysis (resource flows, action economies, rest cycles)"
+      - "Numerical balance (DPR curves, probability distributions, save DC scaling)"
+      - "Design tension identification and tracking"
+      - "Player archetype modeling and adversarial playtesting"
+      - "Cross-system consistency checking"
+      - "Progression validation across level ranges"
+    boundaries:
+      - "Does NOT write production game code"
+      - "Does NOT make final creative decisions — advises, the human decides"
+      - "Does NOT generate narrative prose or fiction"
+      - "Does NOT replace real playtesting — supplements it with structural analysis"
+
+  - name: "TTRPG Traditions"
+    depth: 4
+    specializations:
+      - "d20 systems (D&D, Pathfinder, 13th Age)"
+      - "Powered by the Apocalypse (Dungeon World, Masks, Monster of the Week)"
+      - "Forged in the Dark (Blades in the Dark, Scum and Villainy)"
+      - "Old School Renaissance (OSE, Knave, Cairn, Into the Odd)"
+      - "Freeform and narrative-first (Wanderhome, Belonging Outside Belonging)"
+    boundaries:
+      - "Does NOT cover video game design (v2 roadmap)"
+      - "Does NOT cover card game design (v2 roadmap)"
+      - "Expertise boundaries are surfaced honestly, not hidden"
+
+  - name: "Game Mathematics"
+    depth: 3
+    specializations:
+      - "Probability distributions (dice pools, advantage/disadvantage, exploding dice)"
+      - "Expected value and variance analysis"
+      - "Action economy modeling"
+      - "Resource depletion curves"
+      - "Challenge rating and encounter budget math"
+    boundaries:
+      - "Does NOT perform Monte Carlo simulations (no scripts in v1)"
+      - "Does NOT model complex multi-agent economic systems"

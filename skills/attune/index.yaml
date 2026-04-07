@@ -1,0 +1,29 @@
+slug: attune
+name: "Attune"
+description: |
+  Use this skill IF user invokes /attune OR wants to analyze a game, ingest a rulebook, or read a system.
+  Produces artifacts to grimoires/gygax/attune/.
+version: 1.0.0
+
+triggers:
+  - "/attune"
+  - "analyze this game"
+  - "ingest this rulebook"
+  - "read this system"
+  - "attune to this"
+
+capabilities:
+  model_tier: opus
+  danger_level: safe
+  effort_hint: large
+  downgrade_allowed: true
+  execution_hint: sequential
+  requires:
+    native_runtime: false
+    tool_calling: true
+    thinking_traces: false
+    vision: false
+
+dependencies:
+  grimoire_paths:
+    - grimoires/gygax/

@@ -1,0 +1,29 @@
+slug: homebrew
+name: "Homebrew"
+description: |
+  Use this skill IF user invokes /homebrew OR wants to design a mechanic, explore a what-if, or refine a system.
+  Produces artifacts to grimoires/gygax/homebrew/.
+version: 1.0.0
+
+triggers:
+  - "/homebrew"
+  - "design a mechanic"
+  - "what if I added"
+  - "how would this work"
+  - "refine this system"
+
+capabilities:
+  model_tier: opus
+  danger_level: safe
+  effort_hint: medium
+  downgrade_allowed: true
+  execution_hint: sequential
+  requires:
+    native_runtime: false
+    tool_calling: true
+    thinking_traces: false
+    vision: false
+
+dependencies:
+  grimoire_paths:
+    - grimoires/gygax/

@@ -1,0 +1,68 @@
+# construct.yaml — Gygax construct pack manifest
+# TTRPG systems analyst for the Loa ecosystem
+# Validate: yq eval '.' construct.yaml
+
+schema_version: 3
+
+name: "Gygax"
+slug: gygax
+version: 1.0.0
+
+description: "TTRPG systems analyst — design, balance, and stress-test tabletop RPG mechanics with persistent game-state and adversarial playtesting"
+short_description: "TTRPG systems analysis and design collaboration"
+
+author: gumibera
+license: MIT
+type: skill-pack
+visibility: public
+
+domain:
+  - design
+
+skills:
+  - slug: attune
+    path: skills/attune
+  - slug: homebrew
+    path: skills/homebrew
+  - slug: augury
+    path: skills/augury
+  - slug: cabal
+    path: skills/cabal
+  - slug: lore
+    path: skills/lore
+  - slug: gygax-status
+    path: skills/gygax-status
+
+commands:
+  - name: attune
+    path: commands/attune.md
+  - name: homebrew
+    path: commands/homebrew.md
+  - name: augury
+    path: commands/augury.md
+  - name: cabal
+    path: commands/cabal.md
+  - name: lore
+    path: commands/lore.md
+  - name: gygax
+    path: commands/gygax.md
+
+composition_paths:
+  writes:
+    - grimoires/gygax/game-state/
+    - grimoires/gygax/designs/
+    - grimoires/gygax/balance-reports/
+    - grimoires/gygax/playtest-reports/
+    - grimoires/gygax/changelog/
+  reads: []
+
+identity:
+  persona: identity/persona.yaml
+  expertise: identity/expertise.yaml
+
+hooks:
+  post_install: scripts/install.sh
+
+quick_start:
+  command: /attune
+  description: "Point Gygax at your game — a rulebook, a repo, or just describe what you're building"
