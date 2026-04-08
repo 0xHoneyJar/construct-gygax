@@ -1,0 +1,825 @@
+tradition: osr
+name: "OSR System Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for Old School Renaissance systems (Cairn, Knave, Into the Odd, The Black
+  Hack, Mork Borg, Old-School Essentials, etc.). Distilled from the OSR design community,
+  blog posts, zines, play reports, and the collective wisdom of designers who have been
+  iterating on these ideas since the early 2000s.
+
+heuristics:
+  # --- RESOURCES ---
+
+  - id: resource-depletion-inertia
+    name: "Resource Depletion Inertia"
+    category: resources
+    severity: critical
+    tradition_specific: true
+    description: |
+      OSR play is driven by resource depletion: torches burn out, rations run low, HP does
+      not fully recover, ammunition is finite. When resource depletion is too slow (enough
+      torches for 100 rooms) or too fast (one torch per room), the pacing breaks. Too slow
+      removes urgency. Too fast prevents exploration. The ideal: resources create a ticking
+      clock that forces decisions without punishing engagement.
+    detection: |
+      Check resource entities for depletion rates and pool sizes. Compare resource duration
+      against expected exploration pace (rooms per torch, encounters per ration, etc.). If
+      resource pools last more than 3x the expected exploration unit, depletion is too slow.
+      If they last less than 0.5x, depletion is punishingly fast.
+
+  - id: torch-as-clock
+    name: "Light Source as Pacing Clock"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Light duration is the invisible dungeon clock. When torches last 1 hour (6 turns of
+      10 minutes), the party has exactly 6 turns of safe exploration before darkness. This
+      creates natural tension without artificial time pressure. If light is unlimited (ever-
+      burning torches, darkvision for all), the dungeon loses its primary pacing mechanism.
+    detection: |
+      Check for light source resources and darkvision or equivalent abilities. If any common
+      ability or item provides unlimited light, or if all character types have darkvision,
+      the light-as-clock mechanic is neutralized. Also check if the game tracks time in
+      units that interact with light duration.
+
+  - id: encumbrance-pressure-calibration
+    name: "Encumbrance Pressure Calibration"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Encumbrance should force choices: take the treasure or keep your supplies? Bring a
+      second weapon or more rations? If encumbrance limits are so generous that players
+      never hit them, the mechanic is dead. If limits are so tight that basic adventuring
+      gear fills the sheet, the game is about inventory management rather than exploration.
+    detection: |
+      Check for encumbrance or inventory slot mechanics. Compare carrying capacity against
+      the minimum gear needed for a standard expedition (weapon, armor, light source, food,
+      rope, tools). If minimum gear fills less than 50% of capacity, encumbrance is too
+      loose. If it fills more than 80%, there is no room for treasure.
+
+  - id: treasure-as-xp-balance
+    name: "Treasure-as-XP Economic Balance"
+    category: resources
+    severity: critical
+    tradition_specific: true
+    description: |
+      When XP comes primarily from treasure recovered (not monsters killed), the game
+      incentivizes creative problem-solving over combat. But the economy must balance:
+      if treasure is too abundant, advancement is trivial. If too scarce, progression stalls.
+      The treasure-to-level ratio must create a consistent sense of accomplishment.
+    detection: |
+      Check if the progression system uses treasure or gold as an advancement currency.
+      If so, compare XP-per-level requirements against expected treasure per dungeon level
+      or exploration unit. If a single treasure hoard can advance the party multiple levels,
+      treasure is too abundant. If a full dungeon clear does not advance anyone, it is too
+      scarce.
+
+  - id: hp-recovery-severity
+    name: "HP Recovery Severity"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      OSR HP recovery is deliberately slow: 1 HP per day of rest, healing spells are rare,
+      and potions are expensive. This makes every combat meaningful because damage persists.
+      If recovery is too generous (full heal on rest, abundant healing items), combat
+      consequences are erased and the exploration-as-attrition model breaks.
+    detection: |
+      Check HP recovery mechanics. If HP fully restores on any single recovery event (rest,
+      item, spell) that is available without significant cost or delay, recovery is too
+      generous for OSR play. Also check if healing items appear in starting equipment or
+      common treasure tables.
+
+  - id: ration-tracking-tedium
+    name: "Ration Tracking Tedium"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Tracking food and water day by day adds realism but creates bookkeeping. If rations
+      are cheap, abundant, and easily restocked, tracking them is tedious without being
+      meaningful. Rations should matter in specific situations (deep dungeon delves, wilderness
+      travel) and be abstract or irrelevant otherwise.
+    detection: |
+      Check for ration or food/water resources. If rations are tracked per-meal but the game
+      assumes frequent access to resupply (town within a day's travel, easy foraging), the
+      tracking adds no meaningful tension. Check if the game offers an abstract supply
+      mechanic as an alternative to per-meal tracking.
+
+  - id: ammunition-tracking-decision
+    name: "Ammunition Tracking Decision Point"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Counting individual arrows is bookkeeping. Usage dice (roll after use, deplete on low
+      result) are elegant. Abstract "you have enough" removes the resource entirely. Each
+      approach has trade-offs. The key question: does ammunition create interesting decisions?
+      If yes, track it. If no, abstract it.
+    detection: |
+      Check for ammunition resources. If individual ammunition is tracked (20 arrows, subtract
+      1 per shot), assess whether running out is a realistic concern in typical play. If
+      ammunition is cheap and resupply is frequent, individual tracking is bookkeeping without
+      payoff. Check if a usage die or abstract system is available.
+
+  - id: spell-scarcity-calibration
+    name: "Spell Scarcity Calibration"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      In OSR play, spells are scarce and powerful. A Magic-User with one first-level spell
+      per day must choose carefully when to use it. This scarcity makes spells feel impactful.
+      If spell access increases to the point where casters can cast every combat (through
+      scroll abundance, fast recovery, or too many starting slots), the scarcity that makes
+      OSR magic special evaporates.
+    detection: |
+      Check spell slot or spell resource pools. If a first-level caster has more than 2
+      spell uses per adventure, or if spell recovery is faster than one full rest cycle,
+      scarcity may be too loose for OSR pacing. Also check if scrolls or wands are common
+      enough to supplement daily casting significantly.
+
+  - id: hireling-cost-balance
+    name: "Hireling Cost/Benefit Balance"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Hirelings extend party capability: torchbearers, porters, guards, specialists. If
+      hirelings are too cheap, the party hires a small army and trivializes danger. If too
+      expensive, they are inaccessible. The cost should make hirelings a meaningful investment
+      that competes with other spending priorities (equipment, supplies, treasure conversion).
+    detection: |
+      Check for hireling mechanics and costs. Compare hireling daily/weekly cost against
+      expected treasure income. If a party can afford 5+ hirelings from a single adventure's
+      treasure, hirelings are too cheap. If they cannot afford even one torchbearer, they
+      are too expensive.
+
+  # --- PACING ---
+
+  - id: random-encounter-frequency
+    name: "Random Encounter Frequency Calibration"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Random encounters are the dungeon's immune system: they punish slow play, discourage
+      resting in dangerous places, and create emergent narrative. But frequency matters.
+      Check every turn (10 minutes) on 1-in-6 means approximately one encounter per hour.
+      If too frequent, the party is overwhelmed. If too rare, there is no time pressure.
+    detection: |
+      Check for random encounter mechanics. Compute expected encounter frequency: check
+      interval * probability. If expected encounters per exploration session exceed the
+      party's resource budget (HP, spells, ammunition), the frequency is too high. If fewer
+      than one encounter per 2 hours of exploration time, the pressure is too low.
+
+  - id: wandering-monster-xp-trap
+    name: "Wandering Monster XP Trap"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      In treasure-as-XP systems, wandering monsters that carry no treasure are pure risk
+      with no reward. This correctly incentivizes avoidance. But if the game also awards
+      XP for killing monsters, wandering encounters become XP farms: sit in a hallway and
+      fight everything that comes along. This inverts the intended behavior.
+    detection: |
+      Check if the game awards XP for both treasure and monster kills. If both paths exist,
+      check if wandering/random encounters yield meaningful combat XP. If they do, the
+      farming incentive contradicts the avoidance incentive that random encounters are
+      designed to create.
+
+  - id: dungeon-turn-rhythm
+    name: "Dungeon Turn Rhythm Breakdown"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      The dungeon turn (typically 10 minutes) is the heartbeat of OSR dungeon exploration.
+      Each turn: move, search, listen, or act. Each turn: check for encounters. Each turn:
+      mark resource depletion. If the game does not use timed turns, or if turns have no
+      mechanical consequence (nothing ticks, nothing depletes), the dungeon loses its rhythm.
+    detection: |
+      Check for dungeon turn or exploration turn mechanics. If turns exist, verify that at
+      least two mechanical consequences occur per turn (resource depletion AND encounter
+      check). If turns exist but nothing happens on them, they are empty structure.
+
+  - id: hex-crawl-content-density
+    name: "Hex Crawl Content Density"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Hex crawl pacing depends on content density: how many hexes have something interesting
+      vs. how many are empty. If every hex is packed, travel has no downtime and the world
+      feels artificial. If hexes are mostly empty, travel is boring. The sweet spot: 1 in 3
+      to 1 in 6 hexes have notable content, with the rest having potential random encounters.
+    detection: |
+      Check for hex crawl or overland travel mechanics. If the game provides hex stocking
+      guidance, check the recommended density. If no guidance exists and the game assumes
+      hex-based exploration, the absence of density guidance is itself a problem.
+
+  - id: dungeon-tempo-oscillation
+    name: "Dungeon Tempo Oscillation"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Good dungeon design alternates between tension (monsters, traps, puzzles) and release
+      (empty rooms, treasure, safe zones). If every room is a threat, the party cannot
+      process information or make strategic decisions. If every room is safe, there is no
+      danger. The game should provide tools or guidance for this oscillation.
+    detection: |
+      Check for dungeon stocking tables or room generation procedures. If stocking tables
+      have categories (monster, trap, treasure, empty, special), check their probability
+      distribution. If monster+trap exceeds 60% or empty+treasure exceeds 70%, the oscillation
+      is off.
+
+  - id: overland-travel-abstraction
+    name: "Overland Travel Abstraction Level"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Overland travel can be played turn-by-turn (hex crawl), abstracted (roll for encounters,
+      mark rations), or skipped entirely. The right level depends on the game's focus. If the
+      game is about dungeon exploration, detailed overland travel is a distraction. If the
+      game is about wilderness survival, abstracting travel defeats the purpose.
+    detection: |
+      Check for overland travel mechanics. Assess their complexity relative to the game's
+      stated focus. If the game promises wilderness adventure but provides only "travel takes
+      X days, make Y encounter checks," the abstraction may be too aggressive. If the game
+      is dungeon-focused but has a detailed hex crawl system, the detail may be misplaced.
+
+  # --- MECHANICS ---
+
+  - id: ruling-vs-rules-balance
+    name: "Ruling vs. Rules Balance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      "Rulings, not rules" is the OSR motto, but it is not a license to have no rules. The
+      game needs enough structure that the referee has anchor points for rulings, and enough
+      openness that creative solutions are not foreclosed by written rules. Too many rules:
+      the game becomes d20. Too few rules: the game becomes collaborative fiction with no
+      mechanical stakes.
+    detection: |
+      Count total mechanics in game-state. For an OSR game, the sweet spot is 10-25 core
+      mechanics. Fewer than 10 may leave the referee unsupported for common situations.
+      More than 30 may over-specify and reduce ruling space. Also check if the game
+      explicitly addresses how to handle situations not covered by the rules.
+
+  - id: save-or-die-lethality
+    name: "Save-or-Die Lethality Appropriateness"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      OSR games are lethal by design. Save-or-die effects (poison, traps, dragon breath)
+      are genre-appropriate when they are telegraphed and avoidable. A save-or-die effect
+      triggered by opening a random door with no warning is punitive. A save-or-die from
+      the obviously trapped golden idol after the referee described the suspiciously clean
+      floor around it is emergent storytelling.
+    detection: |
+      Check for save-or-die mechanics. If they exist, check if the game provides guidance
+      on telegraphing lethal threats. If save-or-die effects can be triggered without prior
+      warning or player decision, the lethality may be punitive rather than emergent.
+
+  - id: morale-system-impact
+    name: "Morale System Impact"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Morale checks determine when monsters flee or surrender. Without morale, every combat
+      is a fight to the death -- which is unrealistic, increases lethality, and removes the
+      incentive for players to create fear. With morale, players can try intimidation, kill
+      the leader, or make a show of force. Morale transforms combat from a damage race into
+      a social-tactical challenge.
+    detection: |
+      Check for morale mechanics. If no morale system exists and monsters are expected to
+      fight to the death (no retreat behavior), combat is more lethal and less tactical than
+      intended. If morale exists but is triggered only by HP thresholds, it misses the rich
+      design space of leader death, supernatural fear, and overwhelming force.
+
+  - id: reaction-roll-weight
+    name: "Reaction Roll Weight in Play"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      The 2d6 reaction roll (hostile / unfriendly / neutral / friendly / helpful) determines
+      NPC disposition before combat begins. It is the OSR's most underrated mechanic: it
+      means not every encounter is a fight, it rewards negotiation, and it creates emergent
+      narrative (the goblins who want to trade, the dragon who is bored and wants conversation).
+      Without reaction rolls, the game defaults to combat for every encounter.
+    detection: |
+      Check for reaction or disposition rolls. If no mechanic determines NPC starting attitude
+      before combat, encounters default to hostile. If a reaction roll exists, check if it is
+      integrated into the encounter procedure (does the game tell you to roll reaction BEFORE
+      initiative?) and if non-hostile results have actionable guidance.
+
+  - id: thief-skill-isolation
+    name: "Thief Skill Isolation"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When only the Thief class can attempt thief skills (lockpicking, trap detection, stealth),
+      other characters cannot attempt these actions at all. This creates a hard dependency on
+      party composition and makes the Thief a required class rather than a choice. Better
+      designs let anyone attempt, with the Thief succeeding more often.
+    detection: |
+      Check if skills or abilities are class-restricted. If any common adventuring action
+      (pick locks, find traps, hide) is mechanically impossible for characters without a
+      specific class, isolation exists. Check if the game addresses what happens when no
+      Thief is in the party.
+
+  - id: stat-check-proliferation
+    name: "Ability Check Proliferation (OSR Drift)"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      OSR games resolve most situations through player description, referee ruling, and
+      environmental interaction -- not ability checks. When the game adds "roll under
+      Strength to force the door" for every obstacle, it drifts toward d20-style skill
+      checks and away from OSR's core strength: creative problem-solving without mechanical
+      gatekeeping.
+    detection: |
+      Count ability check mechanics. If more than 50% of obstacle resolution involves an
+      ability check rather than a player-described action with referee adjudication, the
+      game has drifted from OSR principles. Check if the game distinguishes between
+      "situations that call for a roll" and "situations resolved by player ingenuity."
+
+  - id: class-as-constraint
+    name: "Class as Meaningful Constraint"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      OSR classes are constraints, not power fantasies. The Fighter is tough but has no magic.
+      The Magic-User has spells but is fragile. The Thief has skills but is weak in combat.
+      When a class can do everything (fight, cast, sneak, heal), it is not an OSR class --
+      it is a d20 class in OSR clothing.
+    detection: |
+      Check class or character type entities. If any class has no significant mechanical
+      weakness (low HP, no spells, no skills, restricted equipment), it may be too versatile
+      for OSR play. Check if classes have clear, non-overlapping niches.
+
+  - id: procedure-as-content
+    name: "Procedure as Content"
+    category: mechanics
+    severity: medium
+    tradition_specific: false
+    description: |
+      OSR procedures (dungeon turn, wilderness travel, downtime) ARE the game's content.
+      They generate play through structured randomness and resource management. When procedures
+      are clear and well-integrated, the referee does not need to prep encounters -- the
+      procedures generate them. When procedures are vague or absent, the referee must prep
+      everything, which is unsustainable.
+    detection: |
+      Check for procedural mechanics (dungeon turns, travel procedures, downtime cycles).
+      If procedures include: a structured sequence of actions, random tables for content
+      generation, and resource interaction, they function as content generators. If they
+      are just "the referee describes what happens," they are not procedures.
+
+  - id: domain-play-gap
+    name: "Domain Play Gap"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Classic OSR play transitions from dungeon crawling (low level) to domain management
+      (high level): building strongholds, ruling territories, managing followers. Many modern
+      OSR games skip domain play entirely, creating a progression dead end where characters
+      become powerful but have nothing new to do. If the game promises high-level play, it
+      needs high-level mechanics.
+    detection: |
+      Check progression entities for high-level content. If character progression extends
+      beyond the level where combat challenges become trivial but no domain, faction, or
+      narrative-scale mechanics exist for those levels, a domain play gap exists.
+
+  # --- SOCIAL ---
+
+  - id: reaction-table-depth
+    name: "Reaction Table Depth"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      A reaction roll that produces only "hostile/neutral/friendly" is a starting point.
+      Richer reaction tables include NPC desires, fears, current activity, and disposition
+      modifiers based on appearance, reputation, and approach. Deeper tables create richer
+      emergent encounters.
+    detection: |
+      Check reaction roll mechanics. If the outcome is a single disposition word (hostile,
+      neutral, friendly) with no additional context (what does the NPC want? what are they
+      doing? what would change their mind?), the table lacks depth.
+
+  - id: negotiation-over-diplomacy
+    name: "Negotiation Over Diplomacy Rolls"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      OSR social interaction should be negotiated in-fiction: what do you offer, what do they
+      want, can you find common ground? When a diplomacy skill check replaces this negotiation,
+      the game loses a core OSR interaction pattern. Checks should modify negotiation outcomes,
+      not replace them.
+    detection: |
+      Check for social skill check mechanics. If a single roll can resolve an NPC interaction
+      regardless of what the player says or offers, the check replaces negotiation. If the
+      game distinguishes between "make an offer and check NPC reaction" and "roll Charisma to
+      persuade," note which approach it uses.
+
+  - id: retainer-loyalty-spiral
+    name: "Retainer Loyalty Spiral"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      Retainer morale and loyalty checks that degrade over time (each dangerous situation
+      reduces loyalty) create a spiral where experienced retainers become less reliable.
+      This feels wrong: a retainer who has survived 10 dungeons with you should be MORE
+      loyal, not less. Loyalty should be able to increase as well as decrease.
+    detection: |
+      Check for retainer or follower loyalty mechanics. If loyalty can only decrease (from
+      morale failures, danger exposure, poor treatment) and never increase (from shared
+      success, good pay, kind treatment), the spiral is one-directional.
+
+  - id: faction-play-absence
+    name: "Faction Play Absence"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      Factions (guilds, noble houses, monster tribes, religious orders) create a living world
+      that exists beyond the dungeon. Without faction mechanics, the world between adventures
+      is static -- nothing changes unless the PCs cause it. Faction turns or equivalent
+      mechanics make the world feel alive and give players strategic context for their
+      dungeoneering.
+    detection: |
+      Check for faction mechanics. If no faction system exists and the game assumes a
+      persistent world between adventures, the world is static. Check if factions have goals,
+      resources, and a mechanism for pursuing those goals independently of player action.
+
+  - id: rumor-table-integration
+    name: "Rumor Table Integration"
+    category: social
+    severity: low
+    tradition_specific: true
+    description: |
+      Rumor tables that provide adventure hooks, dungeon clues, and world-building in a
+      randomized format are a classic OSR tool. But rumors must be integrated: a rumor about
+      treasure in the north should correspond to actual content. Rumors that lead nowhere
+      or contradict the prepared content are worse than no rumors.
+    detection: |
+      Check for rumor table mechanics. If rumors exist, check if they reference specific
+      game content (locations, NPCs, treasure) or are generic flavor. Generic rumors add
+      atmosphere but not actionable information.
+
+  # --- ADDITIONAL RESOURCES ---
+
+  - id: silver-standard-economy
+    name: "Silver Standard Economy Calibration"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Many OSR games use a silver standard (1 gp = 10 sp) where silver is the common
+      currency. If prices are calibrated for gold standard but the game uses silver standard,
+      everything is 10x cheaper and treasure values must be adjusted. Mismatched currency
+      standards break the economic game.
+    detection: |
+      Check the currency system. If the game uses a non-standard currency denomination,
+      verify that all prices (equipment, services, hirelings) and all treasure values are
+      calibrated to the same standard. If prices come from a different standard than treasure
+      values, the economy is mismatched.
+
+  - id: potion-scroll-availability
+    name: "Potion and Scroll Availability"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Consumable magic items (potions, scrolls) serve as emergency resources and reward
+      creativity. If they are too common, they trivialize challenges. If too rare, they
+      become too-good-to-use hoards. Ideal: occasionally found as treasure, expensive to
+      buy, and each one represents a meaningful tactical option.
+    detection: |
+      Check treasure tables and shop inventories for consumable magic items. If potions
+      appear in more than 20% of treasure hoards, they may be too common. If they never
+      appear and cannot be purchased, they are inaccessible.
+
+  - id: mundane-equipment-meaningfulness
+    name: "Mundane Equipment Meaningfulness"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      In OSR play, a 10-foot pole, a bag of flour, and a mirror are tactical tools, not
+      mundane purchases. The equipment list should suggest creative uses and the game should
+      reward players who use equipment inventively. If equipment is just a price list with
+      no gameplay implications beyond "you have it," the list is a missed design opportunity.
+    detection: |
+      Check equipment lists. If items have no tags, no suggested uses, and no mechanical
+      interactions (a 10-foot pole does nothing a hand cannot do), equipment is flavorless.
+      Check if any mechanic references specific mundane items as components or tools.
+
+  # --- ADDITIONAL PACING ---
+
+  - id: rest-interruption-frequency
+    name: "Rest Interruption Frequency"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Resting in a dungeon should be risky. Random encounter checks during rest create
+      tension: do we push forward depleted or risk a rest that might attract attention?
+      If rest is safe (no encounter checks) or impossible (encounter every rest), the
+      risk/reward calculation is broken.
+    detection: |
+      Check encounter check mechanics during rest periods. If no encounter check occurs
+      during rest, resting in the dungeon is free. If encounter probability during rest
+      exceeds 50%, resting is suicidal and the party will always leave the dungeon to rest,
+      eliminating deep exploration.
+
+  - id: session-clock-structure
+    name: "Session Clock Structure"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      OSR sessions benefit from a natural end condition: the party runs out of light,
+      runs out of HP, fills their inventory with treasure, or achieves their objective.
+      If no resource creates a natural session clock, sessions end only when players decide
+      to stop, which often means playing past the point of engagement.
+    detection: |
+      Identify which resources create natural session-ending pressure. If light, HP,
+      inventory, or a time-based mechanic creates a "we should head back" moment, the
+      clock is functional. If no resource creates this pressure, sessions lack natural
+      structure.
+
+  - id: difficulty-curve-via-depth
+    name: "Difficulty Curve via Dungeon Depth"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Classic OSR dungeons scale difficulty by depth: level 1 is appropriate for level 1
+      characters, deeper levels are more dangerous but more rewarding. This self-regulates
+      difficulty because players choose how deep to go. If the game does not support this
+      structure (flat difficulty, no depth scaling), the referee must calibrate every encounter
+      manually.
+    detection: |
+      Check if the game provides dungeon level or difficulty tier guidance. If monster
+      placement, treasure value, and trap severity have no relationship to dungeon depth
+      or region, the self-regulating difficulty curve is absent.
+
+  # --- ADDITIONAL MECHANICS ---
+
+  - id: initiative-system-weight
+    name: "Initiative System Weight"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      OSR initiative systems range from individual (roll per character) to side-based (one
+      roll per group) to simultaneous (declare actions, resolve together). Each has different
+      implications for tactics, pacing, and complexity. Side-based initiative is fastest but
+      loses individual character differentiation. Individual initiative adds tactical depth
+      but slows play. The choice should match the game's combat philosophy.
+    detection: |
+      Check initiative mechanics. If the game uses individual initiative in a system designed
+      for fast, lethal combat, the overhead may be disproportionate. If side-based initiative
+      exists but Dexterity-based class features assume individual turns, there is a mismatch.
+
+  - id: death-and-dying-clarity
+    name: "Death and Dying Clarity"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Character death should be clear: at 0 HP, you are dead (classic OSR) or dying (modern
+      OSR with death saves). Ambiguity about when death occurs (negative HP thresholds,
+      Constitution checks, cumulative wound tracks) adds drama for some groups and frustration
+      for others. The game should clearly state what happens at 0 HP.
+    detection: |
+      Check death and dying mechanics. If 0 HP does not have a single, clear outcome
+      (dead, dying with specific rules, unconscious with specific rules), the ambiguity
+      may cause table disagreement. Check for undefined states: what if HP goes negative?
+      What if healing is applied at exactly 0?
+
+  - id: trap-interaction-design
+    name: "Trap Interaction Design"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      OSR traps should be solvable through player description and environmental interaction,
+      not just "roll to find trap, roll to disarm trap." A well-designed trap has observable
+      clues (the floor is suspiciously clean), logical components (the pressure plate connects
+      to a mechanism), and multiple solutions (avoid it, disarm it, trigger it safely).
+      If the game reduces traps to skill checks, it loses this design richness.
+    detection: |
+      Check for trap mechanics. If trap detection and disarmament are resolved by ability
+      checks with no guidance on describing trap components, clues, or creative solutions,
+      traps are reduced to dice rolls. Check if the game provides example traps with
+      observable elements.
+
+  - id: magic-item-identification-gate
+    name: "Magic Item Identification Gate"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Requiring identification of magic items (via spell, sage, or experimentation) adds
+      risk and decision-making: do you drink the unidentified potion? Do you spend a spell
+      slot on identify? If identification is free or automatic, magic items lose their mystery.
+      If identification is prohibitively expensive, players hoard unidentified items.
+    detection: |
+      Check for magic item identification mechanics. If magic items are automatically
+      identified on pickup, the mystery and risk are eliminated. If identification requires
+      a rare spell or expensive service, check if the cost scales appropriately with item
+      frequency.
+
+  - id: level-drain-design
+    name: "Level Drain Design"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Level drain (losing a level permanently from undead touch) is classic but controversial.
+      It creates genuine fear of specific monsters, which is thematically appropriate. But it
+      also feels punitive: the punishment is disproportionate to the action (one failed save
+      erases sessions of play). Modern OSR alternatives (ability drain, temporary penalties)
+      preserve the fear while reducing the punishment.
+    detection: |
+      Check for level drain or permanent advancement loss mechanics. If a single failed save
+      can remove a level (and associated HP, abilities, spells), check whether the triggering
+      monster is telegraphed and avoidable. Unavoidable level drain on random encounters is
+      punitive.
+
+  - id: wilderness-hazard-variety
+    name: "Wilderness Hazard Variety"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Wilderness encounters should not just be "you meet monsters." Weather, terrain hazards,
+      foraging opportunities, lost paths, NPC travelers, and natural phenomena create a
+      richer overland experience. If the wilderness encounter table is 100% monster entries,
+      travel feels like a series of random combats.
+    detection: |
+      Check wilderness encounter tables. If more than 70% of entries are combat encounters
+      (monsters, hostile NPCs), the table lacks variety. Check for weather, terrain, social,
+      discovery, and resource-opportunity entries.
+
+  - id: save-category-clarity
+    name: "Save Category Clarity"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Classic save categories (Death/Poison, Wands, Paralysis/Petrification, Breath Weapon,
+      Spells) have specific uses that are not always obvious. Modern OSR games often simplify
+      to ability-based saves. Either approach works, but the game must be clear about which
+      save applies to which situation. Ambiguity in save category assignment leads to
+      inconsistent adjudication.
+    detection: |
+      Check save mechanics. If multiple save categories exist, check if each situation
+      has a clear mapping to a save category. If the game uses traditional categories without
+      modernizing the language, new referees may struggle to assign the correct save.
+
+  - id: hex-stocking-procedure
+    name: "Hex Stocking Procedure Completeness"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      A hex crawl without a hex stocking procedure requires full manual prep for every hex.
+      A stocking procedure (random tables for terrain features, encounters, settlements,
+      resources) enables emergent world-building and reduces prep burden. If the game assumes
+      hex crawl play but provides no stocking tools, it is asking more prep than it should.
+    detection: |
+      Check for hex crawl mechanics. If hex-based exploration is supported but no hex
+      stocking tables, terrain generators, or settlement placement procedures exist, the
+      game requires full manual prep for the overland map.
+
+  - id: carousing-table-integration
+    name: "Carousing Table Integration"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Carousing tables (spend gold in town, roll for what happens) convert treasure to XP
+      and generate town-based adventure hooks. They close the treasure-XP loop and give
+      players a reason to return to town beyond restocking. Without carousing or an equivalent,
+      town visits are pure logistics.
+    detection: |
+      Check for carousing, downtime, or town-event mechanics. If the game uses treasure-as-XP
+      but provides no mechanism for converting treasure to XP beyond "you level up when you
+      have enough gold," the conversion is passive and uninteresting.
+
+  # --- ADDITIONAL MECHANICS ---
+
+  - id: armor-as-damage-reduction
+    name: "Armor as Damage Reduction vs. Avoidance"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      OSR games split between armor-as-AC (makes you harder to hit) and armor-as-DR (reduces
+      damage taken). Each creates different play dynamics: AC makes armor binary (hit or miss),
+      DR makes every hit less painful but never negated. The choice affects combat feel, weapon
+      differentiation, and monster design. The system should commit to one model and design
+      around it consistently.
+    detection: |
+      Check armor mechanics. If armor grants AC bonus AND damage reduction simultaneously
+      without clear interaction rules, the model is muddled. Check if weapons and monster
+      attacks are designed around the chosen armor model (AC systems need varied attack bonuses;
+      DR systems need varied damage dice).
+
+  - id: old-school-magic-economy
+    name: "Vancian Magic Economy"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Vancian casting (memorize N spells, each fires once) is the classic OSR model. It
+      creates interesting decisions: which spells to prepare, when to use your limited slots.
+      Modern OSR games that add MP systems, at-will cantrips, or flexible casting lose this
+      decision tension. The magic system should serve the game's resource-management philosophy.
+    detection: |
+      Check spell/magic mechanics. If magic uses Vancian preparation with per-day limits,
+      the system supports OSR resource management. If magic is at-will, MP-based, or
+      refreshes frequently, check whether this increased access undermines the resource
+      scarcity that drives OSR play.
+
+  - id: player-skill-vs-character-skill
+    name: "Player Skill vs. Character Skill Balance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      OSR prizes player skill (clever thinking, good questions, environmental interaction)
+      over character skill (high stats, class features, skill bonuses). When the game adds
+      skill systems that let dice replace player thinking ("I roll Investigation to find the
+      secret door" instead of "I search the suspicious bookshelf"), it shifts toward character
+      skill and away from OSR's core identity.
+    detection: |
+      Check for skill systems. If a comprehensive skill list exists that covers common
+      adventuring activities (searching, climbing, negotiation, tracking), and skill checks
+      can resolve these activities without player description, the game favors character
+      skill. Check if the game explicitly prioritizes player description over skill rolls.
+
+  - id: wilderness-survival-integration
+    name: "Wilderness Survival Integration"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Survival mechanics (foraging, hunting, water finding, shelter building) should integrate
+      with the exploration loop. If survival is a standalone subsystem that runs in parallel
+      to exploration (roll for food, separately roll for encounters, separately roll for
+      navigation), it adds bookkeeping. If survival and exploration share the same decision
+      points (spend the turn foraging OR exploring, not both), they integrate.
+    detection: |
+      Check for survival mechanics. If foraging, navigation, and shelter are resolved with
+      independent checks that do not compete with exploration actions for time or resources,
+      they run in parallel rather than integrating.
+
+  - id: monster-ecology-coherence
+    name: "Monster Ecology Coherence"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      OSR dungeon and wilderness stocking should create coherent ecologies: what do the
+      monsters eat? Why are they here? How do different monster groups interact? A dungeon
+      level with goblins, a dragon, and a lich in adjacent rooms with no explanation feels
+      incoherent. Ecology does not require realism -- it requires internal logic.
+    detection: |
+      Check monster/entity placement guidance. If the game provides stocking tables without
+      ecology guidance (lair vs. wandering, predator/prey relationships, faction alliances),
+      coherence is left entirely to the referee.
+
+  - id: critical-hit-lethality-spike
+    name: "Critical Hit Lethality Spike"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      In low-HP OSR systems, critical hits that double damage can instantly kill even fresh
+      characters. This is either a feature (OSR is dangerous) or a problem (random death
+      without player agency). The game should decide: are critical hits a source of deadly
+      tension, and if so, are they telegraphed enough that players can manage the risk?
+    detection: |
+      Check for critical hit mechanics. If critical hits exist, compute maximum critical
+      damage against average starting HP. If a critical can kill a fresh character in one
+      hit, check if the game provides any mitigation (armor, luck points, shields shall
+      be splintered) or if the lethality is intentional and acknowledged.

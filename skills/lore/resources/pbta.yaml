@@ -1,0 +1,819 @@
+tradition: pbta
+name: "PbtA System Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for Powered by the Apocalypse systems (Apocalypse World, Dungeon World,
+  Monsterhearts, Masks, Monster of the Week, etc.). Distilled from a decade of PbtA design,
+  community discussion, and published post-mortems.
+
+heuristics:
+  # --- MECHANICS ---
+
+  - id: trigger-ambiguity
+    name: "Move Trigger Ambiguity"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      When a move's trigger condition is vague enough that players and MC/GM disagree about
+      when it fires, the move creates table arguments instead of play. "When you do something
+      dangerous" is too broad. "When you act despite an imminent threat or suffer a calamity"
+      is better but still contested. The trigger is the single most important line of a move.
+    detection: |
+      Read each mechanic's trigger field. Flag triggers that use subjective terms without
+      concrete fictional anchors: "when you do something risky," "when you try to," "when
+      the situation is dangerous." Compare against triggers with clear fictional positioning:
+      "when you charge into battle," "when you open your brain to the psychic maelstrom."
+
+  - id: trigger-overlap
+    name: "Move Trigger Overlap"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When two moves' triggers can both fire in the same fictional moment, the game needs
+      a clear priority system or the MC must make an arbitrary ruling. "When you fight in
+      melee" and "when you engage in combat" overlap almost completely. If neither move
+      acknowledges the other, the overlap is a design gap.
+    detection: |
+      Compare trigger fields across all mechanics. If two or more moves could fire from the
+      same fictional description (e.g., "I charge the ogre" could trigger both "Hack and
+      Slash" and a custom "Reckless Assault" move), check if the game resolves the overlap
+      with an explicit priority rule or note.
+
+  - id: basic-move-bloat
+    name: "Basic Move Bloat"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Apocalypse World has 7 basic moves. When a game has 12+, players cannot hold them all
+      in working memory. The game slows down as players scan their move list instead of
+      describing fiction. Basic moves should cover 80% of play -- the rest should be
+      playbook-specific or GM tools.
+    detection: |
+      Count mechanics tagged as basic moves. If the count exceeds 10, basic move bloat is
+      present. Also check if any basic move is used less than once per session on average
+      (estimated from trigger frequency) -- those moves could be cut or made peripheral.
+
+  - id: basic-move-desert
+    name: "Basic Move Desert"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When basic moves are too few or too narrow, play constantly enters situations where
+      no move applies and the MC must improvise resolution. Some MC improvisation is healthy
+      (it is PbtA's strength), but if it happens more often than structured resolution, the
+      game is under-designed.
+    detection: |
+      Count basic moves and map their trigger coverage across common fictional situations:
+      violence, social pressure, information gathering, travel/exploration, making/fixing things.
+      If more than two of these domains have no applicable basic move, a desert exists.
+
+  - id: seven-to-nine-quality
+    name: "7-9 Result Quality Problem"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      The 7-9 result is the engine of PbtA. It is where interesting fiction happens. If 7-9
+      results are just "lesser success" (you do it but less well), the move is boring. If 7-9
+      results are just "success at a cost" without specifying the cost, the MC is doing all
+      the work. Good 7-9 results offer specific, interesting complications that change the
+      fiction in concrete ways.
+    detection: |
+      Read the 7-9 outcome for each mechanic. Flag results that are: (1) just a reduced
+      version of the 10+ result with no new fictional element, (2) "GM chooses a complication"
+      with no suggested complication list, or (3) identical in structure across multiple moves
+      (lazy pattern-matching by the designer).
+
+  - id: miss-as-nothing
+    name: "6- Result as Nothing Happening"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      On a 6-, the MC makes a hard move. But if the MC's response to a miss is "nothing
+      happens, you fail," the game stalls. 6- should escalate, complicate, or redirect --
+      never leave the fiction in the same state. This is an MC practice problem, but the
+      game's text can help or hinder.
+    detection: |
+      Check if moves' 6- results have explicit guidance or if they default to "the MC makes
+      a move." If most moves use the generic default without move-specific miss guidance,
+      the game is relying entirely on MC skill for miss quality. Also check if the MC section
+      provides concrete hard move examples tied to specific basic moves.
+
+  - id: stat-dominance
+    name: "Stat Dominance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      In PbtA, if one stat triggers more moves than others, that stat is dominant and players
+      are incentivized to max it. When Hot triggers 4 moves and Weird triggers 1 move, every
+      optimizing player will prioritize Hot. This collapses character diversity.
+    detection: |
+      Count how many moves use each stat. If any stat is used by more than 40% of basic
+      moves, or if any stat is used by fewer than 10% of basic moves, stat balance is off.
+      Check if stat highlighting or advancement mechanics compensate for frequency disparity.
+
+  - id: custom-move-drift
+    name: "Custom Move Drift"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Custom moves created during play or published in supplements often drift from the
+      game's design principles: triggers become too broad, outcomes become too specific,
+      or the move overlaps with an existing basic move. Custom moves need the same design
+      rigor as core moves.
+    detection: |
+      If the game-state includes custom or homebrew moves alongside core moves, compare
+      their structure. Flag custom moves whose triggers are broader than any basic move,
+      whose outcomes bypass the fiction (pure mechanical effects), or whose existence makes
+      a basic move redundant.
+
+  - id: read-a-sitch-abuse
+    name: "Read a Sitch / Discern Realities Abuse"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Investigation moves with question lists can become "I read the situation" before every
+      room, every NPC interaction, every encounter. If there is no cost or limit, the move
+      replaces active fictional investigation with a mechanical information dump.
+    detection: |
+      Check for investigation or perception moves with question lists. If the move has no
+      cost, no requirement for specific fictional positioning, and can be triggered in any
+      situation, it will be over-used. Also check if the question list is generic enough
+      to apply to literally every scene.
+
+  - id: harm-tracking-friction
+    name: "Harm Tracking Friction"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      PbtA harm systems range from simple (countdown clocks) to complex (condition tracks
+      with specific effects per condition). When harm tracking requires consulting a table
+      or remembering which conditions impose which penalties, it adds overhead that conflicts
+      with PbtA's fiction-first philosophy.
+    detection: |
+      Examine harm/damage/condition mechanics. Count the number of distinct harm states a
+      character can be in simultaneously. If more than 4 conditions exist with different
+      mechanical effects, tracking friction is present. Also check if harm application
+      requires a lookup (damage table, wound severity chart).
+
+  - id: mc-move-vagueness
+    name: "MC Move Vagueness"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      The MC's move list is their toolkit for driving play. If MC moves are too vague
+      ("make their lives interesting"), new MCs have no concrete guidance. If they are too
+      specific ("deal 1d6 harm"), they lose the flexibility that makes PbtA work. The sweet
+      spot is concrete enough to act on, open enough to adapt.
+    detection: |
+      Check for GM/MC move lists. If more than half the GM moves are single-sentence
+      abstractions without examples or concrete fictional implications, the vagueness is
+      a barrier to new MC play. Check if the text provides at least one concrete example
+      per MC move.
+
+  # --- PACING ---
+
+  - id: snowball-effect
+    name: "Snowball Effect (Success Begets Success)"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When success on a roll grants fictional positioning that makes the next roll easier
+      (forward momentum, hold, temporary stat boosts), successful characters pull further
+      ahead while struggling characters fall behind. The 2d6 curve amplifies this: the
+      difference between +1 and +2 is 11% on 10+, which compounds over multiple rolls.
+    detection: |
+      Check for mechanics that grant forward (take +1 forward) or ongoing (take +1 ongoing)
+      bonuses. If bonus-granting mechanics fire on 10+ results, successful characters
+      accumulate advantages. Estimate the cascading probability: if a 10+ grants +1 forward,
+      a character with +2 stat goes from 41.7% to 58.3% on their next 10+ -- a 40% relative
+      improvement.
+
+  - id: death-spiral
+    name: "Death Spiral (Failure Begets Failure)"
+    category: pacing
+    severity: critical
+    tradition_specific: true
+    description: |
+      When taking harm or failing a roll imposes penalties on future rolls, characters in
+      trouble get into more trouble. The player feels helpless as each failure makes the
+      next more likely. Some death spiral is appropriate (harm should matter) but unchecked
+      spirals remove agency. Apocalypse World's harm moves are a controlled death spiral;
+      a -1 ongoing from any wound is an uncontrolled one.
+    detection: |
+      Check if harm, conditions, or failed rolls impose penalties to future rolls. If harm
+      at any level imposes a stat penalty or -1 ongoing, model the cascade: a -1 penalty
+      changes 10+ probability from 41.7% (at +2) to 27.8% (at +1). If the penalty stacks
+      or persists, the spiral accelerates.
+
+  - id: advancement-plateau
+    name: "Advancement Plateau"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      PbtA advancement should change how you play, not just make you better at what you
+      already do. If advances are primarily stat increases (+1 to a stat, new move from your
+      playbook), character growth feels incremental rather than transformative. The best PbtA
+      advancement moments change your relationship to the fiction.
+    detection: |
+      Examine progression entities. Categorize advances into: stat increases, new moves
+      (same tier), new moves (different playbook), fiction-changing advances (change your
+      character's situation, retire, become a threat). If more than 60% of advances are stat
+      increases or same-playbook moves, advancement has plateaued.
+
+  - id: session-arc-mismatch
+    name: "Session Arc Length Mismatch"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      PbtA games work best when a meaningful narrative arc can complete in a single session
+      or a short arc (3-5 sessions). If the game's advancement, threat escalation, or
+      campaign structure requires 20+ sessions to reach a climax, it is fighting the format.
+      PbtA is built for compressed, intense fiction.
+    detection: |
+      Estimate advancement rate (how many sessions to gain each advance) and threat
+      escalation pace. If reaching the "endgame" of advancement or threat requires more
+      than 15 sessions of average play, the pacing may be mismatched with PbtA's strengths.
+
+  - id: spotlight-monopoly
+    name: "Spotlight Monopoly by Move Frequency"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When one player triggers moves far more often than others (because their playbook
+      or stats align with the most common situations), they dominate screen time. The
+      game should create situations where different playbooks shine, not just situations
+      where combat stats or social stats always apply.
+    detection: |
+      Map playbook moves to fictional situation types. If one playbook has moves that trigger
+      in the most common game situations (combat, social pressure) while another playbook's
+      moves trigger only in rare situations (downtime, specific fictional circumstances),
+      spotlight distribution will be uneven.
+
+  - id: clock-absence
+    name: "Absence of Pacing Clocks"
+    category: pacing
+    severity: medium
+    tradition_specific: false
+    description: |
+      Without countdown clocks or equivalent tension-tracking mechanisms, the MC has no
+      tool for building slow-burn threats. Everything becomes immediate -- threats either
+      happen now or are forgotten. Clocks give the MC a way to say "this is getting worse"
+      without resolving it immediately.
+    detection: |
+      Check for clock, countdown, or threat-track mechanics. If no mechanism exists for
+      tracking off-screen threat advancement, the game relies entirely on MC memory and
+      improvisation for slow-burn tension.
+
+  - id: love-letter-dependency
+    name: "Love Letter Dependency"
+    category: pacing
+    severity: low
+    tradition_specific: true
+    description: |
+      When games rely on "love letters" (custom between-session moves) to bridge time gaps
+      or handle off-screen events, it works beautifully in experienced MC hands. But if the
+      game NEEDS love letters to function (because its advancement or fiction assumes time
+      passing that the session structure cannot provide), that is a dependency on an advanced
+      MC technique.
+    detection: |
+      Check if advancement mechanics or fictional situations require time passage that
+      exceeds what sessions naturally provide. If the game assumes weeks or months between
+      sessions but provides no mechanical scaffolding for that time, love letters become
+      a necessary patch.
+
+  # --- SOCIAL ---
+
+  - id: string-economy-collapse
+    name: "String / Bond Economy Collapse"
+    category: social
+    severity: high
+    tradition_specific: true
+    description: |
+      Social currency mechanics (Strings in Monsterhearts, Bonds in Dungeon World, History
+      in some games) need to circulate -- earned, spent, and replenished. If earning is easy
+      and spending is rare (or vice versa), the economy stagnates. Strings that accumulate
+      without being spent lose dramatic weight.
+    detection: |
+      Check for social currency resources (bonds, strings, history, debts). Count mechanics
+      that earn the currency vs. mechanics that spend it. If the earn rate exceeds the spend
+      rate by 2:1 or more, accumulation will stagnate the economy. Also check if any mechanic
+      removes or resets the currency.
+
+  - id: manipulation-coercion-conflation
+    name: "Manipulation/Coercion Conflation"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      When a single social move covers both "convince someone with an argument" and "threaten
+      someone into compliance," the fictional difference is erased by a shared mechanical
+      resolution. Good social systems distinguish between leverage types because the fiction
+      should differ: cooperation vs. compliance.
+    detection: |
+      Check social mechanics. If a single move covers both willing and coerced compliance
+      with the same trigger and the same outcomes, the game conflates persuasion and
+      intimidation. Check if the 7-9 results differentiate between the approaches.
+
+  - id: pc-vs-pc-social-gap
+    name: "PC-vs-PC Social Move Gap"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      Many PbtA games have social moves that work against NPCs but are awkward or undefined
+      against other PCs. "Manipulate" says the NPC must comply or suffer -- but what happens
+      when you Manipulate another PC? If the answer is "the player decides," the mechanic is
+      asymmetric. If the answer is "the move forces compliance," player agency is violated.
+    detection: |
+      Check social mechanics for explicit PC-vs-PC rules. If social moves define NPC
+      reactions but say nothing about PC targets, the gap exists. Check if any move explicitly
+      addresses the PC-target case.
+
+  - id: playbook-social-isolation
+    name: "Playbook Social Isolation"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      When a playbook's moves are primarily about personal power and solo action, that
+      character has no mechanical reason to interact with other PCs. PbtA thrives on
+      inter-character drama. A playbook that can be played in isolation is fighting the format.
+    detection: |
+      For each playbook or character type, count moves that reference other PCs, create
+      social obligations, or trigger from inter-character interaction. If a playbook has zero
+      moves that mechanically involve other PCs, it is socially isolated.
+
+  - id: npc-social-depth
+    name: "NPC Social Depth Deficit"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      When social moves treat all NPCs the same (Manipulate works identically on a merchant
+      and a king), NPCs lose individuality. Good PbtA design gives MCs tools to differentiate
+      NPC responses: some NPCs are motivated by fear, others by greed, others by loyalty.
+      If the system does not support this differentiation mechanically, it relies on MC skill.
+    detection: |
+      Check if social mechanics include NPC disposition, motivation, or relationship as a
+      factor in resolution. If all NPCs respond to social moves identically regardless of
+      their fictional characterization, depth is absent.
+
+  # --- MECHANICS (continued) ---
+
+  - id: playbook-balance-asymmetry
+    name: "Playbook Power Asymmetry"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      PbtA playbooks should be balanced in fictional agency and spotlight time, not in
+      mechanical output. But when one playbook has moves that reshape the fiction (The
+      Brainer's direct-brain-whisper-projection) while another has moves that provide
+      modest stat bonuses (The Battlebabe's minor combat edges), the asymmetry creates
+      unequal table presence.
+    detection: |
+      Compare playbook moves by fictional scope. Categorize each move as: narrow (affects
+      one scene mechanically), medium (changes one relationship or situation), broad (reshapes
+      the fiction or creates new fictional elements). If one playbook has primarily broad
+      moves and another has primarily narrow moves, power asymmetry exists.
+
+  - id: basic-special-move-ratio
+    name: "Basic/Special Move Ratio Imbalance"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      The ratio of basic moves (available to all) vs. special moves (playbook-specific)
+      defines how much character type matters. If basic moves cover 90% of play, playbooks
+      are flavor. If special moves dominate, new players are overwhelmed by options. The
+      sweet spot is ~60/40 basic/special for trigger frequency.
+    detection: |
+      Count basic moves and special (playbook) moves. Estimate trigger frequency for each.
+      If basic moves trigger more than 80% of the time, playbook identity is weak. If special
+      moves trigger more than 50% of the time, the shared fiction that basic moves provide
+      is thin.
+
+  - id: fiction-first-violation
+    name: "Fiction-First Violation"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      PbtA's core principle is that fiction triggers mechanics, not the other way around.
+      When a move reads like a menu option ("spend 1 hold to ask a question") without
+      requiring fictional positioning first, it violates fiction-first. The player should
+      describe what their character does, and the MC determines which move (if any) fires.
+    detection: |
+      Check mechanics for triggers that are mechanical rather than fictional: "spend hold,"
+      "use this ability," "activate this power." Contrast with fictional triggers: "when you
+      go aggro," "when you read a charged situation." If more than 20% of moves have
+      mechanical triggers, fiction-first is eroding.
+
+  - id: hold-economy-staleness
+    name: "Hold Economy Staleness"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Hold (generated by a move, spent later) is a powerful PbtA design tool. But if hold
+      has no expiry, no escalation, and always provides the same options, players hoard it
+      and spend it mechanically. Good hold design: hold expires (end of scene), hold options
+      are contextual, spending hold changes the fiction.
+    detection: |
+      Check for mechanics that generate hold. If hold persists indefinitely, has a fixed
+      spend menu with no fictional variation, and does not expire or degrade, staleness is
+      likely. Check if any mechanic removes or resets hold involuntarily.
+
+  - id: gm-fiat-as-design
+    name: "GM Fiat as Design (The MC Will Handle It)"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When a game's answer to "how does X work?" is consistently "the MC decides," the game
+      is pushing design responsibility to the table. Some MC authority is essential (it is the
+      MC's role). But when the game punts on core resolution (how much harm does a sword do?
+      the MC decides), it is incomplete, not elegant.
+    detection: |
+      Count instances where mechanics defer to MC/GM judgment without providing guidelines,
+      ranges, or examples. If more than 3 core interactions (harm severity, move trigger
+      adjudication, NPC response scope) are fully MC-determined with no scaffolding, the
+      game may be under-designed.
+
+  - id: move-as-skill-check
+    name: "Move as Skill Check (D&D in PbtA Clothing)"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      A move that reads "roll 2d6+stat. On 10+, you succeed. On 7-9, you partially succeed.
+      On 6-, you fail" is a d20 skill check wearing PbtA's skin. Real PbtA moves change the
+      fiction on every outcome tier. The 7-9 does not just reduce the success -- it introduces
+      a new fictional element (a complication, a cost, a hard choice).
+    detection: |
+      Check 10+/7-9/6- outcomes for each mechanic. If the 7-9 is structurally identical to
+      the 10+ but with reduced numerical effect ("deal less damage," "get fewer questions"),
+      the move is a skill check. True PbtA 7-9 results introduce something new to the fiction.
+
+  # --- RESOURCES ---
+
+  - id: harm-as-hp
+    name: "Harm as Hit Points (Hidden d20)"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      When harm tracking uses a numbered countdown (6 harm to death) and healing restores
+      numbered harm, the system has re-invented HP without calling it HP. PbtA harm should
+      be fictional -- conditions, debilities, wounds with narrative weight -- not a number
+      that decrements.
+    detection: |
+      Examine harm/wound resources. If harm is tracked as a number (take 2-harm, you have
+      4 remaining) with no fictional state changes at intermediate thresholds, it is HP.
+      Check if harm at different levels imposes different fictional conditions (1-harm is
+      shaken, 3-harm is bleeding out) -- if so, it is doing PbtA harm correctly.
+
+  - id: resource-absence
+    name: "Resource Absence (Pure Fiction Economy)"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Some PbtA games have no trackable resources at all -- no harm track, no currency, no
+      countdowns. Everything is pure fiction. This can work (Belonging Outside Belonging games
+      do it) but it requires exceptionally skilled MC play and highly engaged players. If the
+      game's tone requires tension from scarcity, a pure fiction economy cannot provide it.
+    detection: |
+      Count resource entities in game-state. If zero resources exist and the game's genre
+      implies scarcity or danger (survival horror, dungeon crawling, war), the absence may
+      undermine the genre's promise.
+
+  - id: experience-trigger-gaming
+    name: "Experience/Advancement Trigger Gaming"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      When XP or advancement triggers are tied to specific fictional actions (mark XP when
+      you fail a roll, mark XP when you use your highlighted stat), players game the triggers.
+      They seek out situations that fire their XP trigger even when it makes no fictional
+      sense. This is fine if the trigger encourages genre-appropriate behavior; it is bad
+      if it encourages degenerate play.
+    detection: |
+      Check advancement triggers. If XP is earned by performing specific actions (fail a
+      roll, use a highlighted stat, make a specific move), assess whether gaming the trigger
+      produces genre-appropriate fiction. "Mark XP when you fail" encourages risk-taking
+      (usually good). "Mark XP when you use [specific stat]" encourages shoehorning.
+
+  - id: barter-system-irrelevance
+    name: "Barter / Wealth System Irrelevance"
+    category: resources
+    severity: low
+    tradition_specific: true
+    description: |
+      Abstract wealth systems (barter in AW, coin in DW) that have no mechanical teeth --
+      nothing costs enough to create meaningful scarcity -- become bookkeeping without
+      payoff. If barter exists but nothing in the game mechanically requires spending it,
+      it is vestigial.
+    detection: |
+      Check for wealth or currency resources. Count mechanics that require spending the
+      currency. If fewer than 3 mechanics have a cost denominated in the currency, or if
+      the expected income exceeds expected expenses by 3:1+, the system is irrelevant.
+
+  # --- ADDITIONAL MECHANICS ---
+
+  - id: peripheral-move-orphan
+    name: "Peripheral Move as Orphan"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Peripheral moves (session start, session end, when you level up) that exist but are
+      consistently forgotten because they break the flow of play. If the move is only
+      remembered when someone reads the rules, it is not integrated into the rhythm of play.
+    detection: |
+      Check for session-start, session-end, or advancement-trigger moves. If these moves
+      are defined but do not connect to the core play loop (they produce resources that no
+      other move consumes, or they trigger fictional events that no move addresses), they
+      are orphaned.
+
+  - id: playbook-move-count-disparity
+    name: "Playbook Move Count Disparity"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When one playbook has 4 unique moves and another has 8, the player experience differs
+      dramatically. More moves means more decisions, more triggers to remember, and more
+      spotlight moments. Fewer moves means simpler play but less mechanical engagement. This
+      is acceptable if intentional; it is a problem if accidental.
+    detection: |
+      Count unique moves per playbook. If the ratio between the most and fewest is greater
+      than 2:1, disparity exists. Check if move count correlates with playbook complexity
+      intent (some playbooks are explicitly designed as beginner-friendly).
+
+  - id: sex-move-integration
+    name: "Intimacy Move Integration Failure"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      PbtA games that include sex/intimacy moves must integrate them into the game's economy
+      and fiction. When the intimacy move's consequences are trivial or disconnected from the
+      rest of the game's mechanics, it feels bolted on for shock value. When they are too
+      consequential, they punish player vulnerability.
+    detection: |
+      Check for intimacy or special relationship moves. If the move's outcomes do not connect
+      to any other mechanic (no resource change, no bond/string effect, no fictional
+      consequence that other moves interact with), integration has failed.
+
+  - id: monster-move-simplicity
+    name: "Monster / Threat Move Under-Design"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      PbtA threat moves should be as interesting as player moves. When monsters only have
+      "deal damage" and "capture someone," MC options are limited and combats become
+      repetitive. Good threat design gives each threat type a unique move vocabulary that
+      creates distinct fictional situations.
+    detection: |
+      Check entities with subtype threat or monster. If threats have fewer than 3 unique
+      moves, or if most threats share the same moves (just with different damage values),
+      threat design is under-developed.
+
+  # --- ADDITIONAL PACING ---
+
+  - id: front-threat-sprawl
+    name: "Front / Threat Sprawl"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Fronts (organized groups of threats) provide MC structure. But when a game generates
+      too many fronts -- every NPC, every faction, every location becomes a front -- the MC
+      is drowning in bookkeeping. Fronts should be few, focused, and urgent. More than 3
+      active fronts is usually too many.
+    detection: |
+      Check for front, threat, or arc tracking mechanics. If the game's faction or threat
+      system encourages creating fronts for every significant NPC or situation without
+      guidance on limiting active fronts, sprawl is likely.
+
+  - id: end-of-session-move-skip
+    name: "End-of-Session Move Skip Rate"
+    category: pacing
+    severity: low
+    tradition_specific: true
+    description: |
+      End-of-session moves that ask "did we learn something about [NPC]?" or "did we explore
+      a new location?" are meant to reward genre-appropriate play. But tables routinely skip
+      them because the session ended and everyone wants to go home. If the move is consistently
+      skipped, its XP reward is not functioning.
+    detection: |
+      Check for end-of-session mechanics. If the move grants advancement resources (XP,
+      marks) and its questions are generic enough to always be answered "yes," it is either
+      auto-granted (making it invisible) or skipped (making it functionless).
+
+  - id: hard-framing-dependency
+    name: "Hard Framing Dependency"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Some PbtA games require aggressive scene framing by the MC to work. If the game stalls
+      when the MC asks "what do you do?" and waits for player initiative, the game is
+      dependent on hard framing. This is fine for experienced MCs but a trap for new ones
+      who expect player-driven exploration.
+    detection: |
+      Check if the game's structure assumes scene-based play with MC-initiated framing. If
+      mechanics primarily trigger from MC-initiated situations (threats arriving, harm
+      incoming) rather than player-initiated fiction (I go here, I do this), hard framing
+      dependency exists.
+
+  # --- ADDITIONAL SOCIAL ---
+
+  - id: hx-history-stagnation
+    name: "Hx / History Stagnation"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      Starting relationships (Hx, History, Bonds) that set the initial social web but never
+      evolve mechanically. If the starting bonds are the most interesting social mechanic and
+      play never generates new bonds of equal weight, the social system front-loads and then
+      decays.
+    detection: |
+      Check for starting relationship mechanics (bonds, history, strings). Then check for
+      mechanics that create, modify, or replace relationships during play. If the creation
+      rate during play is lower than the starting count, relationships are stagnating.
+
+  - id: safety-tool-as-mechanic-gap
+    name: "Safety Tool Mechanical Gap"
+    category: social
+    severity: low
+    tradition_specific: false
+    description: |
+      Games that deal with intense themes (Monsterhearts, Night Witches) need safety tools.
+      But if safety tools are mentioned in the text without mechanical integration (lines and
+      veils as a social contract but not a game mechanic), their use is inconsistent. Games
+      that make safety part of the mechanics (the X-card as a move) get more consistent use.
+    detection: |
+      Check if the game's themes include violence, abuse, or other intense content. If so,
+      check whether safety mechanisms are referenced in the mechanics section or only in a
+      social-contract preamble. If safety is not mechanized in a high-intensity game, the
+      gap may be a design oversight.
+
+  # --- ADDITIONAL RESOURCES ---
+
+  - id: gear-as-fiction-only
+    name: "Gear as Fiction-Only Problem"
+    category: resources
+    severity: low
+    tradition_specific: true
+    description: |
+      When gear and equipment have no mechanical weight (no tags, no bonuses, no fictional
+      constraints), the fiction loses texture. "I have a sword" and "I have a magic ancestral
+      blade" are mechanically identical. Some PbtA games intentionally do this; others do it
+      by omission and the fiction suffers for it.
+    detection: |
+      Check if equipment or gear appears in entities. If equipment has no tags, no mechanical
+      differentiation, and no interaction with any move, gear is fiction-only. Check if any
+      move references equipment type, quality, or tags.
+
+  - id: countdown-clock-overuse
+    name: "Countdown Clock Overuse"
+    category: resources
+    severity: medium
+    tradition_specific: false
+    description: |
+      Clocks are powerful but can be overused. When the MC has 8 active clocks on the table,
+      players lose the ability to track which threats are advancing and the clocks become
+      background noise. Fewer, more consequential clocks create clearer tension.
+    detection: |
+      Check for clock or countdown mechanics. If the game encourages clocks for threats,
+      projects, and situations without guidance on maximum active clocks, overuse is likely.
+      Check if any mechanic retires or combines clocks.
+
+  # --- ADDITIONAL MECHANICS ---
+
+  - id: move-result-homogeneity
+    name: "Move Result Homogeneity"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When every move follows the exact same result template (10+: full success, 7-9: partial,
+      6-: miss) with no structural variation, the moves feel interchangeable. The best PbtA
+      moves vary their structure: some grant hold, some offer lists of options, some create
+      countdowns, some have unique miss effects. Structural variety keeps the game surprising.
+    detection: |
+      Analyze the result structure of all moves. If more than 80% of moves use identical
+      result structures (10+: you do it / 7-9: you do it but / 6-: bad thing), the moves
+      lack structural variety. Check for hold-granting moves, list-choosing moves, and
+      moves with unique resolution formats.
+
+  - id: player-facing-roll-violation
+    name: "Player-Facing Roll Violation"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      PbtA games are typically player-facing: only players roll dice. When the game introduces
+      GM rolls (damage rolls, random tables mid-scene, contested rolls), it breaks the
+      player-facing contract and slows play. Each GM roll interrupts the fiction-first flow.
+    detection: |
+      Check for mechanics that require GM/MC dice rolls during scenes. If the GM must roll
+      damage, roll for NPC actions, or make contested checks, the game has broken player-facing
+      convention. Some games intentionally do this; the question is whether it is acknowledged.
+
+  - id: playbook-retirement-gap
+    name: "Playbook Retirement Gap"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Characters in PbtA should have a natural endpoint: retirement, death, transformation,
+      or narrative completion. When no mechanical trigger suggests "this character's story is
+      done," campaigns drag on with characters who have exhausted their arcs but not their
+      advancement options.
+    detection: |
+      Check advancement mechanics for endgame triggers. If no advancement option involves
+      character retirement, transformation into a new character, or narrative conclusion,
+      characters have no mechanical off-ramp.
+
+  - id: tone-mechanic-dissonance
+    name: "Tone-Mechanic Dissonance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      PbtA games are genre engines: the mechanics should produce fiction that feels like
+      the genre. When a horror game has empowering combat moves, or a romance game has
+      tactical positioning mechanics, the tone and the mechanics point in different directions.
+      Every move should reinforce the genre promise.
+    detection: |
+      Identify the game's stated genre or tone. Then examine each mechanic's outcomes: do
+      they produce fiction consistent with the genre? If a horror game's moves consistently
+      produce heroic outcomes, or a drama game's moves produce tactical situations, dissonance
+      exists.
+
+  - id: apocalyptica-dependency
+    name: "Apocalyptica Dependency (AW Assumption Leak)"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Many PbtA games inherit assumptions from Apocalypse World that do not fit their setting:
+      scarcity economics, barter systems, sex moves, hardhold management. When a PbtA game
+      about teen drama includes a barter system because AW had one, the mechanic is inherited
+      rather than designed.
+    detection: |
+      Check for mechanics that feel imported from Apocalypse World without adaptation to
+      the game's genre: barter/scarcity systems in non-apocalyptic settings, harm clocks
+      in low-violence games, hardhold moves in games without territory management. If the
+      mechanic exists but connects to nothing else in the game, it may be an AW inheritance.
+
+  - id: cascade-move-chain
+    name: "Cascade Move Chain"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When the outcome of one move triggers another move, which triggers another, a cascade
+      occurs. "You Hack and Slash, which deals harm, which triggers the harm move, which
+      triggers Defy Danger." Each link in the chain slows play and distances the fiction from
+      the original action. Cascades of 3+ moves indicate over-designed move interaction.
+    detection: |
+      Trace move interactions. If the outcome of move A (dealing harm, changing conditions,
+      creating fictional triggers) mechanically triggers move B, which can trigger move C,
+      a cascade chain exists. Check if any chain exceeds 2 links.
+
+  - id: agenda-principle-disconnect
+    name: "Agenda/Principle Disconnect from Moves"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      PbtA games have MC agendas and principles that guide play philosophy. But if the actual
+      moves do not support the agendas (the agenda says "make the world feel dangerous" but
+      no move creates danger without player initiation), the agendas are aspirational, not
+      functional.
+    detection: |
+      Read MC agendas and principles. For each, check if at least one MC move or game
+      mechanic directly supports it. If an agenda has no mechanical backing (no move, no
+      resource, no procedure that enacts it), it is advice, not design.

@@ -1,0 +1,815 @@
+tradition: fitd
+name: "FitD System Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for Forged in the Dark systems (Blades in the Dark, Scum & Villainy,
+  Band of Blades, Wicked Ones, etc.). Distilled from published games, designer commentary,
+  community play reports, and mechanical analysis.
+
+heuristics:
+  # --- RESOURCES ---
+
+  - id: stress-economy-collapse
+    name: "Stress Economy Collapse"
+    category: resources
+    severity: critical
+    tradition_specific: true
+    description: |
+      Stress is FitD's universal currency: it pays for resistance rolls, pushing yourself,
+      assists, flashbacks, and special abilities. When stress costs are too low across the
+      board, players can afford everything and stress never creates tension. When too high,
+      players hoard stress and avoid interesting actions. The economy collapses when the
+      expected stress expenditure per score does not create meaningful choices about what to
+      resist and what to accept.
+    detection: |
+      Sum expected stress expenditure per score: resistance rolls (1-5 typical), push (2),
+      assists (1), flashbacks (0-4), special abilities (variable). Compare against pool size
+      (typically 9). If total expected spend per score is less than 4, stress is too loose.
+      If greater than 8, players will trauma frequently and the game becomes about stress
+      conservation rather than daring action.
+
+  - id: stress-as-hp
+    name: "Stress as Hit Points (Resistance Spam)"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      When players use resistance rolls to negate every consequence, stress becomes HP --
+      a pool that absorbs damage until it runs out. This bypasses the position/effect
+      system entirely: why negotiate position when you can just resist the consequences?
+      The game loses its core tension of accepting bad outcomes to conserve stress.
+    detection: |
+      Check if resistance rolls can negate any consequence type. If resistance has no
+      limitation beyond stress cost, and stress recovery (via downtime indulge) is reliable,
+      the resistance-spam pattern is available. Check if any mechanic limits resistance
+      (some consequences are irresistible, or repeated resistance costs escalate).
+
+  - id: trauma-pacing-mismatch
+    name: "Trauma Pacing Mismatch"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Trauma at 4 retires the character. If stress management is tight, characters trauma
+      every few scores and the campaign chews through characters too fast for investment.
+      If stress management is loose, characters never trauma and the mechanic is invisible.
+      Trauma should occur roughly 2-4 times per campaign, pacing toward a meaningful
+      character arc endpoint.
+    detection: |
+      Estimate scores per campaign (typically 20-30). Estimate trauma rate: how many scores
+      before expected first trauma? If trauma arrives in fewer than 5 scores, it is too fast.
+      If it takes more than 15 scores, it is too slow. Factor in downtime indulge frequency
+      and stress cost per score.
+
+  - id: harm-stress-redundancy
+    name: "Harm/Stress Redundancy"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Harm and stress both represent negative consequences, but they function differently:
+      harm impairs future actions, stress gates further resource expenditure. If the game
+      does not clearly differentiate when harm applies vs. when stress applies, the two
+      systems feel redundant. In Blades, harm is what happens to you and stress is what
+      you spend to avoid it -- the relationship is clear. Custom FitD games often blur this.
+    detection: |
+      Check for both harm and stress resources. If harm application is at MC discretion and
+      resistance (stress spend) can reduce harm, the systems interact. But if harm and stress
+      serve overlapping functions without a clear "when to use which" rule, redundancy exists.
+
+  - id: downtime-indulge-dominance
+    name: "Downtime Indulge Vice Dominance"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      If Indulge Vice is the only reliable stress recovery mechanism, it dominates downtime
+      action selection. Players spend every downtime action on vice rather than training,
+      projects, healing, or other options. Downtime should be a menu of interesting choices,
+      not a stress maintenance chore.
+    detection: |
+      Check downtime mechanics. Count downtime actions available per cycle. If stress
+      recovery is only available through one action and the expected stress load requires
+      using it every downtime, the choice is illusory. Also check if vice indulgence has
+      meaningful costs (overindulgence) that counterbalance its necessity.
+
+  - id: coin-economy-triviality
+    name: "Coin Economy Triviality"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Coin in FitD pays for lifestyle, crew upgrades, and special expenditures. If coin
+      income per score exceeds the maintenance costs and desired purchases are cheap, coin
+      stops being a constraint. The crew becomes wealthy and the scarcity that drives
+      desperate criminal behavior evaporates.
+    detection: |
+      Compare coin income per score (typical payout) against ongoing costs (tier upkeep,
+      lifestyle, faction obligations). If net coin per score is positive after all costs,
+      accumulation will eventually trivialize the economy. Check if any money-sink mechanic
+      exists to drain excess coin.
+
+  - id: heat-consequence-clarity
+    name: "Heat and Wanted Level Consequence Clarity"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Heat accumulates from scores and eventually produces entanglements or wanted levels.
+      If the consequences of heat are vague ("things get more dangerous") rather than
+      mechanical ("at wanted level 4, the Bluecoats raid your lair"), heat becomes an
+      abstract number that the MC must interpret. Clear consequences make heat a real
+      strategic consideration.
+    detection: |
+      Check for heat or notoriety resources. If heat triggers consequences, check if those
+      consequences are specific and mechanical or vague and MC-interpreted. If the only
+      consequence is "roll on the entanglement table" and the table entries are all
+      narrative, the mechanic lacks teeth.
+
+  # --- MECHANICS ---
+
+  - id: position-effect-collapse
+    name: "Position/Effect Collapse to Default"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      Position/effect is FitD's core negotiation mechanic -- the GM and player agree on how
+      dangerous the action is (position) and how much it accomplishes (effect). When the
+      table defaults to "risky/standard" for every action because negotiating position and
+      effect feels slow or argumentative, the entire system collapses to a flat dice pool
+      roll with no narrative context.
+    detection: |
+      Check if position/effect mechanics exist. If only three positions (controlled,
+      risky, desperate) and three effect levels (limited, standard, great) are defined,
+      check if guidance exists for when to use each. If the determination is entirely
+      GM-judged with no concrete examples tied to specific action types, defaulting is
+      likely.
+
+  - id: position-negotiation-adversarial
+    name: "Position Negotiation Becomes Adversarial"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Position/effect negotiation is collaborative -- the GM sets it, the player can push
+      for better by changing approach. But when the table treats position as something the
+      player argues against (I think this should be controlled, GM says risky), it becomes
+      adversarial. The game needs clear guidance that position reflects fictional reality,
+      not a fairness negotiation.
+    detection: |
+      Check if position/effect mechanics include guidance on negotiation norms. If the rules
+      present position as a GM call without player input mechanisms (trade position for effect,
+      or vice versa), the adversarial dynamic is likely. Also check if "Devil's Bargain" is
+      positioned as the player's lever for modifying position.
+
+  - id: action-rating-dead-zone
+    name: "Action Rating Dead Zone"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When certain action ratings are rarely useful because few situations call for them,
+      investing dots in those ratings feels wasted. "Attune" in a game with no supernatural
+      element, or "Wreck" in a game focused on social intrigue, are dead zones. Action
+      ratings should all see regular use in the game's intended fiction.
+    detection: |
+      List all action ratings. For each, estimate how often a score would call for that
+      action. If any action rating would be relevant in fewer than 10% of scores, it is a
+      dead zone. Also check if any playbook's starting ratings concentrate in dead-zone
+      actions.
+
+  - id: engagement-roll-meaninglessness
+    name: "Engagement Roll Meaninglessness"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      The engagement roll determines starting position for a score. If the engagement roll
+      is consistently positive (risky or controlled start) because the pool is large, the
+      roll feels perfunctory. If it is consistently negative (desperate start) because the
+      pool is small, every score begins in crisis. The roll should produce varied starting
+      conditions that force adaptation.
+    detection: |
+      Check the engagement roll mechanic. What determines the dice pool? If the pool is
+      consistently 2-3d with no variance, outcomes cluster. Compute the probability of each
+      starting position: if one position occurs more than 60% of the time, the roll lacks
+      meaningful variance.
+
+  - id: flashback-abuse-vector
+    name: "Flashback Abuse Vector"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Flashbacks let players retroactively establish preparation. This is brilliant for pacing
+      (no planning phase, just play) but abusable if flashbacks can undo consequences that
+      have already been established in the fiction. "Actually, I planted a bomb there last
+      week" after the GM has already described the situation is flashback abuse. The line
+      between clever preparation and narrative retroaction needs to be clear.
+    detection: |
+      Check flashback mechanics. If flashbacks have no cost ceiling (stress cost scales but
+      has no maximum), no fictional limitation (can contradict established facts), and no
+      GM veto guidance, abuse vectors exist. Check if the rules address what flashbacks
+      cannot do.
+
+  - id: devils-bargain-imbalance
+    name: "Devil's Bargain Imbalance"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Devil's Bargains should be tempting but costly. If bargains are trivially easy to accept
+      (minor inconvenience for +1d), players always take them. If bargains are too harsh
+      (major consequence for +1d), players never take them. The bargain should create a
+      genuine "is this worth it?" moment.
+    detection: |
+      Check for Devil's Bargain or equivalent mechanics. If the mechanic provides a fixed
+      bonus (+1d) regardless of bargain severity, and no guidance calibrates bargain severity,
+      the MC will either offer trivial bargains (always accepted) or harsh bargains (never
+      accepted).
+
+  - id: clock-pacing-confusion
+    name: "Clock Pacing Confusion"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Clocks are FitD's pacing tool, but their size and tick rate determine everything. A
+      4-clock that ticks on every action resolves in one scene. An 8-clock that ticks on
+      critical success resolves never. If the game does not provide guidance on clock sizing
+      relative to scope (scene, score, campaign), MCs will set clocks wrong and wonder why
+      pacing feels off.
+    detection: |
+      Check for clock mechanics. If clock sizes (4, 6, 8) are defined but no guidance maps
+      clock size to scope or tick rate, confusion is likely. Also check if the tick rate is
+      well-defined (ticks on success, on consequence, on specific move) or vague ("when
+      appropriate").
+
+  - id: crew-advancement-neglect
+    name: "Crew Advancement Neglect"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      FitD games often have a crew/ship/group sheet that advances alongside characters. If
+      crew advancement is slower, less impactful, or less interesting than character
+      advancement, it becomes bookkeeping. The crew should feel like a character that everyone
+      plays together.
+    detection: |
+      Compare crew advancement rate and impact against character advancement. If crew
+      upgrades require 3x the investment of character advances, or if crew abilities are
+      passive bonuses rather than active capabilities, the crew sheet is neglected.
+
+  - id: resistance-attribute-imbalance
+    name: "Resistance Attribute Imbalance"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Resistance rolls use attribute ratings (Insight, Prowess, Resolve). If consequences
+      overwhelmingly target one attribute (most harm requires Prowess resistance), characters
+      with low ratings in that attribute are disproportionately vulnerable. Consequence types
+      should be distributed across all resistance attributes.
+    detection: |
+      Map consequence types to resistance attributes. If more than 50% of expected
+      consequences use the same attribute for resistance, that attribute is dominant and
+      characters who did not invest in it are structurally disadvantaged.
+
+  - id: load-planning-paradox
+    name: "Load Planning Paradox"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      FitD removes the planning phase by letting players declare gear via load and flashbacks.
+      But if the load system requires choosing specific items before the score, it reintroduces
+      planning. The ideal: choose load level (light/normal/heavy), declare items as needed
+      during the score, with load limiting total declarations.
+    detection: |
+      Check load/gear mechanics. If players must choose specific items before the score begins
+      (not just load level), the planning paradox exists -- the game tells players not to plan
+      but then requires them to plan their loadout.
+
+  # --- PACING ---
+
+  - id: score-downtime-ratio
+    name: "Score/Downtime Ratio Imbalance"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      FitD's rhythm is score-then-downtime, action-then-recovery. If scores take 3 hours
+      and downtime takes 15 minutes, downtime feels like an afterthought. If downtime is
+      as long as scores, the game drags between action. The ratio should be approximately
+      3:1 to 4:1 (score time to downtime time).
+    detection: |
+      Estimate score complexity (number of obstacles, clocks, opposition) vs. downtime
+      complexity (number of actions, vice, projects). If downtime offers more than 3 actions
+      per character with full resolution mechanics for each, it may consume disproportionate
+      time.
+
+  - id: faction-turn-disconnection
+    name: "Faction Turn Disconnection"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      The faction turn (between-score update of faction positions and projects) keeps the
+      world alive. But if faction turns produce changes that players never see or interact
+      with, they become GM-only bookkeeping. Faction movements should visibly affect the
+      fiction that players engage with during scores.
+    detection: |
+      Check for faction mechanics. If factions advance projects and shift status independently
+      of player action, check if any mechanic surfaces these changes to players (news, rumors,
+      visible consequences). If faction movements are purely behind-the-screen, disconnection
+      exists.
+
+  - id: escalation-ratchet-absence
+    name: "Escalation Ratchet Absence"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Scores should escalate: things go wrong, complications stack, the situation gets more
+      desperate. If the game has no mechanical escalation (clocks ticking toward alarm, heat
+      building, position degrading), scores plateau at a steady tension level. The desperate
+      position should feel inevitable by the score's climax, not random.
+    detection: |
+      Check for mechanics that increase tension during a score: alarm clocks, escalating
+      consequences, position degradation on partial success. If no mechanic mechanically
+      ratchets tension upward during a score, escalation depends entirely on GM instinct.
+
+  - id: free-play-stagnation
+    name: "Free Play Stagnation"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Between scores, characters are in free play -- doing personal things, gathering info,
+      making connections. If free play has no structure (no move triggers, no time pressure,
+      no mechanical scaffolding), it stagnates into aimless roleplay until someone says
+      "let's do a score." Some structure (gather information actions, long-term project ticks)
+      keeps free play productive.
+    detection: |
+      Check for free play or between-score mechanics. If the game defines score and downtime
+      phases but has no mechanical support for the time between them (no gather info move,
+      no setup actions, no faction interaction moves), free play is unstructured.
+
+  - id: campaign-endgame-absence
+    name: "Campaign Endgame Absence"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      FitD campaigns should build toward something -- crew tier 4, faction dominance,
+      retirement. If no endgame condition exists, campaigns peter out rather than concluding.
+      The endgame does not need to be explicit, but the mechanics should create pressure
+      toward a conclusion (trauma accumulation, heat escalation, faction conflict convergence).
+    detection: |
+      Check for endgame triggers: maximum tier, retirement conditions, campaign clocks,
+      faction war resolution. If no mechanic creates natural campaign conclusion pressure,
+      the game will run until the table gets bored.
+
+  - id: tier-scaling-irrelevance
+    name: "Tier Scaling Irrelevance"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Crew tier should affect what kinds of scores are possible and who the opposition is.
+      If tier is just a number that adds to engagement rolls and has no fictional weight
+      (tier 0 crews can attempt the same scores as tier 4 crews with the same approach),
+      tier is irrelevant.
+    detection: |
+      Check how tier interacts with score mechanics. If tier only affects a single roll
+      (engagement) and has no bearing on available targets, opposition quality, or fiction
+      scope, tier scaling is irrelevant.
+
+  # --- ADDITIONAL MECHANICS ---
+
+  - id: group-action-cost-imbalance
+    name: "Group Action Cost Imbalance"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Group actions (everyone rolls, take the best result, leader takes stress for each
+      failure) are efficient when the group is large and skilled, and punishing when small
+      or unskilled. If the stress cost per failure is 1, a 4-person group action where 2
+      fail costs 2 stress -- often worth it for a guaranteed good outcome. This can make
+      solo actions strictly worse than group actions.
+    detection: |
+      Check group action mechanics. Compare the expected outcome of a group action (best
+      of N dice) against a solo action (single roll). If group actions consistently produce
+      better results at manageable stress costs, solo actions are dominated.
+
+  - id: setup-action-underuse
+    name: "Setup Action Underuse"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Setup actions (act to give a teammate +1 effect or better position) are a collaboration
+      mechanic. If setup actions are rarely used because the cost (your action) is high and
+      the benefit (+1 effect) is modest, the collaboration incentive is weak.
+    detection: |
+      Check for setup or assist mechanics. Compare the cost of a setup action (spending your
+      action to help someone) against the benefit (typically +1 effect or improved position).
+      If a character could accomplish more by acting independently than by setting up a
+      teammate, setup is dominated.
+
+  - id: special-ability-homogeneity
+    name: "Special Ability Homogeneity"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Playbook special abilities should create distinct play experiences. When multiple
+      playbooks share abilities with different names but identical mechanical effects
+      (reduce stress cost, add dice to specific action type), the playbooks feel samey.
+    detection: |
+      Compare special abilities across playbooks. If more than 30% of abilities are
+      mechanically identical (same trigger, same cost, same effect) with only flavor
+      differences, homogeneity is present.
+
+  - id: consequence-severity-calibration
+    name: "Consequence Severity Calibration"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      The GM determines consequence severity (level 1-3 harm, complication clock size,
+      reduced effect). If calibration guidance is vague, some GMs will be too lenient
+      (level 1 harm for a gunshot) and others too harsh (level 3 harm for a stumble).
+      Consistent calibration requires concrete examples tied to fiction, not abstract
+      severity scales.
+    detection: |
+      Check consequence mechanics. If harm levels, clock sizes, and complication severity
+      are defined numerically but without fiction-anchored examples (what does level 2 harm
+      LOOK LIKE?), calibration will vary wildly between tables.
+
+  - id: resistance-roll-feel-bad
+    name: "Resistance Roll Feel-Bad"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Resistance rolls reduce consequences but cost stress, and the stress cost is variable
+      (6 minus highest die). Rolling poorly on a resistance roll means paying maximum stress
+      to only partially reduce a consequence. Players feel cheated: they spent a resource
+      to avoid something bad, and something bad happened anyway (high stress cost). The
+      mechanic is mathematically sound but emotionally punishing.
+    detection: |
+      Check resistance roll mechanics. If resistance costs are variable and high-cost outcomes
+      still only reduce (not eliminate) the consequence, the feel-bad pattern exists. Check
+      if any mechanic mitigates this (minimum stress cost, guaranteed full resistance at
+      high stress).
+
+  - id: acquire-asset-loop
+    name: "Acquire Asset Infinite Loop"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      If acquiring an asset (gear, information, temporary ally) during a score has no hard
+      limit, players can spend actions acquiring assets to trivialize the remaining obstacles.
+      "I flash back to acquire [solution to current problem]" repeated indefinitely makes
+      every obstacle solvable through asset acquisition rather than engagement.
+    detection: |
+      Check for asset acquisition mechanics (flashback to acquire, gather information during
+      score). If acquisition has only a stress cost with no narrative limitation or diminishing
+      returns, the loop is available.
+
+  - id: fortune-roll-overuse
+    name: "Fortune Roll Overuse (GM Avoidance)"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Fortune rolls resolve uncertain outcomes without player action. When GMs use fortune
+      rolls for everything (does the NPC betray them? fortune roll. Does the weather change?
+      fortune roll), they are avoiding making GM calls. Fortune rolls should be for genuinely
+      uncertain situations, not a crutch for indecisive GMs.
+    detection: |
+      Check for fortune roll mechanics. If fortune rolls can be triggered by the GM for any
+      uncertain outcome with no guidance on when to roll vs. when to decide, overuse is
+      likely.
+
+  # --- ADDITIONAL RESOURCES ---
+
+  - id: rep-hold-disconnect
+    name: "Rep / Hold Economic Disconnect"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Rep (reputation) and hold (territorial control) should create a progression loop: rep
+      increases tier, tier increases hold, hold increases income. If any link in this chain
+      is broken (rep is hard to earn, tier increase costs are prohibitive, hold provides
+      no benefit), the progression economy disconnects.
+    detection: |
+      Check for rep and hold/territory resources. Trace the progression loop: how does rep
+      convert to tier advancement, and what does tier provide? If any conversion is undefined
+      or the rewards of advancement are unclear, the loop is broken.
+
+  - id: vice-overindulgence-triviality
+    name: "Vice Overindulgence Triviality"
+    category: resources
+    severity: low
+    tradition_specific: true
+    description: |
+      Overindulgence in vice (when the indulge roll exceeds remaining stress) is meant to
+      create consequences: obligation, lost time, bender, tapped. If these consequences are
+      easily managed or rarely impact play, vice becomes a reliable stress recovery with no
+      real risk.
+    detection: |
+      Check overindulgence mechanics. If overindulgence consequences are temporary, narratively
+      minor, and do not affect the next score, the risk is trivialized. Check if any
+      overindulgence outcome creates lasting mechanical impact.
+
+  - id: stash-retirement-invisibility
+    name: "Stash/Retirement Economy Invisibility"
+    category: resources
+    severity: low
+    tradition_specific: true
+    description: |
+      Stash (personal savings toward retirement) is a long-term resource that most tables
+      ignore because it has no short-term impact. If retirement is 40+ stash and income is
+      1-2 per score, retirement is 20+ scores away -- an invisible goal. Making stash visible
+      and its progress tangible would increase engagement.
+    detection: |
+      Check for retirement or long-term savings resources. If the retirement threshold
+      requires more than 15 scores of saving and the resource provides no interim benefits,
+      it is effectively invisible during play.
+
+  - id: turf-claim-meaninglessness
+    name: "Turf Claim Meaninglessness"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Turf claims on the crew sheet expand territory and should provide concrete benefits.
+      If claims are just boxes to check with vague fictional benefits ("a vice den -- you have
+      a vice den now"), they lack mechanical weight. Good turf claims change what the crew can
+      do or reduce what they must spend.
+    detection: |
+      Check for turf or territory mechanics. If turf claims exist but provide no quantifiable
+      benefit (coin income, reduced heat, free downtime actions), they are meaningless markers.
+
+  # --- ADDITIONAL PACING ---
+
+  - id: one-score-per-session-assumption
+    name: "One Score Per Session Assumption"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      FitD games often assume one score and one downtime phase per session. If scores
+      consistently run short (the table finishes early) or long (downtime is cut short),
+      the pacing assumption is wrong for the table. The game should acknowledge variable
+      session lengths.
+    detection: |
+      Check the game's session structure guidance. If the game assumes one score per session
+      but scores vary wildly in scope (a simple theft vs. a full heist), the assumption
+      will frequently be wrong. Check if guidance exists for adjusting score scope to session
+      length.
+
+  - id: entanglement-repetition
+    name: "Entanglement Table Repetition"
+    category: pacing
+    severity: low
+    tradition_specific: true
+    description: |
+      Random entanglement tables that recycle the same results (gang trouble, rival faction
+      move, Bluecoat pressure) produce repetitive between-score fiction. If the table has
+      fewer than 8 distinct outcomes, repetition will be noticeable within a few sessions.
+    detection: |
+      Check for entanglement or complication tables. Count distinct outcomes. If fewer than
+      8 outcomes exist, repetition is inevitable. Also check if outcomes adapt to crew tier
+      or wanted level -- static tables feel less dynamic.
+
+  # --- SOCIAL ---
+
+  - id: faction-status-stagnation
+    name: "Faction Status Stagnation"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      Faction status (-3 to +3) should be dynamic -- rising and falling based on crew
+      actions. If status rarely changes (because the triggers for change are rare or the
+      changes are small), the faction web feels static. Dynamic faction status creates the
+      feeling of operating in a living city.
+    detection: |
+      Check for faction mechanics with status tracking. Count how many scores are expected
+      to change faction status. If fewer than 50% of scores affect any faction status, the
+      web is too static. Also check if status changes are large enough to be felt (a +1
+      shift from 0 to +1 is barely noticeable).
+
+  - id: faction-symmetry-boredom
+    name: "Faction Mechanical Symmetry"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      When all factions function identically (same resource types, same action patterns,
+      same tier mechanics), the faction web lacks texture. Factions should behave differently
+      based on their nature: the Bluecoats enforce law, the cult pursues arcane goals, the
+      gang claims turf. If the mechanics do not differentiate faction behavior, they all
+      feel like the same opponent with different names.
+    detection: |
+      Check faction entities. If all factions have identical mechanical profiles (same
+      attributes, same action types, same advancement), mechanical symmetry exists. Check
+      if faction-specific mechanics or moves differentiate how factions pursue their goals.
+
+  - id: crew-cohesion-assumption
+    name: "Crew Cohesion Assumption"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      FitD assumes the crew works together. But inter-character conflict (betrayal, competing
+      goals, personal agendas) is rich fictional territory that the mechanics poorly support.
+      If the game has no PvP resolution beyond "talk it out," it is missing a social
+      dimension that many tables want.
+    detection: |
+      Check for PvP or inter-character conflict mechanics. If the game assumes cooperation
+      in all mechanical contexts (group actions, assists, scores) but provides no resolution
+      for disagreement between characters, the cohesion assumption may be too rigid.
+
+  - id: contact-npc-depth
+    name: "Contact/NPC Mechanical Depth"
+    category: social
+    severity: low
+    tradition_specific: true
+    description: |
+      Contact NPCs (friends, rivals, acquaintances) that appear on character sheets but have
+      no mechanical weight are names on paper. If contacting an NPC has no defined benefit,
+      cost, or risk, players forget they exist. Good contact mechanics make NPC relationships
+      a strategic resource.
+    detection: |
+      Check for contact or NPC relationship mechanics. If contacts are listed on character
+      sheets but no mechanic defines what they can provide, what they cost, or what happens
+      when you rely on them too much, contacts are under-designed.
+
+  # --- ADDITIONAL MECHANICS ---
+
+  - id: project-clock-overwhelm
+    name: "Long-Term Project Clock Overwhelm"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When players have multiple long-term projects running simultaneously (each tracked
+      by a clock), downtime becomes about ticking clocks rather than making interesting
+      choices. If every character has 2-3 active projects plus a personal goal plus vice,
+      downtime is overloaded.
+    detection: |
+      Count expected active long-term projects per character. If each character can maintain
+      more than 2 projects simultaneously with no mechanic limiting concurrent projects,
+      overwhelm is likely. Check if any mechanic retires or consolidates stale projects.
+
+  - id: ghost-echo-overreach
+    name: "Supernatural Subsystem Overreach"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      FitD games with supernatural elements (ghosts in Blades, space magic in S&V) add
+      a subsystem that interacts with the core mechanics. If the supernatural subsystem
+      is more powerful than mundane actions (attune solves problems that other actions
+      cannot), it dominates play and mundane characters feel irrelevant.
+    detection: |
+      Check for supernatural or special mechanics. Compare their scope (what problems they
+      solve) against mundane action ratings. If supernatural actions can achieve effects
+      that no mundane action can match, and no countermeasure exists, the subsystem overreaches.
+
+  - id: risky-standard-rut
+    name: "Risky/Standard Default Rut"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When the table defaults to risky position, standard effect for nearly every action
+      because it is the "normal" option, the position/effect system stops functioning.
+      Controlled and desperate positions create different fiction and different risk profiles.
+      A game stuck in risky/standard is playing a simpler, less interesting version of itself.
+    detection: |
+      Check if the game provides clear criteria for when position should be controlled vs.
+      desperate. If controlled is described only as "no risk" (rare in criminal fiction) and
+      desperate only as "life or death" (too extreme for routine actions), everything defaults
+      to risky.
+
+  - id: ritual-crafting-complexity
+    name: "Ritual/Crafting Complexity Overload"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Ritual or crafting subsystems that require minimum quality ratings, special components,
+      multi-step clocks, and unique resolution mechanics add complexity that only one player
+      at the table uses. If the subsystem is more complex than the core resolution, it slows
+      down play disproportionately.
+    detection: |
+      Check for crafting, ritual, or invention mechanics. If these mechanics have their own
+      resolution system (different from standard action rolls), require components tracked
+      separately, and involve multi-step processes, check if only one playbook or character
+      type uses them. High complexity plus low frequency is a red flag.
+
+  # --- ADDITIONAL SOCIAL ---
+
+  - id: crew-type-identity-blur
+    name: "Crew Type Identity Blur"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      Crew types (Assassins, Bravos, Hawkers, Shadows, Smugglers) should create distinct
+      play experiences: different score types, different contacts, different advancement paths.
+      When crew type primarily affects starting upgrades and has no bearing on what scores
+      the crew runs, the distinction is cosmetic.
+    detection: |
+      Check crew type entities. If different crew types share the same score mechanics, contact
+      networks, and advancement paths with only starting upgrade differences, identity is
+      blurred. Check if crew type affects engagement roll, available score types, or faction
+      relationships.
+
+  - id: betrayal-mechanics-absence
+    name: "Betrayal Mechanics Absence"
+    category: social
+    severity: low
+    tradition_specific: true
+    description: |
+      FitD settings are often about criminals, outlaws, or morally ambiguous groups. Betrayal
+      is genre-appropriate fiction. But if the game has no mechanical framework for intra-crew
+      betrayal (how does the GM adjudicate a player selling out the crew?), the fiction either
+      cannot go there or must be handled entirely through fiat.
+    detection: |
+      Check for PvP, betrayal, or intra-crew conflict mechanics. If the game's fiction
+      implies the possibility of betrayal (criminal setting, competing personal goals) but
+      provides no resolution framework, the mechanic is missing.
+
+  # --- ADDITIONAL PACING ---
+
+  - id: downtime-project-visibility
+    name: "Downtime Project Visibility"
+    category: pacing
+    severity: low
+    tradition_specific: true
+    description: |
+      Long-term projects tracked on clocks during downtime should have visible progress.
+      If the only feedback is "you ticked one segment of an 8-clock," progress feels
+      glacial and abstract. Good project design includes milestones, partial results, and
+      narrative touchpoints at intermediate clock positions.
+    detection: |
+      Check for long-term project mechanics. If projects only produce results on clock
+      completion (no intermediate effects), progress feels invisible for multi-session
+      projects. Check if any guidance suggests narrative developments at partial completion.
+
+  - id: score-variety-constraint
+    name: "Score Type Variety Constraint"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      If the game defines score types (assault, deception, stealth, social, transport, occult)
+      but the mechanical differences between types are minimal (different engagement roll
+      modifiers), scores feel samey. Each score type should create a distinct play experience
+      with different obstacle types, clock structures, and consequence profiles.
+    detection: |
+      Check score type or plan type mechanics. If all score types use the same obstacle
+      resolution, consequence tables, and pacing structures with only the engagement roll
+      varying, variety is constrained.
+
+  # --- ADDITIONAL RESOURCES ---
+
+  - id: playbook-xp-trigger-imbalance
+    name: "Playbook XP Trigger Imbalance"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Each playbook has an XP trigger (earn XP when you address a challenge with violence,
+      deception, tracking, etc.). If some triggers fire every score (violence is always
+      relevant) and others fire rarely (technical expertise is situational), advancement
+      rates diverge and slower-advancing characters fall behind.
+    detection: |
+      Compare playbook XP triggers. Estimate how often each trigger fires per score. If the
+      most-frequent trigger fires 3x or more often than the least-frequent, advancement
+      rates will diverge significantly over a campaign.
+
+  - id: crew-xp-trigger-passivity
+    name: "Crew XP Trigger Passivity"
+    category: resources
+    severity: low
+    tradition_specific: true
+    description: |
+      Crew XP triggers that fire automatically (you completed a score: mark XP) provide no
+      incentive to play a certain way. Good XP triggers reward specific crew behaviors: "did
+      you acquire new territory?" or "did you complete a score above your tier?" Automatic
+      triggers are XP without motivation.
+    detection: |
+      Check crew XP trigger mechanics. If XP is automatic per score completion with no
+      behavioral component, the trigger provides no incentive. Check if crew XP triggers
+      encourage risk-taking, ambition, or thematic play.
