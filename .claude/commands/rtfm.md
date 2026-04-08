@@ -1,1 +1,0 @@
-../../.loa/.claude/commands/rtfm.md

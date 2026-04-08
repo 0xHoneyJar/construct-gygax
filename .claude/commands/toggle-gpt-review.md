@@ -1,1 +1,0 @@
-../../.loa/.claude/commands/toggle-gpt-review.md

@@ -1,1 +1,0 @@
-../../.loa/.claude/commands/update-loa.md

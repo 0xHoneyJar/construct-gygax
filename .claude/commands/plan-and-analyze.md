@@ -1,1 +1,0 @@
-../../.loa/.claude/commands/plan-and-analyze.md

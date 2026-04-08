@@ -1,1 +1,0 @@
-../../.loa/.claude/commands/permission-audit.md

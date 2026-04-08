@@ -1,0 +1,13 @@
+# Loa framework — development tooling, not part of the construct
+.claude/
+.loa/
+.loa-state/
+.loa.config.yaml
+.gitmodules
+.beads/
+.run/
+.claude.backup.*
+
+# Loa state files — local to developer
+grimoires/loa/
+.loa-version.json
