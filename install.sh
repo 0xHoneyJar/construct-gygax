@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# Gygax — standalone installer for Claude Code (no Loa required)
+# Usage: curl -fsSL https://raw.githubusercontent.com/0xHoneyJar/construct-gygax/main/install.sh | bash
+set -euo pipefail
+
+REPO="0xHoneyJar/construct-gygax"
+BRANCH="main"
+BASE_URL="https://raw.githubusercontent.com/$REPO/$BRANCH"
+
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+log() { echo -e "${GREEN}[gygax]${NC} $*"; }
+warn() { echo -e "${YELLOW}[gygax]${NC} $*"; }
+
+# Check if we're in a project directory
+if [[ ! -d ".git" ]] && [[ ! -f "CLAUDE.md" ]] && [[ ! -d ".claude" ]]; then
+  warn "No project detected (no .git, CLAUDE.md, or .claude/)."
+  warn "Run this from your project root."
+  exit 1
+fi
+
+log "Installing Gygax into $(basename "$(pwd)")..."
+
+# Create .claude/skills directories
+SKILLS=(attune homebrew augury cabal lore gygax-status)
+for skill in "${SKILLS[@]}"; do
+  mkdir -p ".claude/skills/$skill"
+done
+
+# Download skill files
+log "Downloading skills..."
+for skill in "${SKILLS[@]}"; do
+  curl -fsSL "$BASE_URL/skills/$skill/SKILL.md" -o ".claude/skills/$skill/SKILL.md"
+  curl -fsSL "$BASE_URL/skills/$skill/index.yaml" -o ".claude/skills/$skill/index.yaml"
+done
+
+# Download skill resources
+log "Downloading resources..."
+mkdir -p ".claude/skills/attune/resources"
+curl -fsSL "$BASE_URL/skills/attune/resources/game-state-schema.md" -o ".claude/skills/attune/resources/game-state-schema.md"
+
+mkdir -p ".claude/skills/cabal/resources"
+curl -fsSL "$BASE_URL/skills/cabal/resources/archetypes.yaml" -o ".claude/skills/cabal/resources/archetypes.yaml"
+
+mkdir -p ".claude/skills/lore/resources"
+for tradition in d20 pbta fitd osr; do
+  curl -fsSL "$BASE_URL/skills/lore/resources/$tradition.yaml" -o ".claude/skills/lore/resources/$tradition.yaml"
+done
+
+# Download identity files
+log "Downloading identity..."
+mkdir -p ".claude/gygax"
+curl -fsSL "$BASE_URL/identity/persona.yaml" -o ".claude/gygax/persona.yaml"
+curl -fsSL "$BASE_URL/identity/expertise.yaml" -o ".claude/gygax/expertise.yaml"
+curl -fsSL "$BASE_URL/CLAUDE.md" -o ".claude/gygax/CLAUDE.md"
+
+# Create grimoire structure
+log "Creating grimoire structure..."
+mkdir -p grimoires/gygax/game-state/{stats,resources,mechanics,progression,entities,tensions}
+mkdir -p grimoires/gygax/{designs,balance-reports,playtest-reports,changelog}
+
+# Append Gygax identity to project CLAUDE.md if not already present
+if [[ -f "CLAUDE.md" ]]; then
+  if ! grep -q "gygax/CLAUDE.md" CLAUDE.md 2>/dev/null; then
+    echo "" >> CLAUDE.md
+    echo "@.claude/gygax/CLAUDE.md" >> CLAUDE.md
+    log "Added Gygax identity to CLAUDE.md"
+  else
+    log "Gygax identity already in CLAUDE.md"
+  fi
+else
+  echo "@.claude/gygax/CLAUDE.md" > CLAUDE.md
+  log "Created CLAUDE.md with Gygax identity"
+fi
+
+log ""
+log "Gygax installed."
+log ""
+log "Commands available:"
+log "  /attune    — Point at your game (doc, repo, or describe it)"
+log "  /homebrew  — Design or refine a mechanic"
+log "  /augury    — Run the numbers"
+log "  /cabal     — Stress-test with simulated players"
+log "  /lore      — TTRPG design heuristics"
+log "  /gygax     — Status overview"
+log ""
+log "Start with: /attune"

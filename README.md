@@ -31,11 +31,23 @@ Gygax shortens that loop to minutes. Not by replacing playtesting — by catchin
 
 ## Quick Start
 
-```
-/attune docs/my-rulebook.md
+**Claude Code** (one-liner):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/0xHoneyJar/construct-gygax/main/install.sh | bash
 ```
 
-Or just `/attune` with no arguments, and Gygax will interview you about your game.
+Run from your project root. Installs skills into `.claude/skills/`, creates grimoire structure, wires up identity. Then:
+
+```
+/attune
+```
+
+**With [Loa](https://github.com/0xHoneyJar/loa)**:
+
+```
+constructs install gygax
+```
 
 ## The Cabal
 
