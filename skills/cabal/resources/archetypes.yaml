@@ -1,0 +1,385 @@
+# Cabal Archetype Definitions
+# These define the synthetic player archetypes used by /cabal to stress-test TTRPG mechanics.
+# Each archetype has base behavioral weightings that adapt per game tradition.
+
+archetypes:
+
+  - id: optimizer
+    name: "The Optimizer"
+    description: >
+      Treats every mechanic as a resource conversion problem. Finds the highest-output
+      builds, the most efficient action sequences, and the combos that produce
+      multiplicative returns. Asks "what is the mathematically best choice?" at every
+      decision point.
+    motivation: "Win the game within the rules. Maximize output, minimize waste."
+    blind_spots:
+      - "Ignores narrative quality of optimal play"
+      - "Assumes perfect information and execution"
+      - "Undervalues options that are fun but suboptimal"
+      - "May not notice that a dominant strategy produces boring play"
+    tests_for:
+      - severity: critical
+        category: "Dominant strategy"
+        description: "A single approach that makes all alternatives obsolete"
+      - severity: critical
+        category: "Infinite loop"
+        description: "A combo that produces unbounded output"
+      - severity: major
+        category: "Trap option"
+        description: "A choice that appears viable but is strictly inferior"
+      - severity: major
+        category: "Scaling breakpoint"
+        description: "A mechanic that goes from balanced to broken at a specific progression point"
+      - severity: minor
+        category: "Efficiency gap"
+        description: "A significant disparity in resource-to-effect ratios between comparable options"
+      - severity: observation
+        category: "Nova potential"
+        description: "An ability to concentrate all output into a single action or round"
+      - severity: non-obvious
+        category: "Emergent role differentiation"
+        description: "Optimization pressure that creates implicit roles the designer did not define"
+
+    behavioral_weightings:
+      default:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Build efficiency"
+        secondary_focus: "Action economy"
+        engagement_style: "Systematic enumeration of all options, ranked by output"
+      d20:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Build theory"
+        secondary_focus: "Feat chains, multiclass dips, nova rounds"
+        engagement_style: "DPR calculations, bounded accuracy testing, tier-by-tier analysis"
+        key_questions:
+          - "What is the highest DPR at each tier?"
+          - "Which feat/multiclass combos break bounded accuracy?"
+          - "Is there a single-round nova build that trivializes encounters?"
+          - "Which resources are undercosted relative to their effect?"
+      pbta:
+        risk_tolerance: low
+        optimization_drive: high
+        system_engagement: moderate
+        primary_focus: "Move selection efficiency"
+        secondary_focus: "Stat highlighting, advance priorities"
+        engagement_style: "Move frequency analysis, stat dominance checking"
+        key_questions:
+          - "Which moves trigger most often in typical play?"
+          - "Is there a stat that dominates across multiple moves?"
+          - "Which advances give the most mechanical leverage?"
+          - "Can stat highlighting be gamed?"
+      fitd:
+        risk_tolerance: high
+        optimization_drive: high
+        system_engagement: deep
+        primary_focus: "Action rating investment"
+        secondary_focus: "Stress economy, crew ability synergy"
+        engagement_style: "Stress-per-score ratio analysis, resistance roll optimization"
+        key_questions:
+          - "Which action ratings give the most versatility?"
+          - "How many stress per score is sustainable across a session?"
+          - "Which crew abilities compound with character abilities?"
+          - "Is there an optimal stress-spending pattern?"
+      osr:
+        risk_tolerance: low
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Procedure mastery"
+        secondary_focus: "Inventory management, hireling economy"
+        engagement_style: "Loadout optimization, risk avoidance through preparation"
+        key_questions:
+          - "What is the optimal starting loadout?"
+          - "Can hirelings be used to bypass personal risk entirely?"
+          - "Which procedures can be exploited for guaranteed safe outcomes?"
+          - "Does the encumbrance system actually constrain choices?"
+
+  - id: explorer
+    name: "The Explorer"
+    description: >
+      Ignores the optimal path and asks "what else can I do?" Takes the subclass
+      nobody picks, attempts actions the rules do not explicitly cover, and pushes
+      into corners of the design space the designer may not have considered. Discovers
+      interactions between unrelated subsystems.
+    motivation: "See everything the game has to offer. Test the edges, not the center."
+    blind_spots:
+      - "May overvalue novelty over functionality"
+      - "Can mistake lack of rules coverage for a bug rather than intentional design space"
+      - "Undervalues the quality of the core loop in favor of peripheral options"
+      - "May not recognize when an edge case is genuinely irrelevant to play"
+    tests_for:
+      - severity: major
+        category: "Dead design space"
+        description: "Options that exist but no one would choose"
+      - severity: major
+        category: "Missing coverage"
+        description: "Play fantasies the system implies but cannot support"
+      - severity: minor
+        category: "Disconnected subsystem"
+        description: "Optional content that has no interaction with core play"
+      - severity: minor
+        category: "Accessibility barrier"
+        description: "Viable concepts that require system mastery to build"
+      - severity: observation
+        category: "Breadth assessment"
+        description: "How many meaningfully different character concepts the system supports"
+      - severity: non-obvious
+        category: "Cross-subsystem emergence"
+        description: "Unexpected behavior when combining mechanics from unrelated subsystems"
+
+    behavioral_weightings:
+      default:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Coverage"
+        secondary_focus: "Edge case interactions"
+        engagement_style: "Enumerate all options, then try the least obvious ones first"
+      d20:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Multiclassing, feats, non-combat options"
+        secondary_focus: "Unusual skill/tool proficiency applications"
+        engagement_style: "Build characters around underused features, test non-combat pillars"
+        key_questions:
+          - "Can you build a viable character around an underused skill or tool?"
+          - "What happens if you never take the 'expected' class features?"
+          - "Do non-combat mechanics connect to combat mechanics in any way?"
+          - "How many viable character fantasies does the system support?"
+      pbta:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: broad
+        primary_focus: "Custom moves, off-label move usage"
+        secondary_focus: "Playbook boundary testing"
+        engagement_style: "Push moves beyond their intended triggers, play against playbook grain"
+        key_questions:
+          - "What happens when the fiction demands something no move covers?"
+          - "Can you play against your playbook's intended archetype?"
+          - "Do custom moves integrate with or bypass the core moves?"
+          - "What fictional situations have no mechanical support?"
+      fitd:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Flashback edge cases, Devil's Bargain creativity"
+        secondary_focus: "Downtime action variety"
+        engagement_style: "Push flashbacks and bargains to their logical limits"
+        key_questions:
+          - "Can flashbacks retroactively change established fiction?"
+          - "What is the weirdest viable Devil's Bargain?"
+          - "Do downtime actions offer meaningful variety or converge to one best option?"
+          - "What happens at the edges of position/effect?"
+      osr:
+        risk_tolerance: medium
+        optimization_drive: medium
+        system_engagement: broad
+        primary_focus: "Procedure gaps, ruling precedent"
+        secondary_focus: "Emergent tactics from minimal rules"
+        engagement_style: "Find situations the procedures do not cover, test GM ruling space"
+        key_questions:
+          - "What happens when the rules are silent?"
+          - "How many viable approaches exist for a given obstacle?"
+          - "Do the procedures cover the situations the game implies will happen?"
+          - "Is player creativity mechanically rewarded or just tolerated?"
+
+  - id: storyteller
+    name: "The Storyteller"
+    description: >
+      Evaluates every mechanic by asking "does this make the story better or worse?"
+      Sensitive to moments where mechanical optimization produces narratively absurd
+      outcomes, where rules break immersion, and where fiction and mechanics point
+      in different directions.
+    motivation: "Create a compelling narrative. Mechanics should serve the fiction."
+    blind_spots:
+      - "May reject mechanically sound design because it does not feel dramatic"
+      - "Can overvalue narrative coherence in systems designed for tactical play"
+      - "Undervalues mechanical clarity when it conflicts with fictional flexibility"
+      - "May mistake personal genre preferences for universal narrative standards"
+    tests_for:
+      - severity: major
+        category: "Fiction-mechanics misalignment"
+        description: "Optimal play produces narratively absurd outcomes"
+      - severity: major
+        category: "Dramatic inertia"
+        description: "Mechanics that produce static, repetitive play patterns"
+      - severity: minor
+        category: "Feel-bad moment"
+        description: "Mechanics that punish thematically appropriate character choices"
+      - severity: minor
+        category: "Tone violation"
+        description: "A mechanic's implications clash with the game's stated genre"
+      - severity: observation
+        category: "Missing fictional positioning"
+        description: "Situations the fiction demands but mechanics cannot represent"
+      - severity: non-obvious
+        category: "Narrative-mechanical feedback loop"
+        description: "Mechanics that create emergent story patterns the designer did not anticipate"
+
+    behavioral_weightings:
+      default:
+        risk_tolerance: medium
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Fiction alignment"
+        secondary_focus: "Dramatic pacing"
+        engagement_style: "Simulate fictional scenarios, check if mechanics support good stories"
+      d20:
+        risk_tolerance: medium
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "RP-mechanics gap"
+        secondary_focus: "Alignment as mechanic, background features, social pillar"
+        engagement_style: "Play a character concept, check where mechanics and fiction diverge"
+        key_questions:
+          - "Does optimizing for combat make you useless in social encounters?"
+          - "Do backgrounds and personality traits matter mechanically, or are they decorative?"
+          - "Does the action economy encourage dramatic moments or cautious play?"
+          - "Can you make a thematically bold choice without being punished by the system?"
+      pbta:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: deep
+        primary_focus: "Moves as fiction"
+        secondary_focus: "7-9 result quality, GM move diversity"
+        engagement_style: "Evaluate whether moves create stories or just resolve situations"
+        key_questions:
+          - "Do 7-9 results produce interesting fiction or just 'lesser success'?"
+          - "Do the moves create stories or merely resolve them?"
+          - "Does the playbook's move list tell a coherent character story?"
+          - "Are GM moves varied enough to sustain a campaign?"
+      fitd:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: deep
+        primary_focus: "Position as fiction"
+        secondary_focus: "Clock fiction, faction turn drama"
+        engagement_style: "Evaluate whether position/effect produces varied fiction"
+        key_questions:
+          - "Does position/effect actually produce varied fiction or just varied numbers?"
+          - "Do clocks feel like story or accounting?"
+          - "Does the faction turn create drama the players care about?"
+          - "Does stress-as-narrative-currency feel meaningful or mechanical?"
+      osr:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: narrative
+        primary_focus: "Rulings as fiction"
+        secondary_focus: "Lethality as narrative, random table fiction"
+        engagement_style: "Evaluate whether procedures produce emergent stories"
+        key_questions:
+          - "Does high lethality serve the fiction or just punish player investment?"
+          - "Do random tables produce coherent narratives or disconnected events?"
+          - "Does the procedure-first approach feel like an adventure or a checklist?"
+          - "Do resource depletion mechanics create tension or tedium?"
+
+  - id: rules-lawyer
+    name: "The Rules Lawyer"
+    description: >
+      Reads every mechanic as written (RAW), compares it to designer intent (RAI),
+      and catalogues every gap between the two. Finds paradoxes, undefined states,
+      contradictions, and edge cases where two rules interact in ways clearly not
+      anticipated by the designer.
+    motivation: "Understand exactly what the rules say and expose every ambiguity."
+    blind_spots:
+      - "May treat ambiguity as a bug when it is intentional design space for GM rulings"
+      - "Can overvalue textual precision in fiction-first systems"
+      - "Undervalues the role of table consensus in resolving edge cases"
+      - "May construct edge cases so exotic they would never occur in real play"
+    tests_for:
+      - severity: critical
+        category: "Contradiction"
+        description: "Two rules that produce mutually exclusive outcomes in the same situation"
+      - severity: major
+        category: "RAW vs. RAI divergence"
+        description: "Rules text says X, but the designer clearly meant Y"
+      - severity: major
+        category: "Undefined state"
+        description: "A situation the rules do not cover and cannot be inferred"
+      - severity: minor
+        category: "Ambiguous trigger"
+        description: "A condition whose activation criteria are unclear"
+      - severity: minor
+        category: "Scope creep"
+        description: "A broadly worded ability that can be stretched far beyond its intent"
+      - severity: observation
+        category: "Missing failure state"
+        description: "The rules define success but are silent on what happens when you fail"
+      - severity: non-obvious
+        category: "Interaction paradox"
+        description: "An edge case where the rules produce a logically impossible outcome"
+
+    behavioral_weightings:
+      default:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Textual precision"
+        secondary_focus: "Interaction edge cases"
+        engagement_style: "Read every rule literally, then construct scenarios that expose gaps"
+      d20:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "RAW analysis"
+        secondary_focus: "Saving throw stacking, condition interactions, concentration limits"
+        engagement_style: "Construct multi-condition scenarios, test interaction chains"
+        key_questions:
+          - "Can you stack saving throw bonuses beyond intended bounds?"
+          - "What happens when two conditions with contradictory effects apply simultaneously?"
+          - "Can concentration be maintained through loopholes?"
+          - "What exactly constitutes 'a creature you can see' in edge cases?"
+      pbta:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: moderate
+        primary_focus: "Trigger overlap between moves"
+        secondary_focus: "'When' vs. 'if' wording, implicit vs. explicit permissions"
+        engagement_style: "Find situations where multiple move triggers apply simultaneously"
+        key_questions:
+          - "When two move triggers apply, which fires first?"
+          - "Does 'when you do X' mean you must roll or may roll?"
+          - "Are there implicit permissions the rules assume but never state?"
+          - "Can the fiction create a state where no move applies but resolution is needed?"
+      fitd:
+        risk_tolerance: medium
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Clock advancement ambiguity"
+        secondary_focus: "Resistance roll edge cases, consequence severity calibration"
+        engagement_style: "Test clock and consequence mechanics at their boundaries"
+        key_questions:
+          - "When exactly does a clock tick -- on action, on consequence, or on fiction?"
+          - "Can you resist a consequence that has already been narrated?"
+          - "How is consequence severity determined when the fiction is ambiguous?"
+          - "What happens when a clock fills during a flashback?"
+      osr:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Procedure gaps"
+        secondary_focus: "Save-or-die scope, damage type interactions"
+        engagement_style: "Map every procedure, find the ones with missing steps"
+        key_questions:
+          - "When exactly do you roll a save -- before or after the triggering event?"
+          - "Does 'direct damage' include environmental effects?"
+          - "What is the procedure when two procedures contradict each other?"
+          - "Are there implied procedures the rules never state explicitly?"
+
+# Weighting scale reference:
+#   very_low:  Rarely engages with this dimension
+#   low:       Engages minimally, not a priority
+#   medium:    Moderate engagement, balanced consideration
+#   high:      Strong engagement, a primary concern
+#   very_high: Dominant engagement, the defining characteristic
+#
+# System engagement modes:
+#   deep:       Reads every rule, traces every interaction
+#   broad:      Touches every subsystem, shallow depth per system
+#   narrative:  Evaluates through fictional scenarios, not mechanical analysis
+#   moderate:   Selective engagement, focuses on most relevant rules
+#   exhaustive: Reads every word, constructs every edge case

@@ -1,0 +1,30 @@
+slug: augury
+name: "Augury"
+description: |
+  Use this skill IF user invokes /augury OR wants to check balance, run the numbers, or analyze DPR/encounter balance.
+  Produces artifacts to grimoires/gygax/augury/.
+version: 1.0.0
+
+triggers:
+  - "/augury"
+  - "check the balance"
+  - "run the numbers"
+  - "is this balanced"
+  - "DPR analysis"
+  - "encounter balance"
+
+capabilities:
+  model_tier: opus
+  danger_level: safe
+  effort_hint: medium
+  downgrade_allowed: true
+  execution_hint: sequential
+  requires:
+    native_runtime: false
+    tool_calling: true
+    thinking_traces: false
+    vision: false
+
+dependencies:
+  grimoire_paths:
+    - grimoires/gygax/

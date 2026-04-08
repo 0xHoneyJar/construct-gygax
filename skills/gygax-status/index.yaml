@@ -1,0 +1,28 @@
+slug: gygax-status
+name: "Gygax Status"
+description: |
+  Use this skill IF user invokes /gygax OR asks for status, current state, or where they are.
+  Produces artifacts to grimoires/gygax/.
+version: 1.0.0
+
+triggers:
+  - "/gygax"
+  - "what's the status"
+  - "where am I"
+  - "game state summary"
+
+capabilities:
+  model_tier: haiku
+  danger_level: safe
+  effort_hint: small
+  downgrade_allowed: true
+  execution_hint: sequential
+  requires:
+    native_runtime: false
+    tool_calling: true
+    thinking_traces: false
+    vision: false
+
+dependencies:
+  grimoire_paths:
+    - grimoires/gygax/

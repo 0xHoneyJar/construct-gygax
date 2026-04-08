@@ -1,0 +1,912 @@
+tradition: d20
+name: "d20 System Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for d20-family systems (D&D, Pathfinder, 13th Age, Level Up A5E, etc.).
+  Distilled from decades of play, theorycraft, and published errata across editions.
+
+heuristics:
+  # --- MATH ---
+
+  - id: bounded-accuracy-violation
+    name: "Bounded Accuracy Violation"
+    category: math
+    severity: critical
+    tradition_specific: true
+    description: |
+      Bounded accuracy assumes attack bonuses and ACs scale slowly (+1 to +6 over 20 levels)
+      so that lower-level threats remain relevant. When a mechanic grants large flat bonuses that
+      stack, it breaks this contract -- high-level characters become unhittable and low-level
+      threats become irrelevant.
+    detection: |
+      Look for mechanics or entities that grant flat bonuses to attack, AC, save DCs, or saving
+      throws exceeding +3 at any single level. Check for stacking conditions where multiple
+      small bonuses combine to exceed bounded accuracy range. Check stat blocks where AC or
+      attack bonus outpaces the expected proficiency + ability modifier progression.
+
+  - id: to-hit-floor-ceiling
+    name: "Hit Probability Floor/Ceiling Collapse"
+    category: math
+    severity: high
+    tradition_specific: true
+    description: |
+      When hit probability drops below 30% or rises above 85% outside of natural 1/20 rules,
+      combat becomes either frustrating (constant misses) or trivial (no tension). The d20's
+      flat distribution means every +1 is exactly 5% -- small bonuses have outsized impact.
+    detection: |
+      Calculate hit probability for attack mechanics against target ACs at key progression
+      points (levels 1, 5, 11, 17). If probability is below 0.30 or above 0.85 at any tier,
+      the floor/ceiling is collapsed. Check both PC-vs-monster and monster-vs-PC.
+
+  - id: save-dc-scaling-divergence
+    name: "Save DC Scaling Divergence"
+    category: math
+    severity: high
+    tradition_specific: true
+    description: |
+      Save DCs and saving throw bonuses must scale in rough parallel. If DCs outpace saves,
+      save-or-suck effects become unavoidable. If saves outpace DCs, save-based abilities
+      become worthless at higher levels. This divergence often emerges at tier 3-4 play.
+    detection: |
+      Compare save DC formulas against saving throw bonus progression at levels 1, 5, 11, 17.
+      If the difference (DC - save bonus) changes by more than 4 across the full progression,
+      scaling has diverged. Also check if any class gets proficiency in all strong saves.
+
+  - id: damage-type-irrelevance
+    name: "Damage Type Irrelevance"
+    category: math
+    severity: low
+    tradition_specific: true
+    description: |
+      If resistances, vulnerabilities, and immunities are rare or irrelevant, damage types
+      become flavor text. This removes a layer of tactical decision-making and makes weapon
+      and spell choice purely about raw numbers.
+    detection: |
+      Check entity stat blocks for resistances, vulnerabilities, and immunities. If fewer
+      than 20% of monsters have any damage interaction, or if the most common damage types
+      (slashing, piercing, bludgeoning) are never resisted, damage types are mechanically inert.
+
+  - id: modifier-stacking-exploit
+    name: "Modifier Stacking Exploit"
+    category: math
+    severity: high
+    tradition_specific: true
+    description: |
+      Without clear stacking rules, players combine bonuses from multiple sources to reach
+      values the system was not designed to handle. This is how you get +15 to hit at level 3.
+      3.5e and Pathfinder 1e both suffered from bonus type proliferation.
+    detection: |
+      Count distinct sources of bonuses to any single roll type (attack, save, AC, skill).
+      If more than 3 sources can apply simultaneously and no stacking limitation is defined
+      in the mechanics, stacking exploits are possible.
+
+  - id: ability-score-point-buy-trap
+    name: "Ability Score Point Buy Trap"
+    category: math
+    severity: medium
+    tradition_specific: true
+    description: |
+      When point buy costs scale non-linearly but the mechanical benefit of high scores is
+      linear, optimal play is to dump stats. When costs are linear but benefits are non-linear
+      (e.g., even scores grant no benefit in modifier systems), odd scores become traps.
+    detection: |
+      Check if stat generation uses point buy. Examine modifier formula -- if modifiers change
+      on even numbers only, odd ability scores are dead values. Check if any mechanic rewards
+      or penalizes specific odd-score thresholds.
+
+  # --- PROGRESSION ---
+
+  - id: linear-fighter-quadratic-wizard
+    name: "Linear Fighter / Quadratic Wizard"
+    category: progression
+    severity: critical
+    tradition_specific: true
+    description: |
+      The defining d20 class balance failure. Martial classes gain incremental numerical
+      improvements (extra attacks, +1 to hit) while spellcasters gain reality-warping
+      capabilities (teleportation, planar travel, wish). By tier 3, casters solve problems
+      martials cannot even participate in.
+    detection: |
+      Compare progression tables for martial vs. spellcasting classes. If caster progression
+      grants qualitatively new capabilities (new spell levels with new effect categories) while
+      martial progression grants only quantitative improvements (more damage, more HP), the
+      linear/quadratic gap is present. Check if any martial feature grants narrative agency
+      equivalent to 5th+ level spells.
+
+  - id: dead-level
+    name: "Dead Level"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      A level where a class gains no new feature, no meaningful numerical improvement, and
+      no new capability. Dead levels feel like wasted progression and are a common cause of
+      dip multiclassing -- why stay in a class through its dead levels when another class
+      offers front-loaded power?
+    detection: |
+      Examine progression tables level by level. Any level where the only gains are HP and
+      possibly a proficiency bonus increase (which all classes share) is a dead level. Levels
+      that grant only a known spell but no class feature are borderline.
+
+  - id: front-loaded-multiclass-bait
+    name: "Front-Loaded Multiclass Bait"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      When a class's best features are concentrated in levels 1-3, the optimal strategy is
+      to take a few levels and then multiclass out. This hollows out single-class identity
+      and leads to cookie-cutter 3-level dip builds. Hexblade 1 / Paladin 6 / Swords Bard X
+      is the canonical example.
+    detection: |
+      Check if more than 50% of a class's most impactful features (those with the most
+      cross-references in depends_on/affects) are gained in the first 3 levels. Check if
+      levels 4+ offer primarily passive or numerical improvements rather than new capabilities.
+
+  - id: capstone-irrelevance
+    name: "Capstone Feature Irrelevance"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      Level 20 capstone features that are underwhelming relative to the opportunity cost of
+      reaching them. If multiclassing at level 17+ offers more power than the capstone, the
+      capstone fails its design purpose of rewarding single-class commitment.
+    detection: |
+      Examine the highest-level features in progression tables. Compare their mechanical
+      impact against what a 3-level dip into another class would provide at the same total
+      character level.
+
+  - id: feat-tax
+    name: "Feat Tax"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      When a feat is required to make a playstyle viable rather than enhancing an already
+      viable playstyle, it is a tax. Great Weapon Master, Sharpshooter, Polearm Master,
+      and Crossbow Expert in 5e are classic examples -- martials must take specific feats
+      to keep up, while casters have no equivalent mandatory picks.
+    detection: |
+      Check for feats or equivalent optional progression choices that grant more than a
+      25% increase in a character's primary output metric (DPR, healing, etc.). If removing
+      the feat makes the build non-competitive with peers, it is a tax, not a choice.
+
+  - id: asi-vs-feat-false-choice
+    name: "ASI vs. Feat False Choice"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      When ability score increases and feats compete for the same slot, one option almost
+      always dominates. If the system uses bounded accuracy, ASIs that cap at 20 become
+      less valuable once the cap is reached, making feats the only real choice at high
+      levels -- and at low levels the ASI is mandatory to hit expected accuracy targets.
+    detection: |
+      Check if ASIs and feats share progression slots. Check if ability scores have a cap.
+      If the cap is reachable by mid-progression and feats are available at the same slots,
+      the choice collapses at certain level ranges.
+
+  - id: tier-3-4-collapse
+    name: "Tier 3-4 Play Collapse"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      High-level d20 play (levels 11-20) frequently collapses because: spell effects outscale
+      monster design, PC HP inflation makes attrition meaningless, teleportation eliminates
+      travel challenges, and single saving throws determine entire encounters. Most published
+      campaigns end by level 15.
+    detection: |
+      Check if any mechanic or entity scales to levels above 10. If progression tables exist
+      beyond level 10, check for: spells that bypass combat entirely, resources that never
+      deplete at that tier, or single-roll mechanics that resolve whole encounters. Check if
+      monster CR scaling keeps pace with PC power growth.
+
+  # --- RESOURCES ---
+
+  - id: rest-economy-exploit
+    name: "Rest Economy Exploit"
+    category: resources
+    severity: critical
+    tradition_specific: true
+    description: |
+      When powerful abilities recover on rest and nothing mechanically prevents resting,
+      the optimal strategy is the "five-minute adventuring day" -- nova, rest, repeat.
+      This trivializes resource management and makes long-rest-recovery abilities dominant
+      over short-rest-recovery abilities.
+    detection: |
+      Check resources for recovery triggers. If the most powerful resources recover on
+      long rest and no mechanic creates time pressure, rest urgency, or penalties for
+      frequent resting, the rest economy is exploitable. Look for random encounter tables
+      or narrative time pressure mechanics as countermeasures.
+
+  - id: short-rest-long-rest-disparity
+    name: "Short Rest / Long Rest Class Disparity"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      When some classes recover on short rests and others on long rests, the number of
+      encounters per rest determines class balance. With many encounters, short-rest classes
+      shine. With few encounters, long-rest classes dominate because they can nova every fight.
+      The adventuring day assumption is the invisible balance lever.
+    detection: |
+      Categorize resources by recovery trigger (short rest vs. long rest). If different classes
+      have fundamentally different recovery cadences, check whether the game defines an expected
+      encounter-to-rest ratio. If no such expectation is stated, this disparity is unresolved.
+
+  - id: healing-surge-invalidation
+    name: "Healing Surge Invalidation"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      If in-combat healing throughput approaches or exceeds incoming damage, combat becomes
+      a stalemate. If out-of-combat healing fully restores the party, attrition between
+      encounters is meaningless. Either extreme undermines the resource tension that makes
+      HP interesting.
+    detection: |
+      Compare healing mechanic throughput against expected incoming DPR. If healing per round
+      exceeds 50% of expected incoming damage, in-combat healing may invalidate attrition.
+      Check if out-of-combat healing restores to full with no meaningful cost.
+
+  - id: concentration-economy-bottleneck
+    name: "Concentration Economy Bottleneck"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      When the most powerful spells all require concentration, casters are limited to one
+      at a time -- which is the point. But if the concentration check is too easy to pass
+      (high Constitution saves), the limiting effect is weaker than designed. If it is too
+      hard, casters avoid concentration spells entirely.
+    detection: |
+      Check if a concentration or maintenance mechanic exists. Count how many powerful
+      mechanics require it. Check the save DC (typically 10 or half damage) against the
+      expected Constitution save bonus at various levels. If success rate exceeds 85% with
+      standard builds, the bottleneck is too loose.
+
+  - id: spell-slot-pressure-collapse
+    name: "Spell Slot Pressure Collapse"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      As casters gain more spell slots and higher-level slots, the pressure to conserve
+      resources disappears. At high levels, casters have so many slots that they never need
+      to resort to cantrips or non-spell options. The resource management game that makes
+      low-level spellcasting interesting evaporates.
+    detection: |
+      Sum total spell slots available per long rest at various levels. Estimate spell
+      consumption per encounter (assume 1-2 leveled spells per combat). If total slots
+      exceed expected encounters * 2 by a factor of 2+, slot pressure has collapsed.
+
+  - id: consumable-hoarding
+    name: "Consumable Hoarding Psychology"
+    category: resources
+    severity: medium
+    tradition_specific: false
+    description: |
+      Players hoard consumable items (potions, scrolls, wands with charges) because they
+      fear needing them later. If consumables are powerful but one-use, they are effectively
+      removed from play by player psychology. This is the "too good to use" problem.
+    detection: |
+      Check for entities with single-use or charge-based resources. If these items are
+      powerful relative to at-will options but offer no mechanical incentive to use them
+      promptly (expiration, degradation, situational bonuses), hoarding is likely.
+
+  - id: hit-die-recovery-irrelevance
+    name: "Hit Die Recovery Irrelevance"
+    category: resources
+    severity: low
+    tradition_specific: true
+    description: |
+      If hit die recovery on short rests heals too little relative to damage taken, players
+      skip short rests entirely. If it heals too much, it eliminates attrition. The hit die
+      pool is one of the subtlest resource knobs in d20 design and is often set wrong.
+    detection: |
+      Compare average hit die healing (hit die average + Con mod) against average damage
+      per encounter. If a full hit die spend heals less than one round of incoming damage,
+      the mechanic feels pointless. If it heals more than half the damage from a full encounter,
+      attrition between encounters is trivialized.
+
+  # --- PACING ---
+
+  - id: initiative-snowball
+    name: "Initiative Snowball"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Going first in initiative order provides a compounding advantage: the first-acting
+      side can remove enemies before they act, further increasing their action advantage.
+      In systems with rocket-tag damage (high damage, low HP), initiative often determines
+      the entire combat outcome.
+    detection: |
+      Check if initiative is rolled once and fixed for the entire combat. Check if first-round
+      damage (before the slower side acts) can eliminate one or more combatants. If expected
+      first-round damage exceeds the HP of the weakest target on the opposing side, initiative
+      snowball is in effect.
+
+  - id: rocket-tag
+    name: "Rocket Tag (Alpha Strike Dominance)"
+    category: pacing
+    severity: critical
+    tradition_specific: true
+    description: |
+      When damage output is so high relative to HP that combats are decided in 1-2 rounds,
+      the game becomes "whoever hits first wins." This eliminates tactical depth, resource
+      management, and the dramatic arc of combat. Common at high levels when spells and
+      multiattack outscale HP growth.
+    detection: |
+      Calculate expected first-round damage for optimized attackers against average target HP.
+      If first-round damage exceeds 50% of target HP, or if expected time-to-kill is less
+      than 2 rounds, rocket tag conditions exist. Check at multiple progression tiers.
+
+  - id: combat-length-variance
+    name: "Combat Length Variance"
+    category: pacing
+    severity: medium
+    tradition_specific: false
+    description: |
+      If some combats last 2 rounds and others last 12 rounds with no design intent behind
+      the difference, pacing is inconsistent. Long combats drag. Short combats feel pointless.
+      The variance usually comes from monster HP pools that do not match the party's DPR tier.
+    detection: |
+      Compute TTK for party vs. representative monsters at each tier. If TTK variance
+      (standard deviation across monster types) exceeds the mean TTK, combat length is
+      too unpredictable. Check if the system provides encounter design guidance that addresses
+      this.
+
+  - id: adventuring-day-assumption
+    name: "Unstated Adventuring Day Assumption"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When class balance depends on a specific number of encounters between long rests but
+      the game never states this expectation, GMs unknowingly create imbalanced play by
+      running too few or too many encounters per day. 5e's "6-8 medium encounters" assumption
+      is the canonical example.
+    detection: |
+      Check for resources that recover on long rest. Check if the game states an expected
+      number of encounters per rest cycle. If long-rest resources exist but no encounter
+      frequency guidance is provided, the adventuring day assumption is unstated.
+
+  - id: exploration-pillar-vacuum
+    name: "Exploration Pillar Vacuum"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Many d20 systems declare three pillars (combat, exploration, social) but only provide
+      robust mechanics for combat. Exploration becomes GM fiat with occasional skill checks,
+      leaving one-third of the promised game unsupported by rules.
+    detection: |
+      Count mechanics by tag. If mechanics tagged with combat-related terms outnumber
+      exploration-related mechanics by more than 5:1, the exploration pillar is mechanically
+      unsupported.
+
+  # --- MECHANICS ---
+
+  - id: save-or-die
+    name: "Save-or-Die / Save-or-Suck"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      Mechanics that reduce a target to zero agency on a single failed saving throw remove
+      the target from play. Even when death is not the outcome, effects like paralysis,
+      banishment, or polymorph effectively end a character's participation in the encounter.
+      One die roll should not negate an entire character's contribution.
+    detection: |
+      Check mechanics for resolution patterns where a single failed save results in conditions
+      like death, paralysis, petrification, banishment, domination, or polymorph. If the
+      effect has no secondary save, no duration limit, and no ally interaction to break it,
+      it is save-or-die.
+
+  - id: action-economy-imbalance
+    name: "Action Economy Imbalance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When one side of a combat has significantly more actions than the other, the side with
+      more actions almost always wins regardless of individual power levels. Summoning spells,
+      pet classes, bonus action attacks, and minion-heavy encounters all warp action economy.
+    detection: |
+      Count actions per round for a standard party vs. expected opposition. If the ratio
+      exceeds 2:1, the side with more actions has a structural advantage that individual
+      monster power cannot overcome. Check for summoning mechanics or bonus action attack
+      features that inflate action counts.
+
+  - id: bonus-action-congestion
+    name: "Bonus Action Congestion"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When too many desirable abilities compete for the bonus action slot, builds that rely
+      on bonus actions become internally competitive with themselves. This is especially
+      common for dual-wielding, certain spellcasting classes, and rogues who want to use
+      Cunning Action AND an off-hand attack.
+    detection: |
+      Count mechanics that require a bonus action for any single class or build. If more
+      than 3 meaningful options compete for the same bonus action slot, congestion exists.
+      Check if the game acknowledges this trade-off or if it appears accidental.
+
+  - id: reaction-economy-vacancy
+    name: "Reaction Economy Vacancy"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      If reaction slots exist in the action economy but most characters have nothing
+      meaningful to do with their reaction, the slot is wasted design space. Opportunity
+      attacks alone do not fill this -- many combats never trigger them.
+    detection: |
+      Count mechanics that use reactions. If fewer than 50% of classes or builds have a
+      reliable reaction option that triggers at least once per combat, the reaction economy
+      is underutilized.
+
+  - id: condition-stacking-paralysis
+    name: "Condition Stacking Paralysis"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When conditions stack (frightened + restrained + exhaustion), the combined effect
+      can be far more severe than any individual condition. If no mechanic limits condition
+      stacking or provides diminishing returns, condition-stacking strategies become dominant
+      and feel-bad for the target.
+    detection: |
+      Check for conditions or status effects in the mechanics. If three or more conditions
+      can apply simultaneously and their effects compound (e.g., disadvantage from two sources
+      does not stack but exhaustion + frightened does), stacking paralysis is possible.
+
+  - id: opportunity-attack-tax
+    name: "Opportunity Attack Tax"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Opportunity attacks punish movement, which in theory creates positional tactics. In
+      practice, they often just make combat static -- nobody moves because the tax is too
+      high. If OAs deal full attack damage with no cost to the attacker, the incentive to
+      stay put is overwhelming.
+    detection: |
+      Check if an opportunity attack or equivalent mechanic exists. Compare OA damage against
+      normal attack damage. If OA damage equals a full attack and has no resource cost, the
+      tax is high enough to discourage movement. Check if mechanics exist that allow movement
+      without provoking (Disengage, mobile feat equivalents).
+
+  - id: grapple-rules-complexity-trap
+    name: "Grapple Rules Complexity Trap"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Grappling rules are disproportionately complex relative to their frequency of use.
+      Every d20 system struggles with this. If grappling requires consulting multiple
+      subsystems, has unclear interactions with other conditions, and is rarely optimal,
+      the complexity is not justified.
+    detection: |
+      Check for grapple or restrain mechanics. Count the number of other mechanics they
+      interact with or reference. If grapple mechanics have more than 5 interactions or
+      cross-references and appear in fewer than 10% of expected combats, the complexity
+      is disproportionate.
+
+  - id: attunement-slot-scarcity
+    name: "Attunement Slot Scarcity"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      If a system limits how many magic items a character can use simultaneously (attunement
+      slots), but the game distributes more attuneable items than slots available, the
+      result is interesting choice. But if the limit is so tight that characters cannot use
+      basic expected equipment, it becomes a frustrating bottleneck.
+    detection: |
+      Check for item attunement or equip slot limits. Count available attuneable items versus
+      available slots. If the ratio exceeds 3:1, the system creates meaningful choice. If it
+      exceeds 6:1, it may create frustration as players have many unusable items.
+
+  - id: counterspell-arms-race
+    name: "Counterspell Arms Race"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When a mechanic exists to negate another character's action (counterspell, dispel,
+      interrupt), and that negation can itself be negated, the game enters an arms race
+      of reaction chains. This extends turns, creates feel-bad moments for the negated
+      player, and often favors whoever has more resources to spend on the chain.
+    detection: |
+      Check for mechanics that negate or cancel other mechanics. If the negation itself
+      can be negated (counter-counterspell), and this chain can repeat, an arms race
+      exists. Check if the game limits reaction chains per round.
+
+  # --- SOCIAL ---
+
+  - id: social-skill-override
+    name: "Social Skill Override"
+    category: social
+    severity: medium
+    tradition_specific: false
+    description: |
+      When social skill checks can override NPC behavior regardless of context -- convincing
+      a king to hand over his crown with a Persuasion check -- the social pillar breaks.
+      Skills should inform social outcomes, not replace roleplay and logic.
+    detection: |
+      Check for social mechanics. If a social mechanic's resolution can produce outcomes
+      that contradict established NPC motivations with no stated limitations on scope,
+      the social skill override problem exists. Look for DCs on social checks that do
+      not scale with the absurdity of the request.
+
+  - id: charisma-monopoly
+    name: "Charisma Monopoly"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      When one stat governs all social interaction mechanics and one class is the designated
+      "face," other party members have no mechanical avenue to participate in social
+      encounters. This creates the "sit quietly while the bard talks" problem.
+    detection: |
+      Check if all social mechanics depend on the same stat. Count how many classes or
+      builds have proficiency in social skills. If fewer than 40% of character options
+      have meaningful social mechanic access, a Charisma monopoly exists.
+
+  - id: alignment-as-mechanic
+    name: "Alignment as Mechanic"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      When alignment has mechanical consequences (detect evil, protection from evil, alignment
+      damage) but alignment itself is subjectively assigned, the mechanic creates arguments.
+      Objective moral detection in a system with subjective morality is a design contradiction.
+    detection: |
+      Check for mechanics that reference moral or ethical alignment. If any mechanic's
+      trigger or effect depends on a character's alignment, and alignment is assigned by
+      player choice rather than measured by a game system, the contradiction exists.
+
+  - id: downtime-as-afterthought
+    name: "Downtime as Afterthought"
+    category: social
+    severity: low
+    tradition_specific: false
+    description: |
+      When downtime activities exist in the rules but have no mechanical integration with
+      the main game loop, they feel bolted on. Crafting that takes 100 days when the campaign
+      moves at a pace of days, or businesses that generate trivial gold, are symptoms.
+    detection: |
+      Check for downtime mechanics. If downtime activities produce resources or benefits
+      that are trivially available through adventuring, or if the time investment is
+      incompatible with the expected campaign pacing, downtime is mechanically irrelevant.
+
+  # --- ADDITIONAL MATH ---
+
+  - id: cr-reliability-collapse
+    name: "Challenge Rating Reliability Collapse"
+    category: math
+    severity: high
+    tradition_specific: true
+    description: |
+      CR systems promise that a CR X monster is an appropriate challenge for a level X party.
+      In practice, CR calculations fail to account for: action economy, save-or-suck abilities,
+      terrain, party composition, magic items, and class synergies. CR is a guideline that
+      collapses at the extremes.
+    detection: |
+      Check if monster entities have CR values. Compare CR-implied difficulty against
+      computed TTK and party damage capacity. If the computed difficulty diverges from
+      CR by more than 2 tiers (e.g., a CR 5 monster that computes as a CR 8 threat),
+      CR is unreliable for this game's math.
+
+  - id: proficiency-bonus-universality
+    name: "Proficiency Bonus Universality Problem"
+    category: math
+    severity: medium
+    tradition_specific: true
+    description: |
+      When all classes share the same proficiency bonus progression, the only differentiator
+      is the ability modifier. This means class identity in skills, saves, and attacks rests
+      entirely on which proficiencies are granted -- and expertise effects that double
+      proficiency become disproportionately powerful.
+    detection: |
+      Check if a universal proficiency or competence bonus exists across all classes. If so,
+      check if any mechanic doubles it (expertise). If expertise exists, compare the gap
+      between an expert and a non-expert at high levels -- if the gap exceeds 6, expertise
+      is likely too strong.
+
+  # --- ADDITIONAL PROGRESSION ---
+
+  - id: subclass-timing-trap
+    name: "Subclass Timing Trap"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      When subclass selection happens at different levels for different classes (level 1
+      for some, level 3 for others), early-subclass classes have more defined identity from
+      the start while late-subclass classes feel generic at low levels. This also affects
+      multiclass dip incentives.
+    detection: |
+      Check progression tables for when subclass or archetype features appear. If timing
+      varies by more than 2 levels across classes, the inconsistency may create perception
+      issues and dip incentives.
+
+  - id: cantrip-scaling-inflation
+    name: "Cantrip Scaling Inflation"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      If at-will damage options (cantrips) scale with character level, they create a
+      baseline that martial characters must exceed to feel relevant. When cantrips deal
+      2d10+ at level 5, a martial character's basic attack must outpace that or the martial
+      feels like a worse caster.
+    detection: |
+      Check for at-will attack mechanics that scale with level. Compare their damage at each
+      tier against the basic attack damage of martial classes. If cantrip damage exceeds
+      single-attack martial damage at any tier, martial characters feel pressured.
+
+  # --- ADDITIONAL RESOURCES ---
+
+  - id: death-save-spiral
+    name: "Death Save Spiral"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Death saving throw mechanics that accumulate failure states across combats (failures
+      do not reset) create an invisible spiral where characters become more fragile over
+      the course of an adventuring day. If this is intentional, it is elegant attrition.
+      If it is accidental, it is invisible lethality.
+    detection: |
+      Check for death or dying mechanics. Do failure states reset between encounters? If
+      not, does the game acknowledge the accumulation? If death save failures persist and
+      no mechanic addresses the accumulation, the spiral may be unintentional.
+
+  - id: inspiration-evaporation
+    name: "Inspiration Evaporation"
+    category: resources
+    severity: low
+    tradition_specific: true
+    description: |
+      Meta-currency resources (inspiration, hero points, fate points) that are too rare,
+      too situational, or too weak in effect evaporate from play. GMs forget to award them,
+      players forget they have them, and the mechanic exists only on paper.
+    detection: |
+      Check for meta-currency resources. If the resource has no defined award frequency,
+      can only be spent on a narrow range of effects, and does not stack (binary on/off),
+      evaporation is likely.
+
+  # --- ADDITIONAL MECHANICS ---
+
+  - id: martial-caster-toolkit-gap
+    name: "Martial-Caster Toolkit Gap"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      Beyond raw damage numbers, casters have tools for: scouting (divination), travel
+      (teleportation), information (commune, legend lore), battlefield control (wall of force),
+      social manipulation (charm, suggestion), and utility (fabricate, creation). Martials
+      have: attacking. The toolkit gap is what makes the linear/quadratic problem feel bad.
+    detection: |
+      Catalog mechanics by category: scouting, travel, information, control, social, utility,
+      damage. If caster classes have access to 5+ categories while martial classes access 1-2
+      categories, the toolkit gap is present.
+
+  - id: surprise-round-dominance
+    name: "Surprise Round Dominance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      If surprise grants a full round of actions while the other side cannot act, surprise
+      combined with alpha-strike damage can end encounters before they begin. Stealth-based
+      builds that consistently achieve surprise become dominant.
+    detection: |
+      Check for surprise or ambush mechanics. If surprise grants a full uncontested round
+      of actions and the game has high first-round damage potential, surprise is potentially
+      encounter-ending. Check if any mechanic provides consistent surprise (reliable stealth).
+
+  - id: aoe-scaling-cliff
+    name: "AoE Scaling Cliff"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Area-of-effect abilities scale multiplicatively with the number of targets. A fireball
+      that does 28 damage hits 1 target for 28, or 6 targets for 168 total. If AoE damage
+      is balanced around single-target math, it becomes dominant against groups. If balanced
+      around group math, it is useless against bosses.
+    detection: |
+      Check for AoE mechanics. Compare single-target damage per resource spent against
+      AoE damage per resource spent. If AoE damage exceeds single-target damage by 2x or
+      more when hitting 3+ targets, AoE dominates in group encounters.
+
+  - id: magic-item-dependency-curve
+    name: "Magic Item Dependency Curve"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      If the math assumes characters will have magic items at certain levels (to overcome
+      resistances, to hit expected AC/save targets) but the game treats magic items as
+      optional or GM-discretionary, the actual play experience diverges from the designed
+      experience. Pathfinder 1e had explicit wealth-by-level; 5e pretends items are optional
+      while the math quietly assumes them.
+    detection: |
+      Check if monster stat blocks or expected DCs at high levels assume bonuses beyond
+      what base progression provides. If hitting a CR-appropriate monster's AC at level 15
+      requires a +1 or better weapon, but the game does not guarantee magic item availability,
+      there is an unstated dependency.
+
+  - id: multiclass-ability-score-gate
+    name: "Multiclass Ability Score Gate"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Multiclass ability score prerequisites are meant to prevent incoherent builds, but
+      they often fail at this while succeeding at punishing interesting ones. A 13 Strength
+      requirement to multiclass Fighter is trivial for optimizers and a barrier only for
+      creative builders who want Fighter levels for narrative reasons.
+    detection: |
+      Check for multiclass prerequisites. If prerequisites require specific ability scores,
+      check whether those scores are always the primary stat for optimized builds (making
+      the gate trivial) and a real cost only for off-meta builds.
+
+  - id: legendary-resistance-band-aid
+    name: "Legendary Resistance as Band-Aid"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Legendary Resistance (auto-succeed on a failed save, limited uses) exists because
+      the save-or-suck problem is real and would make boss fights trivial. But it is a
+      band-aid: it does not fix the underlying problem, it just delays it. When legendary
+      resistances run out, the boss is still vulnerable to the same save-or-suck.
+    detection: |
+      Check for auto-succeed mechanics on saves for powerful entities. If such a mechanic
+      exists with limited uses, check if save-or-suck effects also exist. The combination
+      indicates the save-or-suck problem was identified but patched rather than solved.
+
+  # --- ADDITIONAL PACING ---
+
+  - id: encounter-budget-invisibility
+    name: "Encounter Budget Invisibility"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      XP budgets and encounter building rules that require lookup tables, multiplication,
+      and threshold comparison are too complex for most GMs to use at the table. If the
+      encounter building system is not intuitive, GMs will eyeball it -- defeating the
+      purpose of having a system.
+    detection: |
+      Check for encounter design mechanics. If building a single encounter requires more
+      than 3 steps (choose monsters, sum XP, compare to threshold), the system is likely
+      too complex for consistent GM use.
+
+  - id: travel-montage-syndrome
+    name: "Travel Montage Syndrome"
+    category: pacing
+    severity: low
+    tradition_specific: false
+    description: |
+      When the game has travel or exploration rules but they are tedious in practice, GMs
+      skip them with "you travel for three days uneventfully." This is a sign that the
+      travel mechanics do not create interesting decisions or tension -- they create bookkeeping.
+    detection: |
+      Check for travel or overland movement mechanics. If travel mechanics involve tracking
+      supplies, random encounters, and navigation checks but do not create meaningful choices
+      (just pass/fail skill checks), montaging past them is rational.
+
+  # --- ADDITIONAL SOCIAL ---
+
+  - id: persuasion-dc-absurdity
+    name: "Persuasion DC Absurdity Scaling"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      Social skill DCs that scale linearly regardless of request absurdity lead to high-level
+      characters convincing dragons to hand over their hoards. If Persuasion DC 30 can achieve
+      anything, and level 17 characters can reliably hit DC 30, the social system breaks.
+    detection: |
+      Check for social skill mechanics with fixed DCs. If the highest achievable check
+      result can meet or exceed DCs for extreme requests, and no mechanic limits what social
+      skills can accomplish based on NPC disposition or request reasonableness, the scaling
+      is absurd.
+
+  - id: intimidation-combat-loop
+    name: "Intimidation-Combat Feedback Loop"
+    category: social
+    severity: low
+    tradition_specific: true
+    description: |
+      When Intimidation can impose the frightened condition in combat, and frightened imposes
+      mechanical penalties, Intimidation becomes a combat ability rather than a social one.
+      This is not necessarily a problem -- but if it was designed as a social skill and
+      accidentally became a combat debuff, the design intent is violated.
+    detection: |
+      Check for intimidation or fear-inducing social mechanics. If they can be used in
+      combat to impose conditions, check whether this interaction is acknowledged in the
+      design or appears to be an accidental consequence.
+
+  # --- ADDITIONAL MECHANICS ---
+
+  - id: mounted-combat-orphan
+    name: "Mounted Combat as Orphaned Subsystem"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Mounted combat rules that interact poorly with the core combat system, require special
+      handling for mount HP/actions/initiative, and rarely arise in play are orphaned
+      subsystems -- complexity that exists on paper but not at the table.
+    detection: |
+      Check for mounted combat mechanics. If mounted combat has its own rules for action
+      economy, movement, and targeting that differ from standard combat, and no class feature
+      or progression makes mounted combat a primary playstyle, it is likely orphaned.
+
+  - id: flanking-advantage-collapse
+    name: "Flanking Advantage Collapse"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When flanking grants advantage (or its equivalent), and advantage is the same benefit
+      from all sources, positioning reduces to a binary: flanking or not flanking. This
+      devalues other sources of advantage and makes positioning trivially solved.
+    detection: |
+      Check for flanking or positioning mechanics. If flanking grants the same benefit as
+      other advantage sources and those sources do not stack, flanking collapses the entire
+      advantage economy into a single positional question.
+
+  - id: cover-rules-ignorance
+    name: "Cover Rules Under-Integration"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Cover rules that exist in the combat system but are rarely adjudicated because they
+      require tracking geometry, partial cover degrees, and exceptions. Most GMs default to
+      either "you have cover or you don't" or forget cover entirely.
+    detection: |
+      Check for cover mechanics. If cover has 3+ degrees (half, three-quarters, full) and
+      requires positional adjudication in a system that does not use a grid as the default
+      play surface, cover rules will be under-applied.
+
+  - id: two-weapon-fighting-trap
+    name: "Two-Weapon Fighting Trap"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Two-weapon fighting (dual wielding) appears to offer more attacks but typically costs
+      a bonus action, prevents using a shield, and does not add ability modifier to off-hand
+      damage without a feat. The math rarely favors it over two-handed or sword-and-board.
+    detection: |
+      Check for dual-wielding or two-weapon fighting mechanics. Compare DPR of dual-wielding
+      against equivalent single-weapon styles. If dual-wielding DPR is lower AND it costs a
+      bonus action that could be used for class features, it is a trap option.
+
+  - id: underwater-combat-tax
+    name: "Environmental Combat Tax"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Special rules for underwater, aerial, or other environmental combat that impose
+      penalties on most characters but rarely come into play. When they do arise, the rules
+      are unfamiliar and slow down play.
+    detection: |
+      Check for environmental combat variant rules. If these rules impose disadvantage or
+      restrictions on standard actions and are not tied to a core gameplay loop (just
+      occasional set-piece encounters), they add complexity without proportionate value.
