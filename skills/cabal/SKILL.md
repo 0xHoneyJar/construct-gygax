@@ -39,6 +39,8 @@ Four synthetic player archetypes form the cabal. Each archetype has distinct mot
 
 Full archetype definitions with per-tradition weightings are in `skills/cabal/resources/archetypes.yaml`.
 
+**For non-traditional games**: These archetypes adapt to ANY game, not just combat-focused ones. In a journaling RPG, the Optimizer finds prompt sequences that produce the most dramatic entries. In a map-drawing game, the Explorer tries every placement rule to see what emerges. In a GMless game, the Rules Lawyer probes authority distribution for ambiguity. If an archetype genuinely cannot engage with the game (e.g., Optimizer in a game with no mechanical choices), report that explicitly — "The Optimizer has nothing to optimize, which may indicate the game lacks mechanical depth for players who want it" — that IS a finding.
+
 ### The Optimizer
 
 **Motivation:** Win the game within the rules. Maximize output, minimize waste.

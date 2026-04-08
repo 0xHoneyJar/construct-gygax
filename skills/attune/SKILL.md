@@ -70,14 +70,17 @@ Read the source material thoroughly. Do NOT skim. Read every file, every section
    - **fitd**: Action ratings, position/effect, stress/trauma, clocks, crew sheets (Blades in the Dark, Scum & Villainy)
    - **osr**: Minimal stats, high lethality, procedures over rules, reaction tables, resource depletion (Cairn, Knave, Into the Odd)
    - **freeform**: No dice or minimal resolution, fiction-first, safety tools as mechanics (Belonging Outside Belonging, Wanderhome)
-   - **custom**: Hybrid or novel system that doesn't fit neatly into one tradition
-3. **Extract raw game content.** Pull out every identifiable game element, organized by what it is:
-   - Attributes/stats/scores -- anything that defines a character numerically
-   - Resources/pools -- anything that depletes and recovers (HP, spell slots, stress, supply, etc.)
-   - Mechanics/moves/actions -- how things get resolved (rolls, triggers, costs, outcomes)
-   - Progression -- how characters change over time (levels, advances, playbook moves, milestones)
-   - Entities -- the things in the game (classes, playbooks, monsters, items, spells)
-   - Tensions -- push-pull dynamics you observe (even if the source doesn't name them explicitly)
+   - **custom**: Hybrid or novel system that doesn't fit neatly into one tradition. This includes journaling RPGs, GMless games, map-drawing games, games where you play as a landscape or a community, lyric games, or anything truly experimental. Do NOT force these into another tradition -- use `custom` and let the game tell you what it is.
+
+   **For truly novel games**: Not every entity type will apply. A journaling RPG may have only `mechanics/` (prompts) and `tensions/` (thematic). A GMless game may have no `entities/` at all. That's fine -- use only the entity types that make sense. Empty categories are better than forced ones.
+
+3. **Extract raw game content.** Pull out every identifiable game element. Use the 6 entity types as a lens, not a requirement -- if a category doesn't exist in this game, skip it:
+   - Attributes/stats/scores -- anything that defines a character numerically (if the game has characters)
+   - Resources/pools -- anything that depletes and recovers (tokens, stress, supply, prompts remaining, etc.)
+   - Mechanics/moves/actions -- how things get resolved (rolls, triggers, prompts, scene-framing rules, safety tools as mechanics, etc.)
+   - Progression -- how characters or the game state changes over time (levels, advances, seasonal shifts, relationship evolution, narrative arcs)
+   - Entities -- the things in the game (classes, playbooks, locations, prompts, oracle tables, community roles)
+   - Tensions -- push-pull dynamics you observe (even if the source doesn't name them explicitly -- every game has tensions, even if they're thematic rather than mechanical)
 4. **Track what you found and what's missing.** Make a mental inventory:
    - Which of the 6 entity types have clear source material?
    - Which are implied but not spelled out?
@@ -346,6 +349,9 @@ Different TTRPG traditions emphasize different entity types. Adjust your extract
 | fitd | resources (stress, harm), mechanics (actions, position/effect) | progression (crew advances), entities (crew sheet) | stats, tensions |
 | osr | mechanics (procedures), entities (monsters, treasure), resources (supply, torches) | stats (minimal) | progression, tensions |
 | freeform | mechanics (tokens, prompts), tensions (safety tools as mechanics) | entities (character concepts) | stats, resources, progression |
+| custom | **let the game decide** -- interview to discover which types matter | varies | varies |
+
+**Custom tradition guidance**: For games that don't fit any tradition, do NOT default to d20 patterns. Ask the user what the core loop of their game is. A journaling RPG's core loop might be "draw prompt → write → reflect." A map-drawing game's core loop might be "place feature → name it → connect it." Build entity types around what the game actually does, not what a traditional TTRPG looks like. It is completely valid for a game to have only 1-2 entity types populated.
 
 ## Handling Edge Cases
 

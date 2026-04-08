@@ -48,7 +48,7 @@ Examples:
    - `fitd.yaml` for FitD tradition
    - `osr.yaml` for OSR tradition
    - For `freeform`: load PbtA heuristics (closest applicable) and note the adaptation.
-   - For `custom`: load all tradition files whose heuristics are relevant based on the mechanics present in game-state.
+   - For `custom`: load all tradition files whose heuristics are relevant based on the mechanics present in game-state. For truly novel games (journaling, map-drawing, lyric, etc.), many heuristics will not apply — that is expected. The value is in the ones that DO match. If fewer than 3 heuristics match, say so honestly: "This game is novel enough that most tradition-specific heuristics don't apply. Here's what I can offer from structural analysis instead." Then focus on universal patterns: decision space quality, loop completeness, tension health, pacing.
 2. Parse the heuristic entries. Each heuristic has: `id`, `name`, `category`, `description`, `detection`, `severity`, and `tradition_specific`.
 3. If a scope filter was specified, discard heuristics whose `category` does not match the requested scope.
 

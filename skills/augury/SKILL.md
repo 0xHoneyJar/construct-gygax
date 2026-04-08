@@ -165,6 +165,37 @@ This analysis applies to ALL traditions, including games with no combat mechanic
 - Flag tensions where one pole has significantly more mechanical support than the other.
 - Flag tensions where the engagement frequency is so low that players may never feel the push-pull.
 
+#### 3d-ext: Structural Analysis (Novel and Minimal Systems)
+
+For games where combat math, resource economy, and traditional pacing don't apply — journaling RPGs, map-drawing games, lyric games, GMless/GMfull-less games, or anything truly experimental — use structural analysis instead. This is also valuable as a supplement for traditional games.
+
+**Decision Space:**
+- Count the number of meaningful choices available at each decision point.
+- A "meaningful choice" is one where the options lead to detectably different outcomes.
+- Flag decision points with only 1 real option (false choice) or with so many options that analysis paralysis is likely.
+- For prompt-based games: does each prompt produce genuinely different responses, or do they converge?
+
+**Information Flow:**
+- Map what information is public, private, and hidden at each stage of play.
+- Flag asymmetries: does one player/role consistently know more than others?
+- For journaling RPGs: does the oracle/prompt system provide enough variation to sustain replay?
+
+**Player Agency:**
+- Identify where players make decisions vs. where outcomes are determined by the system.
+- Flag sections where player agency is very low for extended periods.
+- For GMless games: is authority distributed evenly, or does one mechanism concentrate narrative control?
+
+**Loop Completeness:**
+- Identify the core loop (the repeating cycle of play).
+- Check: does each step in the loop have a clear exit to the next step?
+- Flag open loops (steps that don't lead anywhere) and dead ends.
+- For seasonal/chapter games: does the macro loop (across sessions) have clear progression?
+
+**Emotional Arc:**
+- Map the intended emotional trajectory (tension, release, discovery, loss).
+- Check: do mechanics support or undermine the intended emotional beats?
+- Flag mechanics that create emotions at odds with the game's stated tone.
+
 #### 3e: Scaling Analysis
 
 If progression data exists, run every applicable analysis at multiple levels/tiers.
