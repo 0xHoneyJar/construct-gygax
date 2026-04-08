@@ -41,15 +41,14 @@ Or just `/attune` with no arguments, and Gygax will interview you about your gam
 
 `/cabal` is an adversarial playtest. Four archetypes with distinct motivations interact with your design the way real players would — except they do it in minutes instead of months.
 
-**The Optimizer** finds the degenerate strategy. They multiclass Fighter 2 / Wizard X and discover that Shield + Second Wind gives permanent advantage on saves. They compute the DPR of the most abusive build possible and ask if you intended it to be 40% higher than the next best option.
+| Archetype | What They Do | Example Finding |
+|-----------|-------------|-----------------|
+| **The Optimizer** | Finds the degenerate strategy. Computes the most abusive build possible and checks if you intended it. | "Multiclassing Fighter 2 / Wizard X gives Shield + Second Wind for permanent advantage on saves. DPR is 40% higher than the next best option." |
+| **The Explorer** | Wanders off the critical path. Tries every optional system and finds the dead design space. | "Your Crafting system has a trigger condition that never arises in actual play. Three pages of rules no one will use." |
+| **The Storyteller** | Asks whether mechanics serve the fiction. Finds where narrative-focused players will feel unsupported. | "Your Bond system has no mechanical incentive to engage with it. The player who cares about story will feel like the game doesn't care about them." |
+| **The Rules Lawyer** | Reads your text literally. Finds every ambiguity, undefined state, and RAW-vs-RAI conflict. | "'One additional action on your turn' — does that include bonus actions? This WILL cause a table argument." |
 
-**The Explorer** wanders off the critical path. They try every optional system, push every edge case, and find the dead design space — the feature you spent three pages on that no one will ever use because the trigger condition never arises in actual play.
-
-**The Storyteller** asks whether your mechanics serve the fiction. They notice that your "Bond" system has no mechanical incentive to engage with it, so the narrative-focused player at your table will feel like the game doesn't care about what they care about.
-
-**The Rules Lawyer** reads your text literally. "One additional action on your turn" — does that include bonus actions? The text is ambiguous, and it WILL cause a table argument. They find every undefined state, every RAW-vs-RAI conflict, every interaction you didn't specify.
-
-After a run, Gygax remembers the results. The next time you run `/cabal`, it checks for regressions — did your fix for the Optimizer's exploit accidentally break something the Explorer was relying on?
+`/cabal` has memory. After a run, the next run checks for regressions — did your fix for the Optimizer's exploit break something the Explorer was relying on?
 
 For non-traditional games, the archetypes adapt. In a journaling RPG, the Optimizer finds prompt sequences that game the system. In a GMless game, the Rules Lawyer probes authority distribution. If an archetype genuinely can't engage with your game, that itself is a finding.
 
