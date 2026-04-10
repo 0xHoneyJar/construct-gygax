@@ -16,7 +16,8 @@ Gygax shortens that loop to minutes. Not by replacing playtesting — by catchin
 
 - **It remembers.** Gygax maintains structured game-state across sessions. When you're designing your spell system, it still knows about your stamina system. Cross-system interactions are where the real bugs hide.
 - **It does math, not vibes.** "Seems overpowered" isn't actionable. "47 DPR against a 180 HP pool gives a TTK of 3.8 seconds — below your target of 6-8" is.
-- **It argues with you.** Four simulated player archetypes actively try to break your design. The Optimizer finds the exploit. The Rules Lawyer finds the ambiguity. They do it before your real players do.
+- **It argues with you.** Nine simulated player archetypes stress-test your design from every angle — the Optimizer finds the exploit, the Newcomer can't figure out the rules, the GM is drowning in cognitive load. They do it before your real players do.
+- **It lets you explore.** Fork your game-state, try a change, see the consequences, compare alternatives. Commit the good branch, discard the rest. Design is branching, not linear.
 
 ## Commands
 
@@ -25,8 +26,9 @@ Gygax shortens that loop to minutes. Not by replacing playtesting — by catchin
 | `/attune` | Point at a source — rulebook, repo, URL, or just describe your game — and Gygax builds structured game-state |
 | `/homebrew` | Design or refine a mechanic. Gygax checks it against everything that already exists. |
 | `/augury` | Run the numbers. DPR curves, probability distributions, encounter balance, resource economy. |
-| `/cabal` | Summon four phantom players to stress-test your design. |
+| `/cabal` | Summon up to nine phantom players to stress-test your design with scenario walkthroughs. |
 | `/lore` | 210 curated design heuristics across d20, PbtA, FitD, and OSR. Pattern-match your game against known failure modes. |
+| `/scry` | Fork your game-state, explore a change, see the impact. Compare branches, commit the best one. |
 | `/gygax` | Where am I? What's in game-state? What did the last analysis find? |
 
 ## Quick Start
@@ -51,32 +53,50 @@ constructs install gygax
 
 ## The Cabal
 
-`/cabal` is an adversarial playtest. Four archetypes with distinct motivations interact with your design the way real players would — except they do it in minutes instead of months.
+`/cabal` is scenario-based playtest simulation. Nine archetypes walk through your design beat by beat — not just analyzing it from a distance, but experiencing it the way a player would. You compose the panel for each run.
 
-| Archetype | What They Do | Example Finding |
-|-----------|-------------|-----------------|
-| **The Optimizer** | Finds the degenerate strategy. Computes the most abusive build possible and checks if you intended it. | "Multiclassing Fighter 2 / Wizard X gives Shield + Second Wind for permanent advantage on saves. DPR is 40% higher than the next best option." |
-| **The Explorer** | Wanders off the critical path. Tries every optional system and finds the dead design space. | "Your Crafting system has a trigger condition that never arises in actual play. Three pages of rules no one will use." |
-| **The Storyteller** | Asks whether mechanics serve the fiction. Finds where narrative-focused players will feel unsupported. | "Your Bond system has no mechanical incentive to engage with it. The player who cares about story will feel like the game doesn't care about them." |
-| **The Rules Lawyer** | Reads your text literally. Finds every ambiguity, undefined state, and RAW-vs-RAI conflict. | "'One additional action on your turn' — does that include bonus actions? This WILL cause a table argument." |
+| Archetype | What They Do |
+|-----------|-------------|
+| **The Optimizer** | Finds the degenerate strategy. Computes the most abusive build and checks if you intended it. |
+| **The Explorer** | Wanders off the critical path. Tries every optional system and finds the dead design space. |
+| **The Storyteller** | Asks whether mechanics serve the fiction. Finds where the drama dies. |
+| **The Rules Lawyer** | Reads your text literally. Finds every ambiguity and undefined state. |
+| **The Newcomer** | Has never played a TTRPG. Finds where your game fails to teach itself. |
+| **The Chaos Agent** | Goes off-script. "I befriend the monster." Finds where no mechanic covers the action. |
+| **The GM** | Runs the game behind the screen. Finds where cognitive load explodes. |
+| **The Anxious Player** | Overwhelmed by choices. Finds where decision paralysis kills the fun. |
+| **The Veteran** | 50 sessions deep. Finds where the game stops being interesting. |
 
-`/cabal` has memory. After a run, the next run checks for regressions — did your fix for the Optimizer's exploit break something the Explorer was relying on?
+Pick your panel: `/cabal --newcomer --gm --optimizer` tests accessibility, runnability, and exploitability. `/cabal --all` throws every lens at the design. No flags? Gygax picks a context-aware default based on what you're testing.
 
-For non-traditional games, the archetypes adapt. In a journaling RPG, the Optimizer finds prompt sequences that game the system. In a GMless game, the Rules Lawyer probes authority distribution. If an archetype genuinely can't engage with your game, that itself is a finding.
+**Experience tracking.** Each archetype generates experience signals at every beat — confusion, excitement, dead time, decision paralysis, cognitive overload, mastery reward. When different archetypes have radically different experiences of the same moment (the Optimizer is thriving while the Newcomer is drowning), that's an **experience divergence** — an invisible fracture only visible by comparing across player types.
 
-## Typical Flow
+**Regression memory.** Each run checks previous reports. Did your fix for the Optimizer's exploit break something the Explorer was relying on?
 
+For non-traditional games, the archetypes adapt. In a journaling RPG, the Optimizer finds prompt sequences that game the system. If an archetype genuinely can't engage with your game, that itself is a finding.
+
+## Typical Flows
+
+**Design loop:**
 ```
 /attune  →  /homebrew  →  /augury  →  /cabal  →  iterate
+```
+
+**Explore-then-commit:**
+```
+/scry "what if threshold was 4?"  →  /scry "what if threshold was 5?"  →  /scry compare  →  /scry commit
 ```
 
 1. **Attune** to your game (ingest a doc or interview)
 2. **Homebrew** a mechanic (get cross-system consistency feedback)
 3. **Augury** the math (get specific numbers, not approximations)
 4. **Cabal** stress-test (find what players will exploit, ignore, or argue about)
-5. Fix what broke, repeat from 2
+5. **Scry** alternatives (fork, test, compare, commit the best branch)
+6. Fix what broke, repeat from 2
 
-You don't have to follow this order. `/cabal` a napkin sketch before you've done any balance work. `/lore` your half-finished system to see which known anti-patterns you're walking into. Jump in wherever.
+Every skill tells you what to do next. Augury finds a balance problem? It suggests the exact `/homebrew` invocation to fix it. Cabal finds an accessibility issue? It points you to `/homebrew` with the specific mechanic.
+
+You don't have to follow any order. `/cabal` a napkin sketch before you've done any balance work. `/scry` three alternative approaches before committing to one. Jump in wherever.
 
 ## Works With Any TTRPG
 
@@ -99,9 +119,13 @@ The goal is always the same: does this design do what you think it does?
 - **Not a replacement for real playtesting.** It supplements with structural analysis. Real players will always surprise you in ways a simulation can't.
 - **Not omniscient.** It will tell you when it doesn't know enough about a genre or tradition to have a strong opinion, rather than guessing.
 
-## v1 Scope
+## The Grimoire
 
-TTRPG-focused. Card games, video games, and broader systems design are on the v2 roadmap.
+Everything Gygax produces is saved as clean, presentable markdown in `grimoires/gygax/`. Hand someone the directory and they have the complete design journal — game-state, design documents, balance reports, playtest walkthroughs, lore scans, design branches. No conversation context needed.
+
+## Scope
+
+TTRPG-focused. Card games, video games, and broader systems design are on the roadmap.
 
 ## License
 
