@@ -378,6 +378,21 @@ When users reference well-known systems:
 - Ask ONLY about what differs: "I'll use standard 5e ability scores and saving throws as the baseline. What's different in your system?"
 - Generate game-state for the baseline AND the modifications, clearly tagging what's standard vs. custom.
 
+## Cross-Skill Chaining
+
+After attunement completes, suggest next steps based on what was built:
+
+```
+Game attuned. Suggested next steps:
+
+1. `/lore` -- check your design against known tradition anti-patterns
+2. `/augury` -- validate the numerical balance of your mechanics
+3. `/homebrew` -- start designing new mechanics with cross-system checking
+4. `/cabal --newcomer --optimizer` -- quick stress-test for accessibility and exploits
+```
+
+Tailor suggestions to what the game-state contains. If the game has combat mechanics, emphasize `/augury`. If it's narrative-first, emphasize `/lore` and `/cabal --storyteller`.
+
 ## Boundaries
 
 - Does NOT design new mechanics (use `/homebrew` for that)

@@ -29,7 +29,7 @@ You are a TTRPG systems analyst. You see games as interlocking feedback loops â€
 
 ## What You Connect To
 
-**Writes to**: `grimoires/gygax/game-state/`, `grimoires/gygax/designs/`, `grimoires/gygax/balance-reports/`, `grimoires/gygax/playtest-reports/`, `grimoires/gygax/changelog/`
+**Writes to**: `grimoires/gygax/game-state/`, `grimoires/gygax/designs/`, `grimoires/gygax/balance-reports/`, `grimoires/gygax/playtest-reports/`, `grimoires/gygax/lore-reports/`, `grimoires/gygax/forks/`, `grimoires/gygax/changelog/`
 
 **Reads from**: User-provided sources (docs, repos, URLs), `grimoires/gygax/game-state/`
 
@@ -43,7 +43,8 @@ You are a TTRPG systems analyst. You see games as interlocking feedback loops â€
 | `/attune` | Ingest a source (doc, repo, URL) or guided interview to build game-state |
 | `/homebrew` | Design or refine a mechanic with cross-system consistency checking |
 | `/augury` | Run numerical balance analysis grounded in game-state |
-| `/cabal` | Stress-test with simulated player archetypes (Optimizer, Explorer, Storyteller, Rules Lawyer) |
+| `/cabal` | Scenario-based playtest simulation with 9 player archetypes (user-composed panels) |
 | `/lore` | Apply curated TTRPG design heuristics by tradition (d20, PbtA, FitD, OSR) |
+| `/scry` | Explore design branches â€” fork game-state, test changes, compare, commit or discard |
 
 See `identity/persona.yaml` for cognitive frame and `identity/expertise.yaml` for boundaries.

@@ -13,7 +13,7 @@ Surface TTRPG design wisdom -- heuristics, common patterns, known anti-patterns,
 
 Lore is opinionated. These are not suggestions -- they are distilled failures and successes from decades of published tabletop design. When Lore flags something, it is because the pattern has a track record. You may override the wisdom, but you should know the history before you do.
 
-Lore is strictly read-only and inline. It never modifies game-state. It never writes to grimoire directories. All output is presented directly in the conversation.
+Lore is strictly read-only against game-state. It never modifies game-state. Scan results are presented inline AND persisted to `grimoires/gygax/lore-reports/` as presentable markdown.
 
 ## Trigger
 
@@ -84,7 +84,7 @@ For each heuristic in the loaded set:
 
 ### Step 5: Present Findings Organized by Severity
 
-Present all findings inline (no file writes). Organize by severity, then by category within each severity level.
+Present all findings inline. Organize by severity, then by category within each severity level.
 
 #### Output Format
 
@@ -129,6 +129,7 @@ validation or `/cabal` for adversarial stress testing."
 6. **Partial matches get honesty.** If you see indicators but cannot confirm, say "Partial match -- [what I see] suggests [pattern] but the game-state lacks [data] to confirm. Run `/attune` to add [missing data] or `/augury` to measure."
 7. **Cross-tradition findings are welcome.** If a d20 game exhibits a pattern catalogued under FitD wisdom, report it. Good design knowledge is not tradition-locked.
 8. **Do not pad.** If only 2 heuristics match, report 2. Do not stretch partial matches into findings to fill space. A clean scan is a valid and valuable result.
+9. After presenting findings inline, write the same formatted output to `grimoires/gygax/lore-reports/YYYY-MM-DD-scope-description.md`. The persisted report should be readable standalone without conversation context.
 
 ### Step 6: Offer Next Steps
 
@@ -138,6 +139,17 @@ Based on findings, suggest specific next actions:
 - If only warnings: "These are worth investigating but may be intentional. `/augury` can measure whether the numbers actually break, or `/cabal` can test whether players exploit the pattern."
 - If only info: "Nothing alarming. These are patterns to keep in mind as the design evolves. `/cabal` would tell you whether these matter in practice."
 - If no matches: "Clean scan. Your design avoids catalogued failure modes. `/augury` for math validation and `/cabal` for adversarial testing are your next best steps."
+
+### Step 7: Cross-Skill Chaining
+
+Every lore report ends with a "Recommended Next Steps" section:
+
+- Critical findings: "Address with `/homebrew {entity}`. For quantitative severity, run `/augury {entity}`."
+- Warning findings: "Validate with `/cabal {entity}` to test whether players exploit this pattern."
+- Info findings: "Monitor during next `/cabal` run. No immediate action needed."
+- No matches: "Clean scan. Consider `/augury` for math validation and `/cabal` for adversarial testing."
+
+Each recommendation includes the exact invocation command, not just the skill name.
 
 ## Tradition-Specific Scan Behavior
 
@@ -159,7 +171,7 @@ This does not mean low-priority categories are skipped -- they are still scanned
 - Does NOT simulate play (use `/cabal` for adversarial testing)
 - Does NOT ingest source material (use `/attune` for that)
 - Does NOT prescribe fixes -- identifies patterns and explains why they matter
-- Does NOT write to grimoire directories -- all output is inline in conversation
+- Writes scan results to `grimoires/gygax/lore-reports/` as presentable markdown. Also displayed inline.
 - DOES load and apply curated heuristic libraries from `skills/lore/resources/`
 - DOES cross-reference heuristics across traditions when applicable
 - DOES adapt scan depth based on the game's tradition
@@ -168,11 +180,11 @@ This does not mean low-priority categories are skipped -- they are still scanned
 
 ## Output
 
-All output is inline in the conversation. No files are written.
+Output is both inline in the conversation AND persisted to `grimoires/gygax/lore-reports/YYYY-MM-DD-scope-description.md`.
 
 | Artifact | Destination | Format |
 |----------|-------------|--------|
-| Heuristic scan results | Conversation (inline) | Structured markdown per finding |
+| Heuristic scan results | Conversation (inline) + `grimoires/gygax/lore-reports/` | Structured markdown per finding |
 
 ## Error Handling
 

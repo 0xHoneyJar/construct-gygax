@@ -229,6 +229,23 @@ Key design decisions and their justification.
 - DOES work for non-combat mechanics: social systems, exploration, downtime, crafting, faction play, narrative moves
 - DOES support mid-design pivots -- the user can change direction at any point during iteration
 
+## Cross-Skill Chaining
+
+After confirming a design, the skill suggests validation steps:
+
+```
+## Recommended Next Steps
+
+Design confirmed. To validate:
+
+1. `/augury {entity path}` — check the numerical balance of the new mechanic
+2. `/cabal --optimizer --rules-lawyer {entity path}` — stress-test for exploits and ambiguities
+3. `/lore {scope}` — check against known tradition anti-patterns
+4. `/scry "{alternative approach}"` — explore a design branch if you want to compare alternatives
+```
+
+Each recommendation includes the exact invocation command tied to the specific entity just designed.
+
 ## Output
 
 | Artifact | Path | Format |

@@ -1,0 +1,29 @@
+slug: scry
+name: "Scry"
+description: |
+  Use this skill IF user invokes /scry OR wants to explore a design change, fork the game state, compare alternatives, or ask "what if" about a mechanic.
+  Produces artifacts to grimoires/gygax/forks/.
+version: 1.0.0
+
+triggers:
+  - "/scry"
+  - "what if"
+  - "try changing"
+  - "fork the game state"
+  - "explore a design branch"
+
+capabilities:
+  model_tier: opus
+  danger_level: safe
+  effort_hint: large
+  downgrade_allowed: true
+  execution_hint: sequential
+  requires:
+    native_runtime: false
+    tool_calling: true
+    thinking_traces: false
+    vision: false
+
+dependencies:
+  grimoire_paths:
+    - grimoires/gygax/

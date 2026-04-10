@@ -96,6 +96,18 @@ archetypes:
           - "Can hirelings be used to bypass personal risk entirely?"
           - "Which procedures can be exploited for guaranteed safe outcomes?"
           - "Does the encumbrance system actually constrain choices?"
+      custom:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "System-specific efficiency"
+        secondary_focus: "Whatever resource economy the game defines"
+        engagement_style: "Identify the game's core resource loops, then find the highest-yield conversion paths"
+        key_questions:
+          - "What are the primary resources and how are they converted?"
+          - "Is there a dominant conversion path that outperforms all others?"
+          - "Does the game's unique economy have undercosted or overcosted options?"
+          - "Where do the game's own optimization pressures push player behavior?"
 
   - id: explorer
     name: "The Explorer"
@@ -186,6 +198,18 @@ archetypes:
           - "How many viable approaches exist for a given obstacle?"
           - "Do the procedures cover the situations the game implies will happen?"
           - "Is player creativity mechanically rewarded or just tolerated?"
+      custom:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Design space boundaries"
+        secondary_focus: "Interactions the designer may not have anticipated"
+        engagement_style: "Map what the game says you can do, then try everything adjacent to those boundaries"
+        key_questions:
+          - "What play fantasies does the game imply but not mechanically support?"
+          - "Where does the game's unique design space have unexplored corners?"
+          - "Do the game's subsystems interact in ways the designer did not document?"
+          - "What happens when you combine mechanics from different parts of the game?"
 
   - id: storyteller
     name: "The Storyteller"
@@ -276,6 +300,18 @@ archetypes:
           - "Do random tables produce coherent narratives or disconnected events?"
           - "Does the procedure-first approach feel like an adventure or a checklist?"
           - "Do resource depletion mechanics create tension or tedium?"
+      custom:
+        risk_tolerance: medium
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Fiction-mechanics coherence"
+        secondary_focus: "Whether the game's unique mechanics produce stories worth telling"
+        engagement_style: "Play through the game's intended fiction, check where mechanics support or undermine it"
+        key_questions:
+          - "Does the game's core mechanic produce fiction that matches its stated tone?"
+          - "Where do the game's unique mechanics create narrative moments no other system could?"
+          - "Do the game's consequences feel dramatically appropriate or arbitrary?"
+          - "Does the system reward the kind of stories it claims to be about?"
 
   - id: rules-lawyer
     name: "The Rules Lawyer"
@@ -369,6 +405,541 @@ archetypes:
           - "Does 'direct damage' include environmental effects?"
           - "What is the procedure when two procedures contradict each other?"
           - "Are there implied procedures the rules never state explicitly?"
+      custom:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Internal consistency of the game's own rules"
+        secondary_focus: "Gaps between what the rules say and what the game assumes"
+        engagement_style: "Read the game's rules as written, then systematically test every interaction for contradictions"
+        key_questions:
+          - "Does the game define all the terms it uses in its own mechanics?"
+          - "Where do two of the game's own rules produce contradictory outcomes?"
+          - "What situations does the game imply will happen but provides no rules for?"
+          - "Are the game's unique mechanics internally consistent or do they rely on unstated assumptions?"
+
+  - id: newcomer
+    name: "The Newcomer"
+    description: >
+      Has never played a TTRPG before. Brings no conventions, no vocabulary, no
+      assumptions about how "games like this" work. Every mechanic is encountered
+      fresh — if the system does not teach it, this player does not know it. Tests
+      whether the game can stand on its own text without relying on inherited
+      literacy from other systems.
+    motivation: "Learn how to play this game from scratch. Understand what I am supposed to do."
+    blind_spots:
+      - "May flag intended complexity as a problem when it is a feature"
+      - "Has no baseline for what is 'normal' in TTRPGs, so cannot distinguish innovation from convention"
+      - "May undervalue mechanics that reward system mastery over time"
+      - "Cannot tell whether a friction point is bad design or just a learning curve"
+    tests_for:
+      - severity: critical
+        category: "Onboarding failure"
+        description: "A core mechanic the player must use but the text never adequately explains"
+      - severity: major
+        category: "Jargon barrier"
+        description: "Rules that rely on TTRPG terminology without defining it"
+      - severity: major
+        category: "Hidden prerequisite"
+        description: "A system that assumes knowledge from other games, supplements, or genre conventions"
+      - severity: minor
+        category: "Decision overload"
+        description: "A moment where a new player must choose from too many options with insufficient guidance"
+      - severity: minor
+        category: "Invisible procedure"
+        description: "A step in play that experienced players do automatically but is never stated"
+      - severity: observation
+        category: "Self-teaching quality"
+        description: "How well the system teaches its own concepts through play rather than front-loaded reading"
+      - severity: non-obvious
+        category: "False familiarity"
+        description: "A term or mechanic that looks like something from common culture but works differently in this game"
+
+    behavioral_weightings:
+      default:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Comprehension"
+        secondary_focus: "First-session survivability"
+        engagement_style: "Read rules as if encountering every concept for the first time, flag anything that requires outside knowledge"
+      d20:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Character creation walkthrough"
+        secondary_focus: "Core resolution understanding, what dice to roll when"
+        engagement_style: "Attempt to build a character and play a round using only the text provided"
+        key_questions:
+          - "Can a first-time player create a character without external guidance?"
+          - "Does the game explain what to roll and when, or assume you know?"
+          - "How many pages of reading are required before you can take your first action?"
+          - "Are class and race descriptions understandable without TTRPG context?"
+      pbta:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Move comprehension"
+        secondary_focus: "What 'fiction first' actually means in practice"
+        engagement_style: "Read a playbook cold, try to understand what you are supposed to do on your turn"
+        key_questions:
+          - "Does the playbook explain what kind of character you are playing?"
+          - "Is 'the fiction triggers the move' explained or assumed?"
+          - "Can a new player distinguish between player moves and GM moves?"
+          - "What happens when a player does not know what move to use?"
+      fitd:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Action roll comprehension"
+        secondary_focus: "Understanding position and effect without prior FitD experience"
+        engagement_style: "Attempt to understand what happens when you try to do something, from the text alone"
+        key_questions:
+          - "Can a new player understand position and effect without examples from Blades?"
+          - "Is the stress economy explained or does it assume familiarity with the concept?"
+          - "Does the game explain what a score is before asking you to plan one?"
+          - "How many interconnected systems must a new player grasp before the first session?"
+      osr:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Procedure comprehension"
+        secondary_focus: "Understanding lethality expectations before encountering them"
+        engagement_style: "Read the procedures, attempt to follow them step by step without assuming anything"
+        key_questions:
+          - "Does the game explain that your character will likely die, and that this is intended?"
+          - "Are dungeon procedures explained in the order you will actually use them?"
+          - "Can a new player understand the exploration turn without prior OSR experience?"
+          - "Is there guidance on what 'player skill over character skill' means in practice?"
+      custom:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Cold-read comprehension"
+        secondary_focus: "Whether the game teaches itself or relies on TTRPG literacy"
+        engagement_style: "Approach the game with zero assumptions, evaluate whether it explains itself on its own terms"
+        key_questions:
+          - "Can someone who has never played any TTRPG understand this game's core loop from the text?"
+          - "Does the game define its own terms or borrow undefined jargon from other traditions?"
+          - "Where does the game assume you already know how TTRPGs work?"
+          - "Is there a clear 'what do I do on my turn?' answer in the text?"
+
+  - id: chaos-agent
+    name: "The Chaos Agent"
+    description: >
+      Laterally creative and cheerfully off-script. Does not break rules but bends
+      every situation toward the unexpected: befriending the monster, using a spell
+      for an unintended purpose, solving the combat encounter with a wedding proposal.
+      Tests what happens when player intent goes somewhere the designer never imagined.
+    motivation: "Do the thing nobody expected. Find out what happens when you go off the map."
+    blind_spots:
+      - "May create scenarios so unlikely they are not worth designing for"
+      - "Can mistake 'the system does not prevent this' for 'the system supports this'"
+      - "Overvalues surprise and novelty, undervalues reliability and consistency"
+      - "May not recognize when going off-script shifts all the burden to the GM"
+    tests_for:
+      - severity: major
+        category: "Graceful degradation failure"
+        description: "The system produces nonsensical or broken outcomes when used outside its intended scope"
+      - severity: major
+        category: "Missing improvisation framework"
+        description: "No guidance for resolving actions the rules do not cover"
+      - severity: minor
+        category: "Brittle encounter design"
+        description: "Encounters or scenarios that collapse if approached from an unexpected angle"
+      - severity: minor
+        category: "GM load spike"
+        description: "A situation where off-script play forces the GM to invent an entire subsystem on the spot"
+      - severity: observation
+        category: "Creative latitude"
+        description: "How much room the system gives for solutions the designer did not anticipate"
+      - severity: non-obvious
+        category: "Exploit through creativity"
+        description: "A lateral approach that is technically legal but trivializes intended challenges"
+
+    behavioral_weightings:
+      default:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: experiential
+        primary_focus: "Unexpected applications"
+        secondary_focus: "System response to the unplanned"
+        engagement_style: "For every situation, ask 'what is the weirdest thing a player could try here?' and test it"
+      d20:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: experiential
+        primary_focus: "Off-label spell and ability use"
+        secondary_focus: "Social solutions to combat encounters, environmental creativity"
+        engagement_style: "Use every ability for something other than its stated purpose, solve encounters sideways"
+        key_questions:
+          - "What happens when you cast a combat spell to solve a social problem?"
+          - "Can you resolve a combat encounter without attacking?"
+          - "Does the skill system support creative problem-solving or only predefined applications?"
+          - "What happens when a player attempts something no ability or spell covers?"
+      pbta:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Fiction that no move covers"
+        secondary_focus: "Triggering moves in unintended contexts"
+        engagement_style: "Describe actions that fall between moves, test the fiction-first promise"
+        key_questions:
+          - "What happens when the fiction demands something no move covers?"
+          - "Can you trigger a move in a context the designer clearly did not intend?"
+          - "Does the MC/GM have enough guidance to handle truly unexpected player actions?"
+          - "Do the moves constrain creative play or support it?"
+      fitd:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: experiential
+        primary_focus: "Flashback absurdity, creative action descriptions"
+        secondary_focus: "Position/effect for actions the system did not anticipate"
+        engagement_style: "Use flashbacks for increasingly implausible setups, describe actions that strain action rating categories"
+        key_questions:
+          - "Can flashbacks be used to retroactively set up something absurd but technically valid?"
+          - "What position/effect applies when the action does not fit any action rating?"
+          - "Does the Devil's Bargain framework handle genuinely weird player proposals?"
+          - "What happens when a player tries to do something during a score that has nothing to do with the score?"
+      osr:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: experiential
+        primary_focus: "Creative problem-solving beyond procedures"
+        secondary_focus: "Using dungeon features in unintended ways"
+        engagement_style: "Propose solutions the procedures do not cover, test the ruling framework"
+        key_questions:
+          - "Does the referee have enough guidance to adjudicate truly novel player actions?"
+          - "Can dungeon features, items, or environmental elements be used in unintended ways?"
+          - "What happens when the player's plan makes the prepared content irrelevant?"
+          - "Does 'rulings not rules' actually work when the ruling has major consequences?"
+      custom:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: experiential
+        primary_focus: "What breaks when players go off-script"
+        secondary_focus: "Whether the game's unique mechanics handle the unexpected"
+        engagement_style: "Take the game's core mechanics and apply them to situations the designer never described, see what happens"
+        key_questions:
+          - "Does the game's resolution system handle actions it was not designed for?"
+          - "What guidance does the GM have when players do something the game never anticipated?"
+          - "Do the game's unique mechanics constrain or enable creative play?"
+          - "Where does going off-script expose gaps in the game's own framework?"
+
+  - id: gm
+    name: "The GM"
+    description: >
+      Evaluates the game from behind the screen. Tracks cognitive load during play,
+      the weight of prep work before sessions, how much improvisation space the system
+      provides versus demands, and where the GM is most likely to get stuck, burn out,
+      or make inconsistent rulings. The only archetype that experiences every mechanic
+      simultaneously rather than one character's slice.
+    motivation: "Run this game sustainably. Know where I will struggle before I sit down at the table."
+    blind_spots:
+      - "May overvalue GM experience at the expense of player experience"
+      - "Can mistake 'hard to GM' for 'badly designed' when difficulty is the point"
+      - "May undervalue mechanics that create player-side complexity but reduce GM load"
+      - "Tends to evaluate from an experienced GM perspective, may miss new-GM pain points"
+    tests_for:
+      - severity: critical
+        category: "Unsustainable prep"
+        description: "The game requires more preparation than a typical GM can maintain session over session"
+      - severity: major
+        category: "Cognitive overload"
+        description: "Too many simultaneous systems to track during play"
+      - severity: major
+        category: "Improvisation vacuum"
+        description: "A situation the GM must resolve but the system gives no framework for"
+      - severity: minor
+        category: "Spotlight imbalance"
+        description: "Mechanics that consistently give more screen time to some players than others"
+      - severity: minor
+        category: "Ruling inconsistency trap"
+        description: "A mechanic vague enough that the GM will rule it differently every time"
+      - severity: observation
+        category: "Pacing control"
+        description: "How much control the GM has over session pacing versus the mechanics dictating it"
+      - severity: non-obvious
+        category: "Hidden GM minigame"
+        description: "An implicit system the GM must run that the rules never acknowledge as a system"
+
+    behavioral_weightings:
+      default:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Cognitive load"
+        secondary_focus: "Prep-to-play ratio"
+        engagement_style: "Simulate running the game: track everything you must hold in memory, note where you would get stuck"
+      d20:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Encounter design and balancing"
+        secondary_focus: "Monster stat management, initiative tracking, condition stacking"
+        engagement_style: "Run a combat with 4-6 players, track every system the GM must manage simultaneously"
+        key_questions:
+          - "How many stat blocks can a GM reasonably manage in a single combat?"
+          - "Does encounter balancing math actually predict difficulty?"
+          - "Where does initiative tracking break down with large groups?"
+          - "How much prep is required for a session versus how much can be improvised?"
+      pbta:
+        risk_tolerance: high
+        optimization_drive: very_low
+        system_engagement: holistic
+        primary_focus: "MC move selection pressure"
+        secondary_focus: "Threat/front management, when to make hard moves"
+        engagement_style: "Track the decisions the MC must make in rapid succession, note where guidance is insufficient"
+        key_questions:
+          - "Is there enough guidance for when to make soft versus hard moves?"
+          - "How many fronts/threats can an MC track before they start dropping threads?"
+          - "Does the game tell you what to do when players are not triggering moves?"
+          - "How much of the MC's job is described versus assumed?"
+      fitd:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Clock management and position/effect calibration"
+        secondary_focus: "Faction turn complexity, downtime facilitation"
+        engagement_style: "Run a score and track every clock, position call, and consequence decision simultaneously"
+        key_questions:
+          - "How many active clocks can a GM track before losing coherence?"
+          - "Is position/effect calibration consistent or does it produce wildly different rulings?"
+          - "Does the faction turn add meaningful prep or just more bookkeeping?"
+          - "Where does the GM have to make consequence decisions with no guidance?"
+      osr:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Procedure management and ruling consistency"
+        secondary_focus: "Random table integration, dungeon stocking, wandering monster pacing"
+        engagement_style: "Run a dungeon crawl, track every procedure, table roll, and ruling you must make"
+        key_questions:
+          - "Can the procedures be run from memory or do they require constant reference?"
+          - "Do the random tables produce results that require significant on-the-fly interpretation?"
+          - "How many simultaneous tracking duties does the referee have during exploration?"
+          - "Where will the referee most likely make inconsistent rulings?"
+      custom:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "GM cognitive load and sustainability"
+        secondary_focus: "Where the game's unique demands will cause the GM to struggle"
+        engagement_style: "Run the game's core loop mentally, track every decision and system the GM must manage at once"
+        key_questions:
+          - "What is the GM simultaneously tracking during a typical scene in this game?"
+          - "Does the game's unique structure increase or decrease prep requirements?"
+          - "Where does the GM have to make judgment calls with insufficient guidance?"
+          - "Can a GM sustain this game over a campaign, or does the workload escalate?"
+
+  - id: anxious-player
+    name: "The Anxious Player"
+    description: >
+      Wants to participate but is overwhelmed by choices, afraid of making mistakes,
+      and sensitive to moments where the system punishes you for not knowing the
+      "right" answer. Freezes at decision points with too many options, avoids
+      mechanics with harsh or irreversible failure states, and needs clear recovery
+      paths when things go wrong.
+    motivation: "Have fun without feeling stupid. Know that mistakes will not ruin the experience."
+    blind_spots:
+      - "May flag all complexity as anxiety-inducing when some is healthy design tension"
+      - "Can mistake intentional high-stakes decisions for punitive design"
+      - "Undervalues the satisfaction that comes from mastering difficult systems"
+      - "May assume all players share the same sensitivity to failure and permanence"
+    tests_for:
+      - severity: critical
+        category: "Decision paralysis trigger"
+        description: "A choice point with high stakes, many options, and insufficient information to decide"
+      - severity: major
+        category: "Irreversible trap"
+        description: "A permanent consequence that the player could not have reasonably anticipated"
+      - severity: major
+        category: "Failure cliff"
+        description: "A mechanic where small failures cascade into catastrophic outcomes with no recovery"
+      - severity: minor
+        category: "Option overload"
+        description: "A decision point with so many choices that evaluation becomes impossible"
+      - severity: minor
+        category: "Unclear recovery path"
+        description: "A failure state where the game does not indicate how to get back on track"
+      - severity: observation
+        category: "Safety net quality"
+        description: "How well the system catches players who make suboptimal choices without punishing them"
+      - severity: non-obvious
+        category: "Concealed competence check"
+        description: "A moment where system knowledge is required but presented as a free narrative choice"
+
+    behavioral_weightings:
+      default:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Failure consequences"
+        secondary_focus: "Decision complexity at each choice point"
+        engagement_style: "At every decision point, ask: how bad is it if I choose wrong? Do I have enough information to choose well?"
+      d20:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Character creation overwhelm"
+        secondary_focus: "Combat option paralysis, death and resurrection mechanics"
+        engagement_style: "Walk through character creation and first combat, flag every moment of overwhelm or fear"
+        key_questions:
+          - "How many choices must be made during character creation, and how permanent are they?"
+          - "Can a suboptimal character build still contribute meaningfully?"
+          - "What happens when your character dies -- is there a recovery path or just 'make a new one'?"
+          - "During combat, how many options does a player face on a typical turn?"
+      pbta:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: cautious
+        primary_focus: "Consequences of 6- results"
+        secondary_focus: "Playbook selection pressure, advance anxiety"
+        engagement_style: "Roll a 6- on every move, check how harsh the consequences are and whether recovery exists"
+        key_questions:
+          - "Are 6- consequences recoverable or do they spiral?"
+          - "Is there guidance for choosing a playbook, or is it a blind commitment?"
+          - "Can you make a 'wrong' advance choice that permanently weakens your character?"
+          - "Does the game distinguish between player mistakes and character mistakes?"
+      fitd:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Consequence severity and stress death spiral"
+        secondary_focus: "Trauma permanence, crew-level consequences for individual failure"
+        engagement_style: "Trace the worst-case consequence chain: bad roll, complication, stress, trauma -- how bad does it get?"
+        key_questions:
+          - "Can a single bad roll lead to trauma or character retirement?"
+          - "Does the stress economy feel like a safety net or a countdown timer?"
+          - "Are crew-level consequences triggered by individual player failures?"
+          - "Is there a clear path to recovery from a desperate position?"
+      osr:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Lethality fairness and save-or-die transparency"
+        secondary_focus: "Whether danger is telegraphed, resource depletion anxiety"
+        engagement_style: "Walk through a dungeon asking at every step: could I die here, and would I have known to be careful?"
+        key_questions:
+          - "Is lethal danger always telegraphed before the player commits?"
+          - "Does save-or-die feel fair or arbitrary?"
+          - "Is there a way to retreat from a bad situation, or are there point-of-no-return traps?"
+          - "Does resource tracking create productive tension or constant anxiety about running out?"
+      custom:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "How the game handles mistakes and failure"
+        secondary_focus: "Whether the game's unique mechanics create anxiety or healthy tension"
+        engagement_style: "At every decision point and failure state, ask: is this scary in a fun way or in a paralyzing way?"
+        key_questions:
+          - "Does the game's failure system feel recoverable or punitive?"
+          - "Are the game's biggest decisions reversible or permanent?"
+          - "Does the game distinguish between 'you made a bad choice' and 'you did not know the hidden rule'?"
+          - "Where does the game's unique structure create decision paralysis versus meaningful tension?"
+
+  - id: veteran
+    name: "The Veteran"
+    description: >
+      Fifty-plus sessions deep, knows every rule by heart, and has seen every common
+      scenario play out. Seeks sustained engagement: new challenges at high mastery,
+      meaningful long-term progression, and reasons to keep showing up after the
+      novelty is gone. Tests whether the system has enough depth to remain interesting
+      or whether it plateaus once you have learned the rules.
+    motivation: "Stay engaged after mastery. Find depth that rewards long-term investment."
+    blind_spots:
+      - "May overvalue depth and mastery when the system is designed for short campaigns"
+      - "Can mistake 'I have solved this' for 'this is shallow' when the game has a different intended arc"
+      - "Undervalues accessibility and onboarding — already past that stage"
+      - "May assume all players seek the same long-term engagement"
+    tests_for:
+      - severity: major
+        category: "Mastery plateau"
+        description: "A point where system knowledge stops producing new insights or strategies"
+      - severity: major
+        category: "Progression collapse"
+        description: "Long-term advancement that stops feeling meaningful"
+      - severity: minor
+        category: "Solved-game state"
+        description: "A system or subsystem where optimal play becomes rote after sufficient experience"
+      - severity: minor
+        category: "Campaign fatigue trigger"
+        description: "A mechanic or loop that becomes tedious over many sessions"
+      - severity: observation
+        category: "Long-term depth assessment"
+        description: "Whether the system reveals new layers of strategy or fiction over extended play"
+      - severity: non-obvious
+        category: "Emergent late-game dynamics"
+        description: "Mechanics or interactions that only become visible after many sessions of play"
+
+    behavioral_weightings:
+      default:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Long-term engagement"
+        secondary_focus: "Whether mastery is rewarded or the system becomes rote"
+        engagement_style: "Project forward: what does session 50 look like? Is there still something to discover?"
+      d20:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Tier 3-4 play viability"
+        secondary_focus: "Campaign-length progression arcs, late-game class balance"
+        engagement_style: "Evaluate the game at high levels where all features are unlocked, test if it still holds together"
+        key_questions:
+          - "Does the game remain balanced and engaging at tier 3 and beyond?"
+          - "Do high-level class features create new gameplay or just bigger numbers?"
+          - "Is there meaningful character differentiation after all major choices are made?"
+          - "Does the encounter design framework scale to high-level play?"
+      pbta:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Advance saturation and end-of-playbook play"
+        secondary_focus: "Campaign-length arc support, whether the system has an endgame"
+        engagement_style: "Play through a full advance tree, test whether the game intends an end state or indefinite play"
+        key_questions:
+          - "What happens when you have taken most of your advances?"
+          - "Does the game support long campaigns or is it designed to end?"
+          - "Do the moves remain interesting after you have triggered each one dozens of times?"
+          - "Is there meaningful character evolution or just mechanical accumulation?"
+      fitd:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Crew tier endgame and faction saturation"
+        secondary_focus: "Long-term stress/trauma arc, whether retirement feels earned"
+        engagement_style: "Project a crew through multiple tiers, test whether the faction game remains engaging"
+        key_questions:
+          - "Does the crew tier system produce meaningfully different play at high tiers?"
+          - "Is character retirement a satisfying arc conclusion or just stress accumulation?"
+          - "Does the faction game remain dynamic or become predictable?"
+          - "What new challenges emerge after the crew has established itself?"
+      osr:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Domain play and high-level procedures"
+        secondary_focus: "Whether lethality remains meaningful at higher levels, long-term resource arcs"
+        engagement_style: "Follow a character from level 1 to name level, test whether the game evolves or just repeats"
+        key_questions:
+          - "Does the game change meaningfully at name level or when domain play begins?"
+          - "Does lethality remain a factor or does it become trivial at higher levels?"
+          - "Are there emergent strategies that only become visible after many sessions?"
+          - "Does the procedural framework remain engaging or become rote?"
+      custom:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Whether the game sustains engagement past the learning phase"
+        secondary_focus: "Long-term depth of the game's unique mechanics"
+        engagement_style: "Project forward to session 50: does the game's core loop still reveal new possibilities, or has it been solved?"
+        key_questions:
+          - "Does the game's unique core mechanic have enough depth for long-term play?"
+          - "What does mastery of this game look like, and is it rewarding?"
+          - "Does the game's progression system (if any) sustain interest or become rote?"
+          - "Are there emergent dynamics that only appear after extended play?"
 
 # Weighting scale reference:
 #   very_low:  Rarely engages with this dimension
@@ -378,8 +949,12 @@ archetypes:
 #   very_high: Dominant engagement, the defining characteristic
 #
 # System engagement modes:
-#   deep:       Reads every rule, traces every interaction
-#   broad:      Touches every subsystem, shallow depth per system
-#   narrative:  Evaluates through fictional scenarios, not mechanical analysis
-#   moderate:   Selective engagement, focuses on most relevant rules
-#   exhaustive: Reads every word, constructs every edge case
+#   deep:        Reads every rule, traces every interaction
+#   broad:       Touches every subsystem, shallow depth per system
+#   narrative:   Evaluates through fictional scenarios, not mechanical analysis
+#   moderate:    Selective engagement, focuses on most relevant rules
+#   exhaustive:  Reads every word, constructs every edge case
+#   surface:     Engages only with what is immediately visible and explained — no digging
+#   experiential: Tests through play scenarios and creative application, not systematic reading
+#   holistic:    Evaluates the entire system simultaneously, tracking all moving parts at once
+#   cautious:    Engages tentatively, evaluating safety and recoverability before committing
