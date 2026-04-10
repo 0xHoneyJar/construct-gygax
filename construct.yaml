@@ -6,9 +6,9 @@ schema_version: 3
 
 name: "Gygax"
 slug: gygax
-version: 1.0.0
+version: 2.0.0
 
-description: "TTRPG systems analyst — design, balance, and stress-test tabletop RPG mechanics with persistent game-state and adversarial playtesting"
+description: "TTRPG systems analyst — design, balance, and stress-test tabletop RPG mechanics with persistent game-state, scenario-based playtesting, and design experimentation"
 short_description: "TTRPG systems analysis and design collaboration"
 
 author: gumibera
@@ -32,6 +32,8 @@ skills:
     path: skills/lore
   - slug: gygax-status
     path: skills/gygax-status
+  - slug: scry
+    path: skills/scry
 
 commands:
   - name: attune
@@ -46,6 +48,8 @@ commands:
     path: commands/lore.md
   - name: gygax
     path: commands/gygax.md
+  - name: scry
+    path: commands/scry.md
 
 composition_paths:
   writes:
@@ -53,6 +57,8 @@ composition_paths:
     - grimoires/gygax/designs/
     - grimoires/gygax/balance-reports/
     - grimoires/gygax/playtest-reports/
+    - grimoires/gygax/lore-reports/
+    - grimoires/gygax/forks/
     - grimoires/gygax/changelog/
   reads: []
 
