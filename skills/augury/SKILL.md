@@ -427,6 +427,16 @@ Flag when `peer_variance_at_N > 0.5 * mean(metric at level N)` -- one entity is 
 ## Methodology Notes
 
 [Any assumptions made, data gaps encountered, or caveats about the analysis. Transparency about what the numbers do and do not capture.]
+
+## Recommended Next Steps
+
+[For each finding, suggest a specific next-skill invocation:]
+- Critical/Warning findings: "`/homebrew {entity path}` — suggested change: {specific numerical adjustment to address finding #N}"
+- Info findings: "`/cabal --optimizer {entity path}` to test whether this matters in practice"
+- For pattern-related findings: "`/lore {scope}` to check against known tradition anti-patterns"
+- For design branch exploration: "`/scry "{proposed change}"` to test the impact before committing"
+
+[Each recommendation must include the exact invocation command, not just the skill name.]
 ```
 
 ## Boundaries

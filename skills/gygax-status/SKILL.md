@@ -57,7 +57,14 @@ Omit any entity type with a count of zero to keep it concise.
    - `collapsed` -- tension has broken down, needs intervention
 4. If no tensions exist, display: "No tensions defined."
 
-### Step 6: Display Latest Balance Report
+### Step 6: Display Active Scry Branches
+
+1. Glob for `grimoires/gygax/forks/*/delta.md` (exclude `.archived/`).
+2. If fork directories exist, read each `delta.md` first line for the branch summary.
+3. Display each active branch with its summary.
+4. If no active forks, skip this section silently.
+
+### Step 7: Display Latest Balance Report
 
 1. Glob for `grimoires/gygax/balance-reports/*.md`.
 2. If reports exist, identify the most recent by filename (filenames are date-prefixed: `YYYY-MM-DD-*`).
@@ -65,7 +72,7 @@ Omit any entity type with a count of zero to keep it concise.
 4. Display: report title, date, and a 1-2 sentence summary drawn from the Executive Summary.
 5. If no balance reports exist, display: "No balance reports yet. Run /augury to analyze."
 
-### Step 7: Display Latest Playtest Report
+### Step 8: Display Latest Playtest Report
 
 1. Glob for `grimoires/gygax/playtest-reports/*.md`.
 2. If reports exist, identify the most recent by filename (date-prefixed).
@@ -73,7 +80,15 @@ Omit any entity type with a count of zero to keep it concise.
 4. Display: report title, date, and a 1-2 sentence summary.
 5. If no playtest reports exist, display: "No playtest reports yet. Run /cabal to simulate play."
 
-### Step 8: Display Loa Context (if available)
+### Step 9: Display Latest Lore Report
+
+1. Glob for `grimoires/gygax/lore-reports/*.md`.
+2. If reports exist, identify the most recent by filename (date-prefixed).
+3. Read the first 30 lines for title, date, and summary.
+4. Display: report title, date, and 1-2 sentence summary.
+5. If no lore reports exist, display: "No lore reports yet. Run /lore for heuristic scan."
+
+### Step 10: Display Loa Context (if available)
 
 1. Check if an active sprint context exists by looking for sprint plan files in `grimoires/loa/` or `.run/sprint-plan-state.json`.
 2. If Loa sprint context is found, display: the active sprint name and any tasks related to the Gygax construct.
@@ -96,11 +111,19 @@ Entities:  [total] total ([type]: [count], ...)
 [name]: [health] -- [brief health_notes excerpt]
 ...
 
+-- Active Branches --
+[branch-name]: [summary from delta.md]
+...
+
 -- Latest Balance Report --
 [title] ([date])
 [1-2 sentence summary]
 
 -- Latest Playtest Report --
+[title] ([date])
+[1-2 sentence summary]
+
+-- Latest Lore Report --
 [title] ([date])
 [1-2 sentence summary]
 
