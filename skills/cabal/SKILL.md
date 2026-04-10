@@ -192,6 +192,7 @@ Write to `grimoires/gygax/playtest-reports/YYYY-MM-DD-scope-description.md`.
 
 **Date:** YYYY-MM-DD
 **Game:** [Game Name] ([tradition])
+**Game-State Version:** [last_modified_at from index.yaml] | [entity count] entities | [changes since last playtest, if any]
 **Panel:** [archetype list] -- [selection rationale]
 **Scenario:** [description] ([scale: moment|encounter|session|campaign-arc])
 **Entities Tested:** [count]
@@ -229,10 +230,39 @@ Write to `grimoires/gygax/playtest-reports/YYYY-MM-DD-scope-description.md`.
 [Standard format per finding:]
 [ARCHETYPE] [SEVERITY]: One-line summary
   Description: Full description
+  Voice: [In-character one-liner from this archetype's perspective — make the finding vivid]
   Evidence: Specific game-state entities and values
   Recommendation: Suggested next step (which skill, what question)
 
 [Repeat ## Walkthrough section for each archetype in panel]
+
+## Promise Delivery
+
+[Does the game deliver on its own pitch? Read the game's description from index.yaml and evaluate whether the mechanics actually produce the experience the game claims to offer.]
+
+**The game says:** "[description from index.yaml]"
+**The mechanics deliver:** [Yes/Partially/No] — [Specific evidence from the walkthrough. Which beats fulfilled the promise? Which didn't? Is there a gap between what the game claims and what the system produces?]
+
+## Rules Clarity
+
+[Standalone section listing every ambiguity, undefined term, jargon assumption, and "I had to guess" moment encountered across ALL archetypes during the walkthrough. Organized by severity.]
+
+| # | Rule/Mechanic | Issue | Who Hit It | Severity |
+|---|--------------|-------|-----------|----------|
+| 1 | [mechanic] | [what's unclear] | [which archetypes] | High/Medium/Low |
+
+[This section consolidates clarity issues that may be scattered across individual archetype findings. A designer should be able to read this section alone and know every place their rules text needs work.]
+
+## Session Energy
+
+[Beat-by-beat engagement map across the panel. Shows where the session peaked and where it dragged.]
+
+| Beat | Description | [Archetype A] | [Archetype B] | [Archetype C] | Overall |
+|------|-------------|------|------|------|---------|
+| 1 | [beat summary] | [signal] | [signal] | [signal] | [HIGH/MEDIUM/LOW] |
+| 2 | ... | ... | ... | ... | ... |
+
+[Identify: Where was the energy peak? Where was the energy trough? Is the arc shape intentional?]
 
 ## Experience Divergence
 
