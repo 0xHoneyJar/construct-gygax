@@ -13,7 +13,7 @@ Surface TTRPG design wisdom -- heuristics, common patterns, known anti-patterns,
 
 Lore is opinionated. These are not suggestions -- they are distilled failures and successes from decades of published tabletop design. When Lore flags something, it is because the pattern has a track record. You may override the wisdom, but you should know the history before you do.
 
-Lore is strictly read-only and inline. It never modifies game-state. It never writes to grimoire directories. All output is presented directly in the conversation.
+Lore is strictly read-only against game-state. It never modifies game-state. Scan results are presented inline AND persisted to `grimoires/gygax/lore-reports/` as presentable markdown.
 
 ## Trigger
 
