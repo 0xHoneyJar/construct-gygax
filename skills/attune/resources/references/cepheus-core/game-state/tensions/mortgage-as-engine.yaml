@@ -1,0 +1,56 @@
+id: mortgage-as-engine
+name: "Mortgage as Campaign Engine"
+type: tensions
+description: "A starship costs millions of credits. A party that receives ship shares at mustering out and pools them toward a Free Trader starts play with the asset — and with a 40-year, multi-million-credit mortgage. Monthly payments are not optional. This economic obligation is the structural engine that drives Cepheus sandbox campaigns forward."
+tradition: cepheus
+tags: [economy, sandbox, campaign-engine, debt, momentum]
+
+poles:
+  a:
+    name: "Asset: The Ship"
+    description: "Characters possess an interstellar-capable vessel — the most powerful tool in the setting"
+    supported_by:
+      - entities/career-archetype.yaml
+      - progression/lifepath-careers.yaml
+  b:
+    name: "Liability: The Mortgage"
+    description: "Monthly payment due regardless of cargo hauled, distances traveled, or dangers encountered"
+    supported_by:
+      - entities/career-archetype.yaml
+
+health: productive
+health_notes: "The tension is the point — without the mortgage, the ship is a convenience. With it, the ship is a pressure system. The debt converts the sandbox's open-endedness into directed momentum: you must find profitable work, and that necessity generates the campaign's plot organically."
+
+economic_structure:
+  ship_cost_example: "Free Trader (200-ton): approximately 37.08 million Credits"
+  typical_mortgage_term: "40 years (480 monthly payments)"
+  monthly_payment_example: "~150,000 Credits per month for a standard Free Trader"
+  cargo_yield_example: "A full cargo hold of speculative goods might yield 100,000-400,000 Cr profit per jump — enough to cover the mortgage and fuel, with margin for maintenance"
+  maintenance_cost: "~0.1% of ship cost per year — a 37MCr ship costs ~37,000 Cr/year in upkeep"
+
+campaign_implications:
+  - "The mortgage is due whether or not the characters engaged in combat, experienced personal tragedy, or were imprisoned for two months. It doesn't care about narrative convenience."
+  - "This creates realistic economic pressure: characters cannot simply 'take a break.' Missing payments means losing the ship."
+  - "Speculative cargo (buy low at one world, sell high at another) is the primary revenue mechanic — players must engage with trade, not just combat."
+  - "The 40-year term is deliberately longer than any realistic campaign — it is not meant to be paid off, it is meant to be lived with."
+
+design_implications_for_homebrew:
+  - "If you reduce mortgage payments or make the ship free, you remove the primary campaign momentum engine. Ensure you replace it with an equivalent obligation mechanic."
+  - "If you add a mechanic that lets characters quickly earn massive sums, audit it against the mortgage baseline — it may trivialize the economic pressure."
+
+intent:
+  summary: "40-year starship mortgage drives campaign momentum. Intent: economic pressure IS the sandbox."
+  rationale: "Most sandbox RPGs rely on player curiosity to generate momentum: 'what's over that hill?' Cepheus uses economic necessity. The mortgage does not ask players to be curious — it requires them to find work, which in turn requires engaging with ports, factions, rumors, and trade routes. The ship is not a reward; it is a trap that is also the best thing that ever happened to the characters. This is the Traveller genius: the constraint and the freedom are the same object."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - entities/career-archetype.yaml
+  - progression/lifepath-careers.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

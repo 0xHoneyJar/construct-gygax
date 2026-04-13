@@ -1,0 +1,76 @@
+id: career-archetype
+name: "Career Archetype (Generic Blueprint)"
+type: entities
+subtype: career
+description: "A career is the primary organizational unit of Cepheus character creation. Each career has qualification requirements, survival and advancement rolls, and multiple skill tables. This file describes the generic blueprint shared by all careers; specific careers (Scout, Merchant, Marine, Drifter, etc.) instantiate this blueprint with their own parameters."
+tradition: cepheus
+tags: [character-creation, lifepath, career, professional-identity]
+
+career_blueprint:
+  qualification:
+    description: "Roll to enter the career at all. Typically a characteristic check vs. target 5-8."
+    failure: "Redirected to Draft (random career assignment) or Drifter (fallback career with no qualification)"
+  survival:
+    description: "Roll each term to survive the hazards of the career. The most dangerous careers (Marine, Scout) have harder survival rolls."
+    failure_standard: "Injured — forced muster-out, one characteristic reduced by D3"
+    failure_iron_man: "Character death during creation"
+  commission:
+    description: "Available in military/organizational careers. Enter officer track; gain officer rank skills."
+    not_available_in: ["Drifter", "Rogue", "some Merchant variants"]
+  promotion:
+    description: "Each term, attempt to advance in rank. Success grants rank-based skill."
+  skill_tables:
+    count: "Typically 4-6 tables per career"
+    types:
+      - "Personal Development (characteristics + basic skills)"
+      - "Service Skills (career-specific professional skills)"
+      - "Advanced Education (requires Edu 8+; more specialized or technical skills)"
+      - "Officer Skills (if commissioned; leadership and command skills)"
+  reenlistment:
+    description: "Roll to stay in the career for another term. Some careers force the character to stay (mandatory service); others freely release."
+
+canonical_career_examples:
+  Scout:
+    flavor: "Exploration, survey, courier — the edges of known space"
+    signature_skills: [Pilot, Navigation, Survival, Comms, Recon]
+    survival_difficulty: high
+    mustering_out_bonus: "Ship shares or Scout Courier (free use of vessel — not owned, loaned by Scout Service)"
+    design_note: "Scout ships are lent, not given — the Scout Service can recall the ship, creating ongoing obligation and potential adventure hook."
+
+  Merchant:
+    flavor: "Interstellar trade, cargo hauling, passenger transport"
+    signature_skills: [Pilot, Broker, Streetwise, Steward, Engineering]
+    survival_difficulty: low
+    mustering_out_bonus: "Ship shares toward a free trader — the source of the 40-year mortgage"
+    design_note: "The Merchant career is the most direct feeder into the mortgage-as-engine campaign premise. See tensions/mortgage-as-engine.yaml."
+
+  Marine:
+    flavor: "Elite military force projection, boarding actions, ground combat"
+    signature_skills: ["Gun Combat", "Blade Combat", "Tactics", "Battle Dress", Recon]
+    survival_difficulty: high
+    mustering_out_bonus: "Weapon, armor, or ship shares"
+    design_note: "Marines are the most combat-capable starting characters but arrive with physically demanding histories — aging effects matter more for multi-term Marines."
+
+  Drifter:
+    flavor: "No fixed career — wanderers, odd-jobbers, freelancers"
+    signature_skills: [Streetwise, Survival, "Blade Combat", Brawling, Recon]
+    survival_difficulty: medium
+    qualification: "None — Drifter requires no qualification roll; it is the fallback for failed qualification"
+    mustering_out_bonus: "Minimal — cash and basic equipment"
+    design_note: "The Drifter career produces generalist characters with survivalist skillsets. It is also the most narratively flexible — a Drifter's history can be almost anything."
+
+design_notes:
+  - "Career choice during creation is irreversible per term once committed — you cannot restart a term to optimize. This enforces the premise that your history happened."
+  - "Multi-career characters (switching careers between terms) are common and produce interesting skill combinations. A former Scout who spent two terms as a Merchant has a very different profile from a pure Merchant or pure Scout."
+
+depends_on:
+  - progression/lifepath-careers.yaml
+  - mechanics/lifepath-gain.yaml
+affects:
+  - mechanics/skill-level.yaml
+  - resources/life-points.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

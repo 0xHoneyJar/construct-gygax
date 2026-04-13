@@ -1,0 +1,39 @@
+id: xp
+name: "Experience (XP)"
+type: resources
+description: "Accumulated experience toward advancement. Earned by highlighting stats and rolling them, by end-of-session questions, and by specific move triggers. Fills a 0-5 track per advance."
+tradition: pbta
+tags: [advancement, highlighted-stats, milestones]
+
+pool:
+  min: 0
+  max: 5
+  recovery:
+    trigger: "N/A — XP does not recover; it fills to 5 then resets on advance"
+    amount: "Resets to 0 on each advance"
+
+xp_sources:
+  highlighted_stats: "At session start, MC and another player each highlight one stat. Any roll using a highlighted stat marks XP, regardless of outcome."
+  end_of_session: "Answer questions about what happened (varies by game): Did you struggle with your Hx? Did you improve the world? Each yes = 1 XP."
+  move_triggers: "Some moves award XP directly on specific outcomes"
+
+advancement_trigger: "At 5 XP, take an advance and reset to 0"
+
+design_notes:
+  - "Highlighted stats mean XP rewards playing to your character's nature, not just winning. Rolling your highlighted stat and failing still marks XP."
+  - "End-of-session questions are fiction-facing — they ask about the story, not mechanical performance."
+  - "The 0-5 per-advance scale keeps advancement frequent enough to feel responsive without trivializing gains."
+
+depends_on:
+  - stats/cool.yaml
+  - stats/hard.yaml
+  - stats/hot.yaml
+  - stats/sharp.yaml
+  - stats/weird.yaml
+affects:
+  - progression/advancement.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

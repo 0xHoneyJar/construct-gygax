@@ -1,0 +1,52 @@
+id: player-authority-vs-mc-authority
+name: "Player Authority vs. MC Authority"
+type: tensions
+description: "PbtA distributes narrative authority asymmetrically. Players have First Say over their characters' intentions and actions. The MC has Final Say over fictional consequences and world response — but this Final Say is constrained by Agenda and Principles, not unchecked."
+tradition: pbta
+tags: [authority, mc-principles, first-say, narrative-structure]
+
+poles:
+  a:
+    name: "Player First Say"
+    description: "Players establish what their characters intend and do. Move triggers are activated by player-described fiction. On strong hits (10+), the player largely determines the outcome from pick-lists. Highlighted stats give players partial control over when XP accrues."
+    supported_by:
+      - mechanics/move-as-tripwire.yaml
+      - mechanics/resolution-2d6.yaml
+      - resources/xp.yaml
+  b:
+    name: "MC Final Say"
+    description: "MC determines the fictional reality of outcomes, makes all moves (soft and hard), controls the world's response to player actions, and holds authority over all NPCs and environment. MC determines which move triggers when ambiguous."
+    supported_by:
+      - mechanics/mc-move-soft.yaml
+      - mechanics/mc-move-hard.yaml
+
+authority_distribution:
+  first_say: "Distributed via moves — mechanical triggers give players structural bypass of GM fiat on outcomes"
+  final_say: "Retained by MC for fiction-integrity, but constrained: MC operates under Agenda (Play to find out) and Principles (Make the world real; Make PCs' lives not boring)"
+  structural_bypass: "Moves create situations where the MC cannot simply override — a 10+ result means success; MC frames it but cannot revoke it"
+
+mc_agenda_constraints:
+  - "Make the world seem real — prevents arbitrary world behavior"
+  - "Make the PCs' lives not boring — prevents passive or low-stakes fiction"
+  - "Play to find out what happens — prohibits pre-planned plots; story emerges from questions"
+
+health: calibrated
+health_notes: "Tension is healthy when MC uses Agenda + Principles as genuine constraints, not performance. Becomes unhealthy in two failure modes: (1) MC ignores Principles and reverts to traditional GM fiat; (2) Players use moves as shields against all consequences, treating strong hits as invulnerability."
+
+intent:
+  summary: "First Say distributed via moves; Final Say retained by MC for fiction-integrity"
+  rationale: "Traditional RPG design gives the GM Final Say on everything — consequences, world behavior, NPC responses. PbtA's innovation is distributing First Say to players and mechanical triggers, creating structural checks on GM authority without removing it. A 10+ result means the player 'won' that exchange — the MC cannot revoke it but frames it. The MC's remaining authority (Final Say on interpretation, all world events, NPC behavior, move consequences) is then governed by the Agenda + Principles, which function as regulatory rules preventing narrative abuse in either direction. The system is not about equalizing authority — it is about making authority transparent and constrained."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/mc-move-soft.yaml
+  - mechanics/mc-move-hard.yaml
+  - mechanics/resolution-2d6.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

@@ -1,0 +1,54 @@
+id: resolution-2d6-plus-8
+name: "2D6 + Modifier vs. Target 8+"
+type: mechanics
+description: "Core resolution engine. Roll 2D6, add the relevant characteristic modifier and skill level, compare to target number 8. Meeting or exceeding 8 is a success. The degree of success or failure is captured by the Effect system."
+tradition: cepheus
+tags: [core, resolution, checks, bell-curve, 2d6]
+
+trigger: "When an action's outcome is uncertain and the character has a meaningful chance of success or failure"
+cost: []
+
+resolution:
+  method: roll-2d6-plus-modifier-vs-target
+  formula: "2D6 + characteristic_modifier + skill_level vs. 8+"
+  target_number: 8
+  modifier_source: "Characteristic modifier (derived from stat value) + Skill level (0 if unskilled, with -3 penalty applied)"
+  outcomes:
+    ">= 8": "Success (see effect-system.yaml for degree)"
+    "< 8": "Failure (see effect-system.yaml for degree)"
+
+probability_notes:
+  - "Unmodified 2D6: 41.7% chance of rolling 8+ (before any modifier)"
+  - "With +1 modifier (characteristic 9, or skill level 1): 58.3% chance"
+  - "With +2 modifier (characteristic 12, or skill 1 + characteristic mod): 72.2% chance"
+  - "With +3 modifier (skill 2 + characteristic mod): 83.3% chance"
+  - "Unskilled (-3 penalty): 16.7% chance — harshly penalizes out-of-history attempts"
+  - "Bell curve concentrates outcomes near 7 — moderate modifiers shift probability significantly"
+
+comparison_to_pbta:
+  note: "Both systems roll 2D6+mod. PbtA (Dungeon World) targets 10+ for full success, 7-9 for partial. Cepheus targets 8+ with no partial band — the Effect system replaces PbtA's three-tier outcome with a continuous gradient. See effect-system.yaml and effect-as-continuous-vs-pbta-tiers.yaml tension."
+
+intent:
+  summary: "Bell-curve resolution that rewards skill stacking linearly rather than optimizing for probability bands."
+  rationale: "The 8+ target with continuous Effect output means every point of skill improvement shifts the probability curve meaningfully. There is no PbtA-style 'sweet spot' at 7-9 to optimize around. A character with skill 4 simply succeeds more often and with higher Effect than a character with skill 2 — no diminishing returns, no band-optimization game."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - stats/strength.yaml
+  - stats/dexterity.yaml
+  - stats/endurance.yaml
+  - stats/intelligence.yaml
+  - stats/education.yaml
+  - stats/social-standing.yaml
+  - mechanics/skill-level.yaml
+  - mechanics/unskilled-penalty.yaml
+affects:
+  - mechanics/effect-system.yaml
+  - tensions/effect-as-continuous-vs-pbta-tiers.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

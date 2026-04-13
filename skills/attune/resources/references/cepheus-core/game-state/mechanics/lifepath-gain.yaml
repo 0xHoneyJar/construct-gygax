@@ -1,0 +1,54 @@
+id: lifepath-gain
+name: "Lifepath Skill and Characteristic Gain"
+type: mechanics
+description: "During character creation, each 4-year term of career service grants the character rolls on career-specific skill tables and potential characteristic boosts. The accumulated results constitute the character's professional history and starting competencies."
+tradition: cepheus
+tags: [character-creation, lifepath, skill-gain, progression]
+
+trigger: "At the end of each completed career term during character creation"
+cost: []
+
+resolution:
+  method: table-roll
+  per_term_grants:
+    skills: "Typically 2-3 skill table rolls per term (exact count varies by career and event outcomes)"
+    characteristic_boosts: "Some table results increase a characteristic by +1"
+    rank_advancement: "Successful promotion rolls grant career rank, which may grant bonus skills"
+    survival_check: "Each term begins with a Survival Roll — failure may injure, muster out early, or (in Iron Man mode) kill the character"
+
+skill_gain_rules:
+  first_level_cost: "Rolling a skill you don't have: gain it at level 0 (cancels unskilled penalty)"
+  subsequent_levels: "Rolling a skill you already have: advance it by 1 level (0→1, 1→2, etc.)"
+  cascade_note: "Skills cannot exceed level 4 through normal lifepath. Level 4 typically requires 3+ terms in a focused specialization."
+
+mustering_out:
+  description: "At the end of the final career term, the character rolls on Mustering Out tables"
+  possible_benefits:
+    - "Cash (lump sum)"
+    - "Passage vouchers (free starship berths)"
+    - "Weapon or equipment"
+    - "Ship ownership stake (partial — triggers the 40-year mortgage if applicable)"
+
+intent:
+  summary: "Terms of service grant skills and characteristics — the accumulation of a professional life expressed as mechanics."
+  rationale: "The lifepath gain mechanic does not let players choose their skills freely. You roll on career tables — your history shapes you, you don't shape your history retroactively. This randomness is load-bearing: it produces characters with unexpected combinations (a Merchant who learned Gun Combat, a Scout with Medical training) that feel like real people rather than optimized builds. The mechanic enforces the core Cepheus premise that characters have pasts they didn't fully control."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - mechanics/skill-level.yaml
+  - progression/lifepath-careers.yaml
+affects:
+  - stats/strength.yaml
+  - stats/dexterity.yaml
+  - stats/endurance.yaml
+  - stats/intelligence.yaml
+  - stats/education.yaml
+  - stats/social-standing.yaml
+  - mechanics/skill-level.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

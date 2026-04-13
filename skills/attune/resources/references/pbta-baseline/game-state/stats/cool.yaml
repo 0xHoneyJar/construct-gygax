@@ -1,0 +1,32 @@
+id: cool
+name: "Cool"
+type: stats
+description: "Composure under pressure. Governs acting with control in dangerous situations and suppressing panic. The stat of steady hands and ice-cold nerve."
+tradition: pbta
+tags: [stat, composure, action]
+
+range:
+  min: -1
+  max: 3
+  typical: "0 to +2"
+
+used_by:
+  - "Act Under Fire (primary stat)"
+  - "Keep Your Shit Together"
+
+intent:
+  summary: "Bounded accuracy on a bell curve — +1 is worth roughly 15% at the median"
+  rationale: "The -1 to +3 range is deliberate. 2d6 produces a bell curve centered on 7, so +stat shifts the distribution rather than flattening it. A Cool of +2 makes 10+ results meaningfully frequent without making 7-9 obsolete. Specialization is rewarded; runaway power is prevented. A stat of +3 is a character-defining trait, not a baseline."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on: []
+affects:
+  - mechanics/act-under-fire.yaml
+  - mechanics/resolution-2d6.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

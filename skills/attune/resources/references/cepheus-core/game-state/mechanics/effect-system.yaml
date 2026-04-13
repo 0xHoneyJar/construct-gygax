@@ -1,0 +1,43 @@
+id: effect-system
+name: "Effect System (Degrees of Success)"
+type: mechanics
+description: "Effect measures the degree of success or failure on any check. Effect = roll total minus 8 (the target number). Positive Effect means success; negative Effect means failure. The magnitude determines how well or how badly the action went."
+tradition: cepheus
+tags: [core, resolution, degrees-of-success, continuous-gradient]
+
+trigger: "Applied to every 2D6 check result after comparing to target 8"
+cost: []
+
+resolution:
+  method: derived-from-roll
+  formula: "Effect = (2D6 + modifiers) - 8"
+  outcomes:
+    "+6 or higher": "Exceptional Success — far exceeded expectations; may unlock additional benefits, faster completion, or bonus information"
+    "0 to +5": "Success — task accomplished; higher Effect may mean faster or cleaner completion"
+    "-1 to -5": "Failure — task not accomplished; referee may introduce complications proportional to magnitude"
+    "-6 or lower": "Exceptional Failure — dramatically wrong; significant setbacks, equipment damage, or cascading consequences"
+
+design_distinctions:
+  continuous_vs_tiers: "Effect is a number, not a category. A result of +3 is meaningfully different from +1 or +5. This is a continuous gradient, not PbtA's fixed three-tier system (10+/7-9/6-)."
+  skill_stacking: "Because Effect scales linearly with roll total, each +1 from skill or characteristic modifier shifts both the success probability AND the typical Effect magnitude. No ceiling on reward for investment."
+  referee_use: "Effect magnitude guides referee narration — an Effect of +6 on a Pilot check means something very different from Effect +1, even though both are 'successes.'"
+
+comparison_to_fitd:
+  note: "FitD (Blades in the Dark) uses Position/Effect as a two-axis system: how risky the attempt is (Position) vs. how much impact success has (Effect). Cepheus collapses this into a single axis — the roll result IS the effect magnitude. Simpler, but loses FitD's ability to model 'desperate attempts at low-impact tasks.'"
+
+intent:
+  summary: "Continuous gradient of success and failure that rewards skill stacking linearly rather than encouraging probability band optimization."
+  rationale: "The Effect system emerged from the original Traveller design instinct that competent professionals should feel like competent professionals at the table. A Pilot-4 character should not just succeed more often than Pilot-2 — they should succeed more decisively, with higher Effect, completing tasks faster and with less collateral uncertainty. This is distinct from PbtA's design, where a well-optimized character hits the 10+ band reliably and the 7-9 band disappears — a different and arguably less granular expression of expertise."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/resolution-2d6-plus-8.yaml
+affects:
+  - tensions/effect-as-continuous-vs-pbta-tiers.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

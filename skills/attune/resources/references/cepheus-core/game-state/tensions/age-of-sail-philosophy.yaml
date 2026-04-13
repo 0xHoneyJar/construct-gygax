@@ -1,0 +1,48 @@
+id: age-of-sail-philosophy
+name: "Age of Sail Philosophy: No FTL Comms"
+type: tensions
+description: "In Cepheus's implied setting, starships can travel between systems via Jump drive, but information cannot travel faster than the ships carrying it. Orders from a distant capital take weeks or months to arrive. Local nobles, captains, and corporate factors must make decisions without real-time guidance. This is not a setting detail — it is the architectural foundation of the political and economic structure."
+tradition: cepheus
+tags: [setting-architecture, communication, decentralization, feudal, sandbox]
+
+poles:
+  a:
+    name: "Central Authority"
+    description: "Empires, corporations, and hierarchies nominally exist and issue orders"
+    supported_by:
+      - stats/social-standing.yaml
+      - entities/career-archetype.yaml
+  b:
+    name: "Functional Decentralization"
+    description: "No order can be enforced faster than a ship can travel; local power is real power"
+    supported_by:
+      - progression/lifepath-careers.yaml
+
+health: productive
+health_notes: "This tension is structurally healthy — the gap between nominal authority and functional local power is the sandbox's engine. It means players can operate in the gaps between orders and enforcement. The tension only becomes a problem if a designer adds FTL comms, which collapses the political structure entirely."
+
+implied_world_mechanics:
+  - "Information travels at Jump speed (1 week per 1-6 parsecs)"
+  - "A naval fleet ordered to intercept cannot receive updated orders if the quarry changes course"
+  - "Local Dukes govern with genuine autonomy — they cannot wait for Imperial sanction on urgent decisions"
+  - "Merchants can exploit information asymmetries: buying goods before news of shortage reaches the destination"
+
+design_implications_for_homebrew:
+  - "Any mechanic that introduces faster-than-ship communication (ansible, psionic relay network) fundamentally changes the political structure. This should be treated as a setting-level decision, not a convenience feature."
+  - "The communication delay is why Social Standing matters so much — having the right rank means your local word carries weight without waiting for distant confirmation."
+
+intent:
+  summary: "No FTL comms creates feudal decentralization. Intent: distance and communication speed have tangible consequences."
+  rationale: "The 'Age of Sail' label is deliberate. Traveller's original designers looked at the British Empire in the 18th century — where the Captain of a frigate in the Pacific had months of real authority because London's orders couldn't reach him faster than his own ship could return — and built that structure into interstellar space. The consequence is a setting where local judgment, local relationships, and local reputation matter more than distant institutional power. This makes the player characters' personal Social Standing, career histories, and contacts the most relevant political tools available to them, rather than bureaucratic appeals to distant authority."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - stats/social-standing.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

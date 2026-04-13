@@ -1,0 +1,46 @@
+id: mc-move-hard
+name: "MC Move — Hard"
+type: mechanics
+description: "A hard move delivers immediate, unavoidable consequence. No roll to avoid, no warning. Hard moves are the primary response to a 6- result on the dice, or to a soft move that players walked into without reacting."
+tradition: pbta
+tags: [mc-move, hard-move, narrative-authority, miss-consequence]
+
+trigger:
+  primary: "6- result on any player roll"
+  secondary: "Player walks into a soft move without reacting — the announced badness lands"
+
+cost: []
+
+resolution:
+  method: narrative-declaration
+  stat: null
+  outcomes:
+    immediate: "Consequence lands without mitigation. Player has no roll to avoid it."
+
+hard_move_types:
+  - "Separate them — remove a character from safety or support"
+  - "Capture someone — imprison, kidnap, or trap"
+  - "Put someone in a spot — environmental or social bind"
+  - "Trade harm for harm — both parties take damage"
+  - "Announce future badness and make it so — skip the soft version"
+  - "Activate a thing's downside — a resource or relationship turns against the character"
+  - "Tell them the possible consequences and ask — rare hard version of a soft move"
+
+intent:
+  summary: "The miss is not a punishment — it is the MC's turn to advance the fiction"
+  rationale: "Hard moves are not failure states. They are narrative beats where the MC drives the story forward. A 6- result does not mean 'you fail and nothing happens' — it means the MC now has authority and must use it decisively. 'Be prepared for the worst' is the player-facing signal; the MC's job is to make good on that signal in a way that is interesting, not just punitive. The hard move system prevents the common failure mode where misses stall fiction: something always happens."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/resolution-2d6.yaml
+  - mechanics/mc-move-soft.yaml
+affects:
+  - resources/harm.yaml
+  - tensions/player-authority-vs-mc-authority.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

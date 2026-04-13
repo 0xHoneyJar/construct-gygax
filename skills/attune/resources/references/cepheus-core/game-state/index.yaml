@@ -1,0 +1,209 @@
+game: "Cepheus Engine Core"
+tradition: cepheus
+description: "Pre-attuned reference game-state for Cepheus Engine (2D6 SRD), derived from classic Traveller (1977). Covers core resolution, the Effect system, six characteristics, the lifepath career system, and the four primary design tensions of the Cepheus/Traveller tradition. Excludes starship combat, world generation (UWP), full trade rules, and Third Imperium setting material."
+created_at: "2026-04-13T00:00:00Z"
+last_modified_at: "2026-04-13T00:00:00Z"
+
+entity_count:
+  stats: 6
+  resources: 1
+  mechanics: 6
+  progression: 1
+  entities: 1
+  tensions: 4
+  total: 19
+
+files:
+  # stats/
+  - path: stats/strength.yaml
+    id: strength
+    depends_on: []
+    affects:
+      - mechanics/resolution-2d6-plus-8.yaml
+      - resources/life-points.yaml
+
+  - path: stats/dexterity.yaml
+    id: dexterity
+    depends_on: []
+    affects:
+      - mechanics/resolution-2d6-plus-8.yaml
+      - resources/life-points.yaml
+
+  - path: stats/endurance.yaml
+    id: endurance
+    depends_on: []
+    affects:
+      - resources/life-points.yaml
+      - mechanics/resolution-2d6-plus-8.yaml
+
+  - path: stats/intelligence.yaml
+    id: intelligence
+    depends_on: []
+    affects:
+      - mechanics/resolution-2d6-plus-8.yaml
+      - mechanics/characteristic-check.yaml
+
+  - path: stats/education.yaml
+    id: education
+    depends_on: []
+    affects:
+      - mechanics/resolution-2d6-plus-8.yaml
+      - mechanics/characteristic-check.yaml
+      - progression/lifepath-careers.yaml
+
+  - path: stats/social-standing.yaml
+    id: social-standing
+    depends_on: []
+    affects:
+      - mechanics/resolution-2d6-plus-8.yaml
+      - mechanics/characteristic-check.yaml
+      - progression/lifepath-careers.yaml
+
+  # resources/
+  - path: resources/life-points.yaml
+    id: life-points
+    depends_on:
+      - stats/strength.yaml
+      - stats/dexterity.yaml
+      - stats/endurance.yaml
+    affects:
+      - mechanics/resolution-2d6-plus-8.yaml
+
+  # mechanics/
+  - path: mechanics/resolution-2d6-plus-8.yaml
+    id: resolution-2d6-plus-8
+    depends_on:
+      - stats/strength.yaml
+      - stats/dexterity.yaml
+      - stats/endurance.yaml
+      - stats/intelligence.yaml
+      - stats/education.yaml
+      - stats/social-standing.yaml
+      - mechanics/skill-level.yaml
+      - mechanics/unskilled-penalty.yaml
+    affects:
+      - mechanics/effect-system.yaml
+      - tensions/effect-as-continuous-vs-pbta-tiers.yaml
+
+  - path: mechanics/effect-system.yaml
+    id: effect-system
+    depends_on:
+      - mechanics/resolution-2d6-plus-8.yaml
+    affects:
+      - tensions/effect-as-continuous-vs-pbta-tiers.yaml
+
+  - path: mechanics/unskilled-penalty.yaml
+    id: unskilled-penalty
+    depends_on:
+      - mechanics/resolution-2d6-plus-8.yaml
+      - mechanics/skill-level.yaml
+    affects:
+      - tensions/unskilled-penalty-vs-generalist-competence.yaml
+
+  - path: mechanics/skill-level.yaml
+    id: skill-level
+    depends_on:
+      - mechanics/resolution-2d6-plus-8.yaml
+      - progression/lifepath-careers.yaml
+    affects:
+      - mechanics/unskilled-penalty.yaml
+      - tensions/unskilled-penalty-vs-generalist-competence.yaml
+
+  - path: mechanics/characteristic-check.yaml
+    id: characteristic-check
+    depends_on:
+      - stats/strength.yaml
+      - stats/dexterity.yaml
+      - stats/endurance.yaml
+      - stats/intelligence.yaml
+      - stats/education.yaml
+      - stats/social-standing.yaml
+      - mechanics/resolution-2d6-plus-8.yaml
+    affects: []
+
+  - path: mechanics/lifepath-gain.yaml
+    id: lifepath-gain
+    depends_on:
+      - mechanics/skill-level.yaml
+      - progression/lifepath-careers.yaml
+    affects:
+      - stats/strength.yaml
+      - stats/dexterity.yaml
+      - stats/endurance.yaml
+      - stats/intelligence.yaml
+      - stats/education.yaml
+      - stats/social-standing.yaml
+      - mechanics/skill-level.yaml
+
+  # progression/
+  - path: progression/lifepath-careers.yaml
+    id: lifepath-careers
+    depends_on:
+      - stats/strength.yaml
+      - stats/dexterity.yaml
+      - stats/endurance.yaml
+      - stats/intelligence.yaml
+      - stats/education.yaml
+      - stats/social-standing.yaml
+      - mechanics/lifepath-gain.yaml
+    affects:
+      - mechanics/skill-level.yaml
+      - entities/career-archetype.yaml
+
+  # entities/
+  - path: entities/career-archetype.yaml
+    id: career-archetype
+    depends_on:
+      - progression/lifepath-careers.yaml
+      - mechanics/lifepath-gain.yaml
+    affects:
+      - mechanics/skill-level.yaml
+      - resources/life-points.yaml
+
+  # tensions/
+  - path: tensions/age-of-sail-philosophy.yaml
+    id: age-of-sail-philosophy
+    depends_on:
+      - stats/social-standing.yaml
+    affects: []
+
+  - path: tensions/mortgage-as-engine.yaml
+    id: mortgage-as-engine
+    depends_on:
+      - entities/career-archetype.yaml
+      - progression/lifepath-careers.yaml
+    affects: []
+
+  - path: tensions/unskilled-penalty-vs-generalist-competence.yaml
+    id: unskilled-penalty-vs-generalist-competence
+    depends_on:
+      - mechanics/unskilled-penalty.yaml
+      - mechanics/skill-level.yaml
+      - progression/lifepath-careers.yaml
+      - mechanics/lifepath-gain.yaml
+    affects: []
+
+  - path: tensions/effect-as-continuous-vs-pbta-tiers.yaml
+    id: effect-as-continuous-vs-pbta-tiers
+    depends_on:
+      - mechanics/effect-system.yaml
+      - mechanics/resolution-2d6-plus-8.yaml
+      - mechanics/skill-level.yaml
+    affects: []
+
+dependency_graph_summary:
+  most_depended_on:
+    - mechanics/resolution-2d6-plus-8.yaml  # All stats feed into it; all mechanics descend from it
+    - mechanics/skill-level.yaml             # Required by resolution, unskilled-penalty, lifepath-gain, tensions
+    - progression/lifepath-careers.yaml      # Required by skill-level, lifepath-gain, entities, mortgage tension
+  orphaned: []
+  circular: []
+
+load_order_recommendation:
+  - "Load stats/ first — no dependencies"
+  - "Load resources/life-points.yaml after stats/"
+  - "Load mechanics/resolution-2d6-plus-8.yaml — central hub; most analysis starts here"
+  - "Load remaining mechanics/ in any order after resolution"
+  - "Load progression/lifepath-careers.yaml"
+  - "Load entities/career-archetype.yaml"
+  - "Load tensions/ last — they reference most other files"

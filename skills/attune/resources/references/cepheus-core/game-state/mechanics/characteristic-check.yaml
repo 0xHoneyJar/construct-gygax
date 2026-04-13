@@ -1,0 +1,56 @@
+id: characteristic-check
+name: "Characteristic Check"
+type: mechanics
+description: "When no skill is applicable, the referee may call for a raw characteristic check — testing innate ability rather than trained expertise. The character rolls 2D6 plus the characteristic modifier only, without any skill bonus or unskilled penalty."
+tradition: cepheus
+tags: [core, resolution, raw-talent, characteristic]
+
+trigger: "When no skill is applicable to the task and the referee determines raw ability is the relevant factor"
+cost: []
+
+resolution:
+  method: roll-2d6-plus-characteristic-modifier-vs-8
+  formula: "2D6 + characteristic_modifier vs. 8+"
+  no_skill_bonus: true
+  no_unskilled_penalty: true
+  note: "Characteristic checks are a deliberate carve-out from the normal skill+characteristic formula. The unskilled -3 penalty does NOT apply because there is no skill to be unskilled in — this is purely testing nature, not training."
+
+applicable_characteristics:
+  - characteristic: strength
+    typical_use: "Feats of raw brute force (breaking down a door, lifting a collapsed beam)"
+  - characteristic: dexterity
+    typical_use: "Reflex reactions, catching falling objects, last-moment evasions"
+  - characteristic: endurance
+    typical_use: "Resisting environmental hazards, disease, prolonged exposure"
+  - characteristic: intelligence
+    typical_use: "Intuitive leaps, pattern recognition without relevant knowledge base"
+  - characteristic: education
+    typical_use: "General knowledge checks where formal schooling broadly applies"
+  - characteristic: social_standing
+    typical_use: "Being recognized, commanding deference by presence alone"
+
+design_notes:
+  - "Characteristic checks are less common than skill checks in Cepheus. The game privileges trained competence over raw talent."
+  - "A high-Strength, unskilled character attempting to pick a lock still takes the -3 unskilled Mechanic penalty. Strength doesn't help — that would be a skill check. But a high-Strength character breaking the lock entirely could be a Strength characteristic check."
+
+intent:
+  summary: "A pure talent check used when no skill applies — tests nature, not training."
+  rationale: "The existence of characteristic checks alongside the unskilled penalty creates an important asymmetry: there are situations where raw ability is genuinely what matters, distinct from situations where trained technique is required but absent. This preserves the 'experienced professional' persona of Cepheus (you cannot substitute raw talent for skill at technical tasks) while acknowledging that pure physical or cognitive tests exist independently of career history."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - stats/strength.yaml
+  - stats/dexterity.yaml
+  - stats/endurance.yaml
+  - stats/intelligence.yaml
+  - stats/education.yaml
+  - stats/social-standing.yaml
+  - mechanics/resolution-2d6-plus-8.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

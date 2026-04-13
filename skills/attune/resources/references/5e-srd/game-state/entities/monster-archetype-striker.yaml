@@ -1,0 +1,49 @@
+id: monster-archetype-striker
+name: "Monster Archetype: Striker"
+type: entities
+subtype: monster-archetype
+description: "Glass cannon archetype. High OCR relative to DCR — deals heavy damage but falls quickly. OCR-DCR spread of +8 to +10."
+tradition: d20
+tags: [monster, archetype, striker, glass-cannon]
+
+ocr_dcr_spread:
+  range: "+8 to +10"
+  note: "OCR is 8-10 points higher than DCR — offense dramatically outpaces defense"
+
+design_role:
+  role: "Priority target — players must focus-fire immediately or face heavy casualties"
+  threat_pattern: "High first-round damage, low survivability"
+  tactical_effect: "Forces target priority decisions; creates nova pressure on player action economy"
+
+worked_example_at_cr_8:
+  ocr: 8
+  dcr: -1
+  dpr: 53
+  attack_bonus: "+6"
+  save_dc: 15
+  hp: 48
+  ac: 13
+  spread: "+9"
+
+design_notes:
+  - "Strikers die in 1-2 rounds under focus fire — reward players who identify priority targets"
+  - "Paired with Brutes or Soldiers, they create action economy dilemmas"
+  - "At L×4 damage coefficient, a Striker can drop a glass-cannon PC in one round"
+
+intent:
+  summary: "High-offense low-defense archetype for tactical variety"
+  rationale: "This is the stated design philosophy of 5e as documented in the DMG. OCR-DCR spread defines monster role, not just CR."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - mechanics/attack-roll.yaml
+  - mechanics/saving-throw.yaml
+affects:
+  - tensions/action-economy-vs-nova.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

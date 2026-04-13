@@ -1,0 +1,31 @@
+id: hard
+name: "Hard"
+type: stats
+description: "Toughness, ruthlessness, willingness to do violence. Governs direct aggression and going aggro on NPCs or other characters."
+tradition: pbta
+tags: [stat, violence, aggression]
+
+range:
+  min: -1
+  max: 3
+  typical: "0 to +2"
+
+used_by:
+  - "Go Aggro"
+  - "Seize by Force"
+
+intent:
+  summary: "Bounded accuracy on a bell curve — +1 is worth roughly 15% at the median"
+  rationale: "The -1 to +3 range is deliberate. Bell curve on 2d6+stat means +1 is worth ~15% at the median; specialization is rewarded without runaway power. Hard at +3 defines a character archetype (the hardened fighter) rather than giving universal competence — it applies narrowly to aggression contexts."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on: []
+affects:
+  - mechanics/resolution-2d6.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

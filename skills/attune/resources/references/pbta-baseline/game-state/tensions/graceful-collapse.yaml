@@ -1,0 +1,53 @@
+id: graceful-collapse
+name: "Graceful Collapse"
+type: tensions
+description: "PbtA is architected as a concentric onion — if peripheral rules are forgotten or dropped, the game collapses inward to the next layer and still functions. The core conversation (MC Agenda + Principles + basic moves) is always sufficient to play."
+tradition: pbta
+tags: [architecture, resilience, concentric-onion, table-confidence]
+
+poles:
+  a:
+    name: "Full System"
+    description: "All layers operating: core conversation, universal moves, playbooks, Fronts/threats, optional subsystems (vehicles, countdowns, custom moves)."
+    layers:
+      4_optional: "Subsystems — vehicles, countdowns, custom playbook moves, hacks"
+      3_playbooks_threats: "Character blueprints (playbooks), Front/threat structure"
+      2_core_systems: "Universal triggers, 5 stats, 10+/7-9/6- resolution, basic moves"
+      1_core_conversation: "MC Agenda + Principles — always sufficient to run the game"
+  b:
+    name: "Graceful Degradation"
+    description: "A peripheral rule is forgotten or unknown. The game collapses inward to the next stable layer, which is sufficient to continue. No layer failure is catastrophic."
+    collapse_scenarios:
+      - scenario: "Front rules forgotten"
+        collapses_to: "Basic moves and MC improvisation under Principles"
+        still_playable: true
+      - scenario: "Playbook-specific move forgotten mid-session"
+        collapses_to: "Generic basic moves; MC rules on intent"
+        still_playable: true
+      - scenario: "Custom subsystem rule contested"
+        collapses_to: "MC applies Agenda ('make the world real') as adjudication framework"
+        still_playable: true
+      - scenario: "Core 10+/7-9/6- forgotten"
+        collapses_to: "Pure conversation; this is the single point of system failure"
+        still_playable: false
+
+health: healthy
+health_notes: "Graceful collapse is a designed property, not an accident. The onion architecture is why PbtA works well with new players and unrehearsed tables — the floor of the system is always reachable."
+
+intent:
+  summary: "Concentric onion — if peripheral rules forgotten, game still runs on core moves"
+  rationale: "Baker's architectural decision to layer the system concentrically rather than interlocking flatly has profound table consequences. When a complex rule is forgotten, the game doesn't break — it simplifies. This preserves MC confidence (no rules-paralysis), session momentum (no mid-scene rule lookup required), and player immersion (less mechanical interruption). Compare to a game where every subsystem is load-bearing: forgetting one rule can invalidate an entire session's logic. The onion architecture treats peripheral rules as optional enrichment, not structural requirements. The trade-off: core moves must be robust enough to handle all situations the peripheral layers would have handled."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/fiction-mechanics-fiction-loop.yaml
+  - mechanics/resolution-2d6.yaml
+  - mechanics/act-under-fire.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

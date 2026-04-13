@@ -1,0 +1,52 @@
+id: bounded-accuracy
+name: "Bounded Accuracy"
+type: tensions
+description: "Proficiency bonuses and ability modifiers grow slowly (+2 to +6 over 20 levels). Keeps DCs meaningful across all tiers, but limits the felt sense of progression."
+tradition: d20
+tags: [core, scaling, progression, design-pillar]
+
+poles:
+  a:
+    name: "System Stability"
+    description: "Tight modifier range means CR 1 goblins remain a threat to Level 10 characters if encountered in sufficient numbers"
+    supported_by:
+      - mechanics/d20-resolution.yaml
+      - progression/generic-pc-class.yaml
+    math: "Max PC attack bonus vs. AC 13 goblin: +11 (Level 20) vs. +5 (Level 5). Still ~65% hit rate both ways."
+  b:
+    name: "Felt Progression"
+    description: "Players expect to feel more powerful as they level — bounded modifiers can make progression feel cosmetic"
+    supported_by:
+      - progression/generic-pc-class.yaml
+    math: "Level 1→20 proficiency bonus growth: +2→+6. Only +4 total. HP and spell access provide the actual power curve."
+
+tension_shape:
+  stability_win: "Low-level threats never become trivially skippable through stat inflation"
+  progression_cost: "Players relying solely on attack/save modifiers feel minimal growth — class features and HP carry the power fantasy"
+  dc_stability: "A DC 15 lock remains relevant at Level 20 (65% success without proficiency) — intentional"
+
+health: balanced-by-design
+health_notes: "Bounded accuracy is the load-bearing structural decision of 5e. Violating it (through stacking flat bonuses, +X items, or custom feats) collapses the system into a whiff-fest at high DCs or triviality at low ones."
+
+whiff_fest_detection:
+  warning_threshold: "If PC attack bonus + 10 < target AC, expected hit rate < 50% — investigate"
+  formula: "Expected hit rate = (21 - (AC - attack_bonus)) / 20"
+  note: "Below 65% hit rate, combat pacing degrades. Below 50%, player experience turns punishing."
+
+intent:
+  summary: "This is the stated design philosophy of 5e as documented in the DMG."
+  rationale: "Bounded accuracy is explicitly named as a 5e design pillar in the DMG. It was introduced in response to 3.5e/4e modifier bloat. The tension between stability and felt progression is intentional — 5e resolves it by front-loading class features rather than stat growth."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/d20-resolution.yaml
+  - mechanics/attack-roll.yaml
+  - progression/generic-pc-class.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

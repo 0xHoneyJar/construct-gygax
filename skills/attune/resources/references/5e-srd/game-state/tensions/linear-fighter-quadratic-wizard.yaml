@@ -1,0 +1,51 @@
+id: linear-fighter-quadratic-wizard
+name: "Linear Fighter / Quadratic Wizard"
+type: tensions
+description: "Martial classes scale linearly (more attacks, same damage type); caster classes scale quadratically (new spell levels unlock qualitatively different capabilities). The gap widens at high levels."
+tradition: d20
+tags: [scaling, balance, class-disparity, high-level-play]
+
+poles:
+  a:
+    name: "Linear Martial Progression"
+    description: "Fighters gain Extra Attack (Level 5, 11, 20) — a multiplier on base damage, but the damage type and delivery remain the same throughout"
+    supported_by:
+      - progression/generic-pc-class.yaml
+    math: "Fighter DPR ≈ attack_count × (weapon_avg + STR_mod). Scales arithmetically."
+  b:
+    name: "Quadratic Caster Progression"
+    description: "Wizards gain access to new spell levels (1st through 9th) — each tier is qualitatively, not just quantitatively, more powerful"
+    supported_by:
+      - resources/spell-slots-abstract.yaml
+      - progression/generic-pc-class.yaml
+    math: "Spell power ≈ f(slot_level) where f is nonlinear — Fireball (3rd) ≠ 3× Magic Missile (1st)"
+
+tension_shape:
+  at_low_levels: "Roughly balanced — 1st-level spells are comparable to weapon attacks"
+  at_mid_levels: "Casters gain meaningful utility advantage (flight, concentration control spells)"
+  at_high_levels: "Casters dominate — 7th-9th level spells rewrite encounter parameters; martials still do weapon attacks"
+
+health: known-asymmetry
+health_notes: "5e acknowledges this tension but does not fully resolve it. Bounded accuracy slows the gap's widening but does not close it. Table culture and player preference determine whether this is felt as a problem."
+
+mitigation_in_5e:
+  - "Short-rest recovery (Warlock) partially addresses slot pressure"
+  - "Martial subclasses (Battlemaster) add decision complexity without spell-level jumps"
+  - "Magic items can grant martials magical damage and utility — designer-administered mitigation"
+
+intent:
+  summary: "This is the stated design philosophy of 5e as documented in the DMG."
+  rationale: "5e's design intent acknowledges martial/caster disparity at high levels. Bounded accuracy was introduced specifically to reduce — not eliminate — the gap. The DMG treats high-level caster dominance as a known property, not a bug. Table-level mitigation is expected."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - progression/generic-pc-class.yaml
+  - resources/spell-slots-abstract.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

@@ -1,0 +1,178 @@
+game: "D&D 5e SRD Core"
+slug: 5e-srd
+tradition: d20
+description: "Pre-attuned 5e SRD combat math baseline. Use as a comparison reference for homebrew deviation analysis via /augury. Install via /attune --reference 5e-srd."
+created_at: "2026-04-13T00:00:00Z"
+last_modified_at: "2026-04-13T00:00:00Z"
+
+entity_count:
+  stats: 6
+  resources: 2
+  mechanics: 5
+  progression: 1
+  entities: 5
+  tensions: 3
+  total: 22
+
+files:
+
+  # ── STATS ──────────────────────────────────────────────────────────────────
+  - path: stats/strength.yaml
+    id: strength
+    depends_on: []
+    affects: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+
+  - path: stats/dexterity.yaml
+    id: dexterity
+    depends_on: []
+    affects: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+
+  - path: stats/constitution.yaml
+    id: constitution
+    depends_on: []
+    affects: [resources/hit-points.yaml, mechanics/saving-throw.yaml]
+
+  - path: stats/intelligence.yaml
+    id: intelligence
+    depends_on: []
+    affects: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+
+  - path: stats/wisdom.yaml
+    id: wisdom
+    depends_on: []
+    affects: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+
+  - path: stats/charisma.yaml
+    id: charisma
+    depends_on: []
+    affects: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+
+  # ── RESOURCES ──────────────────────────────────────────────────────────────
+  - path: resources/hit-points.yaml
+    id: hit-points
+    depends_on: [stats/constitution.yaml, progression/generic-pc-class.yaml]
+    affects: [mechanics/d20-resolution.yaml]
+
+  - path: resources/spell-slots-abstract.yaml
+    id: spell-slots-abstract
+    depends_on: [progression/generic-pc-class.yaml]
+    affects: [tensions/linear-fighter-quadratic-wizard.yaml, tensions/action-economy-vs-nova.yaml]
+
+  # ── MECHANICS ──────────────────────────────────────────────────────────────
+  - path: mechanics/d20-resolution.yaml
+    id: d20-resolution
+    depends_on:
+      - stats/strength.yaml
+      - stats/dexterity.yaml
+      - stats/constitution.yaml
+      - stats/intelligence.yaml
+      - stats/wisdom.yaml
+      - stats/charisma.yaml
+    affects:
+      - mechanics/attack-roll.yaml
+      - mechanics/saving-throw.yaml
+      - tensions/bounded-accuracy.yaml
+
+  - path: mechanics/attack-roll.yaml
+    id: attack-roll
+    depends_on:
+      - mechanics/d20-resolution.yaml
+      - mechanics/advantage.yaml
+      - mechanics/disadvantage.yaml
+    affects: [resources/hit-points.yaml]
+
+  - path: mechanics/saving-throw.yaml
+    id: saving-throw
+    depends_on:
+      - mechanics/d20-resolution.yaml
+      - stats/strength.yaml
+      - stats/dexterity.yaml
+      - stats/constitution.yaml
+      - stats/intelligence.yaml
+      - stats/wisdom.yaml
+      - stats/charisma.yaml
+    affects: [resources/hit-points.yaml]
+
+  - path: mechanics/advantage.yaml
+    id: advantage
+    depends_on: [mechanics/d20-resolution.yaml]
+    affects: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+
+  - path: mechanics/disadvantage.yaml
+    id: disadvantage
+    depends_on: [mechanics/d20-resolution.yaml]
+    affects: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+
+  # ── PROGRESSION ────────────────────────────────────────────────────────────
+  - path: progression/generic-pc-class.yaml
+    id: generic-pc-class
+    depends_on: [stats/constitution.yaml]
+    affects:
+      - resources/hit-points.yaml
+      - resources/spell-slots-abstract.yaml
+      - tensions/linear-fighter-quadratic-wizard.yaml
+      - tensions/bounded-accuracy.yaml
+
+  # ── ENTITIES ───────────────────────────────────────────────────────────────
+  - path: entities/monster-tier-1.yaml
+    id: monster-tier-1
+    depends_on: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+    affects: []
+
+  - path: entities/monster-tier-2.yaml
+    id: monster-tier-2
+    depends_on: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+    affects: []
+
+  - path: entities/monster-tier-3.yaml
+    id: monster-tier-3
+    depends_on: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+    affects: []
+
+  - path: entities/monster-archetype-striker.yaml
+    id: monster-archetype-striker
+    depends_on: [mechanics/attack-roll.yaml, mechanics/saving-throw.yaml]
+    affects: [tensions/action-economy-vs-nova.yaml]
+
+  - path: entities/monster-archetype-brute.yaml
+    id: monster-archetype-brute
+    depends_on: [mechanics/attack-roll.yaml, resources/hit-points.yaml]
+    affects: [tensions/action-economy-vs-nova.yaml]
+
+  # ── TENSIONS ───────────────────────────────────────────────────────────────
+  - path: tensions/linear-fighter-quadratic-wizard.yaml
+    id: linear-fighter-quadratic-wizard
+    depends_on: [progression/generic-pc-class.yaml, resources/spell-slots-abstract.yaml]
+    affects: []
+
+  - path: tensions/bounded-accuracy.yaml
+    id: bounded-accuracy
+    depends_on:
+      - mechanics/d20-resolution.yaml
+      - mechanics/attack-roll.yaml
+      - progression/generic-pc-class.yaml
+    affects: []
+
+  - path: tensions/action-economy-vs-nova.yaml
+    id: action-economy-vs-nova
+    depends_on:
+      - resources/spell-slots-abstract.yaml
+      - resources/hit-points.yaml
+      - mechanics/attack-roll.yaml
+    affects: []
+
+dependency_graph_summary:
+  most_depended_on:
+    - mechanics/d20-resolution.yaml     # 4 direct dependents
+    - mechanics/attack-roll.yaml        # 5 direct dependents
+    - progression/generic-pc-class.yaml # 4 direct dependents
+    - stats/constitution.yaml           # 2 direct dependents
+    - resources/spell-slots-abstract.yaml # 2 direct dependents
+  orphaned: []
+  circular: []
+
+augury_reference_notes:
+  healing_check: "Healing averages 4 HP/round at Level 5 — 5e baseline incoming DPR is 35/round (CR 5). Healing covering <20% of incoming DPR is below expected band."
+  hp_check: "Compare custom monster HP against 15(DCR+4)+3. If custom HP < 50% of baseline, TTK < 2 rounds."
+  hit_rate_check: "Expected party hit rate: 65%. If custom monster AC pushes hit rate below 50%, whiff-fest territory."
+  sword_plus_one: "+1 weapon in bounded accuracy = 5% hit rate boost (65% → 70%). Evaluate homebrew flat bonuses against this scale."

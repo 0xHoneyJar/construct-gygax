@@ -1,0 +1,43 @@
+id: move-as-tripwire
+name: "Move as Tripwire"
+type: mechanics
+description: "Architectural meta-mechanic. PbtA moves are not buttons a player pushes — they are tripwires that activate automatically when the fiction crosses a specific threshold. The player describes what their character does; the fiction determines which move (if any) triggers."
+tradition: pbta
+tags: [meta-mechanic, architecture, tripwire, fiction-first]
+
+trigger: "This mechanic has no trigger — it IS the trigger architecture for all other moves"
+
+cost: []
+
+resolution:
+  method: meta-rule
+  stat: null
+  outcomes:
+    fiction_crosses_threshold: "Move activates; player rolls"
+    fiction_does_not_cross_threshold: "No move; MC narrates forward without a roll"
+    player_selects_move_from_sheet: "This is NOT how PbtA works — architectural failure if this occurs"
+
+the_distinction:
+  button: "Player looks at sheet, selects 'Seize by Force', describes action to fit. The mechanic leads."
+  tripwire: "Player describes throwing someone off a building. Fiction triggers 'Act Under Fire'. The fiction leads."
+
+diagnostic_question: "Can a player select this move from a menu without fiction justifying it? If yes, it is a button, not a tripwire."
+
+intent:
+  summary: "Moves activate from fiction — this is the structural difference from skill systems"
+  rationale: "The tripwire architecture is what makes PbtA a fiction-first system rather than a mechanics-with-fiction-dressing system. In a d20 skill system, the player chooses the mechanical action and describes it fictionally. In PbtA, the player describes the fictional action and the fiction chooses the mechanic. This inversion is not cosmetic — it changes how the conversation flows, who has authority over when mechanics engage, and what the dice represent. A game that uses 2d6+stat but lets players button-press moves is running on PbtA math with d20 architecture."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/fiction-mechanics-fiction-loop.yaml
+affects:
+  - mechanics/act-under-fire.yaml
+  - mechanics/resolution-2d6.yaml
+  - tensions/fiction-vs-mechanics.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

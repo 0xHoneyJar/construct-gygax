@@ -1,0 +1,35 @@
+id: strength
+name: "Strength"
+type: stats
+description: "Physical power. Governs melee attacks, carrying capacity, and feats of brute force. Contributes to life points alongside Dexterity and Endurance."
+tradition: cepheus
+tags: [characteristic, physical, core, life-points]
+
+range:
+  min: 2
+  max: 15
+  typical: "7 (average baseline)"
+  notation_note: "Values above 9 recorded in pseudo-hexadecimal: 10=A, 11=B, 12=C, 13=D, 14=E, 15=F. This allows the Universal Personality Profile (UPP) string to remain single-character per characteristic."
+
+used_by:
+  - "Melee attack and damage rolls"
+  - "Carrying capacity"
+  - "Physical labor tasks"
+  - "Life points calculation (Str + Dex + End)"
+
+intent:
+  summary: "Physical capability. 7 is average baseline."
+  rationale: "Characteristics in Cepheus are rolled on 2D6, producing a bell curve centered on 7. Modifiers derived from characteristic values are modest (+1 at 9, +2 at 12), keeping the bell curve of the resolution roll dominant over individual stat variation."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on: []
+affects:
+  - mechanics/resolution-2d6-plus-8.yaml
+  - resources/life-points.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

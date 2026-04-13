@@ -1,0 +1,68 @@
+id: monster-tier-3
+name: "Monster Tier 3 (CR 11-16)"
+type: entities
+subtype: monster-template
+description: "Baseline monster math for CR 11-16. Represents threats for Levels 18-22 parties. Solo monsters at this tier require Legendary Actions to survive party action economy."
+tradition: d20
+tags: [monster, tier-3, template, cr-11-16]
+
+cr_range: "11-16"
+equivalent_party_levels: "18-22 (inflated for solo action economy)"
+damage_coefficient: "L × 4 (Brutal) to L × 5 (Extreme)"
+
+stat_formulas:
+  offensive:
+    dpr: "6(OCR) + 5"
+    attack_bonus: "0.4(OCR) + 3"
+    save_dc: "0.4(OCR) + 12"
+  defensive:
+    hp: "15(DCR + 4) + 3"
+    ac: "(DCR)/3 + 13"
+
+worked_examples:
+  cr_11:
+    ocr: 11
+    dcr: 11
+    dpr: 71
+    attack_bonus: "+7"
+    save_dc: 16
+    hp: 228
+    ac: 16
+  cr_13:
+    ocr: 13
+    dcr: 13
+    dpr: 83
+    attack_bonus: "+8"
+    save_dc: 17
+    hp: 258
+    ac: 17
+  cr_16:
+    ocr: 16
+    dcr: 16
+    dpr: 101
+    attack_bonus: "+9"
+    save_dc: 18
+    hp: 303
+    ac: 18
+
+action_economy_inflation:
+  note: "A solo CR 16 monster needs ~5 CR levels of inflation to survive 3 rounds against a 4-PC party"
+  legendary_actions: "Standard mitigation — grants extra actions outside turn order"
+  legendary_resistance: "Standard mitigation — auto-succeed on saves a limited number of times/day"
+
+intent:
+  summary: "CR 11-16 stat baseline for deviation analysis"
+  rationale: "This is the stated design philosophy of 5e as documented in the DMG. Reference math for high-tier encounter design and solo boss calibration."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - mechanics/attack-roll.yaml
+  - mechanics/saving-throw.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

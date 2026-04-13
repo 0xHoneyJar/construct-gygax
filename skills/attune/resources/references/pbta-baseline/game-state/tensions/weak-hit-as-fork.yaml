@@ -1,0 +1,48 @@
+id: weak-hit-as-fork
+name: "Weak Hit as Fork"
+type: tensions
+description: "The 7-9 result must produce genuine forks — real costs, difficult choices, or meaningful trade-offs. If 7-9 results feel like 'lesser success' or 'success but slightly worse,' the design has failed its core innovation."
+tradition: pbta
+tags: [weak-hit, fork, choice, 7-9, outcome-design]
+
+poles:
+  a:
+    name: "Genuine Fork"
+    description: "7-9 results force the player into a real decision: take a worse outcome, accept a hard bargain, or face an ugly choice. Each option has meaningful fictional consequences. The player changes the story through their choice."
+    healthy_examples:
+      - "'You get the throw, but you catch the ledge — let go and fall, or hang while the gang closes in?'"
+      - "'You seduce them, but they want something from you first — name your price or walk away.'"
+      - "'You read the sitch clearly, but it costs you time — Dremmer's already moving.'"
+  b:
+    name: "Lesser Success"
+    description: "7-9 results are success-but-penalized: the player gets what they wanted with a minor drawback attached. No choice required, no meaningful fork, just reduced reward."
+    unhealthy_examples:
+      - "'You succeed, but take 1 harm.'"
+      - "'You do it, but it takes longer than expected.'"
+      - "'You get it, but they're suspicious of you now.'"
+    note: "These examples are not automatically unhealthy — they can work if they create genuine ongoing fiction. They become lesser success when they attach to outcomes without changing future stakes."
+
+health: tension
+health_notes: "This is an active design challenge, not a stable equilibrium. Writing genuine 7-9 results is harder than writing 10+ or 6- results. The failure mode (lesser success) is the path of least resistance for move designers. The tension is irreducible: every 7-9 result needs to be evaluated for whether it creates a real choice or just penalizes."
+
+fork_quality_test:
+  question: "Does the 7-9 result require the player to make a decision that materially changes what happens next?"
+  pass: "Player must choose between two or more options, each with distinct fictional consequences"
+  fail: "Player accepts a fixed outcome that is merely worse than the 10+ result"
+
+intent:
+  summary: "7-9 results must produce real forks and costs — 'lesser success' is a design failure"
+  rationale: "Baker's innovation with the three-tier system is that 7-9 is not a graduated success — it is a fork. The player succeeds, but the world makes a demand in return. The design value is that this keeps the fiction moving (unlike a miss, which might stall) while keeping the stakes real (unlike a full hit, which might resolve tension). The 7-9 result at its best is a writer's room move: 'yes, and here's what it costs.' If the cost doesn't require a decision, the fork collapses into a lesser-success tax. Move designers must ask: 'what is the player choosing between, and does either choice matter?'"
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/resolution-2d6.yaml
+  - mechanics/act-under-fire.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

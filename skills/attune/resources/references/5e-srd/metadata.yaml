@@ -1,0 +1,8 @@
+name: "D&D 5e SRD Core"
+slug: 5e-srd
+tradition: d20
+version: "5.1 (OGL 1.0a)"
+source: "https://dnd.wizards.com/resources/systems-reference-document"
+scope: "Combat math baseline: ability scores, CR-indexed monster math, attack bonuses, save DCs, HP/AC scaling, core PC class progression"
+excludes: "Full spell list, magic items, setting lore, subclasses beyond archetypes"
+compiled_from: "grimoires/loa/context/5e-srd-baseline.md"

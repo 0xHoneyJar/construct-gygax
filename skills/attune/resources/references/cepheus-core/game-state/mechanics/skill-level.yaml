@@ -1,0 +1,60 @@
+id: skill-level
+name: "Skill Level"
+type: mechanics
+description: "Skills are rated 0 through 4. Each level adds directly to the 2D6 roll as a flat bonus. Levels correspond to recognizable real-world training milestones, grounding character competence in familiar terms."
+tradition: cepheus
+tags: [core, skill, progression, professional-identity]
+
+trigger: "Applied as a modifier whenever the relevant skill is used in a check"
+cost: []
+
+resolution:
+  method: flat-modifier-to-resolution-2d6-plus-8
+  formula: "skill_level added directly to 2D6 roll (e.g., Pilot-3 adds +3)"
+
+level_table:
+  0:
+    label: "Touched"
+    real_world_equivalent: "Some familiarity — cancels unskilled penalty but no bonus"
+    modifier: 0
+    notes: "Character has basic exposure; can attempt without the -3 penalty"
+  1:
+    label: "Trained"
+    real_world_equivalent: "Associate's degree / ~2 years formal training"
+    modifier: "+1"
+  2:
+    label: "Professional"
+    real_world_equivalent: "Bachelor's degree / ~4 years formal training"
+    modifier: "+2"
+  3:
+    label: "Expert"
+    real_world_equivalent: "Master's degree / ~6 years formal training or equivalent experience"
+    modifier: "+3"
+  4:
+    label: "Master"
+    real_world_equivalent: "Doctorate / ~8+ years formal training or lifelong practice"
+    modifier: "+4"
+
+scaling_notes:
+  - "Level 4 is exceptionally rare — typically 2-3 terms of career service in a focused path."
+  - "The +4 modifier at max skill shifts the 8+ success probability from 41.7% (unmodified) to 91.7% (with no characteristic modifier). With a +1 characteristic modifier, max-skill characters succeed approximately 97.2% of the time on standard difficulty tasks."
+  - "This linear scaling means skill investment is always rewarded. There is no diminishing returns inflection point."
+
+intent:
+  summary: "Levels 1-4 correlate to Associate/Bachelor/Master/Doctorate training — competence is legible and grounded in recognizable career progression."
+  rationale: "By mapping skill levels to real-world educational equivalents, Cepheus makes character competence intuitively legible without explanation. When a player sees their character has Medic-2, they understand 'this person has the equivalent of a nursing or paramedic qualification.' This grounds the lifepath system in social reality and makes skill acquisition during character creation feel meaningful rather than abstract number assignment."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - mechanics/resolution-2d6-plus-8.yaml
+  - progression/lifepath-careers.yaml
+affects:
+  - mechanics/unskilled-penalty.yaml
+  - tensions/unskilled-penalty-vs-generalist-competence.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

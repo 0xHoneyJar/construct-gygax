@@ -1,0 +1,40 @@
+id: harm
+name: "Harm"
+type: resources
+description: "Physical damage accumulation on a 0-6 scale. Harm does not directly reduce capability at low levels but imposes conditions and fictional consequences as it accumulates. At 6, the character dies."
+tradition: pbta
+tags: [damage, consequence, health, core]
+
+pool:
+  min: 0
+  max: 6
+  recovery:
+    trigger: downtime
+    amount: variable
+    notes: "Recovery requires fictional justification — rest, aid from another character, or medical attention. Recovery is not automatic between scenes."
+
+harm_levels:
+  0: "Unharmed"
+  1-2: "Stabilized — minor injury, no mechanical effect but fiction acknowledges it"
+  3: "Grievous — ongoing fictional consequence; stat debuff at MC discretion"
+  4-5: "Dying — requires immediate attention or death"
+  6: "Dead"
+
+depletion_consequence: "At 6 harm: character death. Intermediate harm imposes fictional costs the MC uses to drive stakes."
+overflow_consequence: "Death — permanent removal from play unless a move or playbook ability intervenes"
+pressure_rating: high
+
+design_notes:
+  - "Harm is a stakes escalator, not an attrition meter. Low harm levels don't mechanically hobble characters; they create fictional obligation."
+  - "The 0-6 scale maps to narrative beats, not combat rounds. A character at 4 harm isn't half-dead — they are dramatically dying."
+  - "No hit points, no damage rolls. Harm amount is set by MC fiction ('that's 3-harm') based on fictional positioning."
+
+depends_on:
+  - mechanics/mc-move-hard.yaml
+affects:
+  - tensions/fiction-vs-mechanics.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

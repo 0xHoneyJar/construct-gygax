@@ -1,0 +1,40 @@
+id: spell-slots-abstract
+name: "Spell Slots (Abstract)"
+type: resources
+description: "Generic spell slot resource representing daily spellcasting capacity. Abstract model for cross-system comparison; actual per-level counts vary by class."
+tradition: d20
+tags: [spellcasting, rest-recovery, per-day, resource-pressure]
+
+pool:
+  min: 0
+  max_by_cr:
+    note: "Slot count scales with character level; highest slot level ≈ ceil(PC_level / 2), max 9th"
+    low_tier: "Levels 1-4: 2-6 total slots, max 2nd-level spells"
+    mid_tier: "Levels 5-10: 8-14 total slots, max 5th-level spells"
+    high_tier: "Levels 11-16: 14-20 total slots, max 8th-level spells"
+    apex_tier: "Levels 17-20: 20-22 total slots, max 9th-level spells"
+  recovery:
+    trigger: long-rest
+    amount: full
+  partial_recovery:
+    trigger: short-rest
+    note: "Warlock only — all slots recovered, but only 1-4 slots total (Pact Magic)"
+
+depletion_consequence: "Cannot cast leveled spells. Cantrips (at-will) remain available."
+pressure_rating: high
+
+design_notes:
+  - "Core driver of linear-fighter-quadratic-wizard tension"
+  - "Nova risk: full slot expenditure in one encounter trivializes it, breaks intended 4-5 round TTK"
+  - "Resistance Trap: do NOT increase monster DCR for non-magical physical resistance past Level 5 — magic weapons saturate the party, making resistance narrative flavor only"
+
+depends_on:
+  - progression/generic-pc-class.yaml
+affects:
+  - tensions/linear-fighter-quadratic-wizard.yaml
+  - tensions/action-economy-vs-nova.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

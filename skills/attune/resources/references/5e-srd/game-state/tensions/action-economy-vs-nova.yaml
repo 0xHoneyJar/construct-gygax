@@ -1,0 +1,61 @@
+id: action-economy-vs-nova
+name: "Action Economy vs. Nova"
+type: tensions
+description: "Sustained damage over 4-5 rounds favors resource conservation; nova strategies concentrate all resources into round 1 to end the fight instantly. These create opposite incentive structures."
+tradition: d20
+tags: [combat, pacing, resources, encounter-design]
+
+poles:
+  a:
+    name: "Sustained Action Economy"
+    description: "Party distributes damage over 4-5 rounds, preserving spell slots for future encounters — the expected 5e encounter design"
+    supported_by:
+      - mechanics/attack-roll.yaml
+      - resources/hit-points.yaml
+    math: "Time-to-kill baseline: 4-5 rounds. Standard DPR per round assumed across all party members."
+  b:
+    name: "Nova Strategy"
+    description: "Party burns all high-level spell slots in round 1, dealing 3-5× expected DPR to end the encounter before the monster acts"
+    supported_by:
+      - resources/spell-slots-abstract.yaml
+    math: "Full-slot nova: Level 5 party can output ~3-4× base DPR in round 1. Most CR 5 monsters die before initiative completes."
+
+tension_shape:
+  single_encounter_day: "Nova dominates — if there's only one fight, burn everything"
+  adventuring_day: "Action economy dominates — 6-8 encounter day punishes nova; no slots remain"
+  real_table_problem: "Most tables run 2-3 encounters/day — nova is optimal, tension collapses in practice"
+
+health: structurally-stressed
+health_notes: "5e's intended 6-8 encounter adventuring day rarely occurs at real tables. This makes spell slots feel less pressured than designed, and nova strategies more rewarding than intended. Short-rest classes (Warlock, Monk) are partially immune to this collapse."
+
+encounter_building_reference:
+  mp_formula: "(No. of Players + AoE_adjustment) × Difficulty_Multiplier"
+  aoe_adjustment: "+1 MP if a PC has high-impact AoE (e.g., Fireball Wizard)"
+  difficulty_multipliers:
+    easy: 0.5
+    medium: 1.0
+    hard: 1.5
+    deadly: 2.0
+  monster_mp_costs:
+    minion: 0.25
+    standard: 1.00
+    elite: 2.00
+    champion: 4.00
+
+intent:
+  summary: "This is the stated design philosophy of 5e as documented in the DMG."
+  rationale: "5e's encounter math assumes a 6-8 encounter adventuring day. Nova vs. sustained is intentionally kept in tension by the long-rest recovery model — short rests provide partial relief for half-casters. The DMG acknowledges this tension; table pacing is the expected control mechanism."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - resources/spell-slots-abstract.yaml
+  - resources/hit-points.yaml
+  - mechanics/attack-roll.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

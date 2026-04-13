@@ -1,0 +1,56 @@
+id: effect-as-continuous-vs-pbta-tiers
+name: "Effect as Continuous Gradient vs. PbtA Outcome Tiers"
+type: tensions
+description: "Both Cepheus and PbtA games (Dungeon World, Apocalypse World) use 2D6+modifier as their resolution mechanic. But their output structures are fundamentally different design philosophies: PbtA uses three fixed outcome tiers (10+/7-9/6-), while Cepheus uses a continuous Effect gradient (roll minus 8). This difference has significant downstream consequences for skill investment, player psychology, and table feel."
+tradition: cepheus
+tags: [cross-tradition, resolution, design-philosophy, 2d6, pbta-comparison]
+
+poles:
+  a:
+    name: "Effect: Continuous Gradient"
+    description: "Every point of modifier improvement shifts both success probability and typical Effect magnitude linearly. There is no plateau or inflection point — investment is always rewarded."
+    supported_by:
+      - mechanics/effect-system.yaml
+      - mechanics/resolution-2d6-plus-8.yaml
+      - mechanics/skill-level.yaml
+  b:
+    name: "PbtA Tiers: Fixed Outcome Bands"
+    description: "A modifier of +2 vs +3 matters only insofar as it shifts probability between the three fixed bands (10+/7-9/6-). Once reliably in the 10+ band, additional investment has sharply diminishing returns."
+    supported_by: []
+
+health: resolved-by-design
+health_notes: "This is not a tension within Cepheus that needs resolution — it is a cross-system design comparison that informs how to evaluate Cepheus mechanics. Within Cepheus, the continuous Effect system is the design. The tension is relevant when players or designers import PbtA intuitions (e.g., 'once I have +2, I'm effectively capped') into a Cepheus context where that intuition is false."
+
+cross_system_analysis:
+  pbta_probability_bands:
+    "6-": "Roll 2D6+2 or less: probability ~16.7% with +0, drops as modifier increases"
+    "7-9": "The 'partial success' band — most mechanically interesting territory in PbtA design"
+    "10+": "Full success — PbtA design optimizes to reliably reach this band"
+    band_optimization_problem: "A character with +3 reaches 10+ approximately 83% of the time, making the 7-9 band effectively disappear. Once there, further investment has minimal table impact."
+  cepheus_continuous:
+    effect_at_skill_1: "Typical Effect on success: +1 to +2 range"
+    effect_at_skill_3: "Typical Effect on success: +3 to +4 range — qualitatively better, not just more frequent"
+    no_plateau: "There is no skill level at which additional investment stops mattering — higher Effect means faster completion, more information, and larger narrative scope on success"
+
+design_implications_for_homebrew:
+  - "If layering PbtA partial-success moves onto a Cepheus chassis: audit whether the partial-success band (Effect -1 to +2, roughly) will be populated often enough to matter. A skilled character rarely lands here."
+  - "If adding fixed outcome tiers to Cepheus: you are changing the game's skill investment curve. High-skill characters lose the continuous reward; PbtA-style band optimization becomes viable."
+  - "The continuous Effect system makes Cepheus an excellent candidate for 'degrees of success' subsystems (faster repair at high Effect, more accurate intelligence at high Effect) — these map naturally onto the gradient."
+
+intent:
+  summary: "Effect is a continuous gradient, not fixed tiers like PbtA's 10+/7-9/6-. Intent: reward skill stacking linearly rather than encouraging probability band optimization."
+  rationale: "The choice to make Effect continuous rather than tiered reflects a different relationship between character and outcome. PbtA's partial success band (7-9) is a design space for interesting complications — it is the zone where narrative complexity lives. Cepheus's continuous gradient is a different design bet: there is no special zone, only degrees of how well or poorly you performed. This shifts the table feel from 'interesting complications' to 'competence gradient' — experts feel like experts, not just people who skip the complication zone."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/effect-system.yaml
+  - mechanics/resolution-2d6-plus-8.yaml
+  - mechanics/skill-level.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

@@ -1,0 +1,67 @@
+id: monster-tier-2
+name: "Monster Tier 2 (CR 5-10)"
+type: entities
+subtype: monster-template
+description: "Baseline monster math for CR 5-10. Represents threats for Levels 10-16 parties. Magic weapon saturation begins here — resistance inflation trap activates."
+tradition: d20
+tags: [monster, tier-2, template, cr-5-10]
+
+cr_range: "5-10"
+equivalent_party_levels: "10-16"
+damage_coefficient: "L × 3 (Normal) to L × 4 (Brutal)"
+
+stat_formulas:
+  offensive:
+    dpr: "6(OCR) + 5"
+    attack_bonus: "0.4(OCR) + 3"
+    save_dc: "0.4(OCR) + 12"
+  defensive:
+    hp: "15(DCR + 4) + 3"
+    ac: "(DCR)/3 + 13"
+
+worked_examples:
+  cr_5:
+    ocr: 5
+    dcr: 5
+    dpr: 35
+    attack_bonus: "+5"
+    save_dc: 14
+    hp: 138
+    ac: 15
+  cr_8:
+    ocr: 8
+    dcr: 8
+    dpr: 53
+    attack_bonus: "+6"
+    save_dc: 15
+    hp: 183
+    ac: 15
+  cr_10:
+    ocr: 10
+    dcr: 10
+    dpr: 65
+    attack_bonus: "+7"
+    save_dc: 16
+    hp: 213
+    ac: 16
+
+resistance_trap_warning:
+  note: "Do NOT increase DCR for non-magical physical resistance past Level 5"
+  rationale: "Magic weapons saturate party loadout by Tier 2; non-magical resistance becomes narrative flavor only, not functional defense increase"
+
+intent:
+  summary: "CR 5-10 stat baseline for deviation analysis"
+  rationale: "This is the stated design philosophy of 5e as documented in the DMG. Reference math for identifying when homebrew monsters are under- or over-statted at mid-tier."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - mechanics/attack-roll.yaml
+  - mechanics/saving-throw.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

@@ -1,0 +1,45 @@
+id: mc-move-soft
+name: "MC Move — Soft"
+type: mechanics
+description: "A soft move announces future badness — it signals what is about to happen and gives the players a window to react, change course, or brace for impact. Soft moves are the MC's primary narrative instrument outside of 6- results."
+tradition: pbta
+tags: [mc-move, soft-move, narrative-authority, pacing]
+
+trigger: "During natural conversation flow — when the fiction calls for escalation, complication, or consequence that players can still influence"
+
+cost: []
+
+resolution:
+  method: narrative-declaration
+  stat: null
+  outcomes:
+    player_reacts: "Player changes fiction to avoid or deflect the incoming badness — new move may trigger"
+    player_ignores: "Soft move becomes hard move — consequence lands without a roll"
+    player_rolls: "If reaction triggers a move, roll resolves whether they successfully navigate the soft move's threat"
+
+examples:
+  - "Tell them the consequences and ask: 'The ceiling is creaking. What do you do?'"
+  - "Announce future badness: 'You hear Dremmer's gang coming down the corridor.'"
+  - "Show signs of an approaching threat: 'The scanner chirps. Something's moving in the dark.'"
+
+mc_principles_connection:
+  - "Look through crosshairs — every NPC/resource is a potential target; soft moves telegraphing this are honest"
+  - "Play to find out — soft moves create branches, not predetermined conclusions"
+
+intent:
+  summary: "Preserve player agency by making consequences visible before they land"
+  rationale: "Soft moves are the MC's primary tool for fair play. They distinguish PbtA from adversarial GMing: the MC announces what is coming (future badness) rather than springing consequences invisibly. This gives players the opportunity to react — which may trigger a move. If they choose not to react, the soft move escalates to a hard move. The structure is not about softening consequences; it is about making the fictional stakes legible so players can make meaningful choices."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on: []
+affects:
+  - mechanics/mc-move-hard.yaml
+  - mechanics/resolution-2d6.yaml
+  - tensions/player-authority-vs-mc-authority.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"
