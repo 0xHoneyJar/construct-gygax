@@ -90,13 +90,18 @@ Check for conflicts: glob `grimoires/gygax/forks/*/` to see if the name already 
    - Creating new entity files
    - Removing entity files
    - Updating `depends_on` and `affects` arrays in related entities
-2. Update the fork's `index.yaml` to reflect all changes:
+2. After applying the change to forked game-state, check if the change affects any entities with intent set. If so, prompt the user: "This change affects entities with stated intent: [list]. Does this change preserve the original intent, or shift it?"
+
+   - **Preserve:** Intent fields unchanged in the fork
+   - **Shift:** Prompt for new intent summary and rationale for each affected entity; update in fork
+
+3. Update the fork's `index.yaml` to reflect all changes:
    - Update entity counts if entities were added or removed
    - Update file list entries
    - Update `last_modified_at` to current timestamp
    - Set `last_modified_by: scry`
    - Regenerate `dependency_graph_summary` if the dependency structure changed
-3. Validate every modified YAML file: required fields present, cross-references point to files that exist within the fork, tradition is valid.
+4. Validate every modified YAML file: required fields present, cross-references point to files that exist within the fork, tradition is valid.
 
 Do NOT modify any files in `grimoires/gygax/game-state/` (the main game-state). All changes happen in the fork only.
 
@@ -265,6 +270,17 @@ Compare the fork's analysis results against main game-state to produce a unified
 |---------|-----------|------------|-------|
 | ...     | balanced  | tilted-a   | ...   |
 
+## Intent Deltas
+
+[Only include this section if intent changed between main and fork]
+
+| Entity | Original Intent | Fork Intent | Shift Magnitude |
+|--------|----------------|-------------|-----------------|
+| tensions/foo.yaml | "deliberate asymmetry" | "balanced pole-swap" | Major |
+
+**Analysis:**
+[Does the intent shift align with the change's purpose? Or did the change inadvertently alter the design philosophy?]
+
 ## Key Findings
 
 [Top 3-5 findings across both augury and cabal analysis, prioritized by severity.]
@@ -360,6 +376,8 @@ Merge a fork's game-state into main.
 
 1. Copy all files from `grimoires/gygax/forks/{branch-name}/game-state/` to `grimoires/gygax/game-state/`, overwriting existing files.
 2. Verify the copy: read the updated `game-state/index.yaml` and confirm it reflects the fork's state.
+
+When `/scry commit` merges a fork to main, all intent fields from the fork are copied to main — including intent changes. The changelog entry for the merge explicitly records intent deltas for full traceability.
 
 #### Step M3: Write Changelog Entry
 
@@ -470,6 +488,9 @@ Scry's inline analysis is derived from `/augury` and `/cabal` but scoped and ada
 - DOES handle any TTRPG tradition -- adapts analysis methodology to the game's tradition (d20, PbtA, FitD, OSR, freeform, custom)
 - DOES support multiple simultaneous forks for side-by-side comparison
 - DOES include "Recommended Next Steps" in every delta report for cross-skill chaining
+- DOES prompt about intent preservation when forks touch intent-annotated entities
+- DOES include intent deltas in comparison reports alongside numerical/experiential deltas
+- DOES preserve intent fields on commit (including any shifts)
 
 ## Output
 

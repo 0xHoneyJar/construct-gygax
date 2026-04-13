@@ -1,0 +1,36 @@
+id: dexterity
+name: "Dexterity"
+type: stats
+description: "Agility and reflexes. Governs ranged attacks, AC (light/no armor), and Dex-based skills."
+tradition: d20
+tags: [ability-score, physical, core]
+
+range:
+  min: 1
+  max: 30
+  typical: "8-18"
+  modifier_formula: "floor((value - 10) / 2)"
+
+used_by:
+  - "Ranged attack rolls"
+  - "Finesse melee attack rolls"
+  - "Dexterity saving throws"
+  - "Armor Class (no armor: 10 + DEX mod; light armor: base + DEX mod)"
+  - "Acrobatics, Sleight of Hand, Stealth checks"
+
+intent:
+  summary: "Core physical ability score"
+  rationale: "Bounded accuracy baseline — modifiers stay within the -1 to +5 range for most of play, preserving challenge across all levels"
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on: []
+affects:
+  - mechanics/attack-roll.yaml
+  - mechanics/saving-throw.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

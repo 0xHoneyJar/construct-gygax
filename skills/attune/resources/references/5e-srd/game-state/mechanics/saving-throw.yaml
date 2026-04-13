@@ -1,0 +1,47 @@
+id: saving-throw
+name: "Saving Throw"
+type: mechanics
+description: "Reactive defense against effects. Roll d20 + save modifier vs. caster's Save DC."
+tradition: d20
+tags: [combat, defense, spellcasting, core]
+
+trigger: "When a creature is subjected to an effect that allows a saving throw"
+cost: []
+
+resolution:
+  method: roll-d20-plus-save-modifier-vs-dc
+  formula: "d20 + ability_modifier + proficiency_bonus (if proficient in that save) vs. DC"
+  outcomes:
+    ">= DC": "Success — reduced or no effect"
+    "< DC": "Failure — full effect applies"
+
+save_dc_formula:
+  fractional_cr: "13 (flat)"
+  cr_1_to_19: "0.4(OCR) + 12"
+  cr_20_to_30: "(OCR)/3 + 12"
+  note: "OCR = Offensive Challenge Rating of the creature imposing the save"
+
+proficient_saves_by_class:
+  note: "Each class is proficient in 2 of the 6 saves. Wisdom saves are most common in 5e encounter design."
+
+virtual_damage_equivalents:
+  blinded: "OCR + 1 effective DPR"
+  stunned: "OCR + 1.5 effective DPR"
+  paralyzed: "+21 damage equivalent (6d6, Scorching Ray equivalent)"
+  petrified: "OCR + 3 effective DPR"
+
+depends_on:
+  - mechanics/d20-resolution.yaml
+  - stats/strength.yaml
+  - stats/dexterity.yaml
+  - stats/constitution.yaml
+  - stats/intelligence.yaml
+  - stats/wisdom.yaml
+  - stats/charisma.yaml
+affects:
+  - resources/hit-points.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

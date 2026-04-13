@@ -11,3 +11,6 @@
 # Loa state files — local to developer
 grimoires/loa/
 .loa-version.json
+
+# Obsidian workspace (developer-local)
+.obsidian/

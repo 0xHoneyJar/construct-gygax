@@ -1,3 +1,35 @@
 # Gygax construct script manifest
-# v1 uses pure AI runtime — no custom scripts required
-scripts: []
+# v3: populated with 6 probability utility scripts
+# Scripts are pure functions invoked by skills (primarily /augury) for precise math
+# that the AI runtime cannot reliably compute.
+
+scripts:
+  - name: dice-probability
+    path: scripts/lib/dice-probability.ts
+    description: "Single-die probability distributions (d4-d100). Expected values, CDF, probability of meeting/exceeding target."
+    invoked_by: [augury, delve]
+
+  - name: dice-pool
+    path: scripts/lib/dice-pool.ts
+    description: "Binomial success-counting math for dice pool systems (Shadowrun, Storyteller, FitD). Given pool size, success threshold, and required successes, returns probability distribution."
+    invoked_by: [augury]
+
+  - name: bell-curve
+    path: scripts/lib/bell-curve.ts
+    description: "Multi-die summation for bell curve systems (2d6, 3d6, Cepheus/Traveller). Returns mean, stdev, full CDF, and probability at target."
+    invoked_by: [augury]
+
+  - name: advantage
+    path: scripts/lib/advantage.ts
+    description: "Advantage/disadvantage math for any die size. Returns effective bonus curve showing where advantage is worth +5 (near median) vs +1 (at extremes)."
+    invoked_by: [augury]
+
+  - name: exploding-dice
+    path: scripts/lib/exploding-dice.ts
+    description: "Recursive 'aces' dice math (Savage Worlds, DCC, Feng Shui). Expected value and infinite tail modeling. Surfaces the Target Number Paradox where smaller dice can be mathematically superior."
+    invoked_by: [augury]
+
+  - name: cdf-compare
+    path: scripts/lib/cdf-compare.ts
+    description: "Compare two probability distributions across DC range. Returns deltas, crossover points, and narrative summary. Core tool for cross-system comparison."
+    invoked_by: [augury]

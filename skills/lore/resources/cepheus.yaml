@@ -1,0 +1,241 @@
+tradition: cepheus
+name: "Cepheus/Traveller System Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for Cepheus Engine and Traveller-family systems. Covers 2d6+mod vs 8+
+  resolution, the Effect system (degrees of success), lifepath character creation, the
+  -3 unskilled penalty enforcement of specialization, and the "Age of Sail" philosophy
+  that underpins classic Traveller setting logic. Distilled from the Cepheus Engine SRD,
+  original 1977 Traveller rules, and 45+ years of play reports.
+
+  Source: grimoires/loa/context/traveller-cepheus.md
+
+heuristics:
+  # --- 2D6+8 RESOLUTION MATHEMATICS ---
+
+  - id: bell-curve-stat-calibration
+    name: "Bell Curve Stat Calibration"
+    category: math
+    severity: critical
+    tradition_specific: true
+    description: |
+      2d6 produces a bell curve centered on 7. Target 8+ means base success is 41.67%.
+      Each +1 modifier shifts the curve: +1 = 58%, +2 = 72%, +3 = 83%, +4 = 92%, +5 = 97%.
+      Because of the bell curve, modifiers near the median (DC 7-10) are worth far more
+      than modifiers at extremes. A characteristic modifier of +3 plus skill level 2
+      (+5 total) makes a task 97% likely. Calibrate modifier totals so typical tasks
+      remain uncertain (60-80% range) rather than trivial or impossible.
+    detection: |
+      Check mechanics where characteristic modifiers and skill levels combine. If typical
+      trained characters achieve +4 or higher before rolling, the dice become ceremony.
+      If typical trained characters achieve only +1, the game is harsher than baseline
+      Cepheus. Compare against the 2d6+mod CDF (invoke bell-curve.ts to verify).
+
+  - id: effect-vs-tier-resolution
+    name: "Effect System vs Tier-Based Resolution"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Cepheus uses a CONTINUOUS Effect gradient (Effect = roll - 8), not PbtA's fixed
+      tiers (10+/7-9/6-). This has design implications: Effect rewards skill stacking
+      linearly (each +1 translates directly to Effect magnitude), while tier-based
+      resolution encourages probability band optimization. If a Cepheus-inspired game
+      uses tier bands, it borrows mechanical structure but loses Cepheus's core design
+      philosophy.
+    detection: |
+      Check resolution mechanics for outcome structure. If outcomes use bands (Exceptional
+      / Success / Failure / Catastrophic), it's true Cepheus. If outcomes use tiers
+      (10+/7-9/6- style), the design is PbtA-borrowed. If outcomes use Effect as
+      continuous gradient (Effect 3 = "modest success," Effect 7 = "exceptional"), the
+      design is authentic Cepheus.
+
+  - id: unskilled-penalty-calibration
+    name: "Unskilled Penalty Calibration (-3 Baseline)"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      The -3 unskilled penalty is Cepheus's core specialization enforcer. It reduces
+      unskilled success rate from 41.67% (2d6 vs 8+) to 16.67% (2d6-3 vs 8+). This
+      PUNISHES attempts outside character history, reinforcing the "experienced
+      professional" persona. If the penalty is weaker (-1 or -2), specialization is not
+      meaningfully enforced. If stronger (-4 or -5), generalist play becomes impossible.
+      The -3 baseline is carefully calibrated.
+    detection: |
+      Check for an unskilled penalty in the resolution mechanic. If absent, the game
+      may not be Cepheus-philosophy-aligned — everyone is competent at everything.
+      If present but weaker, document the deviation. Cepheus's design intent is:
+      try what you trained for.
+
+  - id: lifepath-skill-scope
+    name: "Lifepath Skill Scope Coherence"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      In Cepheus, skills come from career history. A Scout has Survey and Pilot from
+      exploration terms; a Marine has Gun Combat and Tactics from military terms. When
+      skill trees allow arbitrary selection (pick any 3 skills at character creation),
+      the lifepath loses its identity function. Skills should trace to career narrative,
+      not to optimization pathways.
+    detection: |
+      Check character creation/progression mechanics. If skills are selected à la carte
+      without career gating, lifepath coherence is broken. If skills are career-gated but
+      careers are unlimited, the gating is cosmetic. Authentic Cepheus: career selection
+      determines skill pool; you play the career your characteristics and rolls permitted.
+
+  # --- AGE OF SAIL PHILOSOPHY ---
+
+  - id: age-of-sail-coherence
+    name: "Age of Sail Coherence (No FTL Comms)"
+    category: setting
+    severity: high
+    tradition_specific: true
+    description: |
+      The "Age of Sail" philosophy is Cepheus's most famous innovation: information
+      travels no faster than a ship. This forces feudal decentralization — an emperor
+      cannot micro-manage a thousand worlds in real time. Pocket empires emerge. Local
+      nobles wield real power. If a setting claims interstellar scope but permits instant
+      communication (FTL radio, psionic network, etc.), it loses the decentralization
+      pressure that makes Cepheus settings tick.
+    detection: |
+      Check setting entities for communication speed. If FTL communication exists and
+      scales with empire span, central authority can function in real time — the feudal
+      structure is decorative. Flag settings that claim Age of Sail feeling but permit
+      mechanics that shortcut distance.
+
+  - id: mortgage-as-campaign-engine
+    name: "40-Year Mortgage as Campaign Engine"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Traveller's 40-year starship mortgage is not flavor text — it is the MECHANICAL
+      ENGINE of the sandbox. Ship costs millions → party starts with massive debt →
+      forced into Commerce or Drifter roles to afford monthly payments. The economic
+      pressure drives the campaign. Cepheus games that omit the mortgage (or make it
+      trivial to pay off) lose the structural tension that generates adventure hooks.
+    detection: |
+      Check for persistent economic pressure mechanisms. A one-time ship purchase vs
+      ongoing mortgage payments are fundamentally different. Ongoing payments create
+      the sandbox engine. If ship acquisition is a loot drop or plot reward, the engine
+      is absent. Flag as deviation from classic design.
+
+  - id: spice-and-peppercorn-trade
+    name: "Spice-and-Peppercorn Trade Economics"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Traveller's trade model only supports HIGH-VALUE LOW-MASS goods as viable cargo.
+      Shipping bulk ore across parsecs is economically impossible — jump fuel and life
+      support costs destroy margins. This forces trade cargo toward "spice and peppercorn"
+      equivalents (luxury goods, information, rare biologicals, passengers). If your
+      trade system permits profitable bulk shipping, it violates the interstellar
+      economic realism that grounds Cepheus.
+    detection: |
+      Check trade mechanics. Are freight costs per-mass proportional to distance squared
+      or exponential (realistic for jump fuel)? Or are they flat per-parsec (unrealistic)?
+      If flat, players will min-max bulk goods. Authentic Cepheus: trade is speculative
+      cargo driven by price differentials, not bulk freight.
+
+  # --- EFFECT SYSTEM DESIGN ---
+
+  - id: effect-consequence-mapping
+    name: "Effect-to-Consequence Mapping"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Effect (roll - 8) should map to consequence magnitude. Effect 1 = "barely" (task
+      accomplished, no bonus), Effect 3 = "solidly" (task plus minor benefit), Effect 6
+      = "exceptionally" (task plus significant benefit). Effect -3 = "definitely failed"
+      (task incomplete, minor consequence), Effect -6 = "catastrophically" (task failed,
+      major consequence). If the game ignores Effect magnitude in consequence narration,
+      it reduces Cepheus's granular system to binary pass/fail.
+    detection: |
+      Check outcome text for Effect use. Do mechanics reference Effect magnitude in their
+      consequence rules? Or do they collapse into success/failure? Games that use Effect
+      as a narration prompt (GM riffs on magnitude) are authentic; games that ignore it
+      lose the design value.
+
+  - id: characteristic-vs-skill-check
+    name: "Characteristic vs Skill Check Boundaries"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Cepheus distinguishes Skill Checks (trained expertise) from Characteristic Checks
+      (raw talent, no training required). When uncertain, the game should default to
+      the broader test. Pure skill checks force the -3 unskilled penalty. Pure
+      characteristic checks bypass training entirely. Well-designed systems use both,
+      with clear rules for when each applies.
+    detection: |
+      Check resolution mechanics for check-type logic. If the game uses only skill checks,
+      untrained characters are maximally punished (fine for high-specialization campaigns).
+      If only characteristic checks, training is decorative. Most Cepheus games benefit
+      from both: Skill check for trained action, Characteristic check for raw-talent
+      fallback.
+
+  # --- CHARACTER CREATION LETHALITY ---
+
+  - id: creation-lethality-tone-setter
+    name: "Character Creation Lethality as Tone-Setter"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      Original 1977 Traveller allowed character death during the Survival Roll at
+      character creation. This was DEFAULT, not optional. It set the campaign tone:
+      space is lethal, survival earns the right to play. Modern iterations offer "Iron
+      Man" vs "soft" variants, but retaining SOME risk in lifepath enforces the
+      seriousness of career choices. If creation is pure reward (terms always succeed,
+      benefits always positive), the tone shifts toward heroic fantasy.
+    detection: |
+      Check character creation for risk mechanisms. Can terms fail catastrophically?
+      Can benefits be lost? Is death on the table? If creation is pure advancement,
+      the tone is softer than classic Cepheus. Flag as deviation — may be intentional
+      (modernization) or unintentional (tonal drift).
+
+  - id: social-standing-as-mechanic
+    name: "Social Standing as Active Mechanic"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Cepheus's Soc characteristic is not just a number — it's a FEUDAL HIERARCHY
+      MECHANIC. It should actively shape play: Soc 9+ accesses noble-only careers, Soc 3-
+      is disadvantaged in starport interactions, Soc 12+ grants titles. If Soc exists
+      but never matters mechanically (no checks use it, no NPCs react to it), it's a
+      vestigial characteristic.
+    detection: |
+      Check how often Social Standing modifier appears in check mechanics. Check for
+      Soc-gated content (careers, allies, access). If Soc is disconnected from
+      consequential mechanics, flag as vestigial. Authentic Cepheus makes Soc as
+      material as Strength.
+
+  # --- PHILOSOPHICAL DIVERGENCE FROM PBTA ---
+
+  - id: pbta-vs-cepheus-2d6-philosophy
+    name: "2d6 System Philosophy Divergence (PbtA vs Cepheus)"
+    category: mechanics
+    severity: medium
+    tradition_specific: false
+    description: |
+      PbtA and Cepheus both use 2d6+mod but with OPPOSITE design philosophies. PbtA:
+      fiction-first, moves as tripwires, three tiers, distributed authority. Cepheus:
+      skill-first, static tasks, continuous Effect, traditional GM authority. A 2d6
+      system that mixes these — tier outcomes with GM-only authority, or continuous
+      Effect with fiction-triggered mechanics — is a hybrid. Hybrids can work, but the
+      designer should know they're hybridizing opposing philosophies.
+    detection: |
+      Cross-check the game's authority distribution, trigger system, and outcome
+      structure. If authority is centralized (GM decides when to roll) BUT outcomes use
+      tier bands (PbtA style), the design is mixing philosophies. Flag for designer
+      awareness — "your 2d6 system uses PbtA outcome structure with Cepheus authority
+      distribution. Intentional hybrid or borrowed without realizing?"
+
+# Weighting scale reference matches other tradition files:
+#   severity: critical | high | medium | low
+#   tradition_specific: true (only applies to 2d6 sci-fi / Cepheus) | false (cross-tradition)

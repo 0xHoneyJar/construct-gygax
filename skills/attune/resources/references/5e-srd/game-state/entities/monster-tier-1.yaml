@@ -1,0 +1,71 @@
+id: monster-tier-1
+name: "Monster Tier 1 (CR 1-4)"
+type: entities
+subtype: monster-template
+description: "Baseline monster math for CR 1-4. Representative of standard threats for Levels 1-7 parties. Uses L×3 Normal damage coefficient."
+tradition: d20
+tags: [monster, tier-1, template, cr-1-4]
+
+cr_range: "1-4"
+equivalent_party_levels: "1-7"
+damage_coefficient: "L × 3 (Normal — standard threat)"
+
+stat_formulas:
+  offensive:
+    dpr: "6(OCR) + 5"
+    attack_bonus: "0.4(OCR) + 3"
+    save_dc: "0.4(OCR) + 12"
+  defensive:
+    hp: "15(DCR + 4) + 3"
+    ac: "(DCR)/3 + 13"
+
+worked_examples:
+  cr_1:
+    ocr: 1
+    dcr: 1
+    dpr: 11
+    attack_bonus: "+3"
+    save_dc: 13
+    hp: 78
+    ac: 13
+  cr_2:
+    ocr: 2
+    dcr: 2
+    dpr: 17
+    attack_bonus: "+4"
+    save_dc: 13
+    hp: 93
+    ac: 13
+  cr_4:
+    ocr: 4
+    dcr: 4
+    dpr: 29
+    attack_bonus: "+5"
+    save_dc: 14
+    hp: 123
+    ac: 14
+
+fractional_cr_method:
+  note: "Use negative integer method to avoid stat bloat"
+  mapping:
+    "1/2": 0
+    "1/4": -1
+    "1/8": -2
+    "0": -3
+
+intent:
+  summary: "CR 1-4 stat baseline for deviation analysis"
+  rationale: "This is the stated design philosophy of 5e as documented in the DMG. Reference math for identifying when homebrew monsters are under- or over-statted relative to expected threat level."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - mechanics/attack-roll.yaml
+  - mechanics/saving-throw.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

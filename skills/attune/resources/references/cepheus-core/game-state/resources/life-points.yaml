@@ -1,0 +1,41 @@
+id: life-points
+name: "Life Points"
+type: resources
+description: "Hit point equivalent. Derived from the sum of three physical characteristics (Strength + Dexterity + Endurance). As damage is taken, it is applied first to Endurance, then to Strength or Dexterity. Characteristic reduction below zero triggers incapacitation or death."
+tradition: cepheus
+tags: [durability, combat, derived, physical, core]
+
+pool:
+  min: 0
+  derivation_formula: "Strength + Dexterity + Endurance (typical range: 6 to 45, average 21 at 7+7+7)"
+  typical_range: "15-25 for most starting characters (characteristics cluster around 7 each)"
+  recovery:
+    trigger: "Medical aid or rest"
+    amount: "Characteristic points restored individually; full recovery requires treatment or extended downtime"
+
+damage_application_order:
+  - "Endurance first (primary damage buffer)"
+  - "Strength or Dexterity second (attacker's or situation's choice)"
+  - "When any characteristic reaches 0: incapacitated (unconscious)"
+  - "When two characteristics reach 0: mortally wounded"
+  - "When all three reach 0: dead"
+
+depletion_consequence: "Characteristic damage has lasting consequences — lost Strength means weaker attacks, lost Dexterity means slower reactions. This differs fundamentally from D&D 5e HP, which is an abstract buffer with no mechanical side-effects until 0."
+pressure_rating: high
+
+design_notes:
+  - "Unlike 5e HP (a single pool), Cepheus distributes damage across three tracked characteristics, each with downstream mechanical effects."
+  - "The separation of Endurance (primary buffer) from Strength/Dexterity (functional capacity) means late-combat characters are mechanically degraded, not just 'almost dead.'"
+  - "Starting life points depend on characteristic rolls — two unlucky characteristic rolls can produce a genuinely fragile character. This is consistent with Cepheus's lethality philosophy."
+
+depends_on:
+  - stats/strength.yaml
+  - stats/dexterity.yaml
+  - stats/endurance.yaml
+affects:
+  - mechanics/resolution-2d6-plus-8.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

@@ -1,0 +1,50 @@
+id: monster-archetype-brute
+name: "Monster Archetype: Brute"
+type: entities
+subtype: monster-archetype
+description: "HP sponge archetype. Low or negative OCR-DCR spread — absorbs damage without threatening to kill. OCR-DCR spread of -2 to +4."
+tradition: d20
+tags: [monster, archetype, brute, sponge]
+
+ocr_dcr_spread:
+  range: "-2 to +4"
+  note: "DCR meets or exceeds OCR — defense matches or exceeds offense"
+
+design_role:
+  role: "Resource drain — extends combat duration, depleting spell slots and hit dice"
+  threat_pattern: "Low per-round damage, very high survivability"
+  tactical_effect: "Creates attrition pressure; forces resource expenditure without immediate KO threat"
+
+worked_example_at_cr_8:
+  ocr: 4
+  dcr: 8
+  dpr: 29
+  attack_bonus: "+5"
+  save_dc: 14
+  hp: 183
+  ac: 16
+  spread: "-4"
+
+design_notes:
+  - "Brutes are most dangerous after the fight — HP spent fighting them is HP unavailable for the next encounter"
+  - "AC 8 / High HP variant (Zombie archetype): satisfying to hit, creates heavy resource drain"
+  - "Pure brutes rarely create memorable moments — pair with Strikers for tactical complexity"
+  - "Non-magical physical resistance: do NOT increase DCR past Level 5 (Resistance Trap)"
+
+intent:
+  summary: "High-defense low-offense archetype for attrition pressure"
+  rationale: "This is the stated design philosophy of 5e as documented in the DMG. Brutes convert action economy into resource depletion, not immediate kill pressure."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - mechanics/attack-roll.yaml
+  - resources/hit-points.yaml
+affects:
+  - tensions/action-economy-vs-nova.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

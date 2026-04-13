@@ -1,0 +1,43 @@
+id: fiction-vs-mechanics
+name: "Fiction vs. Mechanics"
+type: tensions
+description: "The core PbtA tension: mechanics must serve the fiction and generate new fiction, not replace or bypass it. When mechanics become the primary reality (numbers without narrative) the game breaks its core loop."
+tradition: pbta
+tags: [core-tension, architecture, fiction-first, loop-integrity]
+
+poles:
+  a:
+    name: "Fiction Primacy"
+    description: "The shared imagined space is the game's primary reality. Mechanics are instruments that advance the fiction, not the other way around."
+    supported_by:
+      - mechanics/fiction-mechanics-fiction-loop.yaml
+      - mechanics/move-as-tripwire.yaml
+      - mechanics/mc-move-soft.yaml
+  b:
+    name: "Mechanical Creep"
+    description: "Mechanics begin to substitute for fiction — rolls without fictional triggers, outcomes stated in numbers without narrative consequence, moves selected from menus rather than activated by fiction."
+    risk_signals:
+      - "Players say 'I use Act Under Fire' rather than describing what they do"
+      - "MC states 'you take 3 harm' without naming what happens fictionally"
+      - "Rolls happen without a clear fictional trigger identified"
+      - "Strong hits end conversation rather than generating new fiction"
+
+health: calibrated
+health_notes: "This tension is not resolvable — it is inherent to running any structured mechanic within a conversation. The game stays healthy when the MC consistently names fictional outcomes and holds the tripwire standard for move activation. It drifts into mechanical creep gradually, typically as players optimize."
+
+intent:
+  summary: "The conversation is the game — mechanics must feed fiction back into the shared imagined space"
+  rationale: "Baker's central claim is that role-playing is a structured, continuous conversation. Mechanics are not the game — they are tools within the conversation. The tension between fiction and mechanics is permanent: any mechanic introduced creates pressure toward mechanical abstraction. PbtA manages this tension through its architecture (tripwire moves, loop structure, MC principles) rather than eliminating it. A game honoring this tension will always feel like 'we're figuring out what happens' not 'we're resolving outcomes.' The diagnostic: if you removed all the dice, could you still identify what should happen from the fiction alone?"
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/fiction-mechanics-fiction-loop.yaml
+  - mechanics/move-as-tripwire.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

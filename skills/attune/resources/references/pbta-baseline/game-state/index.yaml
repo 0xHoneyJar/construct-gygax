@@ -1,0 +1,232 @@
+game: "Apocalypse World Baseline"
+tradition: pbta
+description: "Pre-attuned PbtA baseline reference game-state. Grounds Gygax analysis in Apocalypse World 2E's core architecture: 2d6+stat resolution, three-tier outcomes (10+/7-9/6-), move-as-tripwire, MC Agenda + Principles, soft vs hard moves. Use as comparison baseline for 'how does my narrative mechanic compare to PbtA's approach?'"
+underlying_model: "Conflict Model (Apocalypse World style) — see metadata.yaml for contrast with Relating Model (Under Hollow Hills) and Adventure Model"
+compiled_from: "grimoires/loa/context/pbta-masterclass.md"
+created_at: "2026-04-13T00:00:00Z"
+last_modified_at: "2026-04-13T00:00:00Z"
+
+entity_count:
+  stats: 5
+  resources: 2
+  mechanics: 6
+  progression: 1
+  entities: 1
+  tensions: 4
+  total: 19
+
+files:
+  # STATS — 5 stats on -1 to +3 range
+  - path: stats/cool.yaml
+    id: cool
+    description: "Composure under pressure — primary stat for Act Under Fire"
+    depends_on: []
+    affects:
+      - mechanics/act-under-fire.yaml
+      - mechanics/resolution-2d6.yaml
+
+  - path: stats/hard.yaml
+    id: hard
+    description: "Toughness and ruthlessness — primary stat for Go Aggro / Seize by Force"
+    depends_on: []
+    affects:
+      - mechanics/resolution-2d6.yaml
+
+  - path: stats/hot.yaml
+    id: hot
+    description: "Social leverage and seductive power — primary stat for Turn Someone On / Manipulate"
+    depends_on: []
+    affects:
+      - mechanics/resolution-2d6.yaml
+
+  - path: stats/sharp.yaml
+    id: sharp
+    description: "Perceptiveness and situational awareness — primary stat for Read a Sitch / Read a Person"
+    depends_on: []
+    affects:
+      - mechanics/resolution-2d6.yaml
+
+  - path: stats/weird.yaml
+    id: weird
+    description: "Psychic sensitivity and novel arena access — primary stat for Open Your Brain"
+    depends_on: []
+    affects:
+      - mechanics/resolution-2d6.yaml
+
+  # RESOURCES — harm scale and XP track
+  - path: resources/harm.yaml
+    id: harm
+    description: "0-6 physical damage scale; 6 = death; recovery requires downtime"
+    depends_on:
+      - mechanics/mc-move-hard.yaml
+    affects:
+      - tensions/fiction-vs-mechanics.yaml
+
+  - path: resources/xp.yaml
+    id: xp
+    description: "0-5 per-advance XP track; earned via highlighted stats and end-of-session questions"
+    depends_on:
+      - stats/cool.yaml
+      - stats/hard.yaml
+      - stats/hot.yaml
+      - stats/sharp.yaml
+      - stats/weird.yaml
+    affects:
+      - progression/advancement.yaml
+
+  # MECHANICS — core PbtA architecture
+  - path: mechanics/fiction-mechanics-fiction-loop.yaml
+    id: fiction-mechanics-fiction-loop
+    description: "Core bedrock loop: fictional cause → move trigger → mechanical resolution → new fictional reality → next trigger"
+    depends_on: []
+    affects:
+      - mechanics/move-as-tripwire.yaml
+      - mechanics/resolution-2d6.yaml
+      - mechanics/mc-move-soft.yaml
+      - mechanics/mc-move-hard.yaml
+      - tensions/fiction-vs-mechanics.yaml
+
+  - path: mechanics/move-as-tripwire.yaml
+    id: move-as-tripwire
+    description: "Architectural meta-mechanic: moves activate from fiction crossing a threshold, not player selection from a menu"
+    depends_on:
+      - mechanics/fiction-mechanics-fiction-loop.yaml
+    affects:
+      - mechanics/act-under-fire.yaml
+      - mechanics/resolution-2d6.yaml
+      - tensions/fiction-vs-mechanics.yaml
+
+  - path: mechanics/resolution-2d6.yaml
+    id: resolution-2d6
+    description: "2d6+stat three-tier resolution: 10+ strong hit / 7-9 weak hit (fork) / 6- miss (MC hard move)"
+    depends_on:
+      - stats/cool.yaml
+      - stats/hard.yaml
+      - stats/hot.yaml
+      - stats/sharp.yaml
+      - stats/weird.yaml
+    affects:
+      - mechanics/mc-move-hard.yaml
+      - tensions/weak-hit-as-fork.yaml
+      - tensions/fiction-vs-mechanics.yaml
+
+  - path: mechanics/act-under-fire.yaml
+    id: act-under-fire
+    description: "Reference Action Move: roll +Cool, three-tier outcome, 7-9 is an explicit fork (worse outcome / hard bargain / ugly choice)"
+    depends_on:
+      - stats/cool.yaml
+      - mechanics/resolution-2d6.yaml
+      - mechanics/move-as-tripwire.yaml
+    affects:
+      - resources/harm.yaml
+      - tensions/weak-hit-as-fork.yaml
+
+  - path: mechanics/mc-move-soft.yaml
+    id: mc-move-soft
+    description: "Announce future badness; player can react before consequence lands — the MC's primary narrative instrument"
+    depends_on: []
+    affects:
+      - mechanics/mc-move-hard.yaml
+      - mechanics/resolution-2d6.yaml
+      - tensions/player-authority-vs-mc-authority.yaml
+
+  - path: mechanics/mc-move-hard.yaml
+    id: mc-move-hard
+    description: "Immediate unavoidable consequence; primary response to 6- results or un-reacted soft moves"
+    depends_on:
+      - mechanics/resolution-2d6.yaml
+      - mechanics/mc-move-soft.yaml
+    affects:
+      - resources/harm.yaml
+      - tensions/player-authority-vs-mc-authority.yaml
+
+  # PROGRESSION — advancement track
+  - path: progression/advancement.yaml
+    id: advancement
+    description: "5-XP per-advance track; advances give breadth and flexibility, not power scaling; stat cap enforced at +3"
+    depends_on:
+      - resources/xp.yaml
+      - stats/cool.yaml
+      - stats/hard.yaml
+      - stats/hot.yaml
+      - stats/sharp.yaml
+      - stats/weird.yaml
+    affects:
+      - entities/playbook-archetype.yaml
+
+  # ENTITIES — playbook blueprint
+  - path: entities/playbook-archetype.yaml
+    id: playbook-archetype
+    description: "Generic playbook blueprint: conflict-wise cluster, required identity move, three game questions, arena differentiation"
+    depends_on:
+      - stats/cool.yaml
+      - stats/hard.yaml
+      - stats/hot.yaml
+      - stats/sharp.yaml
+      - stats/weird.yaml
+      - mechanics/move-as-tripwire.yaml
+    affects:
+      - progression/advancement.yaml
+      - resources/xp.yaml
+
+  # TENSIONS — core PbtA design tensions
+  - path: tensions/fiction-vs-mechanics.yaml
+    id: fiction-vs-mechanics
+    description: "Core tension: mechanics must generate new fiction, not replace it. Mechanical creep vs fiction primacy."
+    depends_on:
+      - mechanics/fiction-mechanics-fiction-loop.yaml
+      - mechanics/move-as-tripwire.yaml
+    affects: []
+
+  - path: tensions/player-authority-vs-mc-authority.yaml
+    id: player-authority-vs-mc-authority
+    description: "First Say distributed via moves; Final Say retained by MC under Agenda + Principles constraint"
+    depends_on:
+      - mechanics/mc-move-soft.yaml
+      - mechanics/mc-move-hard.yaml
+      - mechanics/resolution-2d6.yaml
+    affects: []
+
+  - path: tensions/weak-hit-as-fork.yaml
+    id: weak-hit-as-fork
+    description: "7-9 results must produce real forks requiring player choice — not lesser success with a penalty"
+    depends_on:
+      - mechanics/resolution-2d6.yaml
+      - mechanics/act-under-fire.yaml
+    affects: []
+
+  - path: tensions/graceful-collapse.yaml
+    id: graceful-collapse
+    description: "Concentric onion architecture: peripheral rules can be forgotten without breaking the game; core moves are always sufficient"
+    depends_on:
+      - mechanics/fiction-mechanics-fiction-loop.yaml
+      - mechanics/resolution-2d6.yaml
+      - mechanics/act-under-fire.yaml
+    affects: []
+
+dependency_graph_summary:
+  most_depended_on:
+    - id: mechanics/resolution-2d6.yaml
+      dependents: 7
+      note: "All 5 stats, mc-move-hard, weak-hit-as-fork, fiction-vs-mechanics"
+    - id: mechanics/fiction-mechanics-fiction-loop.yaml
+      dependents: 4
+      note: "Architectural root — move-as-tripwire, resolution-2d6, mc-move-soft, mc-move-hard all derive from it"
+    - id: mechanics/move-as-tripwire.yaml
+      dependents: 3
+      note: "Key differentiator from non-PbtA 2d6 systems; act-under-fire, resolution-2d6, fiction-vs-mechanics"
+  hub_stats:
+    - "All 5 stats feed into resolution-2d6.yaml — stat selection is the primary player-facing lever"
+    - "fiction-mechanics-fiction-loop.yaml is the architectural root — all mechanics derive from it"
+    - "move-as-tripwire.yaml is the structural separator: games that use 2d6 but lack tripwire architecture are not PbtA-native"
+  orphaned: []
+  circular: []
+
+heuristics:
+  button_vs_tripwire: "Does this move activate from fiction, or can a player select it from a menu? If menu-selectable, it is not PbtA-native."
+  fiction_mechanics_loop_integrity: "Does every mechanical outcome generate new fiction, or does it just adjust a number?"
+  weak_hit_quality: "Do 7-9 results produce genuine forks/costs, or do they feel like 'you won but worse'?"
+  required_move_presence: "Do playbooks express identity through mandatory triggers, or are all moves optional upgrades?"
+  graceful_collapse_test: "If a peripheral rule is forgotten, does the game still function on the 10+/7-9/6- core?"
+  arena_differentiation: "Do playbooks bypass conflict through unique arenas, or do they all engage the same conflict type with different stats?"
+  underlying_model_coherence: "Is the game's underlying model (Conflict/Relating/Adventure) consistent with its moves and playbooks?"

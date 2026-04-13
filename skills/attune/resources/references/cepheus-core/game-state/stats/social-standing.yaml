@@ -1,0 +1,36 @@
+id: social-standing
+name: "Social Standing"
+type: stats
+description: "A character's position in the interstellar feudal hierarchy. Not merely flavor — Social Standing mechanically determines NPC reactions, access to noble networks, and eligibility for certain career tracks."
+tradition: cepheus
+tags: [characteristic, social, core, feudal-hierarchy, unique-to-traveller]
+
+range:
+  min: 2
+  max: 15
+  typical: "7 (average baseline)"
+  notation_note: "Values above 9 recorded in pseudo-hexadecimal: 10=A, 11=B, 12=C, 13=D, 14=E, 15=F. Soc 10 (A) = Knight; Soc 11 (B) = Baron; Soc 12 (C) = Marquis; Soc 13 (D) = Count; Soc 14 (E) = Duke; Soc 15 (F) = Archduke or equivalent."
+
+used_by:
+  - "NPC reaction modifiers in social encounters"
+  - "Eligibility for Noble career track"
+  - "Access to aristocratic resources, estates, political leverage"
+  - "Social skill checks (Carouse, Persuade, Admin at high levels)"
+
+intent:
+  summary: "FEUDAL HIERARCHY MECHANIC — unique to Traveller. Represents place in interstellar nobility. Intent: make social class mechanically material, not flavor."
+  rationale: "Most RPGs treat social status as roleplay texture. Traveller makes it a number on the character sheet with the same mechanical weight as Strength. This is a deliberate design statement: in a feudal interstellar empire where FTL communications don't exist and local nobles govern autonomously, your rank IS a resource. A Duke can requisition a Naval escort; a peasant cannot. Social Standing externalizes and quantifies the power differentials that fantasy games often leave vague. The pseudo-hex notation at high values (C, D, E, F) underscores that these characters are in a genuinely different tier of human society."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on: []
+affects:
+  - mechanics/resolution-2d6-plus-8.yaml
+  - mechanics/characteristic-check.yaml
+  - progression/lifepath-careers.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

@@ -1,0 +1,31 @@
+id: sharp
+name: "Sharp"
+type: stats
+description: "Perceptiveness, situational awareness, and reading people. Governs assessing situations and understanding what is really happening beneath the surface."
+tradition: pbta
+tags: [stat, perception, intelligence]
+
+range:
+  min: -1
+  max: 3
+  typical: "0 to +2"
+
+used_by:
+  - "Read a Sitch"
+  - "Read a Person"
+
+intent:
+  summary: "Bounded accuracy on a bell curve — +1 is worth roughly 15% at the median"
+  rationale: "The -1 to +3 range is deliberate. Bell curve on 2d6+stat means +1 is worth ~15% at the median; specialization is rewarded without runaway power. Sharp moves (Read a Sitch, Read a Person) produce direct fictional information — questions the player gets to ask and the MC must answer honestly. This makes Sharp a narrative authority distribution mechanism, not just a skill modifier."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on: []
+affects:
+  - mechanics/resolution-2d6.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

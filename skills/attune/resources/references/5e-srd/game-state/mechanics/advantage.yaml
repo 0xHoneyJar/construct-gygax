@@ -1,0 +1,35 @@
+id: advantage
+name: "Advantage"
+type: mechanics
+description: "Roll 2d20, keep the higher result. Applied when circumstances favor the roll."
+tradition: d20
+tags: [core, modifier, probability]
+
+trigger: "When a creature has favorable circumstances on a d20 roll"
+cost: []
+
+resolution:
+  method: roll-2d20-keep-high
+  formula: "max(d20_1, d20_2) + modifier vs. DC or AC"
+  statistical_effect: "+3.3 to +5 effective bonus depending on base DC"
+  note: "Advantage does not stack — multiple sources of advantage still = roll 2d20 once"
+
+interactions:
+  - "Advantage and disadvantage together cancel out — roll one d20 normally"
+  - "Common sources: Prone attacker in melee, Blinded attacker (gives disadvantage to attacker), Help action"
+  - "Lucky feat: Roll 3d20 keep highest when having advantage"
+
+design_notes:
+  - "Advantage is equivalent to +3.3 to +5 on the roll, making it a powerful binary swing"
+  - "Flat bonuses in a bounded accuracy system are weaker than advantage — key design consideration for homebrew"
+
+depends_on:
+  - mechanics/d20-resolution.yaml
+affects:
+  - mechanics/attack-roll.yaml
+  - mechanics/saving-throw.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

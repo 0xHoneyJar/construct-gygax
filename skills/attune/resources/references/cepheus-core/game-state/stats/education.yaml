@@ -1,0 +1,45 @@
+id: education
+name: "Education"
+type: stats
+description: "Formal schooling and accumulated academic knowledge. Correlates directly with real-world training level and unlocks access to advanced skills during the lifepath."
+tradition: cepheus
+tags: [characteristic, cognitive, core, lifepath]
+
+range:
+  min: 2
+  max: 15
+  typical: "7 (average baseline)"
+  notation_note: "Values above 9 recorded in pseudo-hexadecimal: 10=A, 11=B, 12=C, 13=D, 14=E, 15=F."
+
+used_by:
+  - "Skill acquisition gating during lifepath careers"
+  - "Modifier for academic, technical, and scientific skill checks"
+  - "Characteristic checks for knowledge-based tasks"
+
+education_level_correlates:
+  - edu_value: 6
+    equivalent: "Basic schooling"
+  - edu_value: 8
+    equivalent: "Roughly university entrance level"
+  - edu_value: 10
+    equivalent: "University graduate"
+  - edu_value: 12
+    equivalent: "Advanced degree — correlates with skill level 3 (Master's equivalent)"
+
+intent:
+  summary: "Educational and cognitive capability. Education correlates with training level."
+  rationale: "Education is mechanically significant in a way most RPG systems avoid: it gates career opportunities and skill progression during character creation. A character cannot enter Officer-track careers without minimum Education. This makes formal schooling a tangible advantage, reflecting Traveller's interest in socioeconomic stratification as mechanical content."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on: []
+affects:
+  - mechanics/resolution-2d6-plus-8.yaml
+  - mechanics/characteristic-check.yaml
+  - progression/lifepath-careers.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

@@ -1,0 +1,50 @@
+id: d20-resolution
+name: "d20 Resolution"
+type: mechanics
+description: "Core resolution engine. Roll 1d20, add relevant modifier, compare to Difficulty Class. Meets or beats DC = success."
+tradition: d20
+tags: [core, resolution, checks, bounded-accuracy]
+
+trigger: "When an action's outcome is uncertain and a creature is capable of success"
+cost: []
+
+resolution:
+  method: roll-d20-plus-modifier-vs-dc
+  formula: "d20 + ability_modifier + proficiency_bonus (if proficient) vs. DC"
+  outcomes:
+    ">= DC": "Success"
+    "< DC": "Failure"
+  natural_20: "Automatic hit on attack rolls; maximum result on damage"
+  natural_1: "Automatic miss on attack rolls"
+
+dc_benchmarks:
+  trivial: 5
+  easy: 10
+  medium: 15
+  hard: 20
+  very_hard: 25
+  nearly_impossible: 30
+
+intent:
+  summary: "Single-roll bounded accuracy resolution"
+  rationale: "This is the stated design philosophy of 5e as documented in the DMG. Bounded accuracy keeps DCs meaningful at all levels by constraining modifier growth."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - stats/strength.yaml
+  - stats/dexterity.yaml
+  - stats/constitution.yaml
+  - stats/intelligence.yaml
+  - stats/wisdom.yaml
+  - stats/charisma.yaml
+affects:
+  - mechanics/attack-roll.yaml
+  - mechanics/saving-throw.yaml
+  - tensions/bounded-accuracy.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

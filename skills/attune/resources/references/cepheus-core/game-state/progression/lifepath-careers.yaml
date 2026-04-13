@@ -1,0 +1,58 @@
+id: lifepath-careers
+name: "Lifepath Career System"
+type: progression
+description: "Character creation in Cepheus is a career simulation, not a build selection. Characters serve 4-year terms across one or more careers, accumulating skills, characteristics, contacts, and injuries. Play begins after this history — the character arrives at the table as a mid-career professional, not a blank-slate novice."
+tradition: cepheus
+tags: [character-creation, lifepath, careers, professional-identity, lethality]
+
+structure:
+  term_length: "4 years per term"
+  min_terms: 1
+  max_terms: "No hard limit — aging effects apply after term 4 (age 34+), and Survival Roll death risk accumulates"
+  aging_onset: "Characteristic penalties begin appearing from age 34 onward, incentivizing earlier mustering out"
+
+career_sequence_per_term:
+  1: "Qualify for career (or be rejected and redirected)"
+  2: "Survival Roll — fail in Iron Man mode = character death; fail in standard mode = injured, forced muster-out"
+  3: "Commission Roll (for applicable careers) — enter officer track"
+  4: "Promotion Roll — advance in rank, gaining rank-based skill"
+  5: "Skill table rolls — gain 2-3 skills from career tables"
+  6: "Event roll (optional in some editions) — narrative event with mechanical consequence"
+  7: "Re-enlistment Roll — stay in career or muster out"
+
+lethality_note:
+  original_1977: "Survival Roll failure = character death during creation. Players would watch a character die before they ever played it. Sets campaign tone: space is lethal; survival earns the right to play."
+  modern_cepheus: "Default rules avoid death in creation; Iron Man mode restores original lethality as opt-in."
+  design_implication: "Even without death, failed Survival Rolls injure characters and force career changes — the history is not clean. Characters arrive with scars, detours, and unexpected skills from their injuries or redirections."
+
+starting_age: "18 + (4 × number of terms served)"
+typical_starting_age_range: "26-38 (2-5 terms is most common)"
+
+intent:
+  summary: "Characters start as mid-career professionals, not Level 1 novices. This transforms player connection to the world — they don't BECOME heroes, they ARE individuals with histories."
+  rationale: "The 4-year term system is Traveller's most radical design departure from the D&D tradition. Level 1 D&D characters are defined by potential; Cepheus characters are defined by what has already happened to them. This changes the psychological relationship to character: you are not building toward something, you are expressing something that already is. The consequence is richer NPC relationships (former crewmates, ex-commanding officers), denser world-connection (you served in the Imperium Navy — you know what the Navy is from the inside), and a different kind of investment — you care about the character because they have a past, not because you've optimized their future."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+scaling_notes:
+  - "More terms = more skills but aging characteristic penalties and higher accumulated mortality risk (in Iron Man mode)."
+  - "The aging inflection at term 4 (age 34) creates a natural tension: stay for more skills or muster out before your body starts failing. This is an intentional design pressure, not a flaw."
+  - "Characters who served fewer terms (2-3) tend to be more physically capable; characters with many terms (6-8) tend to be highly skilled but physically diminished. Both are valid — Cepheus does not privilege one over the other."
+
+depends_on:
+  - stats/strength.yaml
+  - stats/dexterity.yaml
+  - stats/endurance.yaml
+  - stats/intelligence.yaml
+  - stats/education.yaml
+  - stats/social-standing.yaml
+  - mechanics/lifepath-gain.yaml
+affects:
+  - mechanics/skill-level.yaml
+  - entities/career-archetype.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

@@ -1,0 +1,35 @@
+id: disadvantage
+name: "Disadvantage"
+type: mechanics
+description: "Roll 2d20, keep the lower result. Applied when circumstances hinder the roll."
+tradition: d20
+tags: [core, modifier, probability]
+
+trigger: "When a creature has unfavorable circumstances on a d20 roll"
+cost: []
+
+resolution:
+  method: roll-2d20-keep-low
+  formula: "min(d20_1, d20_2) + modifier vs. DC or AC"
+  statistical_effect: "-3.3 to -5 effective penalty depending on base DC"
+  note: "Disadvantage does not stack — multiple sources of disadvantage still = roll 2d20 once"
+
+interactions:
+  - "Advantage and disadvantage together cancel out — roll one d20 normally"
+  - "Common sources: Ranged attack while prone, Attacking a creature you can't see, Poisoned condition"
+  - "Lightly obscured: Disadvantage on Perception checks only"
+
+design_notes:
+  - "Disadvantage is the primary mechanical enforcement of conditions in 5e — most debuffs impose it rather than flat penalties"
+  - "Binary nature means stacking conditions has diminishing returns: second source of disadvantage does nothing"
+
+depends_on:
+  - mechanics/d20-resolution.yaml
+affects:
+  - mechanics/attack-roll.yaml
+  - mechanics/saving-throw.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

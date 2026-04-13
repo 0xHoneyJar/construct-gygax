@@ -1,0 +1,38 @@
+id: hit-points
+name: "Hit Points"
+type: resources
+description: "Measure of a creature's durability. Depleted by damage; recovered on rest. At 0 HP a creature falls unconscious (PCs) or dies (monsters)."
+tradition: d20
+tags: [combat, durability, rest-recovery, core]
+
+pool:
+  min: 0
+  max_by_level:
+    formula: "(hit_die_max + CON_mod) at level 1, then (hit_die_avg + CON_mod) per level thereafter"
+    typical_range: "7-12 HP per level gained"
+    note: "hit_die_avg = (hit_die_max / 2) + 1; e.g., d8 avg = 5, d10 avg = 6"
+  recovery:
+    trigger: long-rest
+    amount: full
+  short_rest_recovery:
+    trigger: short-rest
+    amount: "Spend Hit Dice (up to level total); each HD roll restores HP + CON mod"
+
+depletion_consequence: "At 0 HP: PCs make death saving throws; monsters die."
+pressure_rating: high
+
+design_notes:
+  - "5e HP sponge philosophy: high HP + moderate AC beats high AC + low HP for avoiding whiff-fest"
+  - "Zombie archetype: AC 8 / high HP — satisfying to hit, heavy resource drain"
+  - "Animated Armor archetype: AC 18 / low HP — tactical puzzle, miss-heavy tension"
+
+depends_on:
+  - stats/constitution.yaml
+  - progression/generic-pc-class.yaml
+affects:
+  - mechanics/d20-resolution.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

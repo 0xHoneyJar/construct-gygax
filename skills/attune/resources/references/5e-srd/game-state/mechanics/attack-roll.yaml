@@ -1,0 +1,43 @@
+id: attack-roll
+name: "Attack Roll"
+type: mechanics
+description: "Offensive resolution against a target's AC. Roll d20 + attack bonus vs. AC."
+tradition: d20
+tags: [combat, offense, core]
+
+trigger: "When a creature takes the Attack action against a target"
+cost: []
+
+resolution:
+  method: roll-d20-plus-attack-bonus-vs-ac
+  formula: "d20 + ability_modifier + proficiency_bonus vs. target AC"
+  outcomes:
+    ">= target_AC": "Hit — roll damage"
+    "< target_AC": "Miss — no effect"
+
+ocr_indexed_attack_bonus:
+  fractional_cr: "+3 (flat)"
+  cr_1_to_19: "0.4(OCR) + 3"
+  cr_20_to_30: "(OCR)/3 + 3"
+  note: "OCR = Offensive Challenge Rating. Players hit CR-equivalent monsters ~65% of the time at expected stats."
+
+design_baseline:
+  player_hit_rate: "65% against same-CR monster"
+  note: "5e pivot point. AC inflation above this baseline creates whiff-fest; below it reduces tactical tension."
+
+interactions:
+  - "Advantage: roll 2d20, keep highest (see advantage.yaml)"
+  - "Disadvantage: roll 2d20, keep lowest (see disadvantage.yaml)"
+  - "Proficiency bonus applies if proficient with weapon"
+
+depends_on:
+  - mechanics/d20-resolution.yaml
+  - mechanics/advantage.yaml
+  - mechanics/disadvantage.yaml
+affects:
+  - resources/hit-points.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

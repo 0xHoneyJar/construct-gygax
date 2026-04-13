@@ -1,0 +1,44 @@
+id: unskilled-penalty-vs-generalist-competence
+name: "Unskilled Penalty vs. Generalist Competence"
+type: tensions
+description: "The -3 unskilled penalty enforces hard specialization: attempting tasks outside your career history is punishingly unreliable. But the lifepath system naturally rewards breadth — multiple career terms across different careers, combined with Personal Development table rolls, produce characters with wide skill coverage. The tension: the system penalizes gaps sharply but structurally encourages acquiring shallow coverage of many skills."
+tradition: cepheus
+tags: [specialization, generalism, penalty, lifepath, skill-design]
+
+poles:
+  a:
+    name: "Unskilled Penalty Enforces Specialization"
+    description: "The -3 penalty means characters should stick to their career wheelhouse; attempting outside it is unreliable even with high characteristics"
+    supported_by:
+      - mechanics/unskilled-penalty.yaml
+      - mechanics/skill-level.yaml
+  b:
+    name: "Lifepath Awards Breadth"
+    description: "Multiple career terms, Personal Development tables, and multi-career characters naturally produce wide but shallow skill sets"
+    supported_by:
+      - progression/lifepath-careers.yaml
+      - mechanics/lifepath-gain.yaml
+
+health: intentional-tension
+health_notes: "This tension is deliberate and productive up to a point. Skill-0 (canceling the unskilled penalty with no bonus) is the system's resolution: the lifepath awards enough breadth to eliminate most unskilled penalties, while deep specialization still provides meaningful mechanical advantage via level bonuses. The tension becomes a problem if characters can trivially reach level 0 in every relevant skill — at that point the unskilled penalty is merely a character-creation tax, not an ongoing constraint."
+
+analysis_note: "The resolution mechanic for this tension is Skill-0. A character with Pilot-0 is no longer penalized for flying; a character with Pilot-3 excels at it. The penalty is abolished by minimal investment, but excellence still requires deep investment. This means the system actually privileges deep-but-specific over jack-of-all-trades: both eliminate the penalty, but only deep specialization provides positive contribution."
+
+intent:
+  summary: "The -3 unskilled penalty enforces specialization; but lifepath awards breadth. Tension: designed to privilege deep careers over jacks-of-all-trades."
+  rationale: "Cepheus wants characters who feel like professionals — not people who are randomly bad at everything, but people whose competence has a clear shape derived from their history. The tension between penalty and breadth is managed by Skill-0: the lifepath gives you enough breadth to cover your bases, but rewards dedication with positive modifiers. A Scout who spent three terms in the Scouts doesn't just lack the unskilled penalty on Pilot — they have Pilot-3, making them genuinely extraordinary. The jack-of-all-trades who spread across five careers might have Pilot-0, Medical-0, Gun Combat-0 — functional but unremarkable in all of them."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - mechanics/unskilled-penalty.yaml
+  - mechanics/skill-level.yaml
+  - progression/lifepath-careers.yaml
+  - mechanics/lifepath-gain.yaml
+affects: []
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

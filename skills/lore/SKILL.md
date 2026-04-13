@@ -76,11 +76,28 @@ For each heuristic in the loaded set:
    - **No match**: the game-state does not exhibit this pattern. Skip silently -- do not report clean results for every heuristic.
    - **Insufficient data**: the game-state lacks the entities needed to evaluate this heuristic. Note only if the missing data is significant.
 4. For `tradition_specific: false` heuristics, evaluate even if they come from a different tradition file than the game's primary tradition. Cross-tradition wisdom applies everywhere.
+
+After pattern-matching, check each matched entity for intent:
+- If the heuristic matches AND the entity has intent that acknowledges/explains the pattern → Tag as [INTENT-ALIGNED]
+- If the heuristic matches AND intent conflicts → Tag as [INTENT-CONFLICT]
+- If no intent set → Leave classification unchanged, add note
 5. For each match or partial match, record:
    - The heuristic ID and name
    - The severity (from the heuristic definition)
    - Which game-state entities exhibit the pattern (with file paths)
    - A brief explanation of why this matters for THIS specific game
+
+### Step 4.5: Load Learned Heuristics
+
+In addition to curated heuristics from `skills/lore/resources/{tradition}.yaml`, load learned heuristics from the grimoire:
+
+1. Glob `grimoires/gygax/learned-lore/*.yaml`
+2. Filter by `applicable_traditions` match or `tradition_specific: false`
+3. Apply learned heuristics to game-state alongside curated ones
+4. Tag learned matches with `[LEARNED]` prefix in report
+5. Learned heuristics with `confidence: low` are presented in an appendix, not main findings
+6. Learned heuristics with `confidence: medium` include caveat: "Learned pattern — may not apply universally"
+7. Learned heuristics with `confidence: high` presented as standard findings
 
 ### Step 5: Present Findings Organized by Severity
 
@@ -101,6 +118,11 @@ Pattern: [What the anti-pattern is, from the heuristic description]
 Found in: [specific game-state entity paths]
 Analysis: [Why this matters for this specific game. Be concrete. Reference the entity values.]
 Consider: [What the designer should think about. Not a prescription -- a prompt for reflection.]
+
+**[LEARNED pattern-name]** (category: ..., source: learned from [game], confidence: medium)
+Pattern: ...
+Found in: ...
+[Continue with standard format]
 
 ### Warning
 
@@ -131,6 +153,11 @@ validation or `/cabal` for adversarial stress testing."
 8. **Do not pad.** If only 2 heuristics match, report 2. Do not stretch partial matches into findings to fill space. A clean scan is a valid and valuable result.
 9. After presenting findings inline, write the same formatted output to `grimoires/gygax/lore-reports/YYYY-MM-DD-scope-description.md`. The persisted report should be readable standalone without conversation context.
 
+If a heuristic did NOT match any curated pattern but represents a structural observation that might generalize, flag it as a learned-lore candidate:
+
+> **[CANDIDATE: pattern-title]**
+> I noticed [pattern] that doesn't match my curated heuristics but might generalize to other [tradition] games. Would you like to capture this as a learned heuristic? (Saved to `grimoires/gygax/learned-lore/`.)
+
 ### Step 6: Offer Next Steps
 
 Based on findings, suggest specific next actions:
@@ -140,7 +167,17 @@ Based on findings, suggest specific next actions:
 - If only info: "Nothing alarming. These are patterns to keep in mind as the design evolves. `/cabal` would tell you whether these matter in practice."
 - If no matches: "Clean scan. Your design avoids catalogued failure modes. `/augury` for math validation and `/cabal` for adversarial testing are your next best steps."
 
-### Step 7: Cross-Skill Chaining
+### Step 7: Candidate Capture Flow
+
+When candidate patterns are surfaced:
+
+1. Present each candidate to the user with a prompt: "Capture as learned heuristic?"
+2. For each confirmed capture:
+   - Write `grimoires/gygax/learned-lore/{date}-{pattern-id}.yaml` with full provenance
+   - Pattern schema includes: id, name, category, discovered_at, source (skill+report+severity), description, detection, confidence, applicable_traditions, confirmed_in_games
+3. For each declined capture: log decision, no file written
+
+### Step 8: Cross-Skill Chaining
 
 Every lore report ends with a "Recommended Next Steps" section:
 
@@ -164,6 +201,30 @@ Different traditions have different areas of concern. The scan adapts:
 
 This does not mean low-priority categories are skipped -- they are still scanned. But findings in high-priority categories are given extra analytical depth.
 
+## Subcommand: /lore promote
+
+`/lore promote {pattern-id} --target {tradition}` promotes a learned heuristic to the curated tradition library.
+
+Workflow:
+1. Read `grimoires/gygax/learned-lore/{date}-{pattern-id}.yaml`
+2. Append to `skills/lore/resources/{tradition}.yaml` with full provenance:
+   ```yaml
+   - id: {pattern-id}
+     name: "{name}"
+     category: {category}
+     source: promoted-from-learned
+     source_game: "{confirmed_in_games[0]}"
+     promoted_at: "ISO-8601"
+     description: ...
+     detection: ...
+     severity: ...
+     tradition_specific: [true/false]
+   ```
+3. Archive learned-lore file to `grimoires/gygax/learned-lore/.promoted/{original-filename}`
+4. Write changelog entry
+
+Promotion is manual — Gygax does NOT auto-promote. The user decides when a learned pattern is proven enough to become curated wisdom.
+
 ## Boundaries
 
 - Does NOT modify game-state files -- strictly read-only (use `/homebrew` to act on findings)
@@ -176,6 +237,9 @@ This does not mean low-priority categories are skipped -- they are still scanned
 - DOES cross-reference heuristics across traditions when applicable
 - DOES adapt scan depth based on the game's tradition
 - DOES report clean scans as a valid result (no finding fabrication)
+- DOES read per-game learned heuristics alongside curated ones
+- DOES flag non-matching structural patterns as learned-lore candidates
+- Does NOT auto-promote learned patterns to curated (requires explicit /lore promote)
 - Does NOT edit files in `.claude/` (System Zone)
 
 ## Output
@@ -185,6 +249,10 @@ Output is both inline in the conversation AND persisted to `grimoires/gygax/lore
 | Artifact | Destination | Format |
 |----------|-------------|--------|
 | Heuristic scan results | Conversation (inline) + `grimoires/gygax/lore-reports/` | Structured markdown per finding |
+
+Reports now include `[LEARNED]` and `[CANDIDATE]` tags to distinguish curated heuristic matches from learned heuristic matches and novel structural observations flagged for capture.
+
+`/lore promote` modifies `skills/lore/resources/{tradition}.yaml` (appends promoted pattern) AND archives the source file to `grimoires/gygax/learned-lore/.promoted/`.
 
 ## Error Handling
 

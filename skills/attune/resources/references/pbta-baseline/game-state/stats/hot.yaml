@@ -1,0 +1,32 @@
+id: hot
+name: "Hot"
+type: stats
+description: "Attractiveness, social leverage, and seductive power. Governs manipulation, turning NPCs, and social influence through appeal rather than logic."
+tradition: pbta
+tags: [stat, social, influence]
+
+range:
+  min: -1
+  max: 3
+  typical: "0 to +2"
+
+used_by:
+  - "Turn Someone On"
+  - "Manipulate an NPC"
+  - "Seduce or Manipulate"
+
+intent:
+  summary: "Bounded accuracy on a bell curve — +1 is worth roughly 15% at the median"
+  rationale: "The -1 to +3 range is deliberate. Bell curve on 2d6+stat means +1 is worth ~15% at the median; specialization is rewarded without runaway power. Hot as a distinct stat keeps social influence mechanically separated from physical presence (Hard) — a character can be utterly ruthless and utterly unsexy, or vice versa, which creates interesting character configurations."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on: []
+affects:
+  - mechanics/resolution-2d6.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

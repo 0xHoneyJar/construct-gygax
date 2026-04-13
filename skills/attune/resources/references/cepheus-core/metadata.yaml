@@ -1,0 +1,8 @@
+name: "Cepheus Engine Core"
+slug: cepheus-core
+tradition: cepheus
+version: "1.0 (2D6 SRD)"
+source: "Cepheus Engine SRD — derived from classic Traveller (1977)"
+scope: "2D6+mod vs target 8+ resolution, Effect system (degrees of success), 6 characteristics, unskilled -3 penalty, lifepath concepts"
+excludes: "Starship combat, world generation (UWP), full trade rules, Third Imperium setting"
+compiled_from: "grimoires/loa/context/traveller-cepheus.md"

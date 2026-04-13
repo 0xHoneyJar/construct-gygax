@@ -1,0 +1,31 @@
+id: weird
+name: "Weird"
+type: stats
+description: "Psychic sensitivity, connection to the maelstrom, and transgressive perception. Governs accessing the supernatural and opening the brain to the psychic maelstrom."
+tradition: pbta
+tags: [stat, psychic, supernatural]
+
+range:
+  min: -1
+  max: 3
+  typical: "0 to +2"
+
+used_by:
+  - "Open Your Brain"
+  - "Playbook-specific psychic moves (Brainer, etc.)"
+
+intent:
+  summary: "Bounded accuracy on a bell curve — +1 is worth roughly 15% at the median"
+  rationale: "The -1 to +3 range is deliberate. Bell curve on 2d6+stat means +1 is worth ~15% at the median; specialization is rewarded without runaway power. Weird is the stat most tied to a specific arena of conflict — the Brainer's psychic manipulation creates a novel conflict space where opposition is structurally difficult. This is an arena differentiation mechanism: some characters win through a space where others cannot easily contest."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on: []
+affects:
+  - mechanics/resolution-2d6.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

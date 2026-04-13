@@ -1,0 +1,35 @@
+id: dexterity
+name: "Dexterity"
+type: stats
+description: "Agility, reflexes, and hand-eye coordination. Governs ranged attacks, evasion, and fine motor tasks. Contributes to life points alongside Strength and Endurance."
+tradition: cepheus
+tags: [characteristic, physical, core, life-points]
+
+range:
+  min: 2
+  max: 15
+  typical: "7 (average baseline)"
+  notation_note: "Values above 9 recorded in pseudo-hexadecimal: 10=A, 11=B, 12=C, 13=D, 14=E, 15=F."
+
+used_by:
+  - "Ranged attack rolls"
+  - "Stealth and evasion tasks"
+  - "Fine manipulation checks"
+  - "Life points calculation (Str + Dex + End)"
+
+intent:
+  summary: "Physical capability. 7 is average baseline."
+  rationale: "Like all physical characteristics, Dexterity is rolled on 2D6 and averaged at 7. The 2-15 range (pseudo-hex above 9) is a legacy notation from Traveller's Universal Personality Profile, where each characteristic occupies exactly one character in the UPP string."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on: []
+affects:
+  - mechanics/resolution-2d6-plus-8.yaml
+  - resources/life-points.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

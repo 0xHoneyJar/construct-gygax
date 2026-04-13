@@ -94,6 +94,15 @@ The panel selection and rationale are documented in every report header.
 2. If no flags, determine scenario type from the invocation and select context-aware default panel (see table above).
 3. State the panel selection in the output: "Panel: Optimizer, Rules Lawyer, Newcomer (selected for new mechanic review)"
 
+### Step 2.5: Read Intent
+
+Before running the walkthrough, read `intent` fields from all in-scope entities:
+- Every tension (required to have intent)
+- Every mechanic with intent set
+- The dungeon's intent (if scope includes dungeons)
+
+Build an "intent context" the archetypes can reference during the walkthrough. An archetype seeing an asymmetric mechanic should know whether that asymmetry is designer-intended.
+
 ### Step 3: Construct Scenario
 
 Parse the user's invocation to determine the scenario.
@@ -126,6 +135,8 @@ Beat N: [situation description]
   Signal rationale: [why this signal, grounded in specific game-state entities]
 ```
 
+When an archetype encounters an entity with stated intent, the archetype's 'Chooses' reasoning can reference intent. The Optimizer might note: 'The asymmetry is flagged as deliberate per intent — the designer wants this inversion. I'll play into it rather than against it.' Experience signals remain purely experiential — intent does not change whether the Newcomer is confused.
+
 **Walkthrough guidelines:**
 - Be concrete. Reference specific game-state entity values, not abstractions.
 - Each archetype's "sees" should reflect their actual knowledge level. The Newcomer does not know what "action economy" means. The Veteran knows every interaction.
@@ -147,6 +158,8 @@ Each signal has concrete, mechanically-grounded triggers:
 | **Cool moment** | Emergent interaction produces something unplanned, system and fiction align to create a memorable beat, or mastery creates an unexpectedly satisfying outcome | Storyteller, Explorer, Veteran |
 | **Cognitive overload** | More than 3 active mechanical states to track simultaneously, resolution requires consulting multiple subsystems, or too many things happening at once to process | GM, Newcomer |
 | **Mastery reward** | A non-obvious mechanical choice produces a meaningfully better outcome than the obvious choice, or deep system knowledge creates an advantage | Optimizer, Veteran |
+
+Experience signals are NEVER suppressed by intent. If the Newcomer is confused, that's a real UX problem regardless of whether the confusion-causing mechanic is intentional. Intent changes finding severity, not experience signal presence.
 
 **Signal rules:**
 - Every beat gets exactly one signal per archetype.
@@ -170,6 +183,8 @@ After all archetypes complete the walkthrough, cross-compare signals at each bea
 
 **Divergence findings** are a first-class output. They represent invisible fractures in the design -- problems that only emerge when you compare across player types.
 
+Experience divergence findings are ALSO never suppressed by intent. A design that serves the Optimizer while drowning the Newcomer is a real fracture in the design, whether intentional or not. Intent context in the report explains whether the gap is 'designed for' (and thus a tradeoff the designer accepted) or 'unplanned' (and thus likely a bug).
+
 ### Step 7: Regression Check
 
 Compare current findings against previous playtest reports.
@@ -180,6 +195,28 @@ Compare current findings against previous playtest reports.
    - **Persists**: The issue still exists unchanged
    - **Worsened**: Subsequent changes made the issue more severe
    - **Evolved**: The issue has changed character
+
+### Step 7.5: Apply Intent to Finding Classification
+
+For each finding from any archetype:
+
+1. Check if the entity involved has intent set
+2. If intent exists and the finding aligns with intent:
+   - Tag as [INTENT-ALIGNED]
+   - If severity was Warning → Observation ("working as designed per intent")
+   - If severity was Critical → Still Critical (math cannot be intentionally broken)
+   - If severity was Non-obvious → Still Non-obvious, with [INTENT-ALIGNED] tag
+3. If intent exists and the finding conflicts with intent:
+   - Tag as [INTENT-CONFLICT]
+   - Severity UNCHANGED (intent-conflict is valuable context, not a suppression)
+   - Recommendation cites: "This mechanic's intent was '[summary]' — consider whether the current implementation serves that intent"
+4. If non_negotiable: true on intent:
+   - Warning findings SUPPRESSED (moved to appendix, not main findings)
+   - Still appear in "Suppressed by Non-Negotiable Intent" appendix for transparency
+
+If entity has no intent:
+   - Leave finding classification unchanged
+   - Add note in report: "N entities have no intent set. Future runs will have richer context once intent is captured via /homebrew --set-intent"
 
 ### Step 8: Generate Report
 
@@ -277,6 +314,21 @@ Moments where archetypes had radically different experiences of the same design.
 
 [What the divergence means for the design. Which player types are being served well vs. poorly. Specific game-state entities that cause the divergence.]
 
+## Intent Alignment
+
+[Summary of how findings relate to stated intent:]
+
+**Entities with intent set:** N of M
+**Findings aligned with intent:** N (tagged [INTENT-ALIGNED])
+**Findings in conflict with intent:** N (tagged [INTENT-CONFLICT])
+**Findings suppressed (non-negotiable intent):** N (see appendix)
+
+### Findings by Intent Relationship
+
+| Entity | Intent Summary | Aligned | Conflicting |
+|--------|---------------|---------|-------------|
+| ... | ... | count | count |
+
 ## Findings Summary
 
 | Severity | Count |
@@ -331,6 +383,8 @@ Archetype behavior shifts based on the game's tradition. The same archetype asks
 - DOES check for regressions against previous playtest runs
 - DOES adapt archetype behavior to the game's tradition
 - DOES guarantee at least one non-obvious finding per run
+- DOES read entity intent and adjust finding classification accordingly
+- Does NOT suppress experience signals or divergence findings based on intent (these are experiential, not judgment-based)
 - Does NOT edit files in `.claude/` (System Zone)
 
 ## Output

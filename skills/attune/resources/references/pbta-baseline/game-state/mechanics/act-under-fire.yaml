@@ -1,0 +1,45 @@
+id: act-under-fire
+name: "Act Under Fire"
+type: mechanics
+description: "When you do something under fire — in danger, under threat, under time pressure — roll +Cool. On 10+, you do it. On 7-9, you flinch, hesitate, or stall: the MC will offer you a worse outcome, a hard bargain, or an ugly choice. On 6-, be prepared for the worst."
+tradition: pbta
+tags: [basic-move, action-move, cool, dangerous-action]
+
+trigger: "When a character acts despite imminent danger, threat, or pressure — the danger must be real and fictional, not hypothetical"
+
+cost: []
+
+resolution:
+  method: roll-2d6-plus-stat
+  stat: stats/cool.yaml
+  outcomes:
+    "10+": "You do it. The action succeeds."
+    "7-9": "Flinch, hesitate, or stall. MC offers worse outcome, hard bargain, or ugly choice — player decides."
+    "6-": "Be prepared for the worst. MC makes a hard move."
+
+example:
+  fiction: "Dremmer throws an opponent off a building"
+  trigger: "Act Under Fire activates — Dremmer is in danger of going over too"
+  result_10plus: "Dremmer executes the throw cleanly, keeps their footing"
+  result_7_9: "Dremmer gets the throw, but catches the ledge — MC: 'You can let go and fall, or hang there while the gang closes in'"
+  result_miss: "Dremmer goes over too — MC makes a hard move"
+
+intent:
+  summary: "Reference Action Move demonstrating the tripwire principle and stat-as-fiction alignment"
+  rationale: "Act Under Fire is the archetypal Action Move. It shows the tripwire principle clearly: the move doesn't activate because a player says 'I use Act Under Fire' — it activates when the fiction crosses the threshold of genuine danger under action. Cool as the stat is not arbitrary; composure under pressure is the fictional question being asked. The 7-9 result is explicitly a fork: 'worse outcome, hard bargain, or ugly choice' names three distinct move patterns, all of which generate new fiction rather than just adjusting numbers."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - stats/cool.yaml
+  - mechanics/resolution-2d6.yaml
+  - mechanics/move-as-tripwire.yaml
+affects:
+  - resources/harm.yaml
+  - tensions/weak-hit-as-fork.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

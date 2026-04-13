@@ -225,6 +225,19 @@ Organize all computed results into findings. Every finding must include:
 | **Info** | A notable observation that may be intentional | Scaling curve differs from norm, one entity slightly above average, trigger frequency is low |
 | **Healthy** | Analysis confirms the mechanic is within expected bounds | Include these so the user knows what IS working, not just what is not |
 
+### Step 4b: Intent-Aware Findings (v3)
+
+Before finalizing severity classifications, check whether the game-state declares designer intent for the affected entities.
+
+1. **Read the `intent` field** from each entity involved in a finding.
+2. **If intent exists and the finding conflicts with it:**
+   - **Warning → Observation:** If the intent confirms the design is deliberate, downgrade to Observation and tag: "working as designed per intent". The asymmetry or outlier is intentional.
+   - **Critical remains Critical:** Math cannot be intentionally broken. A mechanic that produces DPR of 0, infinite TTK, or a resource that depletes before first use is broken regardless of what the designer intended.
+   - **Non-obvious findings always surface:** Tag as `[INTENT-ALIGNED]` if the finding matches stated intent, or `[INTENT-CONFLICT]` if it contradicts it. Both cases are worth reporting.
+3. **Cite intent in recommendations.** When recommending changes to an entity with declared intent, note it: "Note: this asymmetry is intentional per tensions/instinct-vs-craft.yaml" or similar reference to the specific intent source.
+
+If no intent field exists on an entity, classify findings normally without adjustment.
+
 ### Step 5: Generate Report
 
 Write the report to `grimoires/gygax/balance-reports/YYYY-MM-DD-scope-description.md`.
@@ -310,6 +323,84 @@ peer_variance_at_N     = stddev(metric across all comparable entities at level N
 ```
 
 Flag when `peer_variance_at_N > 0.5 * mean(metric at level N)` -- one entity is dramatically out of band relative to its peers at that level.
+
+### Script-Backed Math (v3)
+
+Certain probability calculations are unreliable when performed by AI reasoning alone. Bell curves, dice pools, advantage/disadvantage distributions, and exploding dice involve combinatorics and recursive math where LLMs consistently produce incorrect CDFs, wrong expected values, and flawed tail probabilities. Scripts exist to handle these cases with deterministic precision.
+
+**When to invoke scripts vs. use AI reasoning:**
+
+```
+IF single die (d20, d100) with static target:
+  → AI reasoning sufficient for simple probability
+  → Invoke dice-probability.ts only for large-scale tables
+
+ELIF multi-die summation (2d6, 3d6, 4d6 drop lowest):
+  → MUST invoke bell-curve.ts
+  → AI reasoning produces wrong CDFs
+
+ELIF dice pool (Nd6 count successes):
+  → MUST invoke dice-pool.ts
+  → Binomial math is LLM-unreliable
+
+ELIF advantage/disadvantage mechanic:
+  → MUST invoke advantage.ts
+  → Bell-shaped utility curve is counterintuitive
+
+ELIF exploding/acing dice:
+  → MUST invoke exploding-dice.ts
+  → Target Number Paradox breaks intuition
+
+ELIF cross-system comparison requested:
+  → MUST invoke cdf-compare.ts on the two CDFs
+```
+
+**Invocation pattern:**
+
+All scripts follow the same protocol:
+
+```bash
+echo '<json-input>' | npx tsx scripts/lib/{script-name}.ts
+```
+
+Example:
+```bash
+echo '{"dice": 3, "sides": 6, "target": 12}' | npx tsx scripts/lib/bell-curve.ts
+# {"probability_at_least": 0.7407, "cdf": [...], "expected_value": 10.5, "stdev": 2.958}
+```
+
+**Available scripts** (see `scripts/MANIFEST.yaml` for full details):
+
+| Script | Input Domain | When Required |
+|--------|-------------|---------------|
+| `dice-probability.ts` | Single-die distributions (d4-d100) | Large-scale probability tables |
+| `bell-curve.ts` | Multi-die summation (2d6, 3d6, Traveller/Cepheus) | Any multi-die sum calculation |
+| `dice-pool.ts` | Success-counting pools (Shadowrun, Storyteller, FitD) | Any dice pool probability |
+| `advantage.ts` | Advantage/disadvantage (5e-style) | Any advantage/disadvantage analysis |
+| `exploding-dice.ts` | Recursive aces (Savage Worlds, DCC, Feng Shui) | Any exploding die calculation |
+| `cdf-compare.ts` | Two CDF distributions across DC range | Any cross-system comparison |
+
+**Citation requirement:** Script outputs must be cited in reports with their input parameters. Example: "Source: bell-curve.ts, input: {dice:3, sides:6, target:12}, output: probability_at_least=0.7407"
+
+### Cross-System Comparison (v3)
+
+Augury can compare the current game-state against installed reference game-states to produce quantitative cross-system analysis. Reference systems are installed via `/attune --reference {name}` and stored in `grimoires/gygax/references/{name}/`.
+
+**Invocation patterns:**
+
+- `/augury compare` -- auto-suggest available comparisons based on installed references
+- `/augury compare --against 5e-srd` -- full-spectrum comparison vs reference
+- `/augury compare dodge-reaction vs 5e-srd:shield-spell` -- entity-level comparison
+- `/augury compare DOSE vs 5e-srd:ability-score-cap` -- cross-concept comparison
+
+**Comparison process:**
+
+1. **Parse invocation:** Identify source (current game-state entity or scope) and target (reference system entity or scope).
+2. **Load game-states:** Load source from `grimoires/gygax/game-state/` and target from `grimoires/gygax/references/{name}/game-state/`.
+3. **Resolve entities:** Match by ID, name, or auto-select the most similar entity if no exact match exists.
+4. **Extract and compute:** For each pair, extract core numerical properties (range, costs, probabilities). If dice math applies, invoke `cdf-compare.ts` to produce precise probability deltas.
+5. **Build delta table + narrative:** Produce a table showing what is the same, what differs, and by how much. Generate narrative explaining what the deltas mean for the design.
+6. **Write report:** Output to `grimoires/gygax/balance-reports/comparison-YYYY-MM-DD-description.md`.
 
 ## Report Format
 
@@ -451,6 +542,8 @@ Flag when `peer_variance_at_N > 0.5 * mean(metric at level N)` -- one entity is 
 - DOES adapt methodology to tradition -- will not force d20 combat math onto a PbtA game
 - DOES report "Healthy" findings so the user knows what is working, not only what is broken
 - DOES handle games with no combat by analyzing pacing, resource economy, and narrative arc coverage
+- DOES invoke probability scripts for math the AI runtime cannot reliably compute
+- DOES cross-reference against installed reference game-states for comparison
 - Does NOT edit files in `.claude/` (System Zone)
 
 ## Output
@@ -458,6 +551,7 @@ Flag when `peer_variance_at_N > 0.5 * mean(metric at level N)` -- one entity is 
 | Artifact | Path | Format |
 |----------|------|--------|
 | Balance report | `grimoires/gygax/balance-reports/YYYY-MM-DD-scope-description.md` | Markdown with tables |
+| Comparison report | `grimoires/gygax/balance-reports/comparison-YYYY-MM-DD-description.md` | Markdown with tables |
 
 ## Error Handling
 
@@ -469,3 +563,5 @@ Flag when `peer_variance_at_N > 0.5 * mean(metric at level N)` -- one entity is 
 | Progression table has gaps (some levels defined, others not) | Interpolate linearly between known points. Note the interpolation in Methodology Notes. | Interpolated scaling |
 | Tradition has no standard benchmarks (custom system) | Analyze internal consistency only (entities relative to each other). Do not compare against external baselines. | Relative analysis |
 | User requests comparison but only one entity exists | "I can only find [entity A]. To compare, I need a second entity in game-state. Run `/attune` to add it, or specify a different entity." | Ask for clarification |
+| Missing reference system | "No reference '{name}' installed. Use `/attune --reference {name}` to install. Available references: [list]." | Direct to `/attune --reference` |
+| Script execution failure | "Probability script failed: [error]. Falling back to AI estimation (lower confidence)." | Degrade gracefully with reduced confidence |

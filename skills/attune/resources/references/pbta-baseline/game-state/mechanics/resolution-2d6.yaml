@@ -1,0 +1,55 @@
+id: resolution-2d6
+name: "2d6+Stat Resolution"
+type: mechanics
+description: "Roll 2d6, add the relevant stat modifier, and apply the three-tier outcome structure: 10+ (strong hit), 7-9 (weak hit / fork), 6- (miss / MC move)."
+tradition: pbta
+tags: [core, resolution, 2d6, three-tier, basic-move]
+
+trigger: "When a move's trigger condition is met by the fiction — not chosen by the player"
+
+cost: []
+
+resolution:
+  method: roll-2d6-plus-stat
+  formula: "2d6 + stat_modifier"
+  outcomes:
+    "10+":
+      class: strong-hit
+      description: "Full success, possibly with an additional benefit (pick-list advantage)"
+    "7-9":
+      class: weak-hit
+      description: "Partial success with a cost, hard bargain, or difficult choice — a fork requiring player decision"
+    "6-":
+      class: miss
+      description: "Complication; MC gains authority to make a hard move immediately"
+
+probability_notes:
+  stat_neg1: "10+: ~17% | 7-9: ~42% | 6-: ~42%"
+  stat_0:    "10+: ~28% | 7-9: ~44% | 6-: ~28%"
+  stat_1:    "10+: ~42% | 7-9: ~42% | 6-: ~17%"
+  stat_2:    "10+: ~58% | 7-9: ~33% | 6-: ~8%"
+  stat_3:    "10+: ~72% | 7-9: ~25% | 6-: ~3%"
+  note: "7-9 remains the modal outcome across the -1 to +2 range. The game is designed to run primarily in the weak-hit space."
+
+intent:
+  summary: "Dynamic evolution over binary pass/fail — the weak hit is the design's core innovation"
+  rationale: "This is not a d20 bounded accuracy system with three buckets added. The three tiers are not success/partial/failure — they are different kinds of story beats. 10+ advances the fiction on the player's terms. 7-9 advances it on shared terms requiring a choice. 6- advances it on the MC's terms. All three results generate new fiction; none stall the conversation. This is PbtA-native architecture: a d20 system with outcome buckets bolted on will still feel like a skill check, not a move."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - stats/cool.yaml
+  - stats/hard.yaml
+  - stats/hot.yaml
+  - stats/sharp.yaml
+  - stats/weird.yaml
+affects:
+  - mechanics/mc-move-hard.yaml
+  - tensions/weak-hit-as-fork.yaml
+  - tensions/fiction-vs-mechanics.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

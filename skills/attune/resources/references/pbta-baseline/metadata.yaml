@@ -1,0 +1,18 @@
+name: "Apocalypse World Baseline"
+slug: pbta-baseline
+tradition: pbta
+version: "2 (Burned Over)"
+source: "lumpley.games / Baker's Apocalypse World 2E"
+scope: "Core 2d6+stat resolution, basic moves, three-tier outcome structure (10+/7-9/6-), MC Agenda + Principles, soft vs hard moves"
+excludes: "Specific playbooks (Angel, Battlebabe, etc.), full move list, Fronts/threats specifics"
+compiled_from: "grimoires/loa/context/pbta-masterclass.md"
+
+underlying_model:
+  name: Conflict Model
+  description: "Escalation between independent actors with incompatible interests. Character defined by passions + survival instincts. MC is a reactive catalyst pushing situations to breaking points."
+  reference: "Apocalypse World 2E (Baker)"
+  contrast:
+    relating_model: "Under Hollow Hills — relationship cycle (meeting, revelation, drawing closer/withdrawing); characters defined by desires and offerings, not armored instincts"
+    adventure_model: "Spout Lore tradition — shared struggle against insensate external dangers; MC holds behind-the-scenes facts requiring active discovery"
+
+policy_note: "PbtA is design lineage, not mechanical engine. Sole criterion: creator was inspired by Apocalypse World and chooses the label. No mechanical purity test. Logo and verbatim text require permission; mechanics and inspiration do not."

@@ -1,0 +1,56 @@
+id: fiction-mechanics-fiction-loop
+name: "Fiction → Mechanics → Fiction Loop"
+type: mechanics
+description: "The core bedrock loop of PbtA play. Fictional action triggers mechanical resolution; mechanical result generates new fictional reality; new fiction sets up the next trigger. The conversation never leaves the fiction for abstract number-adjustment."
+tradition: pbta
+tags: [meta-mechanic, architecture, core, conversation, fiction-first]
+
+trigger: "This is not a triggerable mechanic — it is the structural description of how all PbtA play flows"
+
+cost: []
+
+resolution:
+  method: meta-rule
+  stat: null
+  loop_steps:
+    1:
+      name: "Fictional Cause"
+      description: "Player describes what their character does in the fiction. MC and players reach consensus on what this means in the shared imagined space."
+    2:
+      name: "Move Trigger (if applicable)"
+      description: "If the fiction crosses a move's tripwire, the move activates. If not, the MC narrates forward without dice."
+    3:
+      name: "Mechanical Resolution"
+      description: "Roll 2d6+stat. The result (10+/7-9/6-) determines the shape of what happens next."
+    4:
+      name: "New Fictional Reality"
+      description: "The result is interpreted back into fiction — not 'you take 3 damage' but 'the knife goes in, you stagger, Dremmer's on you now.' New fictional state established."
+    5:
+      name: "Next Trigger Setup"
+      description: "New fiction creates new fictional conditions, potentially crossing a new move's tripwire. The loop continues."
+
+loop_health_checks:
+  healthy: "Every roll generates a new fictional beat. MC narrates what changes, not just what number changed."
+  unhealthy_1: "Roll resolves by adjusting a number with no fictional consequence named — 'you take 3 HP damage.'"
+  unhealthy_2: "Players roll without fiction triggering the move — mechanical without fictional cause."
+  unhealthy_3: "Strong hit ends conversation — 'you succeed, what next?' instead of 'you succeed, and here's what the world does about that.'"
+
+intent:
+  summary: "Mechanics must always generate new fiction — pure number adjustment breaks the loop"
+  rationale: "This is the bedrock design principle Baker describes as 'the conversation.' Role-playing is a structured, continuous conversation, not a series of check-resolution events. The loop is circular by design: the fiction never ends at a mechanical result. A game breaks this loop when dice results are stated in mechanical terms only ('you take damage') rather than fictional terms ('the blade catches you across the shoulder, and now Dremmer's close'). The loop integrity test: can you describe every roll's outcome in purely fictional terms with no mechanical numbers?"
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on: []
+affects:
+  - mechanics/move-as-tripwire.yaml
+  - mechanics/resolution-2d6.yaml
+  - mechanics/mc-move-soft.yaml
+  - mechanics/mc-move-hard.yaml
+  - tensions/fiction-vs-mechanics.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

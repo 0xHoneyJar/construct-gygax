@@ -1,0 +1,70 @@
+id: playbook-archetype
+name: "Playbook (Generic Archetype)"
+type: entities
+subtype: playbook
+description: "Abstract blueprint for a PbtA playbook. A playbook is not a class or a skill list — it is a narrative trajectory, a conflict-wise cluster of moves, and a required identity trigger. Each playbook defines not what you can do but who you are and how the world responds to your existence."
+tradition: pbta
+tags: [playbook, character, conflict-wise, narrative-trajectory]
+
+structure:
+  stats:
+    description: "Starting stat arrays — typically 2-3 preset options the player picks from. Stats are asymmetric by playbook, creating distinct probability profiles from character creation."
+    example: "Cool+1, Hard-1, Hot+2, Sharp+1, Weird-1 (or choose from 2-3 arrays)"
+
+  required_move:
+    description: "One move that is NOT optional — it triggers automatically based on who the character is. This expresses identity, not ability."
+    design_principle: "Required moves are destabilizing consequences of the character's nature, not power upgrades. They express who you ARE, not what you can DO."
+    example:
+      name: "Chaotic Presence (Hardholder variant)"
+      trigger: "When you enter a situation with your gang"
+      effect: "Triggers automatically — the character's authority destabilizes the situation regardless of player intent"
+      note: "The player does not choose to activate this. It fires because the fiction crosses the tripwire of the character's identity."
+
+  optional_moves:
+    description: "Playbook moves the player selects at creation (typically choose 2-3). These represent competencies and arenas of conflict."
+    design_principle: "Moves should differentiate playbooks by arena, not by power level. Each playbook should have a conflict space where it is uniquely effective — an end run, feint, or novel arena unavailable to other playbooks."
+
+  conflict_wise_cluster:
+    description: "The set of arenas where this playbook is effective, including arenas that bypass standard conflict resolution."
+    arena_types:
+      end_runs: "Victory without direct danger — the playbook accomplishes goals while others engage the threat directly"
+      feints: "Misdirect into one arena, escalate in another — appear to engage one way, resolve through a different vector"
+      novel_arenas: "Conflict spaces where opposition is structurally difficult (e.g., psychic manipulation, social leverage, unique information access)"
+
+  hx:
+    description: "History with other PCs — a numeric relationship track (-3 to +3) that governs specific moves and XP from relationships."
+    design_note: "Hx creates inter-PC mechanical dependency. Your relationship with other characters is not just flavor — it affects rolls and advancement."
+
+  three_game_questions:
+    establishment: "Names, gear, core stats — resolved before play begins"
+    constants_and_changes: "How the character evolves via stat improvements and moves — the advancement trajectory"
+    discovery: "What the character makes of the world — emerges entirely in play, cannot be pre-specified"
+
+design_principles:
+  - "Playbooks are designed to NOT overlap. Two players should not be able to do the same thing in the same way."
+  - "A playbook's required move expresses identity, not ability. It should trigger in a way that complicates or destabilizes, not just helps."
+  - "The conflict-wise cluster should include at least one novel arena that other playbooks cannot easily contest."
+  - "Starting stat arrays create distinct probability profiles — the Gunlugger's Hard+2 vs the Skinner's Hot+2 are not just flavor differences."
+
+intent:
+  summary: "Playbooks are narrative trajectories, not competency lists — identity expressed through mandatory triggers"
+  rationale: "Baker's insight is that the character sheet question is not 'what can you do?' but 'who are you and how does the world respond to your existence?' The required move is the clearest expression of this: Chaotic Presence doesn't give the Hardholder a power — it imposes a consequence of their nature. This architectural decision separates PbtA playbooks from d20 classes, where optional features define competency and nothing fires against your will. The playbook's job is to put the character into interesting situations by nature of being who they are."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - stats/cool.yaml
+  - stats/hard.yaml
+  - stats/hot.yaml
+  - stats/sharp.yaml
+  - stats/weird.yaml
+  - mechanics/move-as-tripwire.yaml
+affects:
+  - progression/advancement.yaml
+  - resources/xp.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

@@ -1,0 +1,61 @@
+id: advancement
+name: "Playbook Advancement"
+type: progression
+description: "PbtA advancement operates on a 0-5 XP track. At 5 XP, take one advance and reset to 0. Advances give breadth and flexibility — new moves, stat improvements, playbook changes — not raw power scaling."
+tradition: pbta
+tags: [advancement, playbook, xp, breadth-over-power]
+
+xp_per_advance: 5
+
+progression_table:
+  advance_tier_1:
+    label: "Early Advances (first 5 per character)"
+    options:
+      - "Get +1 to a stat (max stat+3)"
+      - "Take another move from your playbook"
+      - "Take a move from another playbook"
+      - "Get followers (if available in the game)"
+      - "Improve your vehicle or gang (if applicable)"
+    notes: "First-tier advances expand your move set and nudge stats. The stat cap (+3 max) preserves bounded accuracy — no stat can enter runaway territory."
+
+  advance_tier_2:
+    label: "Later Advances (after 5 early advances)"
+    options:
+      - "Get +1 to any stat (max stat+3)"
+      - "Change your character's playbook"
+      - "Take a move from any playbook"
+      - "Retire your character to safety"
+    notes: "Playbook-change is the big late advance. It represents not power increase but identity transformation — a narrative trajectory shift."
+
+stat_cap_enforcement:
+  max: 3
+  note: "Stat improvement advances cannot raise a stat above +3. This is non-negotiable bounded accuracy — a character with Cool+3 is maximally specialized, not still growing."
+
+scaling_notes:
+  - "Power ceiling is low and intentional. Advances give breadth and flexibility, not raw power scaling."
+  - "A character with 10 advances has more options, not more math. Their 2d6+stat is the same engine."
+  - "The 'retire to safety' advance is the PbtA end-state — not a capstone power level but a fictional conclusion."
+  - "Cross-playbook move access means late-game characters develop hybrid identities, not vertical power towers."
+  - "Compare to d20: a 20th-level Fighter has 6x proficiency and Extra Attack x3. A maxed PbtA character has +3 Cool and more moves. These are fundamentally different scaling philosophies."
+
+intent:
+  summary: "Advancement is identity expansion, not power escalation"
+  rationale: "PbtA advancement is designed for a different relationship with time than level-based systems. Characters don't grow more powerful in the sense of solving harder math problems — they grow more defined, more varied, and more narratively complete. The stat cap at +3 enforces this: you cannot advance your way out of the bell curve. A character's probability distribution shifts modestly across their lifespan; their fictional identity shifts dramatically."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on:
+  - resources/xp.yaml
+  - stats/cool.yaml
+  - stats/hard.yaml
+  - stats/hot.yaml
+  - stats/sharp.yaml
+  - stats/weird.yaml
+affects:
+  - entities/playbook-archetype.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

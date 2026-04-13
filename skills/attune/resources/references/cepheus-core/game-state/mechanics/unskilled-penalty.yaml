@@ -1,0 +1,38 @@
+id: unskilled-penalty
+name: "Unskilled Penalty (-3)"
+type: mechanics
+description: "A character attempting a task for which they have no relevant skill applies a -3 penalty to the roll, in addition to any characteristic modifier. This is not zero competence — it is negative competence, representing the active liability of not knowing what you don't know."
+tradition: cepheus
+tags: [core, penalty, specialization, professional-identity]
+
+trigger: "When a character attempts any skill check without the relevant skill at level 0 or higher"
+cost: []
+
+resolution:
+  method: modifier-applied-to-resolution-2d6-plus-8
+  modifier: -3
+  formula: "2D6 + characteristic_modifier - 3 vs. 8+"
+  effect_on_probability: "Reduces base 41.7% success rate to 16.7% before any characteristic modifier. A character with +1 characteristic modifier still only has 27.8% success on an unskilled check."
+
+design_notes:
+  - "Skill 0 (touched on the skill) adds +0 — cancels the unskilled penalty. You are no longer penalized but not yet meaningfully skilled."
+  - "The penalty is steep by design. It is not 'somewhat harder' — it makes most unskilled attempts unreliable even for physically or mentally capable characters."
+  - "Contrast with D&D 5e: an untrained character simply lacks proficiency bonus, still rolls d20+modifier. In Cepheus, the unskilled character rolls at active disadvantage relative to the unmodified baseline."
+
+intent:
+  summary: "Enforces 'experienced professional' persona — punishes out-of-history attempts."
+  rationale: "Cepheus characters are not blank-slate adventurers who reasonably try anything. They are professionals with specific histories built through the lifepath. The -3 penalty exists to make the table feel that reality: a former Scout with Pilot-3 and zero medical training should not casually perform surgery. The penalty enforces that character histories are real constraints, not merely flavor. This distinguishes Cepheus from PbtA games where any character can trigger any move if the fiction supports it."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: true
+
+depends_on:
+  - mechanics/resolution-2d6-plus-8.yaml
+  - mechanics/skill-level.yaml
+affects:
+  - tensions/unskilled-penalty-vs-generalist-competence.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"

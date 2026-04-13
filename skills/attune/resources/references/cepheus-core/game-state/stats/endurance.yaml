@@ -1,0 +1,34 @@
+id: endurance
+name: "Endurance"
+type: stats
+description: "Stamina, constitution, and physical resilience. Governs how long a character can sustain effort and how much punishment they absorb. Primary contributor to life points."
+tradition: cepheus
+tags: [characteristic, physical, core, life-points]
+
+range:
+  min: 2
+  max: 15
+  typical: "7 (average baseline)"
+  notation_note: "Values above 9 recorded in pseudo-hexadecimal: 10=A, 11=B, 12=C, 13=D, 14=E, 15=F."
+
+used_by:
+  - "Life points calculation (Str + Dex + End)"
+  - "Sustained physical effort tasks"
+  - "Survival and environmental resistance checks"
+
+intent:
+  summary: "Physical capability. 7 is average baseline."
+  rationale: "Endurance is the most combat-critical of the three physical characteristics because it forms the largest portion of practical life points. Characters with high Endurance survive longer in lethal environments — consistent with Cepheus's 'space is dangerous' tone."
+  set_by: attune
+  set_at: "2026-04-13T00:00:00Z"
+  non_negotiable: false
+
+depends_on: []
+affects:
+  - resources/life-points.yaml
+  - mechanics/resolution-2d6-plus-8.yaml
+
+created_by: attune
+created_at: "2026-04-13T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-13T00:00:00Z"
