@@ -18,18 +18,20 @@ Gygax shortens that loop to minutes. Not by replacing playtesting — by catchin
 - **It does math, not vibes.** "Seems overpowered" isn't actionable. "47 DPR against a 180 HP pool gives a TTK of 3.8 seconds — below your target of 6-8" is.
 - **It argues with you.** Nine simulated player archetypes stress-test your design from every angle — the Optimizer finds the exploit, the Newcomer can't figure out the rules, the GM is drowning in cognitive load. They do it before your real players do.
 - **It lets you explore.** Fork your game-state, try a change, see the consequences, compare alternatives. Commit the good branch, discard the rest. Design is branching, not linear.
+- **It knows its own limits.** Gygax asks the designer for *intent* — what each mechanic is *supposed* to do — so analysis can distinguish a deliberate asymmetry from a bug. It compares against installed reference systems (5e SRD, PbtA baseline, Cepheus) when you want to see how your design stacks up. And it runs real math via probability scripts when LLM reasoning would be unreliable.
 
 ## Commands
 
 | Command | What It Does |
 |---------|-------------|
-| `/attune` | Point at a source — rulebook, repo, URL, or just describe your game — and Gygax builds structured game-state |
-| `/homebrew` | Design or refine a mechanic. Gygax checks it against everything that already exists. |
-| `/augury` | Run the numbers. DPR curves, probability distributions, encounter balance, resource economy. |
-| `/cabal` | Summon up to nine phantom players to stress-test your design with scenario walkthroughs. |
-| `/lore` | 210 curated design heuristics across d20, PbtA, FitD, and OSR. Pattern-match your game against known failure modes. |
-| `/scry` | Fork your game-state, explore a change, see the impact. Compare branches, commit the best one. |
-| `/gygax` | Where am I? What's in game-state? What did the last analysis find? |
+| `/attune` | Point at a source — rulebook, repo, URL, or just describe your game — and Gygax builds structured game-state. Captures designer intent on tensions and key mechanics. |
+| `/homebrew` | Design or refine a mechanic. Gygax checks it against everything that already exists, prompts for intent, logs rationale. |
+| `/augury` | Run the numbers. Probability scripts handle dice pools, bell curves, advantage math, exploding dice. Cross-system comparison via `/augury compare --against 5e-srd`. |
+| `/cabal` | Summon up to nine phantom players to stress-test your design with scenario walkthroughs. Intent-aware — deliberate asymmetries aren't flagged as bugs. |
+| `/lore` | 230+ curated design heuristics across d20, PbtA, FitD, OSR, and Cepheus. Learns per-game — patterns discovered in analysis can be captured and eventually promoted to curated. |
+| `/scry` | Fork your game-state, explore a change, see the impact. Compare branches, commit the best one. Preserves intent across forks. |
+| `/delve` | Analyze dungeons — ecology coherence, Xandering (non-linearity), attrition curves, loot economies, the G.U.A.R.D. framework. |
+| `/gygax` | Where am I? What's in game-state? References installed, learned heuristics captured, recent reports. |
 
 ## Quick Start
 
@@ -87,16 +89,63 @@ For non-traditional games, the archetypes adapt. In a journaling RPG, the Optimi
 /scry "what if threshold was 4?"  →  /scry "what if threshold was 5?"  →  /scry compare  →  /scry commit
 ```
 
-1. **Attune** to your game (ingest a doc or interview)
-2. **Homebrew** a mechanic (get cross-system consistency feedback)
-3. **Augury** the math (get specific numbers, not approximations)
-4. **Cabal** stress-test (find what players will exploit, ignore, or argue about)
-5. **Scry** alternatives (fork, test, compare, commit the best branch)
-6. Fix what broke, repeat from 2
+**Cross-system comparison:**
+```
+/attune --reference 5e-srd  →  /augury compare DOSE vs 5e-srd:ability-score-cap
+```
 
-Every skill tells you what to do next. Augury finds a balance problem? It suggests the exact `/homebrew` invocation to fix it. Cabal finds an accessibility issue? It points you to `/homebrew` with the specific mechanic.
+**Dungeon design review:**
+```
+/delve the-signal-mine  →  ecology + Xandering + attrition + loot + G.U.A.R.D. scorecard
+```
+
+1. **Attune** to your game (ingest a doc, capture intent on tensions)
+2. **Homebrew** a mechanic (get cross-system consistency feedback)
+3. **Augury** the math (real scripts, not vibes — bell curves, dice pools, exploding dice)
+4. **Cabal** stress-test (intent-aware — deliberate asymmetries aren't flagged as bugs)
+5. **Lore** pattern check (230+ curated heuristics plus patterns learned from your own game)
+6. **Scry** alternatives (fork, test, compare, commit the best branch)
+7. **Delve** your dungeons (ecology, non-linearity, attrition, loot, G.U.A.R.D.)
+8. Fix what broke, repeat from 2
+
+Every skill tells you what to do next. Augury finds a balance problem? It suggests the exact `/homebrew` invocation to fix it. Cabal finds an accessibility issue? It points you to `/homebrew` with the specific mechanic. Lore finds a novel structural pattern? It asks if you want to capture it as a learned heuristic.
 
 You don't have to follow any order. `/cabal` a napkin sketch before you've done any balance work. `/scry` three alternative approaches before committing to one. Jump in wherever.
+
+## Cross-System Comparison
+
+Install a reference system and compare your design against it:
+
+```
+/attune --reference 5e-srd         # Install the 5e SRD combat math baseline
+/attune --reference pbta-baseline  # Install Apocalypse World core
+/attune --reference cepheus-core   # Install Cepheus Engine 2d6 SRD
+```
+
+Then:
+
+```
+/augury compare --against 5e-srd              # Full-spectrum comparison
+/augury compare my-dodge vs 5e-srd:shield     # Entity-level comparison
+```
+
+The comparison report shows numerical deltas (CDF overlays, probability differences), experience deltas (how the designs feel different to play), and a narrative summary of what the differences mean.
+
+## Designer Intent
+
+Gygax reads your *intent* before classifying findings. When you build a game, some asymmetries are bugs. Others are the whole point. Gygax can't tell the difference without you.
+
+Set intent on a tension:
+
+```yaml
+# tensions/instinct-vs-craft.yaml
+intent:
+  summary: "The inversion IS the game."
+  rationale: "Freetekno succeeding through craft is the core dramatic tension — friction between identity and success method generates character moments on every roll."
+  non_negotiable: true
+```
+
+Now when augury sees the 66.7% asymmetry, it reports it as an Observation ("working as designed per intent"), not a Warning. Critical findings never suppress — math can't be intentionally broken. But "this is unusual" vs "this is deliberate" is a distinction Gygax can't make without your help.
 
 ## Works With Any TTRPG
 
@@ -106,9 +155,10 @@ Gygax has deep heuristics for established traditions:
 - **Powered by the Apocalypse** — Dungeon World, Masks, Monsterhearts
 - **Forged in the Dark** — Blades in the Dark, Scum and Villainy
 - **Old School Renaissance** — OSE, Knave, Cairn, Into the Odd
+- **Cepheus / Traveller** — 2d6+Effect sci-fi with lifepath and Age of Sail philosophy
 - **Freeform / narrative-first** — Wanderhome, Belonging Outside Belonging
 
-But it also works with games that don't fit any tradition. Journaling RPGs, map-drawing games, lyric games, GMless experiments, games where you play as a landscape — Gygax meets the game where it is. If your game only has two entity types, that's fine. If none of the 210 curated heuristics apply, Gygax falls back to structural analysis: decision space, loop completeness, player agency, emotional arc.
+But it also works with games that don't fit any tradition. Journaling RPGs, map-drawing games, lyric games, GMless experiments, games where you play as a landscape — Gygax meets the game where it is. If your game only has two entity types, that's fine. If none of the 230+ curated heuristics apply, Gygax falls back to structural analysis: decision space, loop completeness, player agency, emotional arc. And the heuristics that DO fire on your specific game can be captured as learned lore and — once proven across multiple games — promoted to the curated library.
 
 The goal is always the same: does this design do what you think it does?
 
