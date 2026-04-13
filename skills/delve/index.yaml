@@ -1,0 +1,38 @@
+slug: delve
+name: "Delve"
+description: |
+  Use this skill IF user invokes /delve OR wants to analyze a dungeon, evaluate
+  environmental design, check ecology coherence, test Xandering/non-linearity,
+  model attrition curves, analyze loot economies, or apply the G.U.A.R.D. framework.
+  Produces artifacts to grimoires/gygax/delve-reports/.
+version: 1.0.0
+
+triggers:
+  - "/delve"
+  - "analyze this dungeon"
+  - "check the dungeon"
+  - "dungeon design review"
+  - "ecology analysis"
+  - "is this a monster zoo"
+  - "xandering check"
+
+capabilities:
+  model_tier: opus
+  danger_level: safe
+  effort_hint: large
+  downgrade_allowed: false
+  execution_hint: sequential
+  requires:
+    native_runtime: false
+    tool_calling: true
+    thinking_traces: false
+    vision: false
+    scripts: true
+
+dependencies:
+  grimoire_paths:
+    - grimoires/gygax/
+  scripts:
+    - scripts/lib/bell-curve.ts
+    - scripts/lib/dice-probability.ts
+    - scripts/lib/dice-pool.ts
