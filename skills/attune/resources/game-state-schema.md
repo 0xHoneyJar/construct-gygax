@@ -11,17 +11,69 @@ id: unique-kebab-case-id           # Unique within entity type
 name: "Human Readable Name"        # Display name
 type: stats|resources|mechanics|progression|entities|tensions
 description: "What this is and what it does in the game"
-tradition: d20|pbta|fitd|osr|freeform|custom
+tradition: d20|pbta|fitd|osr|cepheus|freeform|custom
 tags: []                           # Freeform tags for querying
 
 depends_on: []                     # Paths relative to game-state/
 affects: []                        # Paths relative to game-state/
 
-created_by: attune|homebrew        # Which skill created this
+created_by: attune|homebrew|scry   # Which skill created this
 created_at: "ISO-8601"
-last_modified_by: attune|homebrew
+last_modified_by: attune|homebrew|scry
 last_modified_at: "ISO-8601"
 ```
+
+## Intent Field (v3)
+
+Intent captures what the designer WANTS a mechanic or tension to do, as distinct from what it currently IS. Analysis skills (augury, cabal, lore) read intent before classifying findings — a deliberately asymmetric mechanic with intent stated is an Observation ("working as designed"), not a Warning.
+
+**Schema (optional on most entity types, required on tensions):**
+
+```yaml
+intent:
+  summary: "One-line design goal"
+  rationale: "Why this design choice — the problem it solves or the experience it creates"
+  set_by: designer|attune|homebrew   # Who set the intent
+  set_at: "ISO-8601"
+  non_negotiable: true|false          # If true, findings conflicting with intent are suppressed, not just downgraded
+```
+
+**Where intent applies:**
+
+| Entity Type | Intent Required? | Notes |
+|-------------|-----------------|-------|
+| `tensions/` | **Required** | Tensions without stated intent are incomplete — a tension's health depends on knowing what it's supposed to do |
+| `mechanics/` | Encouraged for high-connectivity | Prompt for intent on mechanics in `most_depended_on` from index.yaml |
+| `progression/` | Optional | Intent useful for major scaling decisions (e.g., "linear martial / quadratic caster is deliberate") |
+| `resources/` | Optional | Useful for resources with notable pressure design |
+| `stats/` | Optional | Rarely needed — stats usually have obvious intent |
+| `entities/` | Optional | Typically unnecessary; intent lives at mechanic level |
+
+**How intent affects analysis:**
+
+- **Augury:** Warning findings downgrade to Observation when intent confirms the design. Critical findings never suppress (math cannot be "intentionally broken"). Non-obvious findings always surface but gain context.
+- **Cabal:** Archetype findings include intent in the Voice quote. Experience divergence findings are NEVER suppressed — UX problems remain problems regardless of designer intent.
+- **Lore:** Heuristic matches tagged `[INTENT-ALIGNED]` when intent confirms the pattern, `[INTENT-CONFLICT]` when the pattern fires against stated intent.
+
+**Backwards compatibility:** Entity files without intent fields remain valid. Absence of intent is treated as "unknown intent" — findings are not suppressed or modified.
+
+**Example intent on a tension:**
+
+```yaml
+id: instinct-vs-craft
+name: "Instinct vs. Craft"
+type: tensions
+# ... other fields
+
+intent:
+  summary: "The inversion IS the game — characters succeed through the opposite of who they are."
+  rationale: "Freetekno's raw-nerve identity succeeding through craft most of the time is the core dramatic engine. The friction between identity and success method generates character moments on every roll."
+  set_by: designer
+  set_at: "2026-04-10"
+  non_negotiable: true
+```
+
+With this intent set, augury will classify the freetekno 66.7% craft-success rate as an Observation ("working as designed per intent: non-negotiable"), not a Warning.
 
 ## Entity Type: stats/
 

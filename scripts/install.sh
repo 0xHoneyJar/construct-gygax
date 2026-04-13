@@ -18,8 +18,13 @@ mkdir -p grimoires/gygax/designs
 mkdir -p grimoires/gygax/balance-reports
 mkdir -p grimoires/gygax/playtest-reports
 mkdir -p grimoires/gygax/lore-reports
+mkdir -p grimoires/gygax/delve-reports
 mkdir -p grimoires/gygax/forks/.archived
 mkdir -p grimoires/gygax/changelog
+
+# v3 additions: references and learned lore
+mkdir -p grimoires/gygax/references
+mkdir -p grimoires/gygax/learned-lore/.promoted
 
 echo "[gygax] Grimoire structure created."
 echo "[gygax] Run /attune to point Gygax at your game."
