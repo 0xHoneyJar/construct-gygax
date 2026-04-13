@@ -101,7 +101,7 @@ Check for conflicts: glob `grimoires/gygax/forks/*/` to see if the name already 
    - Update `last_modified_at` to current timestamp
    - Set `last_modified_by: scry`
    - Regenerate `dependency_graph_summary` if the dependency structure changed
-3. Validate every modified YAML file: required fields present, cross-references point to files that exist within the fork, tradition is valid.
+4. Validate every modified YAML file: required fields present, cross-references point to files that exist within the fork, tradition is valid.
 
 Do NOT modify any files in `grimoires/gygax/game-state/` (the main game-state). All changes happen in the fork only.
 
