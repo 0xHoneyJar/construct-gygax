@@ -823,3 +823,148 @@ heuristics:
       damage against average starting HP. If a critical can kill a fresh character in one
       hit, check if the game provides any mitigation (armor, luck points, shields shall
       be splintered) or if the lethality is intentional and acknowledged.
+
+  # --- PHILOSOPHICAL HEURISTICS (v3 expansion) ---
+  # Added cycle-003. Source: grimoires/loa/context/osr-ontological-framework.md
+  # These go beyond pattern-matching to test whether the DESIGN PHILOSOPHY is OSR-aligned.
+
+  - id: button-vs-diegetic-test
+    name: "Button vs Diegetic Play"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      The core OSR test: does the system solve fictional problems through player description
+      or through sheet lookups? In "Push-Button" gaming, a trap is a Perception check — a
+      binary roll that bypasses the player's brain. In Diegetic Play, the player describes
+      interacting with the environment: "I tap the floorboards with my 10-foot pole." If
+      correct, they succeed regardless of stats. The character sheet is a record of tools,
+      not a menu of solutions.
+    detection: |
+      Look for skill mechanics that resolve environmental/situational challenges through
+      a single die roll (Perception, Investigation, Survival checks, etc.). If these exist
+      and are the PRIMARY means of engaging with environment, the design has failed the OSR
+      test. True OSR designs make skills supplementary, with description-first resolution.
+
+  - id: xp-source-behavior-driver
+    name: "XP Source as Behavior Driver"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      The XP model dictates player behavior. Combat XP rewards killing → produces murder-
+      hobos. Milestone XP rewards plot-following → produces railroaded play. XP-for-Gold
+      rewards treasure acquisition → produces clever thieves who AVOID combat to preserve
+      gold and their lives. This is a psychological masterstroke of OSR design. If your
+      progression model rewards behaviors that conflict with your intended play style,
+      player behavior will follow incentives, not stated design goals.
+    detection: |
+      Examine progression/*.yaml for XP source. If XP rewards combat kills, the system
+      incentivizes combat-seeking. If XP rewards treasure/gold acquisition (especially
+      when banking it requires extraction), the system incentivizes risk-aversion and
+      creative problem-solving. Flag mismatch between stated design goals and XP incentives.
+
+  - id: information-as-treasure
+    name: "Information as Treasure (Lethality Telegraphing)"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      For player skill to be operative, the GM must uphold a social contract: reveal the
+      situation, telegraph lethality. If lethal danger is hidden behind secret rolls, the
+      player cannot use skill — the game reverts to dice lottery. Providing clues (scent,
+      tracks, environmental warnings) transforms the game from a gamble into a strategic
+      exercise. The most important treasure in an OSR dungeon is INFORMATION, not gold.
+    detection: |
+      Check mechanics for hidden information patterns. Are perception/investigation rolls
+      gating critical safety information? Are secret rolls (made by GM without player
+      knowledge) used for trap detection, monster awareness, or ambush setup? If yes,
+      lethality is hidden rather than telegraphed — the design inhibits player skill.
+
+  - id: white-space-presence
+    name: "Mechanical White Space for Rulings"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      OSR designs utilize intentional "white space" — deliberate mechanical vacuums where
+      the designer steps back and expects the GM to make rulings. This creates Table
+      Agency — no two campaigns are identical, fostering collective ownership. Rule-for-
+      everything systems stifle this. The rules must be minimalist enough to allow the
+      Arbiter to step in without breaking the system's internal math.
+    detection: |
+      Count mechanics that codify edge cases. If the game has explicit rules for niche
+      situations (grappling underwater, falling while invisible, climbing in darkness),
+      it is button-heavy, not ruling-heavy. True OSR designs have only core mechanics plus
+      guidance to "rule based on fiction" for everything else.
+
+  - id: combat-as-war-vs-sport
+    name: "Combat as War vs Combat as Sport"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      OSR rejects "Encounter Balance." Combat as Sport assumes fair, winnable encounters
+      tailored to party level. Combat as War replaces fairness with Upholding Logic —
+      if players stumble into a dragon's lair, the world does not scale down. Combat is
+      often a fail state (negotiation, stealth, trickery failed). The world remains
+      consistent and indifferent, forcing players to respect its internal logic.
+    detection: |
+      Check for encounter balancing mechanics (CR systems, level-scaling monsters, balanced
+      party-size formulas). These indicate Combat-as-Sport philosophy. OSR designs should
+      have monsters defined by world logic (the dragon lives HERE because X), not by what
+      party level can survive them.
+
+  - id: weight-of-choice
+    name: "Strategic Constraints (Weight of Choice)"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Tracking rations, torches, inventory slots creates WEIGHT OF CHOICE. Every slot
+      occupied by a torch is a slot that cannot hold gold. This creates the fundamental
+      ludic tension: How long can we stay? Do we drop food to carry more treasure?
+      Scarcity ensures every decision has a consequence, driving risk-vs-reward dynamics.
+      This is not "bean counting" — it is the economic engine of the dungeon crawl.
+    detection: |
+      Check for inventory limits, encumbrance, consumable resource tracking. If survival
+      is guaranteed and inventory is infinite, the strategic tension that drives the OSR
+      loop is lost. Flag systems that technically have resources but make them abundant
+      enough to never create pressure.
+
+  - id: zen-test
+    name: "The Zen Test (Can Players Stop Looking at Sheets?)"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      The ultimate OSR goal: a state where rules fade and world becomes real. The "Zen"
+      is the unscripted emergent story — the moment players stop looking at their sheets
+      and start truly interacting with the world. The goal is absolute player agency,
+      palpable risk, and victory that tests player ingenuity rather than character stats.
+    detection: |
+      This is a holistic test, not a single-mechanic check. Evaluate across the full
+      game-state: how much of a player's meaningful choices route through the sheet
+      vs the fiction? If every decision requires consulting a skill list, stat block,
+      or ability menu, the design inhibits Zen. If the sheet provides occasional tools
+      referenced when appropriate (weapon damage, ability scores, HP), while the bulk of
+      play happens through description and GM interaction, the design supports Zen.
+
+  # --- INHIBITOR DETECTION (from modern systems resistance to OSR play) ---
+
+  - id: environmental-auto-win-detection
+    name: "Environmental Auto-Wins Trivialize Tension"
+    category: mechanics
+    severity: high
+    tradition_specific: false
+    description: |
+      Features that trivialize environmental engagement destroy OSR tension. Darkvision
+      for all characters eliminates the torch-as-clock mechanic. At-will cantrips (Create
+      Water, Mold Earth, Prestidigitation) remove resource constraints. Unlimited healing
+      via short rests makes HP-as-attrition moot. Each auto-win removes the "Environment
+      as Antagonist" pillar of OSR play.
+    detection: |
+      Scan for always-on environmental abilities: darkvision universal, unlimited cantrips,
+      free-action healing, infinite water/food creation. Count how many dungeon environmental
+      threats these features neutralize. If 3+ environmental pressure vectors are auto-solved,
+      environmental tension is structurally broken.

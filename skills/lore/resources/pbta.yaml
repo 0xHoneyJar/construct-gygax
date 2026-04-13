@@ -817,3 +817,151 @@ heuristics:
       Read MC agendas and principles. For each, check if at least one MC move or game
       mechanic directly supports it. If an agenda has no mechanical backing (no move, no
       resource, no procedure that enacts it), it is advice, not design.
+
+  # --- CONVERSATION ARCHITECTURE HEURISTICS (v3 expansion) ---
+  # Added cycle-003. Source: grimoires/loa/context/pbta-masterclass.md
+  # These test whether the design honors PbtA's design philosophy, not just uses 2d6+stat.
+
+  - id: tripwire-vs-button
+    name: "Moves as Tripwires vs Buttons"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      The defining PbtA test: does a move activate from fiction, or can a player select
+      it from a menu? In PbtA, moves are TRIPWIRES — they engage only when the fiction
+      crosses a specific trigger. The player describes an action; if the description
+      triggers the move, it fires. Moves are NOT buttons on a character sheet to be
+      pressed. If a player can consult their sheet and choose "I use Act Under Fire,"
+      the design has failed the PbtA test, regardless of mechanical resemblance.
+    detection: |
+      Examine mechanics/*.yaml for trigger definitions. Valid PbtA triggers are fiction-
+      anchored: "When you act under fire," "When you go into battle," "When you try to
+      seduce or manipulate someone." INVALID triggers are player-action-anchored:
+      "When you want to attack," "As an action on your turn." Flag moves with player-
+      selectable triggers — these are buttons dressed as moves.
+
+  - id: fiction-mechanics-fiction-loop
+    name: "Fiction-Mechanics-Fiction Loop Integrity"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      Every mechanical outcome must generate new fiction, not just adjust a number.
+      Fiction (cause) → Move triggers → Dice result → New fiction (effect). If a mechanic
+      terminates in "decrement HP" or "spend 1 resource" without requiring narration
+      of what happens fictionally, the loop is broken. PbtA's mechanics always point
+      back to fiction.
+    detection: |
+      For each move, check if its outcomes (10+/7-9/6-) describe MECHANICAL state changes
+      only or FICTIONAL consequences. A 10+ result should prompt narration: "You do it,
+      and also [specific fictional benefit]." A 7-9 should fork: "You do it, but [hard
+      bargain requiring fictional choice]." If outcomes are "deal 1d8 damage" without
+      fictional follow-up, the loop is broken.
+
+  - id: weak-hit-quality
+    name: "Weak Hit (7-9) as Genuine Fork"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      The 7-9 result is PbtA's signature innovation. It's NOT "lesser success." It's a
+      FORK requiring a choice: success at a cost, or partial success with a consequence,
+      or success with a hard bargain. If 7-9 results feel like "you won but worse" rather
+      than genuine dramatic complications, the mechanic is degenerate. The weak hit should
+      produce interesting fiction at a rate comparable to or higher than strong hits.
+    detection: |
+      Examine each move's 7-9 result text. Does it present a choice the player must make?
+      Does it introduce a cost, complication, or decision? Or does it just scale down the
+      10+ outcome? Flag moves where 7-9 is a worse version of 10+ rather than a different
+      kind of outcome.
+
+  - id: required-moves-identity-expression
+    name: "Required Moves Express Identity"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Some playbook moves are NOT upgrades — they are automatic triggers expressing the
+      character's nature. Example: Apocalypse World's "Chaotic Presence" triggers whenever
+      the character enters a situation with their gang. It's not a choice, it's a
+      destabilizing consequence of identity. This is a distinct design pattern: moves
+      that express WHO YOU ARE, not WHAT YOU CAN DO. If all playbook moves are
+      player-selectable upgrades, the design misses a key PbtA expressive tool.
+    detection: |
+      Check playbook entities for "required" or "automatic" moves. A playbook without any
+      identity-expressing required moves misses a PbtA-native pattern. Flag if all moves
+      in all playbooks are optional upgrades.
+
+  - id: graceful-collapse
+    name: "Concentric Onion — Graceful Collapse"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      PbtA games are architected as concentric layers: Core Conversation (MC Agenda +
+      Principles) → Core Systems (moves, stats) → Playbooks/Threats → Optional subsystems.
+      If a peripheral rule is forgotten mid-session, the game must "collapse gracefully
+      inward" to core moves. This ensures MC confidence and session momentum. Games where
+      peripheral rules are load-bearing (must be remembered for the game to function)
+      violate the onion architecture.
+    detection: |
+      Check for cross-references from core moves to optional subsystems. If Act Under
+      Fire requires consulting the Stress Track rules and the Harm Clock simultaneously,
+      the core move has a peripheral dependency. True PbtA cores run on 2d6+stat and the
+      outcome bands alone. Flag excessive cross-subsystem dependencies in core moves.
+
+  - id: arena-differentiation
+    name: "Playbooks Access Unique Conflict Arenas"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Each playbook should provide unique ways to engage with the world's challenges —
+      "conflict-wise clusters" that don't overlap. The Brainer's psychic manipulation is
+      a NOVEL ARENA — a conflict space where opposition is difficult. The Assassin's End
+      Runs achieve victory without facing direct danger. If all playbooks engage the same
+      conflict type (combat, social, etc.) with different stats, the arenas aren't
+      differentiated. True PbtA playbooks change WHAT THE PLAYER CAN DO, not just HOW.
+    detection: |
+      Compare playbook entities for arena overlap. If two playbooks resolve similar
+      situations through the same move trigger but different stats, they're not
+      differentiated — they're the same arena with different numbers. Flag playbooks
+      that lack a unique arena (end run, feint, or novel access pattern).
+
+  - id: underlying-model-coherence
+    name: "Underlying Model Coherence (Conflict / Relating / Adventure)"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      PbtA supports diverse "underlying models" of human interaction. The Conflict Model
+      (Apocalypse World): escalation between independent actors with incompatible interests.
+      The Relating Model (Under Hollow Hills): cycles of meeting, revelation, drawing closer
+      or withdrawing. The Adventure Model: shared struggle against insensate external dangers
+      with behind-the-scenes facts. The game's moves and playbooks should align with its
+      chosen model. A "dating sim" built on Conflict Model mechanics will feel hostile;
+      a gritty mercenary game on Relating Model will feel toothless.
+    detection: |
+      Identify the game's intended tone and compare against its moves. Combat-heavy move
+      lists with damage tracking imply Conflict Model. Moves about offering/accepting
+      intimacy imply Relating Model. Moves about shared discovery with hidden facts imply
+      Adventure Model. Flag mismatch between stated genre and mechanical model.
+
+  - id: soft-hard-move-balance
+    name: "Soft/Hard Move Balance for MC"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      MC moves come in soft (setup future badness, player can react) and hard (immediate
+      consequence, no roll to avoid) varieties. Soft moves maintain player agency and
+      build tension; hard moves cash in on misses and escalate. A game that only provides
+      hard moves creates relentless punishment. A game that only provides soft moves never
+      lands consequences. The balance matters — both for MC calibration and player
+      experience.
+    detection: |
+      Check MC move documentation for soft/hard distinction. If all MC moves are the same
+      severity (all immediate consequences, or all deferred threats), the MC lacks the
+      pacing tool that soft/hard alternation provides. Flag games that don't explicitly
+      document the distinction.
