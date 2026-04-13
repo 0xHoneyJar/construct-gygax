@@ -21,6 +21,49 @@ Also triggered by natural language:
 - "how would this work"
 - "refine this system"
 
+## Subcommands
+
+### `/homebrew --set-intent {entity-path}`
+
+Retroactive intent capture for an existing game-state entity. Use this when a mechanic or tension was created before intent capture was in place, or when you want to articulate intent separately from a design session.
+
+This subcommand makes intent-only changes — no implementation fields are touched.
+
+**Workflow:**
+
+1. Load the entity at `{entity-path}` from game-state.
+2. Show current intent if present: "Current intent: [existing summary] (set by [set_by] at [set_at])"
+   If no intent exists: "No intent currently set for this entity."
+3. Ask for the new intent:
+   - "What's the one-line design goal for this entity?" → `summary`
+   - "Why this design? What problem does it solve or what experience does it create?" → `rationale`
+   - "Is this intent non-negotiable? (If yes, findings conflicting with this intent will be suppressed in future analysis, not just downgraded.)" → `non_negotiable`
+4. Write the updated entity file with the new or replaced `intent` block. Set `set_by: homebrew`, `set_at: [current ISO-8601]`. All other fields remain unchanged.
+5. Write a changelog entry to `grimoires/gygax/changelog/YYYY-MM-DD-HHMMSS-homebrew-set-intent-{id}.yaml` recording the intent change:
+
+```yaml
+timestamp: "ISO-8601"
+skill: homebrew
+action: modified
+entity: "{entity-path}"
+summary: "Set intent for [entity name]"
+rationale: "Retroactive intent capture via --set-intent"
+source: "User request"
+
+intent_change:
+  before: null  # or previous intent object if one existed
+  after:
+    summary: "..."
+    rationale: "..."
+    set_by: homebrew
+    set_at: "ISO-8601"
+    non_negotiable: false
+```
+
+6. Confirm to the user: "Intent set for [entity name]. augury, cabal, lore, and scry will now read this intent when analyzing [entity path]."
+
+No design document is written for `--set-intent` — this is intent-only, not a design change.
+
 ## Workflow
 
 ### Step 1: Load Game-State
@@ -119,6 +162,50 @@ After presenting findings, enter an iterative design loop:
 
 Do not rush the user to confirmation. Design iteration is the point.
 
+### Step 6.5: Intent Capture
+
+Once the user confirms a design, capture intent before writing to game-state. Intent is how Gygax knows what IS the design versus what is a bug — it shapes how augury, cabal, and lore classify findings.
+
+**1. For tensions being created: REQUIRED — prompt for intent.**
+
+Ask: "What's the design goal for this tension? When should it be balanced vs tilted toward one pole?"
+
+Tensions without stated intent are incomplete. Do not write a new tension entity to game-state without an intent field.
+
+**2. For new mechanics with high potential impact: ENCOURAGED.**
+
+High potential impact means any mechanic that: changes resource flow, scales across levels, or interacts with multiple systems (appears in `most_depended_on` in index.yaml, or affects 3+ entities).
+
+Ask: "What's the intent behind this design? What problem does it solve, or what experience does it create?"
+
+This is not required — if the user declines, proceed without it. Document absence as `intent: null` in the entity file.
+
+**3. For existing entities being modified: ASK ABOUT INTENT PRESERVATION.**
+
+If the entity being modified has an existing `intent` field, show it and ask: "This change modifies [entity]. Does it preserve the original intent: '[existing intent summary]'? Or does it shift the intent?"
+
+- If shift: update the `intent` field with new rationale. Capture who shifted it and when.
+- If preserve: no change to the `intent` field. Only the implementation fields change.
+
+If the entity has no existing intent, treat it as a new mechanic and apply rule 2 above.
+
+**4. Optional: ask about non-negotiability for critical mechanics.**
+
+For mechanics that appear to be core to the game's identity (e.g., a central resolution mechanic, the primary tension), ask: "Is this intent non-negotiable? If yes, future analysis findings that conflict with this intent will be suppressed, not just downgraded."
+
+Default is `non_negotiable: false`. Only set true on explicit designer confirmation.
+
+**Capture intent in this YAML shape:**
+
+```yaml
+intent:
+  summary: "one-line goal"
+  rationale: "why this design"
+  set_by: homebrew
+  set_at: "ISO-8601"
+  non_negotiable: false
+```
+
 ### Step 7: Write to Game-State, Designs, and Changelog
 
 Once the user confirms the design:
@@ -139,6 +226,19 @@ Once the user confirms the design:
 **7c. Write design document:**
 - Write a human-readable design document to `grimoires/gygax/designs/YYYY-MM-DD-description.md`.
 - Include: design intent, final specification, consistency check results, design tensions affected, rationale for key decisions, and alternatives considered.
+- If intent was captured in Step 6.5, include a **Design Intent** section immediately after the title block (before Specification). If `non_negotiable` is true, include the suppression note.
+
+Design Intent section format:
+
+```markdown
+## Design Intent
+
+**Summary:** [intent.summary]
+**Rationale:** [intent.rationale]
+**Non-negotiable:** [true/false]
+
+[If non-negotiable: Findings that conflict with this intent will be suppressed in future analysis, not just downgraded.]
+```
 
 **7d. Append to changelog:**
 - Write a changelog entry to `grimoires/gygax/changelog/YYYY-MM-DD-HHMMSS-homebrew-description.yaml`.
@@ -160,6 +260,15 @@ after:
 
 affected_tensions:
   - tensions/tension-id.yaml
+
+intent_change:  # Only if intent was set or modified
+  before: null  # null for new entities; previous intent object for modifications
+  after:        # New intent object as captured in Step 6.5
+    summary: "one-line goal"
+    rationale: "why this design"
+    set_by: homebrew
+    set_at: "ISO-8601"
+    non_negotiable: false
 ```
 
 ## Consistency Check Rules
@@ -180,6 +289,7 @@ The following rules are checked in Step 3. Each rule has a severity.
 | Narratively incoherent with setting assumptions | Observation | "Teleportation in a low-magic setting" |
 | Move trigger overlaps with existing move (PbtA/FitD) | Overlap | "Both 'Defy Danger' and this trigger on threat" |
 | Circular dependency introduced | Contradiction | "A depends on B, B depends on A" |
+| Proposed mechanic conflicts with existing tension's intent | Tension shift | "Adding a reliable defensive option conflicts with tensions/survivability-vs-resources.yaml intent: 'defense should always feel costly'" |
 
 ## Design Document Format
 
@@ -192,9 +302,13 @@ Design documents written to `grimoires/gygax/designs/` follow this structure:
 **Tradition:** [tradition]
 **Status:** Confirmed
 
-## Intent
+## Design Intent
 
-What this mechanic is meant to accomplish in play.
+**Summary:** [intent.summary]
+**Rationale:** [intent.rationale]
+**Non-negotiable:** [true/false]
+
+[If non-negotiable: Findings that conflict with this intent will be suppressed in future analysis, not just downgraded.]
 
 ## Specification
 
@@ -217,6 +331,8 @@ Other approaches discussed during iteration and why they were not chosen.
 Key design decisions and their justification.
 ```
 
+If intent was not captured (user declined or entity type does not warrant it), omit the Design Intent section entirely.
+
 ## Boundaries
 
 - Does NOT ingest or parse existing rulebooks (use `/attune` for that)
@@ -228,6 +344,8 @@ Key design decisions and their justification.
 - DOES handle structural consistency, dependency checking, tension tracking, and narrative coherence
 - DOES work for non-combat mechanics: social systems, exploration, downtime, crafting, faction play, narrative moves
 - DOES support mid-design pivots -- the user can change direction at any point during iteration
+- DOES capture intent on new designs and tension modifications (Step 6.5)
+- DOES ask about intent preservation when modifying existing entities (Step 6.5)
 
 ## Cross-Skill Chaining
 
@@ -245,6 +363,10 @@ Design confirmed. To validate:
 ```
 
 Each recommendation includes the exact invocation command tied to the specific entity just designed.
+
+**Intent and cross-skill consistency:** As of v3, augury, cabal, lore, and scry all read the `intent` field from entity files before classifying findings. Intent is how you tell Gygax what IS the design versus what is a bug. A deliberately asymmetric mechanic with intent stated will surface as an Observation ("working as designed"), not a Warning. Without intent, every finding is classified purely on structure and math.
+
+Tensions should always have intent set — a tension without intent is incomplete. Use `/homebrew --set-intent {entity-path}` to add intent retroactively to any entity.
 
 ## Output
 

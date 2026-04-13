@@ -13,13 +13,14 @@ Attune is the gateway to everything Gygax does. Without game-state, no other ski
 
 ## Trigger
 
-`/attune` with optional source argument.
+`/attune` with optional source argument or flag.
 
 Examples:
 - `/attune docs/rulebook.md` -- ingest a markdown document
 - `/attune src/rules/` -- ingest a directory of files
 - `/attune https://example.com/srd` -- ingest from a URL
 - `/attune` -- no arguments, start a guided interview for a new game
+- `/attune --reference 5e-srd` -- install a bundled reference system (no interview, no ingestion)
 
 ## Workflow
 
@@ -51,6 +52,7 @@ Examine the user's invocation to determine the input mode.
 
 | Input | Mode | Strategy |
 |-------|------|----------|
+| `--reference {name}` flag | **Reference Installation** | Install a pre-attuned bundled reference system — skip to Phase 1.5, then stop |
 | File path to markdown/text | **Document Ingestion** | Read the file, extract game content, then interview to fill gaps |
 | Directory path | **Repo Ingestion** | Glob for relevant files (.md, .txt, .yaml), read them, extract, interview to fill gaps |
 | URL | **URL Ingestion** | Fetch the URL content with WebFetch, extract, interview to fill gaps |
@@ -59,16 +61,36 @@ Examine the user's invocation to determine the input mode.
 
 **Key principle:** For existing games with source material, ingestion comes first and interview fills gaps. For new games being designed from scratch, interview drives the process and builds game-state incrementally.
 
+### Phase 1.5: Reference Installation Mode (--reference flag only)
+
+This is a SHORT workflow. When the user invokes `/attune --reference {name}`, do NOT run a guided interview or ingestion. Execute the following steps and then stop.
+
+**Available reference slugs:** `5e-srd`, `pbta-baseline`, `cepheus-core`
+
+1. **Check for the bundle.** Look for `skills/attune/resources/references/{name}/` in the construct directory.
+   - If the directory does not exist, the slug is not available. Report: "Reference '{name}' not available. Bundled references: 5e-srd, pbta-baseline, cepheus-core." Stop.
+2. **Check if already installed.** Look for `grimoires/gygax/references/{name}/`.
+   - If it exists: "Reference '{name}' already installed at grimoires/gygax/references/{name}/. Reinstall? [y/N]"
+   - Wait for user confirmation before proceeding. If the user declines, stop.
+3. **Copy the bundle.** Copy the bundled game-state from `skills/attune/resources/references/{name}/game-state/` to `grimoires/gygax/references/{name}/game-state/`.
+4. **Copy metadata.** Copy `skills/attune/resources/references/{name}/metadata.yaml` to `grimoires/gygax/references/{name}/metadata.yaml`.
+5. **Validate.** Check that all copied YAML files conform to the schema defined in `skills/attune/resources/game-state-schema.md`. Fix any issues silently; surface only those that require user input.
+6. **Report success.** "Reference system '{name}' installed. Use `/augury compare --against {name}` to cross-reference."
+7. **Write changelog entry** to `grimoires/gygax/changelog/` using the standard Phase 7 format, with `action: created` and `source: reference-bundle`.
+
+**Do not proceed to Phase 2 or beyond.** Reference installation is complete after step 7.
+
 ### Phase 2: Source Ingestion (if source provided)
 
 Read the source material thoroughly. Do NOT skim. Read every file, every section.
 
 1. **Read the source.** Use Read for files, Glob+Read for directories, WebFetch for URLs.
-2. **Identify the TTRPG tradition.** Classify into: `d20`, `pbta`, `fitd`, `osr`, `freeform`, or `custom`. This determines how you interpret the source and what schema fields are relevant.
+2. **Identify the TTRPG tradition.** Classify into: `d20`, `pbta`, `fitd`, `osr`, `cepheus`, `freeform`, or `custom`. This determines how you interpret the source and what schema fields are relevant.
    - **d20**: Ability scores, AC, HP, attack rolls, saving throws, spell slots, CR, levels (D&D, Pathfinder, 13th Age)
    - **pbta**: Stats (-1 to +3), moves (2d6+stat, 10+/7-9/6-), playbooks, harm/conditions (Dungeon World, Apocalypse World, Monsterhearts)
    - **fitd**: Action ratings, position/effect, stress/trauma, clocks, crew sheets (Blades in the Dark, Scum & Villainy)
    - **osr**: Minimal stats, high lethality, procedures over rules, reaction tables, resource depletion (Cairn, Knave, Into the Odd)
+   - **cepheus**: 2d6+mod vs target 8+, Effect-based degrees of success (Effect = roll - 8, continuous gradient not fixed tiers), lifepath character creation with career terms, 6 characteristics (Str/Dex/End/Int/Edu/Soc), unskilled -3 penalty (Traveller, Cepheus Engine)
    - **freeform**: No dice or minimal resolution, fiction-first, safety tools as mechanics (Belonging Outside Belonging, Wanderhome)
    - **custom**: Hybrid or novel system that doesn't fit neatly into one tradition. This includes journaling RPGs, GMless games, map-drawing games, games where you play as a landscape or a community, lyric games, or anything truly experimental. Do NOT force these into another tradition -- use `custom` and let the game tell you what it is.
 
@@ -98,7 +120,7 @@ Whether you are filling gaps after ingestion or building from scratch, the inter
 
 Ask about (skip if already known from source):
 - What is the game called?
-- What tradition does it follow? (Offer the list: d20, PbtA, FitD, OSR, freeform, custom)
+- What tradition does it follow? (Offer the list: d20, PbtA, FitD, OSR, Cepheus, freeform, custom)
 - One-sentence description of what makes this game different
 - What is the core resolution mechanic? (Roll d20+mod vs DC, roll 2d6+stat, dice pool, etc.)
 
@@ -155,6 +177,61 @@ After gathering the above, identify and confirm tensions:
 - If the user says "it's like 5e" or "standard PbtA moves", use your knowledge to fill in the standard version and ask what differs
 - Stop interviewing when you have enough to generate at least stats, resources, and core mechanics. Entities and tensions can be sparse initially.
 
+### Phase 3.5: Intent Capture
+
+This phase runs AFTER the interview (Phase 3) and BEFORE writing game-state files (Phase 4). Its purpose is to capture designer intent for tensions and high-signal mechanics, so that downstream analysis skills can distinguish deliberate asymmetry from unintended imbalance.
+
+**Skip this phase entirely if:**
+- The user invokes `/attune` with "skip intent prompts" at any point during the session.
+- The source document contains explicit design rationale sections (headings such as "Design Notes," "Designer's Commentary," "Intent," or similar). In that case, extract intent from those sections programmatically and populate the intent fields without asking.
+
+**Otherwise, prompt as follows:**
+
+#### Required: Tensions
+
+For EVERY tension entity identified during Phase 3, you MUST ask the user for intent before proceeding to Phase 4. Do not skip any tension.
+
+Prompt template:
+> "I see a tension between **[Pole A name]** and **[Pole B name]**. What's the design intent — is the asymmetry deliberate, or is one pole intended to dominate?"
+
+Wait for a response. Use the answer to populate the `intent` field on the tension entity.
+
+#### Encouraged: High-Connectivity Mechanics
+
+From your dependency analysis, identify the top 3 mechanics by incoming dependency count (i.e., the mechanics that appear most frequently in other entities' `depends_on` lists). For each, ask:
+
+> "This mechanic has [N] other entities depending on it. What's the design goal — what problem is this solving?"
+
+You may combine these into a single message if asking about all three at once is more natural.
+
+#### Encouraged: Unusual Probability Distributions
+
+If any mechanic has a non-obvious probability shape — unusual stat modifier curves, outcome bands that are narrower or wider than tradition norms, exploding dice, threshold effects, unskilled penalties — surface the observation and ask:
+
+> "I notice [specific observation, e.g., 'the unskilled -3 penalty means untrained characters succeed roughly 17% of the time at target 8']. Is this intentional?"
+
+#### Captured Intent Schema
+
+Record all captured intent using this structure:
+
+```yaml
+intent:
+  summary: "one-line goal"
+  rationale: "why this design"
+  set_by: attune
+  set_at: "ISO-8601"
+  non_negotiable: false  # default; user can upgrade to true if they confirm the design is fixed
+```
+
+If the user explicitly says a design is final or locked, set `non_negotiable: true`. This suppresses Warning-level findings (but never Critical) in downstream augury analysis.
+
+#### Asking Guidelines
+
+- Batch questions where possible: ask about all 3 high-connectivity mechanics in one message.
+- Ask tension intent questions one at a time — tensions are nuanced enough to warrant focused responses.
+- If the user says "I don't know yet" or "TBD," leave the `intent` block absent from that entity. Do NOT write a placeholder intent.
+- Keep prompts short and specific. Reference the actual mechanic or tension name and the concrete numbers.
+
 ### Phase 4: Game-State Generation
 
 Generate YAML files for every game element you have extracted or learned through interview. Follow the schema defined in `skills/attune/resources/game-state-schema.md` exactly.
@@ -168,11 +245,19 @@ id: unique-kebab-case-id
 name: "Human Readable Name"
 type: stats|resources|mechanics|progression|entities|tensions
 description: "What this is and what it does in the game"
-tradition: d20|pbta|fitd|osr|freeform|custom
+tradition: d20|pbta|fitd|osr|cepheus|freeform|custom
 tags: []
 
 depends_on: []    # Paths relative to game-state/
 affects: []       # Paths relative to game-state/
+
+# Optional on most entity types; required on tensions (see Phase 3.5)
+intent:
+  summary: "one-line goal"
+  rationale: "why this design"
+  set_by: attune
+  set_at: "ISO-8601"
+  non_negotiable: false
 
 created_by: attune
 created_at: "ISO-8601"
@@ -229,7 +314,7 @@ After writing all entity files, generate or update `grimoires/gygax/game-state/i
 
 ```yaml
 game: "Game Name"
-tradition: d20|pbta|fitd|osr|freeform|custom
+tradition: d20|pbta|fitd|osr|cepheus|freeform|custom
 description: "Brief description of the game"
 created_at: "ISO-8601"
 last_modified_at: "ISO-8601"
@@ -273,7 +358,7 @@ For each generated YAML file, verify:
 - [ ] All common base fields are present (`id`, `name`, `type`, `description`, `tradition`, `tags`, `depends_on`, `affects`, `created_by`, `created_at`, `last_modified_by`, `last_modified_at`)
 - [ ] `id` is kebab-case and unique within its entity type directory
 - [ ] `type` matches the directory the file lives in (`stats/` files have `type: stats`)
-- [ ] `tradition` is one of: d20, pbta, fitd, osr, freeform, custom
+- [ ] `tradition` is one of: d20, pbta, fitd, osr, cepheus, freeform, custom
 - [ ] Type-specific required fields are present (e.g., `range` for stats, `pool` for resources)
 
 #### 6b: Cross-Reference Integrity
@@ -348,6 +433,7 @@ Different TTRPG traditions emphasize different entity types. Adjust your extract
 | pbta | mechanics (moves), stats | progression (advances), entities (playbooks) | resources, tensions |
 | fitd | resources (stress, harm), mechanics (actions, position/effect) | progression (crew advances), entities (crew sheet) | stats, tensions |
 | osr | mechanics (procedures), entities (monsters, treasure), resources (supply, torches) | stats (minimal) | progression, tensions |
+| cepheus | stats (6 characteristics), mechanics (skill checks, Effect), progression (lifepath/careers) | resources (Endurance as ablative pool), entities (career tables, equipment) | tensions |
 | freeform | mechanics (tokens, prompts), tensions (safety tools as mechanics) | entities (character concepts) | stats, resources, progression |
 | custom | **let the game decide** -- interview to discover which types matter | varies | varies |
 
@@ -389,9 +475,10 @@ Game attuned. Suggested next steps:
 2. `/augury` -- validate the numerical balance of your mechanics
 3. `/homebrew` -- start designing new mechanics with cross-system checking
 4. `/cabal --newcomer --optimizer` -- quick stress-test for accessibility and exploits
+5. To compare your system against an industry baseline, run `/attune --reference 5e-srd` (also available: pbta-baseline, cepheus-core).
 ```
 
-Tailor suggestions to what the game-state contains. If the game has combat mechanics, emphasize `/augury`. If it's narrative-first, emphasize `/lore` and `/cabal --storyteller`.
+Tailor suggestions to what the game-state contains. If the game has combat mechanics, emphasize `/augury`. If it's narrative-first, emphasize `/lore` and `/cabal --storyteller`. If the tradition is `cepheus` or uses a 2d6+mod resolution, suggest `/attune --reference cepheus-core` for direct comparison.
 
 ## Boundaries
 
@@ -406,7 +493,7 @@ Tailor suggestions to what the game-state contains. If the game has combat mecha
 
 ## Output
 
-All artifacts are written to `grimoires/gygax/game-state/` organized by entity type:
+**Primary (full attune workflow):** All artifacts are written to `grimoires/gygax/game-state/` organized by entity type:
 - `grimoires/gygax/game-state/stats/*.yaml`
 - `grimoires/gygax/game-state/resources/*.yaml`
 - `grimoires/gygax/game-state/mechanics/*.yaml`
@@ -414,6 +501,12 @@ All artifacts are written to `grimoires/gygax/game-state/` organized by entity t
 - `grimoires/gygax/game-state/entities/*.yaml`
 - `grimoires/gygax/game-state/tensions/*.yaml`
 - `grimoires/gygax/game-state/index.yaml`
+
+**Reference installation (`--reference` mode):** Artifacts are written to the references zone instead:
+- `grimoires/gygax/references/{name}/game-state/` (full entity directory structure)
+- `grimoires/gygax/references/{name}/metadata.yaml`
+
+**Always written (both modes):**
 - `grimoires/gygax/changelog/YYYY-MM-DD-HHMMSS-attune-*.yaml`
 
 ## Error Handling
@@ -428,3 +521,5 @@ All artifacts are written to `grimoires/gygax/game-state/` organized by entity t
 | Existing game-state conflicts with new source | "The existing game-state has [X], but the new source says [Y]. Which should I use?" | Ask user to resolve conflict |
 | Source material is for a game you don't recognize | Proceed anyway. Extract what you can structurally. "I'm not familiar with this specific system, but I can see it uses [resolution mechanic]. Let me ask some targeted questions to fill in what I can't infer." | Shift to interview-heavy mode |
 | User provides contradictory information | Surface the contradiction Socratically: "Earlier you said [X], but this seems to conflict with [Y]. Which is the intended design?" | Ask user to resolve |
+| Unknown reference slug (`--reference {name}` not in bundled list) | "Reference '{name}' not available. Bundled references: 5e-srd, pbta-baseline, cepheus-core." | Stop; do not proceed |
+| Reference already installed | "Reference '{name}' already installed at grimoires/gygax/references/{name}/. Reinstall? [y/N]" | Wait for user confirmation; reinstall only if confirmed |
