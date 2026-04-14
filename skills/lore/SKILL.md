@@ -78,8 +78,9 @@ For each heuristic in the loaded set:
 4. For `tradition_specific: false` heuristics, evaluate even if they come from a different tradition file than the game's primary tradition. Cross-tradition wisdom applies everywhere.
 
 After pattern-matching, check each matched entity for intent:
-- If the heuristic matches AND the entity has intent that acknowledges/explains the pattern → Tag as [INTENT-ALIGNED]
-- If the heuristic matches AND intent conflicts → Tag as [INTENT-CONFLICT]
+- If the heuristic matches AND the entity has `mechanical_intent` (or legacy `intent`) that acknowledges/explains the pattern → Tag as [INTENT-ALIGNED]
+- If the heuristic matches AND `mechanical_intent` conflicts → Tag as [INTENT-CONFLICT]
+- If the entity also has `experiential_intent`, note it for companion construct reference but do not use it for structural classification (experiential intent shapes voicing, not analysis)
 - If no intent set → Leave classification unchanged, add note
 5. For each match or partial match, record:
    - The heuristic ID and name
