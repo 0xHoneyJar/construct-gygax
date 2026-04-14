@@ -29,16 +29,28 @@ Retroactive intent capture for an existing game-state entity. Use this when a me
 
 This subcommand makes intent-only changes — no implementation fields are touched.
 
+Intent is **two-axis**: mechanical intent (what the math should do — owned by Gygax) and experiential intent (how the mechanic should feel — owned by companion constructs like Arneson). Both axes live on the same entity. Gygax captures both; companion constructs read the experiential axis for voicing and scene shaping.
+
 **Workflow:**
 
 1. Load the entity at `{entity-path}` from game-state.
-2. Show current intent if present: "Current intent: [existing summary] (set by [set_by] at [set_at])"
+2. Show current intent if present: "Current mechanical intent: [existing summary] (set by [set_by] at [set_at])"
+   Show current experiential intent if present: "Current experiential intent: tone=[tone], pacing=[pacing], stakes=[stakes]"
    If no intent exists: "No intent currently set for this entity."
 3. Ask for the new intent:
-   - "What's the one-line design goal for this entity?" → `summary`
-   - "Why this design? What problem does it solve or what experience does it create?" → `rationale`
-   - "Is this intent non-negotiable? (If yes, findings conflicting with this intent will be suppressed in future analysis, not just downgraded.)" → `non_negotiable`
-4. Write the updated entity file with the new or replaced `intent` block. Set `set_by: homebrew`, `set_at: [current ISO-8601]`. All other fields remain unchanged.
+   - **Mechanical intent** (what the math should do):
+     - "What's the one-line design goal for this entity?" → `mechanical_intent.summary`
+     - "Why this design? What problem does it solve?" → `mechanical_intent.rationale`
+     - "How severe are failures?" → `mechanical_intent.severity` (minor / moderate / major / lethal)
+     - "What does failure look like?" → `mechanical_intent.failure_mode` (complication_not_lethality / resource_loss / narrative_consequence / lethality)
+     - "Is this intent non-negotiable?" → `mechanical_intent.non_negotiable`
+   - **Experiential intent** (how it should feel — optional but encouraged):
+     - "What emotional tone should this mechanic carry?" → `experiential_intent.tone` (desperate / heroic / tragic / absurd / mundane / uncanny / tender / cruel / comic)
+     - "How should time feel during this mechanic?" → `experiential_intent.pacing` (rushed / steady / languid / punctuated)
+     - "Whose world is being touched?" → `experiential_intent.stakes` (personal / communal / cosmic / professional / trivial)
+     - "What register should the prose take?" → `experiential_intent.register` (formal / colloquial / archaic / technical / mythic / intimate)
+     - Any additional shaping notes → `experiential_intent.notes`
+4. Write the updated entity file with the new or replaced intent blocks. Set `set_by: homebrew`, `set_at: [current ISO-8601]`. All other fields remain unchanged.
 5. Write a changelog entry to `grimoires/gygax/changelog/YYYY-MM-DD-HHMMSS-homebrew-set-intent-{id}.yaml` recording the intent change:
 
 ```yaml
@@ -53,16 +65,27 @@ source: "User request"
 intent_change:
   before: null  # or previous intent object if one existed
   after:
-    summary: "..."
-    rationale: "..."
-    set_by: homebrew
-    set_at: "ISO-8601"
-    non_negotiable: false
+    mechanical_intent:
+      summary: "..."
+      rationale: "..."
+      severity: moderate
+      failure_mode: complication_not_lethality
+      set_by: homebrew
+      set_at: "ISO-8601"
+      non_negotiable: false
+    experiential_intent:  # optional — may be null if designer declines
+      tone: uncanny
+      pacing: languid
+      stakes: communal
+      register: intimate
+      notes: "..."
 ```
 
-6. Confirm to the user: "Intent set for [entity name]. augury, cabal, lore, and scry will now read this intent when analyzing [entity path]."
+6. Confirm to the user: "Intent set for [entity name]. augury, cabal, lore, and scry will now read this intent when analyzing [entity path]. Companion constructs (e.g., Arneson) will read the experiential axis for voicing."
 
 No design document is written for `--set-intent` — this is intent-only, not a design change.
+
+**Backwards compatibility:** Entities with the old single-axis `intent:` block (summary + rationale + non_negotiable) are treated as `mechanical_intent` with no `experiential_intent`. The old shape continues to work; the new shape adds the experiential axis alongside it.
 
 ## Workflow
 
@@ -176,16 +199,17 @@ Tensions without stated intent are incomplete. Do not write a new tension entity
 
 High potential impact means any mechanic that: changes resource flow, scales across levels, or interacts with multiple systems (appears in `most_depended_on` in index.yaml, or affects 3+ entities).
 
-Ask: "What's the intent behind this design? What problem does it solve, or what experience does it create?"
+Ask: "What's the intent behind this design? What problem does it solve?" → `mechanical_intent`
+Then: "How should this mechanic *feel* during play? (tone, pacing, stakes)" → `experiential_intent` (optional)
 
-This is not required — if the user declines, proceed without it. Document absence as `intent: null` in the entity file.
+This is not required — if the user declines, proceed without it. Document absence as `mechanical_intent: null` in the entity file.
 
 **3. For existing entities being modified: ASK ABOUT INTENT PRESERVATION.**
 
-If the entity being modified has an existing `intent` field, show it and ask: "This change modifies [entity]. Does it preserve the original intent: '[existing intent summary]'? Or does it shift the intent?"
+If the entity being modified has an existing `mechanical_intent` field (or legacy `intent` field), show it and ask: "This change modifies [entity]. Does it preserve the original intent: '[existing summary]'? Or does it shift the intent?"
 
-- If shift: update the `intent` field with new rationale. Capture who shifted it and when.
-- If preserve: no change to the `intent` field. Only the implementation fields change.
+- If shift: update the `mechanical_intent` field with new rationale. Capture who shifted it and when. Also ask if the experiential intent should shift.
+- If preserve: no change to intent fields. Only the implementation fields change.
 
 If the entity has no existing intent, treat it as a new mechanic and apply rule 2 above.
 
@@ -195,16 +219,26 @@ For mechanics that appear to be core to the game's identity (e.g., a central res
 
 Default is `non_negotiable: false`. Only set true on explicit designer confirmation.
 
-**Capture intent in this YAML shape:**
+**Capture intent in this YAML shape (two-axis):**
 
 ```yaml
-intent:
-  summary: "one-line goal"
+mechanical_intent:
+  summary: "one-line goal — what the math should do"
   rationale: "why this design"
+  severity: moderate          # minor / moderate / major / lethal
+  failure_mode: complication_not_lethality
   set_by: homebrew
   set_at: "ISO-8601"
   non_negotiable: false
+experiential_intent:          # optional — null if designer declines
+  tone: uncanny               # desperate / heroic / tragic / absurd / mundane / uncanny / tender / cruel / comic
+  pacing: languid             # rushed / steady / languid / punctuated
+  stakes: communal            # personal / communal / cosmic / professional / trivial
+  register: intimate          # formal / colloquial / archaic / technical / mythic / intimate
+  notes: "free-text shaping context for companion constructs"
 ```
+
+**Backwards compatibility:** The old single-axis `intent:` shape (summary + rationale + non_negotiable) is treated as `mechanical_intent` with no `experiential_intent`. Existing entities do not need migration — they work as-is. The new shape adds the experiential axis alongside the mechanical one.
 
 ### Step 7: Write to Game-State, Designs, and Changelog
 
