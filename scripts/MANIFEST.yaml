@@ -3,6 +3,12 @@
 # Scripts are pure functions invoked by skills (primarily /augury) for precise math
 # that the AI runtime cannot reliably compute.
 
+execution:
+  runtime: "node >= 25 (native TS) or npx tsx"
+  invocation: "echo '<json>' | npx tsx scripts/lib/{name}.ts"
+  dependencies: none
+  note: "Scripts are pure functions. No package.json is intentional — zero npm dependencies."
+
 scripts:
   - name: dice-probability
     path: scripts/lib/dice-probability.ts

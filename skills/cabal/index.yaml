@@ -2,7 +2,7 @@ slug: cabal
 name: "Cabal"
 description: |
   Use this skill IF user invokes /cabal OR wants to playtest, stress test, find exploits, or check if players will break something.
-  Produces artifacts to grimoires/gygax/cabal/.
+  Produces artifacts to grimoires/gygax/playtest-reports/.
 version: 1.0.0
 
 triggers:

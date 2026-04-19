@@ -2,7 +2,7 @@ slug: lore
 name: "Lore"
 description: |
   Use this skill IF user invokes /lore OR asks about design patterns, failure modes, or TTRPG design wisdom.
-  Produces artifacts to grimoires/gygax/lore/.
+  Produces artifacts to grimoires/gygax/lore-reports/.
 version: 1.0.0
 
 triggers:

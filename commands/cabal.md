@@ -15,6 +15,8 @@ context_files:
     required: true
   - path: "identity/persona.yaml"
     required: true
+  - path: "identity/expertise.yaml"
+    required: false
 ---
 
 # Cabal

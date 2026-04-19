@@ -2,7 +2,7 @@ slug: attune
 name: "Attune"
 description: |
   Use this skill IF user invokes /attune OR wants to analyze a game, ingest a rulebook, or read a system.
-  Produces artifacts to grimoires/gygax/attune/.
+  Produces artifacts to grimoires/gygax/game-state/.
 version: 1.0.0
 
 triggers:

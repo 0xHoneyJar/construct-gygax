@@ -24,7 +24,7 @@ fi
 log "Installing Gygax into $(basename "$(pwd)")..."
 
 # Create .claude/skills directories
-SKILLS=(attune homebrew augury cabal lore gygax-status)
+SKILLS=(attune homebrew augury cabal lore gygax-status scry delve)
 for skill in "${SKILLS[@]}"; do
   mkdir -p ".claude/skills/$skill"
 done
@@ -45,21 +45,25 @@ mkdir -p ".claude/skills/cabal/resources"
 curl -fsSL "$BASE_URL/skills/cabal/resources/archetypes.yaml" -o ".claude/skills/cabal/resources/archetypes.yaml"
 
 mkdir -p ".claude/skills/lore/resources"
-for tradition in d20 pbta fitd osr; do
+for tradition in d20 pbta fitd osr cepheus; do
   curl -fsSL "$BASE_URL/skills/lore/resources/$tradition.yaml" -o ".claude/skills/lore/resources/$tradition.yaml"
 done
 
 # Download identity files
 log "Downloading identity..."
+mkdir -p "identity"
+curl -fsSL "$BASE_URL/identity/persona.yaml" -o "identity/persona.yaml"
+curl -fsSL "$BASE_URL/identity/expertise.yaml" -o "identity/expertise.yaml"
 mkdir -p ".claude/gygax"
-curl -fsSL "$BASE_URL/identity/persona.yaml" -o ".claude/gygax/persona.yaml"
-curl -fsSL "$BASE_URL/identity/expertise.yaml" -o ".claude/gygax/expertise.yaml"
 curl -fsSL "$BASE_URL/CLAUDE.md" -o ".claude/gygax/CLAUDE.md"
 
 # Create grimoire structure
 log "Creating grimoire structure..."
 mkdir -p grimoires/gygax/game-state/{stats,resources,mechanics,progression,entities,tensions}
 mkdir -p grimoires/gygax/{designs,balance-reports,playtest-reports,changelog}
+mkdir -p grimoires/gygax/{lore-reports,delve-reports,references}
+mkdir -p grimoires/gygax/learned-lore/.promoted
+mkdir -p grimoires/gygax/forks/.archived
 
 # Append Gygax identity to project CLAUDE.md if not already present
 if [[ -f "CLAUDE.md" ]]; then
@@ -84,6 +88,8 @@ log "  /homebrew  — Design or refine a mechanic"
 log "  /augury    — Run the numbers"
 log "  /cabal     — Stress-test with simulated players"
 log "  /lore      — TTRPG design heuristics"
+log "  /scry      — Fork game-state and explore design branches"
+log "  /delve     — Analyze dungeons (ecology, layout, loot)"
 log "  /gygax     — Status overview"
 log ""
 log "Start with: /attune"
