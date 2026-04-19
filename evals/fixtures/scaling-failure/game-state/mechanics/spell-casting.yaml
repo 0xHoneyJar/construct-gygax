@@ -1,0 +1,32 @@
+id: spell-casting
+name: "Spell Casting"
+type: mechanics
+description: "Arcane spellcasting. Effect power scales exponentially with spell level. Higher-level spells don't just do more damage -- they alter the rules of engagement (battlefield control, reality warping, save-or-die)."
+tradition: d20
+tags: [combat, caster, proactive]
+depends_on: [stats/intelligence.yaml, resources/spell-slots.yaml, progression/wizard-class.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Standard action in combat (most spells)"
+cost:
+  - resource: resources/spell-slots.yaml
+    amount: 1  # per spell level
+
+resolution:
+  method: save-or-effect
+  stat: stats/intelligence.yaml
+  dc: "10 + spell level + INT modifier"
+  success: "Spell effect applies (damage, control, transformation)"
+  failure: "Often half damage or reduced effect; some spells have no save"
+
+interactions:
+  - "Spell effects scale EXPONENTIALLY: level 1 = 1d6 damage to one target; level 5 = 10d6 damage to area; level 9 = reality alteration"
+  - "Proactive threat elimination: Wall of Force prevents combat entirely. Maze removes a creature. Time Stop grants free turns."
+  - "Buff stacking: Haste + Greater Invisibility + Fly = untouchable combatant. No martial equivalent."
+  - "Save-or-die at high levels: Finger of Death, Power Word Kill, Imprisonment"
+  - "Battlefield control is PREVENTION (proactive). Martial damage is REACTION (reactive). Prevention > reaction mathematically."
+  - "Estimated effective DPR-equivalent at level 1: ~4.5. Level 10: ~45. Level 20: ~200+. EXPONENTIAL growth."

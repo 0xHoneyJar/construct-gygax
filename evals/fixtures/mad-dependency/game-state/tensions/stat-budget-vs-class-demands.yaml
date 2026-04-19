@@ -1,0 +1,44 @@
+id: stat-budget-vs-class-demands
+name: "Stat Budget vs Class Demands"
+type: tensions
+description: "The fundamental MAD tension: the point-buy system allocates a fixed budget (25 points) while the Monk class implicitly requires 4 stats at 14+. The budget supports 2 high stats. The gap between what the class needs and what the system provides is the root cause of every Monk underperformance."
+tradition: d20
+tags: [balance, mad, character-creation, core-tension]
+depends_on: [stats/strength.yaml, stats/dexterity.yaml, stats/wisdom.yaml, stats/constitution.yaml, progression/monk-class.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Each class should be buildable within the standard point-buy budget without crippling core abilities"
+  rationale: "Character creation should involve meaningful tradeoffs, not impossible math"
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: true
+
+poles:
+  a:
+    name: "Stat Budget Constraint"
+    description: "25-point buy enforces scarcity. You can have two 16s, or one 18 and one 14. Remaining stats are 10-12. This creates meaningful tradeoffs for most classes."
+    supported_by: [stats/strength.yaml, stats/dexterity.yaml, stats/wisdom.yaml, stats/constitution.yaml]
+  b:
+    name: "Monk Class Demands"
+    description: "Monk needs DEX (AC, initiative), WIS (AC, ki DCs), STR (attack, damage), and CON (HP, Fort saves). All four feed core class features. Deprioritizing any one creates a critical weakness."
+    supported_by: [progression/monk-class.yaml, mechanics/unarmed-strike.yaml, mechanics/unarmored-defense.yaml, resources/ki-pool.yaml]
+
+health: b-dominant
+health_notes: "Impossible tension. The class demands exceed the budget by design. No point-buy allocation solves the problem. Every Monk build has at least two critically weak stats. Single-stat classes (Fighter needs STR, Wizard needs INT) have 15+ leftover points for secondary stats. Monk has 1-5 leftover points for essential stats."
+
+budget_analysis:
+  total_points: 25
+  monk_ideal: "STR 16 (10) + DEX 16 (10) + CON 14 (6) + WIS 16 (10) = 36 points. 11 points over budget."
+  monk_actual: "STR 12 (4) + DEX 14 (6) + CON 10 (2) + WIS 14 (6) + remaining 7 points = CHA/INT dumps"
+  fighter_ideal: "STR 16 (10) + CON 14 (6) = 16 points. 9 points leftover for comfort."
+  wizard_ideal: "INT 18 (16) = 16 points. 9 points leftover for CON."
+
+notes:
+  - "This is a DESIGN failure, not a player failure. No amount of optimization rescues the Monk."
+  - "The fix is structural: either reduce the stat dependencies (WIS-only AC, DEX-to-damage) or increase the budget for MAD classes"
+  - "Some DMs allow higher point-buy (32 points) specifically to make Monks viable. This is a house-rule patch for a system-level failure."

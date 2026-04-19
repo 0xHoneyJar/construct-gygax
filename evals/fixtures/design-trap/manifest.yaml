@@ -1,0 +1,16 @@
+id: design-trap
+name: "Static Bonus Trap Option (D&D 3.x Toughness pattern)"
+failure_archetype: design-trap
+tradition: d20
+description: |
+  Encodes an option (feat) that provides a static +3 HP bonus in a system
+  where HP scales multiplicatively with level. The bonus is meaningful at
+  level 1 (30% of HP) but negligible by level 10 (3% of HP). Occupies
+  a valuable feat slot that could be used for scaling options.
+source: "grimoires/gygax/references/design-failure-postmortem.md, Section 2"
+tests_skills:
+  - augury (progression)
+  - cabal (Newcomer + Optimizer divergence)
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate

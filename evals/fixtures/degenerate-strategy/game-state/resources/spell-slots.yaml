@@ -1,0 +1,45 @@
+id: spell-slots
+name: "Spell Slots (Short-Rest Recovery)"
+type: resources
+description: "Spell slots with short-rest recovery. The degenerate interaction: short rests have no daily limit and restore a portion of spell slots each time. A caster can chain 10+ short rests before combat to enter with full resources. The intended 'per-encounter budget' becomes 'entire daily budget in round 1'."
+tradition: d20
+tags: [caster, daily, exploit-vector]
+depends_on: [progression/rest-caster-class.yaml, mechanics/short-rest.yaml]
+affects: [mechanics/arcane-casting.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  min: 0
+  max_by_level:
+    1: 2
+    5: 8
+    10: 15
+    15: 23
+    20: 30
+  recovery:
+    trigger: short-rest
+    amount: "level / 2 (rounded up) spell slot levels restored"
+    daily_limit: none  # THE EXPLOIT: no cap on short rests
+    time_per_rest: "1 hour (in fiction)"
+    note: "10 short rests = 10 hours = full slot recovery before any encounter"
+
+exploit_chain:
+  step_1: "Wake up. 0 slots recovered."
+  step_2: "Short rest 1 hour. Recover level/2 slot levels. Repeat."
+  step_3: "After 10 rests (10 hours): all slots recovered."
+  step_4: "Enter first encounter with 100% resources."
+  step_5: "Dump everything in round 1. Encounter ends before enemy turn 2."
+  step_6: "Rest and repeat for next encounter."
+  total_time: "10 hours + 6 seconds of combat"
+
+depletion_consequence: "Must take another chain of short rests. In practice, never depleted."
+pressure_rating: none  # Resource pressure is zero when recovery is unlimited
+
+notes:
+  - "Intended design: short rest recovery = per-encounter resource budgeting. Caster has moderate power each fight."
+  - "Actual play: short rest recovery = unlimited total resources. Caster has maximum power every fight."
+  - "The missing constraint: a daily limit on short rests, or diminishing returns on recovery."
+  - "MtG parallel: Tolarian Academy generated unlimited mana (resources). This generates unlimited spell slots."

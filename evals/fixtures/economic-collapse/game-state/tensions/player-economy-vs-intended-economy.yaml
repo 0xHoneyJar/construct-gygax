@@ -1,0 +1,39 @@
+id: player-economy-vs-intended-economy
+name: "Player Economy vs Intended Economy"
+type: tensions
+description: "The design tension between the economy players actually experience (gold is trivially abundant) and the economy the designer intended (gold as a meaningful resource that gates equipment access and creates scarcity-driven choices). This tension is collapsed — the player-side pole dominates completely."
+tradition: d20
+tags: [economy, balance, broken-economy, collapsed-tension]
+depends_on: [resources/gold.yaml, mechanics/crafting.yaml, mechanics/npc-trade.yaml, entities/npc-shopkeeper.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Gold should be a meaningful resource that creates interesting purchasing decisions and rewards exploration"
+  rationale: "Economic scarcity drives engagement — choosing between a healing potion and a better sword is a meaningful decision. Without scarcity, treasure loses emotional weight."
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: false
+
+poles:
+  a:
+    name: "Intended Scarcity"
+    description: "Gold is limited. Players must prioritize purchases. Finding treasure feels rewarding. Equipment upgrades are milestones."
+    supported_by: []
+  b:
+    name: "Actual Abundance"
+    description: "Gold is trivially generated via craft-and-sell loops. All items are affordable within sessions. Treasure has no emotional weight. Equipment choices are meaningless."
+    supported_by: [mechanics/crafting.yaml, mechanics/npc-trade.yaml, entities/npc-shopkeeper.yaml, resources/gold.yaml]
+
+health: b-dominant
+health_notes: |
+  Collapsed. The craft-and-sell loop generates gold faster than any system
+  consumes it. By session 3, a moderately engaged player has enough gold
+  to buy every item in the game. The intended scarcity pole has zero
+  mechanical support — no sinks, no caps, no feedback loops throttle
+  accumulation. This is the Ultima Online pattern: an infinite source
+  (NPC shopkeeper gold) paired with no matching sink produces
+  hyperinflation that renders currency meaningless.

@@ -1,0 +1,19 @@
+id: scaling-failure
+name: "Linear Martial / Exponential Caster (D&D 3.x pattern)"
+failure_archetype: scaling-failure
+tradition: d20
+description: |
+  Encodes the classic martial/caster disparity. Fighter damage scales linearly
+  (+1 attack per 5 levels). Wizard spell power scales exponentially (new spell
+  tiers every 2 levels with quadratic effect scaling). At level 1 they're
+  comparable; by level 15 the fighter's agency is deleted.
+source: "grimoires/gygax/references/design-failure-postmortem.md, Section 2"
+tests_skills:
+  - augury (progression)
+  - augury (action-economy)
+  - cabal (Optimizer + Newcomer divergence)
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate

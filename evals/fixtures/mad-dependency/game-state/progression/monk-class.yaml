@@ -1,0 +1,39 @@
+id: monk-class
+name: "Monk"
+type: progression
+description: "Martial class requiring STR, DEX, CON, and WIS simultaneously. Medium BAB (3/4 per level), d8 hit die, multiple ki abilities gated on WIS. Every class feature assumes all four stats are high, but the point-buy system makes this impossible."
+tradition: d20
+tags: [martial, mad-class, melee]
+depends_on: []
+affects: [mechanics/unarmed-strike.yaml, mechanics/unarmored-defense.yaml, resources/ki-pool.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+progression_table:
+  1: {features: [flurry-of-blows, unarmed-strike-1d6, stunning-fist], bab: 0, hit_die: d8}
+  2: {features: [evasion, bonus-feat], bab: 1}
+  4: {features: [ki-strike-magic, slow-fall-20], bab: 3, unarmed: 1d8}
+  5: {features: [purity-of-body], bab: 3}
+  6: {features: [bonus-feat, improved-flurry], bab: 4}
+  8: {features: [slow-fall-40], bab: 6, unarmed: 1d10}
+  10: {features: [ki-strike-lawful, slow-fall-50], bab: 7}
+  12: {features: [abundant-step], bab: 9, unarmed: 2d6}
+  15: {features: [quivering-palm], bab: 11}
+  16: {features: [ki-strike-adamantine], bab: 12, unarmed: 2d8}
+  20: {features: [perfect-self], bab: 15, unarmed: 2d10}
+
+stat_requirements:
+  primary: [dexterity, wisdom]
+  secondary: [strength, constitution]
+  note: "All four are mechanically mandatory. 'Primary' and 'secondary' is a lie -- dumping STR means you can't hit, dumping CON means you die."
+
+scaling_notes:
+  - "BAB is 3/4 per level (medium). Fighter gets full BAB. Monk is always 5 behind by level 20."
+  - "d8 hit die in melee. Fighter has d10. Barbarian has d12. Monk is the squishiest melee class."
+  - "Unarmed damage dice scale (1d6 to 2d10) but STR modifier doesn't because STR is underfunded."
+  - "Flurry of Blows grants extra attacks but at -2 penalty, compounding the low-STR problem."
+  - "Stunning Fist is the payoff ability. WIS 14 gives DC 12 at level 1. DC 17 at level 10. Monsters save trivially."
+  - "Compare: Wizard with INT 18 has spell DC 15 at level 1. DC 24 at level 10. Monk's DCs are always 5-7 behind."
+  - "The MAD tax is invisible at level 1 (everyone has low numbers) and devastating by level 10."

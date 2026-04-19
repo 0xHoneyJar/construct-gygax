@@ -1,0 +1,43 @@
+id: description-opacity
+name: "Opaque Mechanic Descriptions"
+type: mechanics
+description: "Class and subsystem descriptions use evocative names and flavor text but do not explain mechanical effects. 'Glyph Resonance' is described as 'the harmonic convergence of inscribed sigils' without stating that it adds INT modifier to damage when two glyphs are active. Players must either play the class or read deeply nested rules text to discover what abilities actually do."
+tradition: d20
+tags: [communication, opacity, descriptions, cognitive-load]
+depends_on:
+  - mechanics/class-subsystems.yaml
+affects:
+  - tensions/option-paralysis.yaml
+  - tensions/expertise-gate.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "When a player reads class descriptions to evaluate options"
+cost: []
+
+opacity_examples:
+  glyph_resonance:
+    presented_description: "The harmonic convergence of inscribed sigils, channeling the primal language of creation."
+    actual_effect: "When 2+ Glyphs are active, add INT modifier to all damage rolls. At 3+ Glyphs, gain advantage on concentration checks."
+    information_gap: "Description communicates flavor but zero mechanical information. A player cannot evaluate whether this is powerful, niche, or irrelevant."
+  bloom_cycles:
+    presented_description: "The Verdant Warden attunes to the great cycle of growth, dormancy, and rebirth that pulses through the green world."
+    actual_effect: "Every 3 rounds, all Overgrowth Tokens double. After 9 rounds, tokens reset to 0 and all Symbiotic Bonds heal for token count. Effectively a ticking resource clock with a burst heal."
+    information_gap: "The player has no way to know this is a time-based mechanic with reset behavior. The description suggests passive attunement, not active resource management."
+  paradox_thresholds:
+    presented_description: "Those who tamper with the timestream must pay the price of paradox."
+    actual_effect: "Each Echo Action adds 1 Paradox. At 5 Paradox, take 2d6 psychic damage and lose next turn. At 10, permanent -2 to all saves for the encounter. At 15, knocked unconscious."
+    information_gap: "Sounds like narrative flavor. Is actually a hard mechanical cap with escalating penalties. A player choosing Chronist has no idea they're signing up for a self-damage mechanic."
+
+pattern_analysis:
+  descriptions_with_mechanical_content: "3 of 52 subsystem descriptions"
+  descriptions_flavor_only: "49 of 52 subsystem descriptions"
+  mechanical_content_location: "Scattered across class chapters, usually in 'Advanced Rules' subsections separate from the class description page"
+  cross_reference_support: "None -- no page references, no 'see also', no summary tables"
+
+comparison_to_functional_design:
+  mouse_over_equivalent: "A well-designed system would include a 1-line mechanical summary alongside the flavor text: 'Glyph Resonance (2+ active Glyphs: +INT to damage; 3+: advantage on concentration)'"
+  progressive_disclosure: "Present the 1-line summary at selection time, full rules at play time"
+  shared_vocabulary: "Use consistent templates: 'Resource X generates when Y, spent to Z, resets on R'"

@@ -1,0 +1,35 @@
+id: static-vs-scaling-options
+name: "Static vs Scaling Feat Value"
+type: tensions
+description: "The design tension between feats that provide flat bonuses and feats whose value is proportional to the system's scaling. When a static bonus competes for the same scarce resource as a proportional one, the static option becomes a trap for players who don't model long-term value."
+tradition: d20
+tags: [balance, feat-design, trap-option, newcomer-experience]
+depends_on:
+  - entities/feat-toughness.yaml
+  - entities/feat-dodge.yaml
+  - progression/character-progression.yaml
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Feats should offer meaningful, lasting customization regardless of which option a player selects"
+  rationale: "If a feat slot is rare (every 3 levels), every option consuming that slot should provide value commensurate with the opportunity cost"
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: false
+
+poles:
+  a:
+    name: "Static Bonus (Toughness)"
+    description: "Flat +3 HP. Front-loaded value that decays as HP scales. Attractive to newcomers because the number is larger and the benefit is easy to understand."
+    supported_by: [entities/feat-toughness.yaml]
+  b:
+    name: "Proportional Bonus (Dodge)"
+    description: "+1 AC, which maps to a constant ~5% miss chance on d20 resolution. Value holds at every level. Also serves as a prerequisite for more powerful feat chains."
+    supported_by: [entities/feat-dodge.yaml]
+
+health: b-dominant
+health_notes: "Toughness is strictly inferior to Dodge past level 3. By level 5 its value has decayed to 7% of total HP while Dodge still provides 5% damage avoidance. The options are not meaningfully competitive -- one is a trap. This creates a knowledge-gated design trap: experienced players never take Toughness, newcomers often do, and the game provides no signal that the choice is poor until several sessions later."

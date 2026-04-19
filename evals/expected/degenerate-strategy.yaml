@@ -1,0 +1,81 @@
+fixture: degenerate-strategy
+expected_findings:
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    category: degenerate-strategy
+    description_contains: "unlimited"
+    entity_refs:
+      - mechanics/short-rest.yaml
+      - resources/spell-slots.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    category: missing-constraint
+    description_contains: "daily limit"
+    entity_refs:
+      - mechanics/short-rest.yaml
+
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    category: degenerate-strategy
+    description_contains: "round 1"
+    entity_refs:
+      - mechanics/arcane-casting.yaml
+      - resources/action-points.yaml
+
+  - skill: augury
+    layer: action-economy
+    severity: Warning
+    category: solitaire-play
+    description_contains: "other players"
+    entity_refs:
+      - resources/action-points.yaml
+      - mechanics/arcane-casting.yaml
+
+  - skill: cabal
+    signal: excitement
+    archetype: Chaos Agent
+    description_contains: "nova"
+
+  - skill: cabal
+    signal: dead-time
+    archetype: Anxious Player
+    description_contains: "watch"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Veteran
+    description_contains: "exploit"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "solitaire"
+
+  - skill: lore
+    tradition: d20
+    heuristic: "every-resource-needs-a-ceiling"
+    severity: Critical
+    description_contains: "recovery"
+    entity_refs:
+      - mechanics/short-rest.yaml
+      - resources/spell-slots.yaml
+      - tensions/resource-scarcity-vs-recovery.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "Spell resolution works as designed. Save DCs, damage rolls, and AoE targeting are all functional. The problem is resource availability, not how spells resolve."
+
+  - skill: augury
+    layer: progression
+    severity: Critical
+    reason: "Class progression is functional. Spell levels unlock on schedule, slots scale correctly. The failure is in the recovery mechanic, not the progression table."
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    reason: "The strategy is trivially simple (rest, dump, repeat). Cognitive load is actually LOW, which is part of the problem -- a degenerate strategy should require more thought, not less."

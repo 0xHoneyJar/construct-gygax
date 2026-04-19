@@ -1,0 +1,40 @@
+id: reputation
+name: "Reputation"
+type: stats
+description: "A hidden numerical score tracking the party's standing with various factions and regions. Modified by quest completion, NPC interactions, and combat choices. The score is not displayed to players, and its existence is not documented in player-facing materials. Thresholds trigger world events that appear random to the party."
+tradition: custom
+tags: [hidden-stat, reputation, faction, invisible]
+depends_on: []
+affects:
+  - mechanics/hidden-world-events.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: -100
+  max: 100
+  starting: 0
+  player_visible: false
+  gm_visible: true
+
+modifiers:
+  quest_completion: "+5 to +15 depending on quest (not communicated)"
+  npc_dialogue_choices: "-3 to +3 (not communicated)"
+  killing_npc: "-10 to -20 (not communicated)"
+  sparing_enemy: "+2 to +5 (not communicated)"
+  faction_betrayal: "-30 (not communicated)"
+
+visibility:
+  player_can_see_score: false
+  player_can_see_changes: false
+  player_knows_stat_exists: false
+  gm_guidance_on_communicating: "none"
+  player_facing_documentation: "none"
+
+notes:
+  - "Players have no way to know this stat exists until they encounter its effects"
+  - "Even then, the causal chain (action -> reputation change -> world event) is invisible"
+  - "A player who spares enemies is rewarded with better world events but cannot connect the cause to the effect"
+  - "A player who kills NPCs is punished with hostile world events that appear arbitrary"

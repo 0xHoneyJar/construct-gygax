@@ -1,0 +1,39 @@
+id: dungeon-scaling
+name: "Dungeon Difficulty Scaling"
+type: mechanics
+description: "Dungeons scale to match party level, maintaining a constant relative difficulty. This means power growth never translates to faster dungeon completion. The treadmill speed is fixed: a level 3 party and a level 15 party both take 3-4 sessions per dungeon."
+tradition: d20
+tags: [scaling, difficulty, treadmill, level-matching]
+depends_on:
+  - stats/party-level.yaml
+affects:
+  - mechanics/dungeon-completion.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "When a dungeon is generated or entered"
+cost: []
+
+scaling_formula:
+  encounter_cr: "party_level + 2"
+  trap_dc: "10 + party_level"
+  puzzle_complexity: "constant (no scaling)"
+  guardian_cr: "party_level + 4"
+
+time_per_dungeon_by_level:
+  level_3: "3-4 sessions"
+  level_6: "3-4 sessions"
+  level_9: "3-4 sessions"
+  level_12: "3-4 sessions"
+  level_15: "3-4 sessions"
+
+acceleration_mechanics: none
+deceleration_mechanics: none
+
+notes:
+  - "Level-matched scaling is a deliberate design choice that preserves challenge but eliminates the feeling of growing power"
+  - "In a functional pacing system, mid-game dungeons might take 2 sessions as players have mastered the loop, while late-game dungeons introduce new mechanics that extend them for narrative climax"
+  - "Constant difficulty + constant time = the perception that leveling up accomplishes nothing toward the main quest"
+  - "The only measurable quest progress is the MacGuffin count, which advances by exactly 1 per dungeon regardless of all other factors"

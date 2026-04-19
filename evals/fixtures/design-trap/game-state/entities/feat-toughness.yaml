@@ -1,0 +1,67 @@
+id: feat-toughness
+name: "Toughness"
+type: entities
+subtype: feat
+description: "Grants a static +3 HP bonus when selected. Does not scale with level, ability scores, or any other system. Consumes one feat slot -- the same resource used by scaling options like Dodge."
+tradition: d20
+tags: [feat, hp, static-bonus, trap-option]
+depends_on:
+  - resources/feat-slots.yaml
+  - mechanics/hp-calculation.yaml
+affects:
+  - mechanics/hp-calculation.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+cost:
+  - resource: feat-slot
+    amount: 1
+    permanent: true
+
+effect:
+  type: static-bonus
+  target: hit-points
+  value: 3
+  scales_with: nothing
+
+value_over_time:
+  # Relative value = bonus / total HP (CON 14 baseline)
+  level_1:
+    total_hp_without: 12
+    total_hp_with: 15
+    percent_increase: "25.0%"
+    assessment: "Meaningful -- one extra hit could save you"
+  level_3:
+    total_hp_without: 27
+    total_hp_with: 30
+    percent_increase: "11.1%"
+    assessment: "Noticeable but declining"
+  level_5:
+    total_hp_without: 42
+    total_hp_with: 45
+    percent_increase: "7.1%"
+    assessment: "Marginal -- less than half a level of HP"
+  level_10:
+    total_hp_without: 79.5
+    total_hp_with: 82.5
+    percent_increase: "3.8%"
+    assessment: "Negligible -- indistinguishable from noise in a d10 hit die system"
+  level_15:
+    total_hp_without: 117
+    total_hp_with: 120
+    percent_increase: "2.6%"
+    assessment: "Wasted slot"
+  level_20:
+    total_hp_without: 154.5
+    total_hp_with: 157.5
+    percent_increase: "1.9%"
+    assessment: "Wasted slot -- equivalent to a rounding error"
+
+trap_characteristics:
+  - "Appears useful at level 1 when HP pool is small"
+  - "Simple to understand -- attractive to new players who value survivability"
+  - "No prerequisite -- available immediately, unlike better feats"
+  - "Numeric benefit (+3) looks comparable to a CON modifier at first glance"
+  - "Experienced players never select this because they model long-term value"

@@ -1,0 +1,27 @@
+id: communication-failure
+name: "Hidden Mechanic Interactions with No Player-Facing Documentation (Fall from Heaven pattern)"
+failure_archetype: communication-failure
+tradition: custom
+description: |
+  Encodes a system where several mechanics have hidden interactions that
+  are not described anywhere accessible to players. A "blessing" mechanic
+  secretly reduces encounter frequency. A "crafting" skill unlocks vendor
+  discounts at hidden thresholds. A "reputation" score triggers hidden
+  world events. Players cannot make informed decisions because the
+  consequences of their choices are invisible. This mirrors Fall from
+  Heaven's hidden mechanical interactions that players could only discover
+  through source code inspection or community wiki deep dives.
+source: "grimoires/gygax/references/design-failure-postmortem.md, Section 5"
+tests_skills:
+  - cabal (Newcomer)
+  - cabal (Anxious Player)
+  - cabal (Optimizer)
+  - augury (cognitive-load)
+  - lore
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: moderate
+  target_player_count: standard

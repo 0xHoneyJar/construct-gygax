@@ -1,0 +1,60 @@
+id: class-subsystems
+name: "Class-Unique Subsystems"
+type: mechanics
+description: "Each of the 15 classes introduces 3+ unique mechanical subsystems with no shared vocabulary. The Runesmith uses Glyph Resonance, Etch Stacks, and Rune Decay. The Verdant Warden uses Overgrowth Tokens, Symbiotic Bonds, and Bloom Cycles. The Chronist uses Temporal Flux Points, Paradox Thresholds, and Echo Actions. None of these share terminology, math patterns, or mental models with each other."
+tradition: d20
+tags: [class-mechanics, subsystems, unique, cognitive-load]
+depends_on:
+  - stats/ability-scores.yaml
+  - resources/class-selection.yaml
+affects:
+  - tensions/option-paralysis.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Class mechanics activate during combat, exploration, and social encounters depending on class"
+cost: []
+
+subsystem_survey:
+  total_classes: 15
+  unique_subsystems_per_class: 3-5
+  total_unique_subsystems: 52
+  shared_mechanical_patterns: 3
+  shared_patterns_list:
+    - "Hit point pools (all classes)"
+    - "d20 attack rolls (12 of 15 classes)"
+    - "Saving throws (all classes)"
+
+representative_classes:
+  runesmith:
+    subsystems: ["Glyph Resonance", "Etch Stacks", "Rune Decay"]
+    unique_keywords: ["glyph", "resonance", "etch", "inscription", "decay-rate", "rune-chain", "sigil-affinity", "overscribe"]
+    ability_dependencies: [INT, CON]
+  verdant_warden:
+    subsystems: ["Overgrowth Tokens", "Symbiotic Bonds", "Bloom Cycles"]
+    unique_keywords: ["overgrowth", "symbiote", "bloom", "root-network", "verdant-pulse", "canopy-shield", "spore-cloud", "wilt"]
+    ability_dependencies: [WIS, CHA]
+  chronist:
+    subsystems: ["Temporal Flux Points", "Paradox Thresholds", "Echo Actions"]
+    unique_keywords: ["flux", "paradox", "echo", "temporal-rift", "rewind-cost", "anchor-point", "causality-debt", "time-lock"]
+    ability_dependencies: [INT, DEX]
+  blood_oracle:
+    subsystems: ["Vitae Pools", "Scarification Marks", "Prophecy Trances", "Hemorrhage Cascades"]
+    unique_keywords: ["vitae", "scarification", "prophecy", "hemorrhage", "blood-price", "sanguine-sight", "wound-weaving", "exsanguinate"]
+    ability_dependencies: [CON, WIS, CHA]
+  siege_architect:
+    subsystems: ["Blueprint Slots", "Stress Calculations", "Field Fortification", "Demolition Charges"]
+    unique_keywords: ["blueprint", "stress-limit", "fortification", "demolition", "load-bearing", "sap-point", "bulwark", "rubble-field"]
+    ability_dependencies: [INT, STR]
+
+cross_system_interactions:
+  - "No documented interactions between class subsystems"
+  - "Multiclassing rules exist but do not explain how subsystems from different classes interact"
+  - "GM must adjudicate edge cases with no guidance"
+
+cognitive_load_analysis:
+  millers_law_violation: "A player choosing a class must hold 45+ subsystem concepts in working memory to compare options. Miller's Law suggests 7 plus or minus 2 chunks. This exceeds human parsing capacity by 5x."
+  comparison_difficulty: "Because subsystems share no vocabulary, a player cannot use analogical reasoning to compare classes. Each class must be evaluated on its own terms."
+  no_progressive_disclosure: "All subsystems are presented at character creation. There is no tiered introduction or tutorial path."

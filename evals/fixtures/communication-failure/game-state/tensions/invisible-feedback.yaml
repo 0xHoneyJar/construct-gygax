@@ -1,0 +1,55 @@
+id: invisible-feedback
+name: "Invisible Feedback Loops"
+type: tensions
+description: "The central tension of this system: mechanics create real consequences for player choices, but the feedback loops connecting actions to outcomes are invisible. Players are rewarded and punished by systems they don't know exist. The design creates a living world at the cost of informed agency."
+tradition: custom
+tags: [communication, feedback, hidden-mechanics, agency, transparency]
+depends_on:
+  - mechanics/hidden-encounter-reduction.yaml
+  - mechanics/hidden-world-events.yaml
+  - entities/crafting-vendor-thresholds.yaml
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Player choices should have meaningful consequences that create a responsive world"
+  rationale: "The designers wanted the world to feel alive and reactive. The implementation achieves reactivity but hides it so thoroughly that players cannot participate in the system intentionally."
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: false
+
+poles:
+  a:
+    name: "World Responsiveness"
+    description: "The world genuinely reacts to player choices. Reputation, divine favor, and skill investments all shape the campaign experience. The simulation is real."
+    supported_by: [mechanics/hidden-encounter-reduction.yaml, mechanics/hidden-world-events.yaml, entities/crafting-vendor-thresholds.yaml]
+  b:
+    name: "Player Informed Agency"
+    description: "Players can see how their choices connect to outcomes. They can make strategic decisions about which systems to invest in."
+    supported_by: []
+
+health: a-dominant
+health_notes: "The system achieves genuine world responsiveness but at the total expense of informed agency. Three separate hidden systems (encounter reduction, world events, vendor thresholds) all operate on invisible inputs with delayed, ambiguous outputs. A player who accidentally optimizes these systems has a dramatically better campaign experience than one who doesn't -- and neither player understands why."
+
+hidden_systems_inventory:
+  - system: "Divine Favor encounter reduction"
+    input: "Shrine blessings (visible action)"
+    hidden_link: "Divine Favor total modifies encounter rate"
+    output: "Fewer random encounters (ambiguous, attributed to luck)"
+  - system: "Reputation world events"
+    input: "Quest choices, NPC treatment (visible actions)"
+    hidden_link: "Hidden Reputation score triggers event tables"
+    output: "Beneficial or hostile world events (appear as GM decisions or randomness)"
+  - system: "Crafting vendor thresholds"
+    input: "Skill point investment (visible action)"
+    hidden_link: "Skill rank thresholds unlock vendor features"
+    output: "New vendor inventory and quests (appear as story progression)"
+
+agency_audit:
+  informed_decisions_possible: "0 of 3 hidden systems can be optimized through player-visible information"
+  accidental_optimization_possible: "All 3 -- a player who role-plays a devout, merciful crafter will accidentally optimize all three systems"
+  deliberate_optimization_possible: "Only with out-of-game knowledge (community wiki, source material)"
+  fairness_assessment: "The system rewards a specific playstyle (devout, merciful, crafty) without telling players that these choices have mechanical weight. Players pursuing other valid playstyles are mechanically punished without knowing it."

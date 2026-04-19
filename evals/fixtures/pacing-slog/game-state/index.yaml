@@ -1,0 +1,76 @@
+game: "Pacing Slog Test Fixture"
+tradition: d20
+description: "d20 campaign structure encoding the Fall from Heaven long-game pattern -- a main quest requiring 12 MacGuffins, each behind a full dungeon, with no shortcuts, alternative victory conditions, or progress acceleration. Session-to-session advancement is imperceptible, and the narrative arc has no internal milestones or escalation."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: low
+  target_lethality: moderate
+  target_prep: high
+  target_player_count: standard
+
+entity_count:
+  stats: 1
+  resources: 2
+  mechanics: 2
+  progression: 1
+  entities: 1
+  tensions: 1
+
+files:
+  - path: stats/party-level.yaml
+    id: party-level
+    depends_on: []
+    affects: [mechanics/dungeon-scaling.yaml]
+
+  - path: resources/macguffin-fragments.yaml
+    id: macguffin-fragments
+    depends_on: [mechanics/dungeon-completion.yaml]
+    affects: [progression/quest-arc.yaml, tensions/treadmill-fatigue.yaml]
+
+  - path: resources/session-time.yaml
+    id: session-time
+    depends_on: []
+    affects: [mechanics/dungeon-completion.yaml, tensions/treadmill-fatigue.yaml]
+
+  - path: mechanics/dungeon-completion.yaml
+    id: dungeon-completion
+    depends_on: [stats/party-level.yaml, resources/session-time.yaml]
+    affects: [resources/macguffin-fragments.yaml]
+
+  - path: mechanics/dungeon-scaling.yaml
+    id: dungeon-scaling
+    depends_on: [stats/party-level.yaml]
+    affects: [mechanics/dungeon-completion.yaml]
+
+  - path: progression/quest-arc.yaml
+    id: quest-arc
+    depends_on: [resources/macguffin-fragments.yaml]
+    affects: [tensions/treadmill-fatigue.yaml]
+
+  - path: entities/dungeon-roster.yaml
+    id: dungeon-roster
+    depends_on: [mechanics/dungeon-completion.yaml, mechanics/dungeon-scaling.yaml]
+    affects: [resources/macguffin-fragments.yaml]
+
+  - path: tensions/treadmill-fatigue.yaml
+    id: treadmill-fatigue
+    depends_on: [resources/macguffin-fragments.yaml, resources/session-time.yaml, progression/quest-arc.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 18
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: resources/macguffin-fragments.yaml
+      dependents: 3
+    - path: mechanics/dungeon-completion.yaml
+      dependents: 2
+    - path: stats/party-level.yaml
+      dependents: 2

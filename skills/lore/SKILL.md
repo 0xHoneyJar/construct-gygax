@@ -33,8 +33,13 @@ Examples:
 ### Step 1: Load Game-State and Determine Tradition
 
 1. Check that `grimoires/gygax/game-state/index.yaml` exists. If it does not, stop and tell the user: "No game attuned yet. Run `/attune` first to build your game-state."
-2. Read `index.yaml` to get: game name, tradition, entity counts, file list, and dependency graph summary.
-3. Determine the primary tradition. If `tradition` is `custom`, read the full game-state to identify which established traditions it borrows from most heavily -- load heuristics for all applicable traditions.
+2. Read `index.yaml` to get: game name, tradition, entity counts, file list, graph integrity, and **design parameters**.
+3. Read `design_parameters` if present. Use these to adjust heuristic sensitivity:
+   - `target_audience: newcomer` → lower threshold for flagging complexity-related anti-patterns (jargon density, hidden interactions, unguided choices)
+   - `target_audience: mastery` → raise threshold for complexity warnings (expert audience expects and rewards system depth)
+   - `target_session_length: short` → flag setup-heavy patterns more aggressively (less time to amortize front-loaded complexity)
+   - If no `design_parameters` set, use tradition defaults.
+4. Determine the primary tradition. If `tradition` is `custom`, read the full game-state to identify which established traditions it borrows from most heavily -- load heuristics for all applicable traditions.
 4. Determine the scan scope from the user's invocation:
    - **No argument**: full scan across all heuristic categories.
    - **Category keyword** (`combat`, `resources`, `progression`, `pacing`, `social`, `mechanics`): filter heuristics to matching categories.

@@ -1,0 +1,28 @@
+id: strength-fighter
+name: "Strength (Fighter)"
+type: stats
+description: "Primary stat for martial combat. Fighter builds around STR for attack and damage. Can maximize STR easily but this only enables REACTIVE damage -- hitting things after they've already acted."
+tradition: d20
+tags: [combat, martial, reactive]
+depends_on: []
+affects: [mechanics/martial-combat.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 3
+  max: 20
+  typical: 16-18
+  modifier_formula: "floor((value - 10) / 2)"
+
+used_by:
+  - "Melee attack rolls (+modifier)"
+  - "Melee damage rolls (+modifier)"
+  - "Grapple checks (+modifier)"
+
+notes:
+  - "Fighter can easily max STR 18, CON 14. Stat efficiency is fine."
+  - "The problem is not the stat -- it's that STR only enables hitting things."
+  - "No amount of STR lets a fighter prevent a threat. STR is reactive by nature."

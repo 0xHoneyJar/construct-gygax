@@ -1,0 +1,75 @@
+game: "Safety Net Weapon Test Fixture"
+tradition: custom
+description: "Custom system encoding the MtG Mulligan pattern in TTRPG form. A reroll safety net (free reroll on failed checks) with no friction becomes the optimal build strategy. Players maximize Luck (reroll tokens) and minimize skill bonuses, weaponizing the frustration reducer into a primary success path."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: high
+  target_lethality: low
+  target_prep: low
+  target_player_count: standard
+
+entity_count:
+  stats: 2
+  resources: 1
+  mechanics: 2
+  progression: 0
+  entities: 1
+  tensions: 1
+
+files:
+  - path: stats/skill-bonus.yaml
+    id: skill-bonus
+    depends_on: []
+    affects: [mechanics/skill-check.yaml]
+
+  - path: stats/luck-score.yaml
+    id: luck-score
+    depends_on: []
+    affects: [resources/reroll-tokens.yaml, mechanics/retry-reroll.yaml]
+
+  - path: resources/reroll-tokens.yaml
+    id: reroll-tokens
+    depends_on: [stats/luck-score.yaml]
+    affects: [mechanics/retry-reroll.yaml]
+
+  - path: mechanics/skill-check.yaml
+    id: skill-check
+    depends_on: [stats/skill-bonus.yaml]
+    affects: [mechanics/retry-reroll.yaml]
+
+  - path: mechanics/retry-reroll.yaml
+    id: retry-reroll
+    depends_on: [resources/reroll-tokens.yaml, mechanics/skill-check.yaml, stats/luck-score.yaml]
+    affects: []
+
+  - path: entities/exploit-build.yaml
+    id: exploit-build
+    depends_on: [stats/luck-score.yaml, stats/skill-bonus.yaml, resources/reroll-tokens.yaml, mechanics/retry-reroll.yaml]
+    affects: []
+
+  - path: tensions/safety-vs-exploitation.yaml
+    id: safety-vs-exploitation
+    depends_on: [mechanics/retry-reroll.yaml, resources/reroll-tokens.yaml, stats/luck-score.yaml, entities/exploit-build.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 18
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: stats/luck-score.yaml
+      dependents: 4
+    - path: resources/reroll-tokens.yaml
+      dependents: 3
+    - path: mechanics/retry-reroll.yaml
+      dependents: 3
+    - path: mechanics/skill-check.yaml
+      dependents: 2
+    - path: stats/skill-bonus.yaml
+      dependents: 2

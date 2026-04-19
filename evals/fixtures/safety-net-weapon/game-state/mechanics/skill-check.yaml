@@ -1,0 +1,47 @@
+id: skill-check
+name: "Skill Check (d20 + Bonus)"
+type: mechanics
+description: "Standard d20 skill resolution. Roll d20, add skill bonus, compare to DC. Natural 1 always fails (regardless of bonus). This is the base mechanic that the safety-net exploit warps -- the reroll interacts with the natural-1 auto-fail to create a perverse incentive."
+tradition: custom
+tags: [resolution, core, d20]
+depends_on: [stats/skill-bonus.yaml]
+affects: [mechanics/retry-reroll.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "When the outcome is uncertain and a skill applies"
+cost: []
+
+resolution:
+  method: d20-roll
+  stat: stats/skill-bonus.yaml
+  dc: "Set by GM (typically 10-25)"
+  success: "Action succeeds as described"
+  failure: "Action fails. On natural 1: critical failure with additional consequence."
+  natural_1: "Auto-fail regardless of bonus. Triggers critical failure effect AND eligibility for reroll."
+
+probability_table:
+  dc_10:
+    bonus_0: "55% success (need 10+)"
+    bonus_5: "80% success (need 5+)"
+    bonus_8: "90% success (need 2+, auto-fail on 1)"
+  dc_15:
+    bonus_0: "30% success (need 15+)"
+    bonus_5: "55% success (need 10+)"
+    bonus_8: "70% success (need 7+)"
+  dc_20:
+    bonus_0: "5% success (need 20)"
+    bonus_5: "30% success (need 15+)"
+    bonus_8: "45% success (need 12+)"
+
+interactions:
+  - "Natural 1 is always a fail. This creates a 5% floor of failure for everyone."
+  - "The 5% floor is the hook for the safety-net exploit: every character has the same chance of triggering a reroll."
+  - "But the VALUE of the reroll differs: high-bonus characters barely need it, low-bonus characters depend on it."
+  - "Critical failure on natural 1 (broken weapon, social embarrassment, etc.) is the COST of rolling a 1. The reroll removes both the failure AND the critical consequence."
+
+notes:
+  - "The d20 mechanic itself is fine. The problem is in what happens AFTER a natural 1."
+  - "Without the reroll mechanic, natural 1 auto-fail is a universal equalizer. With the reroll, it becomes an exploit vector."

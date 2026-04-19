@@ -1,0 +1,45 @@
+id: fighter-class
+name: "Fighter (Reactive Role)"
+type: progression
+description: "Martial class with full BAB, d10 hit die, all armor/weapon proficiencies, and bonus feats. Optimized for dealing damage reactively. No proactive threat prevention, no resource-gated abilities, no out-of-combat utility. The best at an inferior category of action."
+tradition: d20
+tags: [martial, reactive, linear-scaling]
+depends_on: []
+affects: [mechanics/martial-combat.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+progression_table:
+  1: {features: [bonus-feat, proficiency-all], bab: 1, hit_die: d10}
+  2: {features: [bonus-feat], bab: 2}
+  4: {features: [bonus-feat], bab: 4}
+  6: {features: [bonus-feat], bab: 6}
+  8: {features: [bonus-feat], bab: 8}
+  10: {features: [bonus-feat], bab: 10}
+  11: {features: [], bab: 11}
+  12: {features: [bonus-feat], bab: 12}
+  15: {features: [], bab: 15}
+  16: {features: [bonus-feat], bab: 16}
+  20: {features: [bonus-feat], bab: 20}
+
+capability_comparison:
+  fighter_can:
+    - "Deal weapon damage to a single target in melee range"
+    - "Take hits (high HP, heavy armor)"
+    - "Use combat maneuvers (trip, disarm, grapple)"
+  fighter_cannot:
+    - "Prevent encounters before they start"
+    - "Control battlefield geometry"
+    - "Remove threats without killing them"
+    - "Fly, teleport, or alter terrain"
+    - "Affect multiple enemies simultaneously (no AoE)"
+    - "Provide out-of-combat problem solving"
+
+scaling_notes:
+  - "BAB +1/level (best). But BAB only affects hit chance -- not threat prevention."
+  - "Bonus feats every 2 levels. But feats are static bonuses (+1 to hit, +2 damage). No qualitative jumps."
+  - "DPR scales linearly: ~10 at 1, ~35 at 10, ~65 at 20. Respectable but irrelevant when prevention exists."
+  - "The fighter is the best at dealing damage. But dealing damage is the wrong solution when prevention is available."
+  - "No feature at any level grants proactive capability. The progression makes you better at the wrong thing."

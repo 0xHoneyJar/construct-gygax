@@ -37,6 +37,37 @@ No arguments. Always produces the same dashboard for the current project state.
 
 Present the game name, tradition, description, and last modified timestamp. This is the header of the dashboard.
 
+### Step 3.5: Display Design Parameters (v3.1)
+
+Read `design_parameters` from `index.yaml`. If present, display as a compact summary:
+
+```
+Design: session=medium, audience=intermediate, variance=medium, lethality=moderate, prep=light, players=standard
+```
+
+For fields not explicitly set, show the tradition default with a `(default)` marker:
+
+```
+Design: session=medium, audience=intermediate, variance=high, lethality=brutal (default), prep=moderate (default), players=standard
+```
+
+If no `design_parameters` section exists: "Design parameters: not set (tradition defaults apply). Set via `/homebrew --set-intent design-parameters`."
+
+### Step 3.6: Display Graph Health (v3.1)
+
+Read `graph_integrity` from `index.yaml`. Display:
+
+```
+Graph: 24 resolved refs, 2 stubs, 0 orphaned, 0 circular
+```
+
+If stubs exist, list them:
+```
+Stubs: stats/strength.yaml, resources/spell-slots.yaml (enrich via /attune)
+```
+
+If using old `dependency_graph_summary` format, display what's available and note: "Run /attune to upgrade graph tracking."
+
 ### Step 4: Display Entity Counts
 
 Show entity counts from the index as a compact summary. Include the total across all types. Example format:
@@ -45,7 +76,7 @@ Show entity counts from the index as a compact summary. Include the total across
 Entities: 24 total (stats: 6, resources: 4, mechanics: 8, progression: 2, entities: 3, tensions: 1)
 ```
 
-Omit any entity type with a count of zero to keep it concise.
+Omit any entity type with a count of zero to keep it concise. If stub entities exist, note the count separately: `(includes 2 stubs)`.
 
 ### Step 5: Display Active Tensions
 

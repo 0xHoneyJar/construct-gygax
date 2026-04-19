@@ -1,0 +1,43 @@
+fixture: design-trap
+expected_findings:
+  - skill: augury
+    layer: progression
+    severity: Warning
+    category: design-trap
+    description_contains: "static"
+    entity_refs:
+      - entities/feat-toughness.yaml
+
+  - skill: augury
+    layer: progression
+    severity: Warning
+    category: design-trap
+    description_contains: "scales"
+    entity_refs:
+      - entities/feat-toughness.yaml
+      - mechanics/hp-calculation.yaml
+
+  - skill: cabal
+    signal: frustration
+    archetype: Optimizer
+    description_contains: "Toughness"
+
+  - skill: cabal
+    signal: mastery-reward
+    archetype: Optimizer
+    description_contains: "Dodge"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "newcomer"
+
+expected_absent:
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    reason: "Feat slot economy itself is functional -- slots are granted at consistent intervals and consumed correctly. The failure is that a specific option within the economy is a trap, not that the economy is broken."
+
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "The d20 resolution system and HP mechanics work as designed. The problem is an option that fails to keep pace with the system's scaling, not a flaw in how HP or AC are calculated."

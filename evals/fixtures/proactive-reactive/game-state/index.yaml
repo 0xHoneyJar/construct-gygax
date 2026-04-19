@@ -1,0 +1,78 @@
+game: "Proactive-Reactive Test Fixture"
+tradition: d20
+description: "Simplified d20 system encoding the proactive/reactive role asymmetry. Casters prevent threats in one action; martials react to threats over many rounds. Prevention is categorically superior to reaction. The CoDzilla pattern: a caster that can also fight, making the martial redundant."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: moderate
+  target_player_count: standard
+
+entity_count:
+  stats: 2
+  resources: 1
+  mechanics: 2
+  progression: 2
+  entities: 0
+  tensions: 1
+
+files:
+  - path: stats/wisdom-cleric.yaml
+    id: wisdom-cleric
+    depends_on: []
+    affects: [mechanics/divine-casting.yaml]
+
+  - path: stats/strength-fighter.yaml
+    id: strength-fighter
+    depends_on: []
+    affects: [mechanics/martial-combat.yaml]
+
+  - path: resources/spell-slots-divine.yaml
+    id: spell-slots-divine
+    depends_on: [progression/cleric-class.yaml]
+    affects: [mechanics/divine-casting.yaml]
+
+  - path: mechanics/divine-casting.yaml
+    id: divine-casting
+    depends_on: [stats/wisdom-cleric.yaml, resources/spell-slots-divine.yaml, progression/cleric-class.yaml]
+    affects: []
+
+  - path: mechanics/martial-combat.yaml
+    id: martial-combat
+    depends_on: [stats/strength-fighter.yaml, progression/fighter-class.yaml]
+    affects: []
+
+  - path: progression/cleric-class.yaml
+    id: cleric-class
+    depends_on: []
+    affects: [mechanics/divine-casting.yaml, resources/spell-slots-divine.yaml]
+
+  - path: progression/fighter-class.yaml
+    id: fighter-class
+    depends_on: []
+    affects: [mechanics/martial-combat.yaml]
+
+  - path: tensions/proactive-vs-reactive.yaml
+    id: proactive-vs-reactive
+    depends_on: [progression/cleric-class.yaml, progression/fighter-class.yaml, mechanics/divine-casting.yaml, mechanics/martial-combat.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 16
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: progression/cleric-class.yaml
+      dependents: 3
+    - path: stats/wisdom-cleric.yaml
+      dependents: 1
+    - path: stats/strength-fighter.yaml
+      dependents: 1
+    - path: progression/fighter-class.yaml
+      dependents: 2

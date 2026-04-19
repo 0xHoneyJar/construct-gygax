@@ -1,0 +1,22 @@
+id: intelligence
+name: "Intelligence"
+type: stats
+description: "Mental acuity. Primary stat for arcane spellcasting. Determines spell save DC and bonus spells."
+tradition: d20
+tags: [combat, caster]
+depends_on: []
+affects: [mechanics/spell-casting.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 3
+  max: 20
+  typical: 10-18
+  modifier_formula: "floor((value - 10) / 2)"
+
+used_by:
+  - "Spell save DC (10 + spell level + INT modifier)"
+  - "Bonus spell slots per day"

@@ -1,0 +1,32 @@
+id: raw-materials
+name: "Raw Materials"
+type: resources
+description: "Crafting inputs purchased from NPC vendors at fixed low prices. The cost of materials is always substantially less than the sale price of crafted goods, guaranteeing profit on every crafting cycle."
+tradition: d20
+tags: [economy, crafting, resource]
+depends_on: []
+affects: [mechanics/crafting.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  min: 0
+  max: unlimited
+  starting: 0
+  generation:
+    - source: "Purchase from NPC vendors"
+      rate: "Unlimited supply at fixed price (5-20 gp per unit)"
+      trigger: "Player visits shop"
+      cap: none
+  consumption:
+    - sink: "Used in crafting"
+      rate: "1-3 units per crafted item"
+      notes: "Consumed on craft attempt. On failure, 50% salvaged."
+  recovery:
+    trigger: purchase
+    amount: unlimited
+
+depletion_consequence: "Cannot craft, but materials are always available for purchase."
+pressure_rating: none

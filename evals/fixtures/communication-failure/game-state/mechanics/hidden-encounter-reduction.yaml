@@ -1,0 +1,45 @@
+id: hidden-encounter-reduction
+name: "Hidden Encounter Rate Reduction"
+type: mechanics
+description: "A completely hidden mechanic that reduces random encounter frequency based on the party's Divine Favor total. At 10+ favor, encounter rate drops 30%. At 20+ favor, encounter rate drops 60%. This mechanic is not described in any player-facing text, is not referenced by the blessing system description, and produces effects that players are likely to attribute to GM discretion or randomness."
+tradition: custom
+tags: [hidden-mechanic, encounter-rate, divine-favor, invisible-feedback]
+depends_on:
+  - resources/divine-favor.yaml
+  - mechanics/blessing-system.yaml
+affects:
+  - tensions/invisible-feedback.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Random encounter check (GM rolls behind screen)"
+cost: []
+
+resolution:
+  method: threshold-modifier
+  base_encounter_chance: "30% per exploration turn"
+  modifiers:
+    divine_favor_0_to_9:
+      encounter_chance: "30% (no modification)"
+      player_awareness: none
+    divine_favor_10_to_19:
+      encounter_chance: "21% (30% reduction)"
+      player_awareness: none
+    divine_favor_20_plus:
+      encounter_chance: "12% (60% reduction)"
+      player_awareness: none
+
+detectability:
+  statistical_detection: "Would require tracking ~50+ encounter checks to distinguish signal from noise"
+  causal_detection: "Impossible -- players don't know Divine Favor affects encounters"
+  community_detection: "Requires either source code access or coordinated community testing"
+  gm_knowledge: "The GM may or may not know this rule exists depending on how thoroughly they read the 'Advanced GM Systems' appendix"
+
+impact_analysis:
+  sessions_without_system: "Average 4.2 random encounters per session (at 30% per turn, ~14 turns/session)"
+  sessions_with_10_favor: "Average 2.9 random encounters per session"
+  sessions_with_20_favor: "Average 1.7 random encounters per session"
+  resource_expenditure_difference: "Party maintaining 20+ favor saves approximately 2.5 encounters worth of HP, spell slots, and consumables per session"
+  campaign_over_40_sessions: "~100 fewer encounters for the blessed party vs. the ignorant party"

@@ -1,0 +1,33 @@
+id: fighter-class
+name: "Fighter"
+type: progression
+description: "Martial class with linear power scaling. Gains iterative attacks at -5 penalty and static feat bonuses. No resource-gated abilities beyond daily use of action surge."
+tradition: d20
+tags: [martial, linear-scaling]
+depends_on: []
+affects: [mechanics/melee-attack.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+progression_table:
+  1: {features: [bonus-feat, proficiency-all-weapons], bab: 1, hit_die: d10}
+  2: {features: [bonus-feat], bab: 2}
+  4: {features: [bonus-feat], bab: 4}
+  5: {features: [], bab: 5}
+  6: {features: [bonus-feat, extra-attack-2], bab: 6}
+  8: {features: [bonus-feat], bab: 8}
+  10: {features: [bonus-feat], bab: 10}
+  11: {features: [extra-attack-3], bab: 11}
+  15: {features: [], bab: 15}
+  16: {features: [extra-attack-4], bab: 16}
+  20: {features: [bonus-feat], bab: 20}
+
+scaling_notes:
+  - "BAB scales +1/level (linear). Best BAB progression in the system."
+  - "Extra attacks at BAB +6/+11/+16 but each at -5 cumulative. Diminishing returns."
+  - "Bonus feats provide static +1/+2 bonuses or unlock fixed-value maneuvers."
+  - "No resource-gated nova abilities. Consistent but predictable damage output."
+  - "DPR curve: roughly linear from level 1 to 20. No exponential breakpoints."
+  - "At high levels, damage output becomes IRRELEVANT when casters can prevent combat entirely."

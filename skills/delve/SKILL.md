@@ -43,7 +43,14 @@ Also triggered by natural language:
 ### Step 1: Load Game-State and Dungeons
 
 1. Check `grimoires/gygax/game-state/index.yaml` exists. If not: "No game attuned yet. Run `/attune` first."
-2. Glob for dungeon entities:
+2. Read `design_parameters` from `index.yaml` if present. Use these to adjust analysis thresholds:
+   - `target_session_length: short` → flag dungeons with high room counts (>8) as potential pacing slogs
+   - `target_session_length: long` → raise room count threshold (>20 before flagging)
+   - `target_audience: newcomer` → lower Xandering complexity thresholds (non-linearity can overwhelm new players)
+   - `target_lethality: brutal` → expect and accept steeper attrition curves (don't flag fast resource drain as a problem)
+   - `target_lethality: gentle` → flag encounters without clear escape routes or recovery points
+   - If no `design_parameters` set, use tradition defaults.
+3. Glob for dungeon entities:
    - `grimoires/gygax/game-state/entities/*.yaml` where `subtype: dungeon`
    - `grimoires/gygax/game-state/entities/dungeons/**/*.yaml` (if multi-file dungeon structure used)
 3. If no dungeons found, report: "No dungeon entities in game-state. Dungeons should have `subtype: dungeon` in the entity file. Would you like to attune a dungeon now?"

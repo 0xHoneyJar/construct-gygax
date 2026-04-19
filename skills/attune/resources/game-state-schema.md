@@ -448,10 +448,13 @@ files:
     affects: [mechanics/melee-attack.yaml]
   # ... all files listed
 
-dependency_graph_summary:
-  most_depended_on: []
+graph_integrity:
+  resolved_references: 0
+  stub_count: 0
+  stubs: []
   orphaned: []
   circular: []
+  most_depended_on: []
 ```
 
 Skills load `index.yaml` first to understand the full game-state, then selectively load specific files based on what they need.

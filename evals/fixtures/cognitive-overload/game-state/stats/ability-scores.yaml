@@ -1,0 +1,32 @@
+id: ability-scores
+name: "Ability Scores"
+type: stats
+description: "Standard six ability scores (STR, DEX, CON, INT, WIS, CHA). Each class depends on 2-4 of these, but the dependency is not communicated until after class selection. A player cannot evaluate which ability scores matter without first understanding the class subsystem."
+tradition: d20
+tags: [core-stat, ability-scores, class-dependency]
+depends_on: []
+affects:
+  - mechanics/class-subsystems.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 3
+  max: 20
+  typical: 10-16
+  modifier_formula: "floor((value - 10) / 2)"
+
+stats:
+  - STR
+  - DEX
+  - CON
+  - INT
+  - WIS
+  - CHA
+
+notes:
+  - "Each class uses a different subset of ability scores as primary, secondary, and dump stats"
+  - "Without understanding the class subsystem, players cannot make informed ability score allocations"
+  - "Point buy at character creation is an irrevocable decision that interacts with class choice"

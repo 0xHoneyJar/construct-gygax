@@ -1,0 +1,47 @@
+id: feat-dodge
+name: "Dodge"
+type: entities
+subtype: feat
+description: "Grants +1 AC against a designated opponent. AC is bounded (typical enemy attack bonuses scale with level), so +1 AC retains proportional value across all levels. Serves as a comparison baseline for feat slot value."
+tradition: d20
+tags: [feat, ac, scaling-proportional, baseline]
+depends_on:
+  - resources/feat-slots.yaml
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+cost:
+  - resource: feat-slot
+    amount: 1
+    permanent: true
+
+effect:
+  type: static-bonus
+  target: armor-class
+  value: 1
+  scales_with: "Proportional -- AC is bounded, so +1 AC always reduces hit chance by ~5% on a d20"
+
+value_over_time:
+  # On a d20, +1 AC always converts to ~5% miss chance regardless of level
+  level_1:
+    hit_chance_reduction: "5%"
+    assessment: "Solid -- 5% less incoming damage"
+  level_5:
+    hit_chance_reduction: "5%"
+    assessment: "Unchanged -- still 5% less incoming damage"
+  level_10:
+    hit_chance_reduction: "5%"
+    assessment: "Unchanged -- still 5% less incoming damage"
+  level_20:
+    hit_chance_reduction: "5%"
+    assessment: "Unchanged -- still 5% less incoming damage"
+
+comparison_notes:
+  - "Dodge's value is constant as a proportion of defense. Toughness's value decays toward zero."
+  - "Both cost exactly 1 feat slot. The opportunity cost is identical."
+  - "Dodge also serves as a prerequisite for other feats (Mobility, Spring Attack), adding combinatorial value that Toughness lacks."
+  - "An optimizer immediately sees +1 AC (constant 5%) vs +3 HP (decaying %) and chooses Dodge."
+  - "A newcomer sees +3 HP (bigger number) vs +1 AC (smaller number) and may choose Toughness."

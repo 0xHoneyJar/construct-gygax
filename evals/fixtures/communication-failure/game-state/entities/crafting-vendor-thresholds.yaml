@@ -1,0 +1,38 @@
+id: crafting-vendor-thresholds
+name: "Hidden Crafting-Vendor Discount Thresholds"
+type: entities
+subtype: hidden-interaction
+description: "The crafting skill has hidden breakpoints that unlock vendor discounts. At crafting skill 5, vendors offer 10% discount on materials. At crafting skill 10, vendors offer 25% discount and unlock rare material inventory. At crafting skill 15, vendors offer commission quests for unique items. None of these thresholds are documented. The crafting skill description says only 'create items from raw materials.'"
+tradition: custom
+tags: [hidden-interaction, crafting, vendor, threshold, invisible-feedback]
+depends_on: []
+affects:
+  - tensions/invisible-feedback.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+hidden_thresholds:
+  crafting_5:
+    effect: "Vendors offer 10% discount on crafting materials"
+    documented: false
+    player_observable: "Only if player compares prices before and after reaching rank 5, which requires tracking prices across sessions"
+  crafting_10:
+    effect: "Vendors unlock rare material inventory (previously 'out of stock')"
+    documented: false
+    player_observable: "Player might notice new items in vendor stock but would likely attribute it to story progression or random inventory refresh"
+  crafting_15:
+    effect: "Vendors offer commission quests for unique magic items"
+    documented: false
+    player_observable: "New quest lines appear but player cannot connect them to crafting skill level"
+
+skill_description:
+  player_facing: "Crafting: Create items from raw materials. Higher skill allows creation of more complex items."
+  actual_scope: "Crafting: Create items from raw materials. Higher skill allows creation of more complex items. Also secretly: unlocks vendor discounts at 5, rare inventory at 10, and unique quest lines at 15."
+  information_gap: "Player sees crafting as a production skill. It is actually a production skill AND an economic skill AND a quest-unlock skill, but only the production aspect is documented."
+
+decision_impact:
+  player_who_knows: "Invests early in crafting to reach threshold 10, gaining economic advantage and access to rare materials by mid-campaign"
+  player_who_doesnt: "Treats crafting as optional utility skill, invests minimally, never reaches thresholds, and never knows what they're missing"
+  knowledge_source: "Community wiki, forum guides, or accidental discovery"

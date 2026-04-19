@@ -1,0 +1,60 @@
+id: short-rest
+name: "Short Rest (Unlimited Recovery)"
+type: mechanics
+description: "The exploit enabler. A 1-hour rest that restores spell slot levels equal to half caster level. No daily limit, no diminishing returns, no narrative cost. The missing constraint is the root cause: without a cap, resource scarcity is an illusion."
+tradition: d20
+tags: [recovery, exploit-enabler, missing-constraint]
+depends_on: []
+affects: [resources/spell-slots.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Player declares 1 hour of rest in a safe location"
+cost: []
+
+resolution:
+  method: automatic
+  stat: null
+  dc: null
+  success: "Recover spell slot levels equal to half caster level (rounded up)"
+  failure: null  # Cannot fail
+
+constraints_present:
+  - "Must be in a safe location (no combat)"
+  - "Takes 1 hour of in-game time"
+  - "Cannot be in heavy armor (minor)"
+
+constraints_missing:
+  - "No daily limit on number of short rests"
+  - "No diminishing returns on subsequent rests"
+  - "No narrative consequence for repeated resting"
+  - "No wandering monster checks during rest"
+  - "No time pressure that penalizes 10 hours of resting"
+  - "No opportunity cost (nothing else to spend the time on)"
+
+exploit_math:
+  caster_level_10:
+    slots_recovered_per_rest: "5 spell slot levels (e.g., one 5th-level slot)"
+    rests_to_full_recovery: 3
+    time_cost: "3 hours"
+  caster_level_15:
+    slots_recovered_per_rest: "8 spell slot levels"
+    rests_to_full_recovery: 3
+    time_cost: "3 hours"
+  caster_level_20:
+    slots_recovered_per_rest: "10 spell slot levels"
+    rests_to_full_recovery: 3
+    time_cost: "3 hours"
+
+interactions:
+  - "Without time pressure, 3 hours of resting has zero cost."
+  - "With zero cost, rational players always rest to full before each encounter."
+  - "With full resources every encounter, resource management is eliminated as a gameplay element."
+  - "Intended pacing: 6-8 encounters per long rest, resources spread thin. Actual pacing: full nova every encounter."
+
+notes:
+  - "MtG fixed Combo Winter by banning Tolarian Academy (the mana source). The TTRPG fix is the same: cap the recovery source."
+  - "Possible fixes: max 2 short rests per long rest (5e approach), diminishing returns, wandering monsters, time-limited adventures."
+  - "The absence of a constraint is itself a design failure. Every resource system needs both a faucet AND a drain."

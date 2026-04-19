@@ -1,0 +1,24 @@
+id: pacing-slog
+name: "MacGuffin Treadmill with Imperceptible Progress (Fall from Heaven pattern)"
+failure_archetype: pacing-slog
+tradition: d20
+description: |
+  Encodes a campaign structure requiring players to collect 12 MacGuffins,
+  each locked behind a separate dungeon with no shortcuts, alternative paths,
+  or consolidation mechanics. At a typical pace of 1 dungeon per 3-4 sessions,
+  the main quest takes 36-48 sessions to complete. Session-to-session progress
+  is imperceptible: completing a dungeon moves the counter from 4/12 to 5/12.
+  This mirrors Fall from Heaven's 690-turn games requiring 16 rare resources.
+source: "grimoires/gygax/references/design-failure-postmortem.md, Section 5"
+tests_skills:
+  - augury (pacing)
+  - augury (resource-economy)
+  - cabal (Storyteller)
+  - cabal (Explorer)
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: low
+  target_lethality: moderate
+  target_prep: high
+  target_player_count: standard

@@ -1,0 +1,22 @@
+id: crafting-skill
+name: "Crafting Skill"
+type: stats
+description: "Governs item creation success rate. Higher skill reduces material waste but does not gate access to the crafting mechanic itself. Even unskilled characters can craft profitably."
+tradition: d20
+tags: [crafting, economy]
+depends_on: []
+affects: [mechanics/crafting.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 0
+  max: 20
+  typical: 5-15
+  modifier_formula: "ranks + ability_modifier"
+
+used_by:
+  - "Crafting check DC (flat DC 10 for basic items, DC 15 for uncommon)"
+  - "Failure wastes 50% of materials but is retryable with no cooldown"

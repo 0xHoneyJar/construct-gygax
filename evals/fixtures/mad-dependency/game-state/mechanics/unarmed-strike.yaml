@@ -1,0 +1,66 @@
+id: unarmed-strike
+name: "Unarmed Strike (Flurry of Blows)"
+type: mechanics
+description: "Monk's primary attack. Flurry of Blows grants extra attacks at a -2 penalty. Damage uses STR, attack uses STR (or DEX at penalty), but both are underfunded. The attack is the point where all four MAD stats converge and all four penalties compound."
+tradition: d20
+tags: [combat, martial, mad-convergence]
+depends_on: [stats/strength.yaml, stats/dexterity.yaml, stats/constitution.yaml, resources/ki-pool.yaml, progression/monk-class.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Full attack action in combat"
+cost:
+  - resource: resources/ki-pool.yaml
+    amount: 0  # Flurry is free; ki powers (Stunning Fist) cost 1
+    note: "Stunning Fist overlay costs 1 ki per attempt"
+
+resolution:
+  method: d20-roll
+  stat: stats/strength.yaml
+  dc: "target AC"
+  success: "Deal unarmed damage + STR modifier"
+  failure: "Miss, no effect"
+
+damage_scaling:
+  level_1: "1d6 + STR mod"
+  level_4: "1d8 + STR mod"
+  level_8: "1d10 + STR mod"
+  level_12: "2d6 + STR mod"
+  level_16: "2d8 + STR mod"
+  level_20: "2d10 + STR mod"
+
+mad_penalty_analysis:
+  optimal_single_stat_class:
+    name: "Fighter (greatsword)"
+    str: 18
+    attack_mod: "+4"
+    damage: "2d6+6"
+    ac: "full plate = 18"
+    hp_per_level: "d10+2 (CON 14)"
+    remaining_budget: "14 CON easily, everything else dump"
+  typical_monk_mad_spread:
+    str: 12
+    dex: 14
+    con: 10
+    wis: 14
+    attack_mod: "+1"
+    damage: "1d6+1"
+    ac: "10 + 2(DEX) + 2(WIS) = 14"
+    hp_per_level: "d8+0 (CON 10)"
+    ki_dc: "12 at level 1"
+    budget_spent: 24  # out of 25
+
+interactions:
+  - "Flurry of Blows at level 1: two attacks at -2 each. With STR 12, that's +0/+0 vs fighter's +5."
+  - "Stunning Fist DC with WIS 14: DC 12. Most monsters save on 8+. Success rate ~35%."
+  - "AC 14 (DEX 14 + WIS 14) vs Fighter AC 18 (full plate). Monk takes 20% more hits."
+  - "HP per level 4.5 (d8+0) vs fighter 7.5 (d10+2). Monk has 60% of fighter's HP while taking more hits."
+  - "Every stat interaction is suboptimal. No single ability functions at intended power level."
+
+notes:
+  - "The core failure: Monk's class fantasy requires being good at EVERYTHING (hit hard, dodge, survive, use ki). The stat system only lets you be good at TWO things."
+  - "Fighter needs only STR (or DEX). Wizard needs only INT. Monk needs STR + DEX + CON + WIS."
+  - "The comparison that kills: a level 10 Fighter with STR 20 hits at +15/+10, deals 2d6+7. A level 10 Monk with the MAD spread hits at +8/+8/+3, deals 1d10+1 per hit."

@@ -1,0 +1,45 @@
+id: resource-scarcity-vs-recovery
+name: "Resource Scarcity vs Recovery Accessibility"
+type: tensions
+description: "The tension between spell slot scarcity (which creates meaningful per-encounter choices) and short-rest recovery (which eliminates scarcity between encounters). When recovery has no cap, scarcity becomes theater -- players LOOK like they're managing resources but the management has no cost."
+tradition: d20
+tags: [balance, resource-economy, degenerate, pacing]
+depends_on: [resources/spell-slots.yaml, mechanics/short-rest.yaml, progression/rest-caster-class.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Spell slots should create meaningful resource pressure across an adventuring day"
+  rationale: "Resource management is a core engagement loop. Eliminating it removes a major source of interesting decisions."
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: true
+
+poles:
+  a:
+    name: "Resource Scarcity"
+    description: "Limited spell slots force choices: save the big spell for the boss, or use it now? Cantrips vs slots? This creates the core tension of resource-based classes."
+    supported_by: [resources/spell-slots.yaml]
+  b:
+    name: "Recovery Accessibility"
+    description: "Short-rest recovery makes the class usable across many encounters without feeling depleted. Prevents the 'adventuring day problem' where long-rest casters dominate in 1-2 encounter days."
+    supported_by: [mechanics/short-rest.yaml, progression/rest-caster-class.yaml]
+
+health: b-dominant
+health_notes: "Recovery completely eliminates scarcity. The tension collapses into a degenerate strategy: always rest, always nova, never conserve. Other players' combat roles are deleted because the rest-caster solves every encounter in round 1. This is the TTRPG equivalent of MtG Combo Winter -- one player plays solitaire."
+
+degenerate_indicators:
+  interaction_window: "0 rounds (encounter ends before other players act)"
+  counterplay_available: false
+  skill_expression: "minimal (always the same: rest, dump, repeat)"
+  social_cost: "3-5 players watch one player solve combat every encounter"
+  narrative_cost: "10 hours of resting per adventuring day breaks verisimilitude"
+
+notes:
+  - "A degenerate strategy is one where no other strategy is rational once it's discovered."
+  - "Once a player discovers rest-chaining, NOT doing it is suboptimal play."
+  - "The fix must be SYSTEMIC (cap rests, add time pressure) not SOCIAL (asking the player to stop)."
+  - "MtG banned the cards. D&D 5e capped short rests at 2 per long rest. Both are the same fix: limit the resource faucet."

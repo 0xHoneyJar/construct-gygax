@@ -1,0 +1,39 @@
+id: ki-pool
+name: "Ki Pool"
+type: resources
+description: "Daily ki point pool fueling the Monk's signature abilities (Stunning Fist, Quivering Palm, Abundant Step). Pool size and DC both depend on WIS, which is underfunded due to MAD."
+tradition: d20
+tags: [ki, daily, mad-bottleneck]
+depends_on: [stats/wisdom.yaml, progression/monk-class.yaml]
+affects: [mechanics/unarmed-strike.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  min: 0
+  max_formula: "half monk level + WIS modifier"
+  max_examples:
+    level_4_wis_12: 3  # 2 + 1
+    level_4_wis_16: 5  # 2 + 3
+    level_10_wis_12: 6  # 5 + 1
+    level_10_wis_16: 8  # 5 + 3
+  recovery:
+    trigger: long-rest
+    amount: full
+
+save_dc_formula: "10 + half monk level + WIS modifier"
+save_dc_examples:
+  level_4_wis_12: 13  # 10 + 2 + 1
+  level_4_wis_16: 15  # 10 + 2 + 3
+  level_10_wis_12: 16  # 10 + 5 + 1
+  level_10_wis_16: 18  # 10 + 5 + 3
+
+depletion_consequence: "Cannot use ki-powered abilities. Reduced to basic unarmed strikes only."
+pressure_rating: high
+
+notes:
+  - "Stunning Fist is the monk's premier ability. At WIS 12, DC is so low enemies save reliably."
+  - "Compare to Wizard: INT is their ONLY mandatory stat. Spell DC = 10 + spell level + INT mod. Wizard easily has INT 18+ because no competing demands."
+  - "The ki pool is double-gated: low WIS means fewer points AND lower DCs. Both failures compound."

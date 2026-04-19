@@ -1,0 +1,43 @@
+id: rest-caster-class
+name: "Rest Caster (Warlock-like)"
+type: progression
+description: "Arcane caster with short-rest recovery. Intended design: moderate per-encounter power with rapid recovery. Actual outcome: unlimited total power through rest-chaining. The class is not overpowered per encounter -- it's overpowered per day because the day has no resource ceiling."
+tradition: d20
+tags: [caster, short-rest, degenerate]
+depends_on: []
+affects: [mechanics/arcane-casting.yaml, resources/spell-slots.yaml, mechanics/short-rest.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+progression_table:
+  1: {features: [spellcasting-1st, short-rest-recovery], bab: 0, hit_die: d6, max_spell_level: 1, slots: 2}
+  3: {features: [spellcasting-2nd], bab: 1, max_spell_level: 2, slots: 2}
+  5: {features: [spellcasting-3rd, quicken-spell], bab: 2, max_spell_level: 3, slots: 3}
+  7: {features: [spellcasting-4th], bab: 3, max_spell_level: 4, slots: 3}
+  9: {features: [spellcasting-5th], bab: 4, max_spell_level: 5, slots: 3}
+  11: {features: [spellcasting-6th], bab: 5, max_spell_level: 6, slots: 4}
+  13: {features: [spellcasting-7th], bab: 6, max_spell_level: 7, slots: 4}
+  15: {features: [spellcasting-8th], bab: 7, max_spell_level: 8, slots: 4}
+  17: {features: [spellcasting-9th], bab: 8, max_spell_level: 9, slots: 5}
+  20: {features: [], bab: 10, max_spell_level: 9, slots: 5}
+
+intended_vs_actual:
+  intended:
+    per_encounter_budget: "2-5 spell slots"
+    encounters_per_day: "6-8"
+    total_daily_casting: "12-40 spells (spread across encounters, moderate power each)"
+    strategy: "Conserve slots, use cantrips when possible, nova only on boss fights"
+  actual:
+    per_encounter_budget: "ALL spell slots (full recovery between each)"
+    encounters_per_day: "irrelevant"
+    total_daily_casting: "unlimited"
+    strategy: "Rest to full. Dump everything round 1. Rest again."
+
+scaling_notes:
+  - "Per-encounter slots are LOW (2-5). This is intentional -- it's a per-encounter class."
+  - "But unlimited recovery means per-encounter = per-everything."
+  - "Quicken Spell at level 5 enables 2 spells per round, doubling nova output."
+  - "By level 9, round 1 nova can end most CR-appropriate encounters."
+  - "By level 15, round 1 nova can end encounters 2-3 CR above party level."

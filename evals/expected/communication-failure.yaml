@@ -1,0 +1,75 @@
+fixture: communication-failure
+expected_findings:
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    category: communication-failure
+    description_contains: "hidden"
+    entity_refs:
+      - mechanics/hidden-encounter-reduction.yaml
+      - mechanics/hidden-world-events.yaml
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Warning
+    category: communication-failure
+    description_contains: "threshold"
+    entity_refs:
+      - entities/crafting-vendor-thresholds.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: invisible-feedback
+    description_contains: "divine favor"
+    entity_refs:
+      - resources/divine-favor.yaml
+      - mechanics/hidden-encounter-reduction.yaml
+
+  - skill: cabal
+    signal: confusion
+    archetype: Newcomer
+    description_contains: "hidden"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Anxious Player
+    description_contains: "unpredictable"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Optimizer
+    description_contains: "optimize"
+
+  - skill: cabal
+    signal: confusion
+    archetype: Rules Lawyer
+    description_contains: "documented"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "knowledge"
+
+  - skill: lore
+    tradition: custom
+    heuristic: "transparent-consequence"
+    severity: Critical
+    description_contains: "feedback"
+    entity_refs:
+      - tensions/invisible-feedback.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "Individual skill checks, combat rolls, and other resolution mechanics work as documented. The failure is in the hidden consequences layered on top of visible systems, not in the resolution systems themselves."
+
+  - skill: augury
+    layer: progression
+    severity: Critical
+    reason: "Character progression (leveling, skill advancement) functions correctly. The hidden thresholds are triggered by progression but are not a progression failure -- they are a communication failure about what progression unlocks."
+
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    reason: "Pacing is not the core failure. Sessions can proceed at a reasonable pace. The problem is that players cannot make informed strategic decisions, not that the game moves too slowly or too quickly."

@@ -1,0 +1,76 @@
+fixture: cognitive-overload
+expected_findings:
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    category: cognitive-overload
+    description_contains: "subsystems"
+    entity_refs:
+      - mechanics/class-subsystems.yaml
+      - entities/class-roster.yaml
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    category: cognitive-overload
+    description_contains: "keywords"
+    entity_refs:
+      - mechanics/class-subsystems.yaml
+      - mechanics/description-opacity.yaml
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Warning
+    category: communication-failure
+    description_contains: "description"
+    entity_refs:
+      - mechanics/description-opacity.yaml
+
+  - skill: cabal
+    signal: decision-paralysis
+    archetype: Newcomer
+    description_contains: "class"
+
+  - skill: cabal
+    signal: cognitive-overload
+    archetype: Anxious Player
+    description_contains: "subsystem"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Newcomer
+    description_contains: "irrevocable"
+
+  - skill: cabal
+    signal: mastery-reward
+    archetype: Veteran
+    description_contains: "depth"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "newcomer"
+
+  - skill: lore
+    tradition: d20
+    heuristic: "progressive-disclosure"
+    severity: Warning
+    description_contains: "disclosure"
+    entity_refs:
+      - mechanics/class-subsystems.yaml
+      - mechanics/description-opacity.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "The d20 resolution system itself is standard and functional. The problem is cognitive load at character creation, not in how rolls resolve."
+
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    reason: "Class selection is technically a resource (one-time allocation), but the failure is not economic -- it's that the options are incomparable, not that the resource is mispriced."
+
+  - skill: augury
+    layer: progression
+    severity: Critical
+    reason: "No progression failure is encoded. Individual class subsystems may scale correctly within their own logic. The failure is front-loaded at the selection decision, not in long-term scaling."

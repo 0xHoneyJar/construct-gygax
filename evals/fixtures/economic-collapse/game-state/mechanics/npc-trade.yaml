@@ -1,0 +1,37 @@
+id: npc-trade
+name: "NPC Trade"
+type: mechanics
+description: "Buy/sell mechanic with NPC shopkeepers. Fixed prices, unlimited NPC gold reserves, no supply/demand adjustment. The transmission mechanism that converts crafted items into gold without limit."
+tradition: d20
+tags: [economy, trade, infinite-source]
+depends_on: [entities/npc-shopkeeper.yaml]
+affects: [resources/gold.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Player interacts with NPC shopkeeper"
+cost: []
+
+resolution:
+  method: automatic
+  stat: none
+  dc: none
+  success: "Transaction completes at fixed price"
+  failure: "N/A — transactions always succeed"
+
+interactions:
+  - "Buy price: item_list_price * 1.0 (player pays full list)"
+  - "Sell price: item_list_price * 0.5 (player receives half list)"
+  - "No haggling, no reputation modifier, no bulk discount/penalty"
+  - "NPC gold is unlimited — selling 1000 swords yields same price as selling 1"
+  - "No price memory — NPC pays the same for the 1st iron dagger as the 500th"
+  - "Materials cost less than half the list price of items they produce, guaranteeing profit"
+
+missing_feedback_loops:
+  - "No supply/demand curve — prices never change"
+  - "No NPC gold depletion — infinite reserves"
+  - "No reputation penalty for flooding the market"
+  - "No regional price variation"
+  - "No item quality variation affecting price"

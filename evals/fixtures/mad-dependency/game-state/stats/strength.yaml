@@ -1,0 +1,35 @@
+id: strength
+name: "Strength"
+type: stats
+description: "Physical power. Monk needs STR for melee attack and damage rolls but cannot afford to prioritize it due to competing stat demands from DEX, CON, and WIS."
+tradition: d20
+tags: [combat, martial, mad-stat]
+depends_on: []
+affects: [mechanics/unarmed-strike.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 3
+  max: 20
+  typical: 10-16
+  modifier_formula: "floor((value - 10) / 2)"
+
+point_buy_cost:
+  8: 0
+  10: 2
+  12: 4
+  14: 6
+  16: 10
+  18: 16
+
+used_by:
+  - "Unarmed strike attack rolls (+modifier)"
+  - "Unarmed strike damage rolls (+modifier)"
+  - "Grapple checks (+modifier)"
+
+notes:
+  - "Monk needs STR for damage but typically dumps it to fund DEX and WIS"
+  - "At STR 10 (typical MAD compromise), monk attack/damage modifier is +0"

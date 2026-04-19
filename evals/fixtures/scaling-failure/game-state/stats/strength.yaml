@@ -1,0 +1,22 @@
+id: strength
+name: "Strength"
+type: stats
+description: "Physical power. Primary stat for martial combat. Adds to melee attack and damage rolls."
+tradition: d20
+tags: [combat, martial]
+depends_on: []
+affects: [mechanics/melee-attack.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 3
+  max: 20
+  typical: 10-16
+  modifier_formula: "floor((value - 10) / 2)"
+
+used_by:
+  - "Melee attack rolls (+modifier)"
+  - "Melee damage rolls (+modifier)"

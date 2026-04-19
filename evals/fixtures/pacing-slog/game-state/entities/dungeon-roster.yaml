@@ -1,0 +1,44 @@
+id: dungeon-roster
+name: "12-Dungeon Roster"
+type: entities
+subtype: dungeon-list
+description: "The 12 dungeons housing MacGuffin fragments. Each dungeon has a unique cosmetic theme but identical mechanical structure. All dungeons are independent -- completing one provides no advantage, information, or mechanical benefit for subsequent dungeons."
+tradition: d20
+tags: [dungeons, roster, quest-content, repetition]
+depends_on:
+  - mechanics/dungeon-completion.yaml
+  - mechanics/dungeon-scaling.yaml
+affects:
+  - resources/macguffin-fragments.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+roster:
+  - {name: "Glacier Sanctum", theme: ice, rooms: 10, encounters: 4, unique_mechanic: none}
+  - {name: "Embervault", theme: fire, rooms: 10, encounters: 4, unique_mechanic: none}
+  - {name: "Shadowmere Depths", theme: shadow, rooms: 11, encounters: 5, unique_mechanic: none}
+  - {name: "Stormspire", theme: lightning, rooms: 9, encounters: 3, unique_mechanic: none}
+  - {name: "Thornhold", theme: nature, rooms: 10, encounters: 4, unique_mechanic: none}
+  - {name: "Bonecrypt", theme: undead, rooms: 12, encounters: 5, unique_mechanic: none}
+  - {name: "Tidecaller's Ruin", theme: water, rooms: 10, encounters: 4, unique_mechanic: none}
+  - {name: "Sandswept Archive", theme: desert, rooms: 9, encounters: 3, unique_mechanic: none}
+  - {name: "Moonwell Caverns", theme: fey, rooms: 11, encounters: 4, unique_mechanic: none}
+  - {name: "Iron Labyrinth", theme: construct, rooms: 10, encounters: 4, unique_mechanic: none}
+  - {name: "Plaguewarren", theme: disease, rooms: 10, encounters: 5, unique_mechanic: none}
+  - {name: "Voidrift", theme: aberration, rooms: 12, encounters: 5, unique_mechanic: none}
+
+structural_analysis:
+  average_rooms: 10.3
+  average_encounters: 4.2
+  unique_mechanics_introduced: 0
+  cross_dungeon_connections: 0
+  dungeons_with_narrative_consequences: 0
+  order_matters: false
+
+notes:
+  - "Themes provide cosmetic variety but no mechanical differentiation"
+  - "A group that has completed 6 dungeons has no mechanical advantage approaching dungeon 7"
+  - "No dungeon contains information, allies, or tools that help with other dungeons"
+  - "The roster could be shuffled randomly with no impact on campaign experience"

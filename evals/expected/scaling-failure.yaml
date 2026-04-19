@@ -1,0 +1,51 @@
+fixture: scaling-failure
+expected_findings:
+  - skill: augury
+    layer: progression
+    severity: Critical
+    category: scaling-failure
+    description_contains: "exponential"
+    entity_refs:
+      - progression/wizard-class.yaml
+      - progression/fighter-class.yaml
+
+  - skill: augury
+    layer: progression
+    severity: Warning
+    category: scaling-failure
+    description_contains: "linear"
+    entity_refs:
+      - progression/fighter-class.yaml
+
+  - skill: augury
+    layer: action-economy
+    severity: Warning
+    category: proactive-reactive-asymmetry
+    description_contains: "proactive"
+    entity_refs:
+      - mechanics/spell-casting.yaml
+
+  - skill: cabal
+    signal: frustration
+    archetype: Optimizer
+    description_contains: "fighter"
+
+  - skill: cabal
+    signal: mastery-reward
+    archetype: Optimizer
+    description_contains: "wizard"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "martial"
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "Core d20 resolution mechanic is standard and functional. The failure is in progression scaling, not in the resolution system itself."
+
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    reason: "Spell slot economy works as intended within the wizard class. The problem is that the economy enables exponential capabilities, not that it's broken internally."

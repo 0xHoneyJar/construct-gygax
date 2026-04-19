@@ -1,0 +1,19 @@
+id: degenerate-strategy
+name: "Degenerate Strategy (MtG Combo Winter / Rest-Casting Exploit)"
+failure_archetype: degenerate-strategy
+tradition: d20
+description: |
+  Encodes the Combo Winter pattern adapted to TTRPG: a strategy that wins before
+  opponents can interact. A rest-casting exploit where short rests restore spell
+  slots with no daily limit, allowing a caster to take 10+ short rests, enter
+  combat with full resources, and unleash everything in round 1. The encounter
+  is over before any other player or enemy takes a turn. Analogous to MtG's
+  Tolarian Academy era: one player plays solitaire while everyone else watches.
+source: "grimoires/gygax/references/design-failure-postmortem.md"
+tests_skills:
+  - augury (resource-economy)
+  - augury (pacing)
+  - cabal (Chaos Agent + Anxious Player)
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate

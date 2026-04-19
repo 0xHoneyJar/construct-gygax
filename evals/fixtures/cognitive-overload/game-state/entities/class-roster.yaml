@@ -1,0 +1,52 @@
+id: class-roster
+name: "15-Class Roster"
+type: entities
+subtype: class-list
+description: "The full roster of 15 character classes, each with mechanically unique subsystems. Presented as a flat list at character creation with no categorization, tier system, or recommended starting classes. The roster size alone exceeds cognitive parsing limits for a single decision point."
+tradition: d20
+tags: [classes, roster, bloat, cognitive-load]
+depends_on:
+  - resources/class-selection.yaml
+affects:
+  - mechanics/class-subsystems.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+roster:
+  - {name: "Fighter", subsystems: 3, complexity: low, unique_keywords: 5}
+  - {name: "Runesmith", subsystems: 3, complexity: high, unique_keywords: 8}
+  - {name: "Verdant Warden", subsystems: 3, complexity: high, unique_keywords: 8}
+  - {name: "Chronist", subsystems: 3, complexity: very-high, unique_keywords: 8}
+  - {name: "Blood Oracle", subsystems: 4, complexity: very-high, unique_keywords: 8}
+  - {name: "Siege Architect", subsystems: 4, complexity: high, unique_keywords: 8}
+  - {name: "Dreamwalker", subsystems: 3, complexity: high, unique_keywords: 7}
+  - {name: "Tide Caller", subsystems: 3, complexity: medium, unique_keywords: 6}
+  - {name: "Ashborn", subsystems: 4, complexity: high, unique_keywords: 9}
+  - {name: "Voidtouched", subsystems: 5, complexity: very-high, unique_keywords: 11}
+  - {name: "Beastbinder", subsystems: 3, complexity: medium, unique_keywords: 6}
+  - {name: "Oathforged", subsystems: 3, complexity: medium, unique_keywords: 7}
+  - {name: "Plague Doctor", subsystems: 4, complexity: high, unique_keywords: 8}
+  - {name: "Graviturge", subsystems: 3, complexity: very-high, unique_keywords: 8}
+  - {name: "Echo Knight", subsystems: 3, complexity: high, unique_keywords: 7}
+
+roster_analysis:
+  total_classes: 15
+  low_complexity: 1
+  medium_complexity: 3
+  high_complexity: 7
+  very_high_complexity: 4
+  total_unique_keywords: 116
+  shared_keywords: 3
+  presentation_order: alphabetical
+  categorization: none
+  recommended_starter: none
+  complexity_warnings: none
+
+cognitive_load_comparison:
+  dnd_5e_phb_classes: 12
+  dnd_5e_approach: "12 classes but shared spell-slot vocabulary, consistent action economy, and class descriptions include mechanical summaries"
+  this_system_classes: 15
+  this_system_approach: "15 classes with no shared vocabulary, no mechanical summaries in descriptions, and no categorization or complexity ratings"
+  overchoice_threshold: "Research (Iyengar & Lepper, 2000) suggests that beyond ~7 options, decision quality and satisfaction decrease. 15 uncategorized options with incomparable mechanics is well past this threshold."

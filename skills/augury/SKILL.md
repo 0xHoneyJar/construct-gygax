@@ -28,33 +28,88 @@ Examples:
 - `/augury mechanics/dodge-reaction.yaml` -- targeted analysis of a specific entity
 - `/augury entities/fighter-class.yaml vs entities/wizard-class.yaml` -- comparative analysis
 
+## Analytical Layers (v3.1)
+
+Augury's analysis is organized into 6 declared layers. Each layer has clear boundaries: what entities it needs, what it can detect, what scripts it uses, and which design parameters affect its thresholds.
+
+### Layer: resolution
+- **Scope:** Core dice mechanics, probability distributions, outcome spreads
+- **Required entities:** mechanics (with `resolution` field)
+- **Optional entities:** stats (for modifier analysis)
+- **Detects:** false choices (two+ options resolve identically), dead zones (probability ranges with no meaningful outcome), threshold clustering (multiple DCs within 1-2 points), variance mismatch (outcome spread inconsistent with `design_parameters.target_variance`)
+- **Scripts:** dice-probability.ts, bell-curve.ts, dice-pool.ts, advantage.ts, exploding-dice.ts
+- **Design parameter sensitivity:** `target_variance` — high variance suppresses dead-zone and threshold-clustering warnings
+
+### Layer: action-economy
+- **Scope:** Turn structure, action costs, opportunity costs, timing, combat/encounter dynamics
+- **Required entities:** mechanics (with `trigger` and `cost` fields)
+- **Optional entities:** entities (with stat blocks for encounter analysis)
+- **Detects:** proactive/reactive asymmetry, action inflation (too many options per slot), dead turns (slots with no meaningful option), action-cost imbalance (one option strictly better than all alternatives in same slot)
+- **Scripts:** none (structural analysis)
+- **Design parameter sensitivity:** `target_session_length` — shorter sessions tolerate less dead time
+
+### Layer: resource-economy
+- **Scope:** Source/sink balance, recovery rates, depletion curves, cross-resource contention
+- **Required entities:** resources (with `pool` and `recovery`)
+- **Optional entities:** mechanics (that consume resources via `cost`)
+- **Detects:** economic collapse (source > sink), infinite accumulation (negative net pressure), resource irrelevance (never under pressure), hoarding incentives (recovery outpaces spending), recovery-depletion mismatch
+- **Scripts:** dice-probability.ts (for probabilistic recovery)
+- **Design parameter sensitivity:** `target_lethality` — brutal games expect faster depletion curves
+
+### Layer: progression
+- **Scope:** Scaling curves, power budgets, feature distribution across levels/advances
+- **Required entities:** progression (with `progression_table`)
+- **Optional entities:** mechanics, resources (with `max_by_level`), entities (for class/archetype comparison)
+- **Detects:** scaling failure (linear vs exponential divergence), dead levels (no meaningful improvement), power spikes (dramatic single-feature jumps), MAD dependency (stat budget insufficient for core function), design traps (options that appear viable but aren't)
+- **Scripts:** cdf-compare.ts (for cross-level comparison)
+- **Design parameter sensitivity:** `target_audience` — mastery audience tolerates more trap options; newcomer audience does not
+
+### Layer: pacing
+- **Scope:** Session arc, encounter density, downtime distribution, mechanic trigger frequency, tension engagement
+- **Required entities:** mechanics (with `trigger`), resources (with recovery timing)
+- **Optional entities:** tensions, progression (for session arc analysis)
+- **Detects:** pacing slogs (extended sequences with no meaningful change), spike-and-recover patterns (sharp intensity swings), trigger starvation (mechanics that never activate), session length mismatch (mechanics too slow/fast for target session)
+- **Scripts:** none (structural + resource depletion rate analysis)
+- **Design parameter sensitivity:** `target_session_length`, `target_prep`
+
+### Layer: cognitive-load
+- **Scope:** Entity count, rule interaction density, decision complexity, communication clarity
+- **Required entities:** any (counts and measures complexity across all entity types)
+- **Detects:** option paralysis (too many viable choices with unclear value), hidden complexity (interactions not surfaced in entity descriptions), communication failures (mechanics whose effects aren't obvious to players), entity density exceeding cognitive thresholds, simultaneous state tracking burden
+- **Scripts:** none (counting and structural analysis)
+- **Design parameter sensitivity:** `target_audience` (newcomer = lower thresholds), `target_player_count` (larger groups amplify cognitive load)
+
+### Structural Analysis (tradition: freeform, custom)
+
+For games where combat math and resource economy don't apply — journaling RPGs, map-drawing games, lyric games, GMless games — the resolution, action-economy, resource-economy, and progression layers may not have applicable entities. In this case, augury runs the pacing and cognitive-load layers plus a **structural analysis pass** covering: decision space, information flow, player agency, loop completeness, and emotional arc. See Step 3d-ext below for details.
+
 ## Workflow
 
 ### Step 1: Load Game-State and Determine Analysis Scope
 
 1. Check that `grimoires/gygax/game-state/index.yaml` exists. If it does not, stop and tell the user: "No game attuned yet. Run `/attune` first to build your game-state."
-2. Read `index.yaml` to get the full entity manifest: game name, tradition, entity counts, file list, and dependency graph summary.
+2. Read `index.yaml` to get the full entity manifest: game name, tradition, entity counts, file list, graph integrity, and **design parameters**.
 3. Determine the analysis scope from the user's invocation:
-   - **No argument**: full-spectrum analysis across all entity types present in game-state.
-   - **Keyword** (`combat`, `resources`, `pacing`, `scaling`): scoped analysis focused on that domain.
-   - **Specific entity path**: targeted analysis of one entity and everything it depends on / affects.
+   - **No argument**: run all layers where required entities exist.
+   - **`--layer X`**: run only layer X. `--layer X,Y`: run layers X and Y.
+   - **Keyword** (`combat`, `resources`, `pacing`, `scaling`): map to layers — `combat` → resolution + action-economy, `resources` → resource-economy, `pacing` → pacing, `scaling` → progression. (Backwards-compatible aliases.)
+   - **Specific entity path**: walk dependency graph 2 hops from target entity, run all layers on the resulting entity set.
    - **Comparative** (`X vs Y`): side-by-side quantitative comparison of two entities.
-4. Load all entity files relevant to the scope. For full-spectrum, load everything. For scoped analysis, use the dependency graph to pull in only what matters.
-5. Identify the game's tradition. The tradition determines which analysis methodologies apply and which would be nonsensical (do not calculate DPR for a freeform game with no attack rolls).
+4. Load entity files relevant to the scope. For full-spectrum, load everything. For entity-targeted or layer-scoped analysis, use the dependency graph to pull in only what matters. For stub entities, note `[STUB — analysis limited]`.
+5. Identify the game's tradition. The tradition determines which analysis methodologies apply.
+6. Read `design_parameters` from `index.yaml`. For missing fields, resolve tradition-appropriate defaults (see the defaults table in attune Phase 5).
 
-### Step 2: Identify Analysis Type
+### Step 2: Identify Applicable Layers
 
-Based on the loaded game-state and the scope, determine which analysis types are applicable. A single invocation may produce multiple analysis types.
+For each of the 6 layers, check whether the loaded game-state contains the layer's required entity types. A layer runs only if its required entities exist.
 
-| Analysis Type | Applicable When | Not Applicable When |
-|---------------|----------------|---------------------|
-| **Combat** | Game-state contains attack mechanics, damage values, AC/defense, HP | No combat mechanics exist (freeform, some PbtA) |
-| **Encounter** | Game-state contains both PC entities and monster/NPC entities with stat blocks | Only one side of the equation exists |
-| **Resource Economy** | Game-state contains resources with `pool`, `recovery`, and `depletion_consequence` | No resource entities defined |
-| **Pacing** | Game-state contains mechanics with triggers, resources with recovery timing, or progression gates | Nothing to measure tempo against |
-| **Scaling** | Game-state contains progression entities with `progression_table` or resources with `max_by_level` | No level-dependent data exists |
+Report at the top of the analysis:
+```
+Layers run: resolution, resource-economy, pacing, cognitive-load
+Layers skipped: action-economy (no mechanics with cost fields), progression (no progression entities)
+```
 
-Inform the user which analysis types will be run and why. If the user requested a specific type but the game-state lacks the data to support it, explain what is missing.
+If the user requested a specific layer via `--layer` but the required entities don't exist, explain what is missing rather than silently skipping.
 
 ### Step 3: Run Calculations
 
@@ -238,6 +293,29 @@ Before finalizing severity classifications, check whether the game-state declare
 
 If no intent field exists on an entity, classify findings normally without adjustment.
 
+### Step 4c: Cross-Layer Deduplication (v3.1)
+
+After all layers have produced their findings, run a deduplication pass:
+
+1. Compare findings across layers. If two layers flag the same entity for the same root cause (e.g., resource-economy flags depletion and pacing flags a stall caused by that depletion), keep the finding in the **more specific** layer.
+2. In the layer where the finding was removed, add a cross-reference: "See [Layer] [Finding-ID] for this issue."
+3. Priority order for specificity: progression > resolution > action-economy > resource-economy > pacing > cognitive-load (more specific layers take precedence).
+
+### Step 4d: Design Parameter Threshold Adjustment (v3.1)
+
+Before finalizing findings, check `design_parameters` from `index.yaml` and adjust thresholds per each layer's declared sensitivity:
+
+- `target_variance: high` → suppress dead-zone and threshold-clustering warnings in resolution layer
+- `target_audience: newcomer` → lower cognitive-load thresholds (fewer entities, simpler interactions before flagging)
+- `target_audience: mastery` → raise trap-option threshold in progression layer (expert audience expects traps)
+- `target_session_length: short` → lower pacing-slog thresholds (less tolerance for slow mechanics)
+- `target_lethality: brutal` → raise acceptable depletion rates in resource-economy layer
+- `target_player_count: large` → lower cognitive-load thresholds (more simultaneous state tracking)
+
+Document all threshold adjustments in the report's Methodology Notes section: "Design parameter `target_audience: newcomer` lowered cognitive-load threshold from 5 simultaneous states to 3."
+
+If no `design_parameters` are set, use tradition defaults. Document: "No design parameters set. Using [tradition] defaults."
+
 ### Step 5: Generate Report
 
 Write the report to `grimoires/gygax/balance-reports/YYYY-MM-DD-scope-description.md`.
@@ -410,14 +488,17 @@ Augury can compare the current game-state against installed reference game-state
 **Date:** YYYY-MM-DD
 **Game:** [game name from index.yaml]
 **Tradition:** [tradition]
-**Scope:** [full-spectrum | combat | resources | pacing | scaling | targeted: entity-id | comparative: A vs B]
+**Scope:** [full-spectrum | layer: X | targeted: entity-id | comparative: A vs B]
+**Layers Run:** [list of layers that ran]
+**Layers Skipped:** [list with reasons]
+**Design Parameters:** [list active parameters, note which are explicit vs tradition defaults]
 **Entities Analyzed:** [count]
 
 ## Executive Summary
 
 [3-5 sentences: what was analyzed, how many findings at each severity, and the single most important takeaway.]
 
-## Combat Analysis
+## Resolution Analysis
 
 ### Hit Probability
 
@@ -446,7 +527,11 @@ Augury can compare the current game-state against installed reference game-state
 
 [Include only sections for which data exists. Omit sections with no applicable data.]
 
-## Resource Economy
+## Action Economy Analysis
+
+[Action types, dead slots, contested slots, proactive/reactive mapping. Include only if action-economy layer ran.]
+
+## Resource Economy Analysis
 
 ### Depletion Rates
 
@@ -466,6 +551,10 @@ Augury can compare the current game-state against installed reference game-state
 |----------|-------------------|--------------------|-------------|
 | ...      | ...               | ...                | ...         |
 
+## Progression Analysis
+
+[Scaling curves, dead levels, power spikes, crossover points. Include only if progression layer ran.]
+
 ## Pacing Analysis
 
 ### Trigger Frequency
@@ -484,32 +573,20 @@ Augury can compare the current game-state against installed reference game-state
 | Falling Action | ...      | ...               | ...        |
 | Resolution | ...          | ...               | ...        |
 
-## Scaling Analysis
+## Cognitive Load Analysis
 
-### [Metric] by Level
-
-| Level | Entity A | Entity B | ... | Peer Variance |
-|-------|----------|----------|-----|---------------|
-| 1     | ...      | ...      | ... | ...           |
-| 5     | ...      | ...      | ... | ...           |
-| 11    | ...      | ...      | ... | ...           |
-
-[Repeat table for each key metric: DPR, HP, Save DC, Resource Pool, etc.]
-
-### Scaling Flags
-
-- **Dead levels:** [list]
-- **Power spikes:** [list]
-- **Crossover points:** [list]
+[Entity counts, rule interaction density, decision complexity, communication clarity. Include only if cognitive-load layer ran.]
 
 ## Findings
 
-| # | Severity | Category | Finding | Values |
-|---|----------|----------|---------|--------|
-| 1 | Critical | Combat   | [description] | [specific numbers] |
-| 2 | Warning  | Resource | [description] | [specific numbers] |
-| 3 | Info     | Scaling  | [description] | [specific numbers] |
-| 4 | Healthy  | Combat   | [description] | [specific numbers] |
+| # | Layer | Severity | Finding | Values |
+|---|-------|----------|---------|--------|
+| R-1 | Resolution | Healthy | [description] | [specific numbers] |
+| AE-1 | Action Economy | Warning | [description] | [specific numbers] |
+| RE-1 | Resource Economy | Critical | [description] | [specific numbers] |
+| P-1 | Pacing | Info | [description] | [specific numbers] |
+
+[Finding IDs are prefixed by layer: R=resolution, AE=action-economy, RE=resource-economy, PR=progression, PA=pacing, CL=cognitive-load. Cross-layer references: "See RE-3 for the underlying cause."]
 
 ## Recommendations
 

@@ -1,0 +1,20 @@
+id: proactive-reactive
+name: "Proactive vs Reactive Role Asymmetry (D&D 3.x CoDzilla pattern)"
+failure_archetype: proactive-reactive
+tradition: d20
+description: |
+  Encodes the proactive/reactive asymmetry between casters and martials. Casters
+  can PREVENT threats before they materialize (Wall of Force blocks enemies,
+  Dominate Person removes them, Maze exiles them). Martials can only REACT to
+  damage after it's dealt. Prevention is mathematically superior: preventing 50
+  damage costs 1 action and 1 spell slot; healing/absorbing 50 damage costs
+  multiple actions across multiple rounds. The CoDzilla (Cleric or Druid +
+  Godzilla) epitomizes this: full caster chassis with martial combat bolted on.
+source: "grimoires/gygax/references/design-failure-postmortem.md"
+tests_skills:
+  - augury (action-economy)
+  - augury (resource-economy)
+  - cabal (Optimizer + GM divergence)
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate

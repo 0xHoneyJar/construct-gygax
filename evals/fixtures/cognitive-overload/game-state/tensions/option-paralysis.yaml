@@ -1,0 +1,35 @@
+id: option-paralysis
+name: "Option Paralysis at Character Creation"
+type: tensions
+description: "The tension between offering rich mechanical diversity and creating an unparseable decision space. 15 classes with 52 unique subsystems and 116 unique keywords presented at a single irrevocable decision point exceeds human cognitive capacity for comparison."
+tradition: d20
+tags: [cognitive-load, decision-paralysis, character-creation, overchoice]
+depends_on:
+  - mechanics/class-subsystems.yaml
+  - mechanics/description-opacity.yaml
+  - entities/class-roster.yaml
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Character classes should provide diverse, engaging mechanical identities that players can evaluate and choose between meaningfully"
+  rationale: "More classes theoretically means more player expression. But expression requires comprehension -- a choice the player can't evaluate is not meaningful agency, it's a coin flip."
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: false
+
+poles:
+  a:
+    name: "Mechanical Diversity"
+    description: "Each class is a genuinely unique gameplay experience. No two classes feel the same. Players who invest time to learn a class are rewarded with deep, distinctive mechanics."
+    supported_by: [mechanics/class-subsystems.yaml, entities/class-roster.yaml]
+  b:
+    name: "Decision Accessibility"
+    description: "Players can meaningfully evaluate and compare their options at character creation. The choice is informed, not random."
+    supported_by: []
+
+health: a-dominant
+health_notes: "The system maximizes mechanical diversity at the total expense of decision accessibility. No tools exist to help players compare classes: no shared vocabulary, no complexity ratings, no recommended starters, no mechanical summaries in descriptions. A newcomer facing 15 incomparable options with opaque descriptions will either choose randomly, choose the one with the coolest name, or freeze. None of these produce informed agency."
