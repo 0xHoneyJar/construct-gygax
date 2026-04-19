@@ -224,6 +224,87 @@ for fixture_dir in "$FIXTURES_DIR"/*/; do
     done
   done
 
+  # 15. Validate entity_refs point to files that exist in the fixture's game-state
+  entity_ref_errors=0
+  while IFS= read -r ref_line; do
+    ref_path=$(echo "$ref_line" | sed 's/^[[:space:]]*- //' | tr -d ' ')
+    if [[ -n "$ref_path" ]] && [[ "$ref_path" != "entity_refs:" ]]; then
+      if [[ ! -f "$gs_dir/$ref_path" ]]; then
+        fail "entity_ref '$ref_path' does not exist in fixture game-state"
+        entity_ref_errors=$((entity_ref_errors + 1))
+      fi
+    fi
+  done < <(grep -A 100 "entity_refs:" "$expected_file" 2>/dev/null | grep "^\s*- " | grep -v "skill:\|layer:\|severity:\|category:\|description_contains:\|signal:\|archetype:\|divergence:\|reason:" || true)
+
+  # More precise: extract entity_refs blocks
+  ref_count=0
+  in_refs=false
+  while IFS= read -r line; do
+    if echo "$line" | grep -q "entity_refs:" 2>/dev/null; then
+      in_refs=true
+      continue
+    fi
+    if $in_refs; then
+      if echo "$line" | grep -q "^\s*- [a-z]" 2>/dev/null; then
+        ref_path=$(echo "$line" | sed 's/^[[:space:]]*- //' | tr -d ' ')
+        if [[ -f "$gs_dir/$ref_path" ]]; then
+          pass "entity_ref '$ref_path' exists"
+          ref_count=$((ref_count + 1))
+        else
+          fail "entity_ref '$ref_path' not found in fixture game-state"
+        fi
+      else
+        in_refs=false
+      fi
+    fi
+  done < "$expected_file"
+  if [[ $ref_count -gt 0 ]]; then
+    pass "$ref_count entity_ref(s) validated"
+  fi
+
+  # 16. Validate signal references in expected findings
+  for signal_ref in $(grep "    signal:" "$expected_file" 2>/dev/null | awk '{print $2}'); do
+    if echo "$VALID_SIGNALS" | grep -qw "$signal_ref" 2>/dev/null; then
+      pass "signal reference '$signal_ref' is valid"
+    else
+      fail "invalid signal reference: '$signal_ref'"
+    fi
+  done
+
+  # 17. Validate archetype references in expected findings
+  # Archetypes can be multi-word, so match the full value after "archetype:"
+  while IFS= read -r arch_line; do
+    arch_ref=$(echo "$arch_line" | sed 's/.*archetype:[[:space:]]*//')
+    if [[ -n "$arch_ref" ]]; then
+      if echo "$VALID_ARCHETYPES" | grep -qi "$arch_ref" 2>/dev/null; then
+        pass "archetype reference '$arch_ref' is valid"
+      else
+        fail "invalid archetype reference: '$arch_ref'"
+      fi
+    fi
+  done < <(grep "    archetype:" "$expected_file" 2>/dev/null || true)
+
+  # 18. Validate divergence fields are boolean
+  for div_ref in $(grep "    divergence:" "$expected_file" 2>/dev/null | awk '{print $2}'); do
+    if [[ "$div_ref" == "true" ]] || [[ "$div_ref" == "false" ]]; then
+      pass "divergence value '$div_ref' is valid boolean"
+    else
+      fail "divergence value '$div_ref' is not a boolean (expected true/false)"
+    fi
+  done
+
+  # 19. Validate expected_absent section
+  absent_count=$(grep -c "^  - skill:" <(sed -n '/^expected_absent:/,/^[^ ]/p' "$expected_file" 2>/dev/null) 2>/dev/null || echo "0")
+  if [[ $absent_count -gt 0 ]]; then
+    # Check that each expected_absent entry has a reason
+    reason_count=$(sed -n '/^expected_absent:/,/^[^ ]/p' "$expected_file" 2>/dev/null | grep -c "reason:" || echo "0")
+    if [[ $reason_count -ge $absent_count ]]; then
+      pass "$absent_count expected_absent entries, all with reasons"
+    else
+      fail "expected_absent has $absent_count entries but only $reason_count reasons"
+    fi
+  fi
+
   echo ""
 done
 

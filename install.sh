@@ -57,6 +57,39 @@ curl -fsSL "$BASE_URL/identity/expertise.yaml" -o "identity/expertise.yaml"
 mkdir -p ".claude/gygax"
 curl -fsSL "$BASE_URL/CLAUDE.md" -o ".claude/gygax/CLAUDE.md"
 
+# Download probability scripts (required by /augury and /delve)
+log "Downloading probability scripts..."
+mkdir -p "scripts/lib"
+for script in dice-probability bell-curve dice-pool advantage exploding-dice cdf-compare construct-runtime; do
+  curl -fsSL "$BASE_URL/scripts/lib/$script.ts" -o "scripts/lib/$script.ts"
+done
+
+# Download reference game-states (required by /attune --reference and /augury compare)
+log "Downloading reference game-states..."
+for ref_system in 5e-srd pbta-baseline cepheus-core; do
+  # Fetch the file list from the repo's index.yaml to know what to download
+  ref_base=".claude/skills/attune/resources/references/$ref_system"
+  mkdir -p "$ref_base/game-state/stats" "$ref_base/game-state/resources" \
+           "$ref_base/game-state/mechanics" "$ref_base/game-state/progression" \
+           "$ref_base/game-state/entities" "$ref_base/game-state/tensions"
+  curl -fsSL "$BASE_URL/skills/attune/resources/references/$ref_system/metadata.yaml" \
+    -o "$ref_base/metadata.yaml"
+  curl -fsSL "$BASE_URL/skills/attune/resources/references/$ref_system/game-state/index.yaml" \
+    -o "$ref_base/game-state/index.yaml"
+  # Parse file paths from index.yaml and download each entity
+  grep "  - path:" "$ref_base/game-state/index.yaml" 2>/dev/null | awk '{print $3}' | while read -r entity_path; do
+    entity_dir=$(dirname "$entity_path")
+    mkdir -p "$ref_base/game-state/$entity_dir"
+    curl -fsSL "$BASE_URL/skills/attune/resources/references/$ref_system/game-state/$entity_path" \
+      -o "$ref_base/game-state/$entity_path"
+  done
+done
+
+# Download design-failure reference document (used by eval harness and analysis context)
+log "Downloading reference documents..."
+curl -fsSL "$BASE_URL/grimoires/gygax/references/design-failure-postmortem.md" \
+  -o "grimoires/gygax/references/design-failure-postmortem.md"
+
 # Create grimoire structure
 log "Creating grimoire structure..."
 mkdir -p grimoires/gygax/game-state/{stats,resources,mechanics,progression,entities,tensions}
