@@ -1,0 +1,42 @@
+id: quest-arc
+name: "Main Quest Arc"
+type: progression
+description: "The campaign's main quest: collect all 12 MacGuffin fragments to unlock the finale. The arc has no internal milestones, no branching paths, no alternative victory conditions, and no escalation. Progress is strictly linear: 0/12 through 12/12."
+tradition: d20
+tags: [quest, progression, linear, main-plot]
+depends_on:
+  - resources/macguffin-fragments.yaml
+affects:
+  - tensions/treadmill-fatigue.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+structure:
+  type: linear-collection
+  required_items: 12
+  order: "Any (player chooses dungeon order)"
+  branching: none
+  alternative_victory: none
+  partial_completion_reward: none
+
+milestones:
+  at_3_fragments: none
+  at_6_fragments: none
+  at_9_fragments: none
+  at_12_fragments: "Finale unlocked"
+  milestone_note: "The only milestone is the final one. There are no intermediate narrative beats, power unlocks, or world-state changes tied to collection progress."
+
+narrative_arc:
+  inciting_incident: "Learn that 12 fragments exist"
+  rising_action: "None -- each dungeon is a self-contained episode with no narrative carry-over"
+  midpoint_twist: "None"
+  escalation: "None -- tension does not increase as more fragments are collected"
+  climax: "Finale dungeon (unlocked at 12/12)"
+  denouement: "Campaign end"
+
+comparison_to_functional_arcs:
+  three_act_structure: "A functional 12-item quest would place narrative milestones at 3 (end of Act 1, villain appears), 6 (midpoint reversal, a fragment is stolen), and 9 (end of Act 2, betrayal or revelation). Each milestone would change the campaign's texture."
+  escalation_curve: "A functional arc would increase stakes and urgency as collection progresses. The villain responds, the world changes, dungeons evolve."
+  alternative_paths: "A functional arc might allow skipping 1-2 dungeons via diplomacy, lore research, or faction alliances."

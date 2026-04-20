@@ -1,0 +1,37 @@
+id: wisdom
+name: "Wisdom"
+type: stats
+description: "Perception and willpower. Powers the Monk's ki abilities (save DCs, bonus AC) and Will saves. Third mandatory high stat in a budget that supports two."
+tradition: d20
+tags: [ki, defense, mad-stat]
+depends_on: []
+affects: [mechanics/unarmored-defense.yaml, resources/ki-pool.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 3
+  max: 20
+  typical: 10-16
+  modifier_formula: "floor((value - 10) / 2)"
+
+point_buy_cost:
+  8: 0
+  10: 2
+  12: 4
+  14: 6
+  16: 10
+  18: 16
+
+used_by:
+  - "Unarmored AC (+modifier, stacks with DEX)"
+  - "Ki ability save DCs (10 + half level + WIS mod)"
+  - "Stunning Fist DC (10 + half level + WIS mod)"
+  - "Will saves (+modifier)"
+
+notes:
+  - "Ki DCs are WIS-dependent. Low WIS means Stunning Fist never lands."
+  - "At WIS 12 (typical MAD compromise), Stunning Fist DC is 11 + half level. Enemies save on 10+ at most levels."
+  - "WIS also contributes to AC, creating a double penalty when it's low: fewer ki hits AND lower AC"

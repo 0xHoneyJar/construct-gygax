@@ -1,0 +1,85 @@
+game: "MAD Dependency Test Fixture"
+tradition: d20
+description: "Simplified d20 system encoding the Multiple Ability Dependency failure. A Monk class requires 4 high stats (STR, DEX, CON, WIS) but point-buy only supports 2. Every class feature underperforms because the stat budget is structurally insufficient."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: moderate
+  target_player_count: standard
+
+entity_count:
+  stats: 4
+  resources: 1
+  mechanics: 2
+  progression: 1
+  entities: 0
+  tensions: 1
+
+files:
+  - path: stats/strength.yaml
+    id: strength
+    depends_on: []
+    affects: [mechanics/unarmed-strike.yaml]
+
+  - path: stats/dexterity.yaml
+    id: dexterity
+    depends_on: []
+    affects: [mechanics/unarmored-defense.yaml, mechanics/unarmed-strike.yaml]
+
+  - path: stats/wisdom.yaml
+    id: wisdom
+    depends_on: []
+    affects: [mechanics/unarmored-defense.yaml, resources/ki-pool.yaml]
+
+  - path: stats/constitution.yaml
+    id: constitution
+    depends_on: []
+    affects: [mechanics/unarmed-strike.yaml]
+
+  - path: resources/ki-pool.yaml
+    id: ki-pool
+    depends_on: [stats/wisdom.yaml, progression/monk-class.yaml]
+    affects: [mechanics/unarmed-strike.yaml]
+
+  - path: mechanics/unarmed-strike.yaml
+    id: unarmed-strike
+    depends_on: [stats/strength.yaml, stats/dexterity.yaml, stats/constitution.yaml, resources/ki-pool.yaml, progression/monk-class.yaml]
+    affects: []
+
+  - path: mechanics/unarmored-defense.yaml
+    id: unarmored-defense
+    depends_on: [stats/dexterity.yaml, stats/wisdom.yaml]
+    affects: []
+
+  - path: progression/monk-class.yaml
+    id: monk-class
+    depends_on: []
+    affects: [mechanics/unarmed-strike.yaml, mechanics/unarmored-defense.yaml, resources/ki-pool.yaml]
+
+  - path: tensions/stat-budget-vs-class-demands.yaml
+    id: stat-budget-vs-class-demands
+    depends_on: [stats/strength.yaml, stats/dexterity.yaml, stats/wisdom.yaml, stats/constitution.yaml, progression/monk-class.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 22
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: stats/wisdom.yaml
+      dependents: 4
+    - path: stats/dexterity.yaml
+      dependents: 3
+    - path: progression/monk-class.yaml
+      dependents: 3
+    - path: stats/strength.yaml
+      dependents: 2
+    - path: stats/constitution.yaml
+      dependents: 2

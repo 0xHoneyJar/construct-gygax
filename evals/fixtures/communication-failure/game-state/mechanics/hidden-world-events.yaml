@@ -1,0 +1,49 @@
+id: hidden-world-events
+name: "Hidden Reputation-Triggered World Events"
+type: mechanics
+description: "World events that trigger based on the party's hidden Reputation score. Positive reputation triggers beneficial events (allied NPCs appear, supply caches are discovered, enemies offer parley). Negative reputation triggers hostile events (ambushes, price gouging, quest givers refuse to help). Players experience these as 'the world responding' but cannot trace the cause because Reputation is invisible."
+tradition: custom
+tags: [hidden-mechanic, reputation, world-events, invisible-feedback]
+depends_on:
+  - stats/reputation.yaml
+affects:
+  - tensions/invisible-feedback.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Every 5 sessions, GM checks Reputation thresholds"
+cost: []
+
+resolution:
+  method: threshold-table
+  thresholds:
+    reputation_negative_50:
+      events: ["Bounty hunters pursue party", "Merchants charge 200% prices", "Quest givers refuse to help"]
+      player_perception: "The world seems hostile but we don't know why"
+    reputation_negative_20:
+      events: ["Occasional hostile NPC encounters", "Merchants charge 150% prices"]
+      player_perception: "Some NPCs seem to dislike us"
+    reputation_0:
+      events: ["Neutral -- standard random event table"]
+      player_perception: "Normal"
+    reputation_positive_20:
+      events: ["Friendly NPC encounters", "Merchant discounts 10%", "Occasional supply caches"]
+      player_perception: "We seem to be getting lucky"
+    reputation_positive_50:
+      events: ["Allied NPCs offer help", "Merchants 25% discount", "Enemies offer parley", "Hidden quest lines unlock"]
+      player_perception: "The world seems to be on our side, but we don't know what we did to earn it"
+
+communication_failure_pattern:
+  action: "Player spares a defeated enemy"
+  hidden_effect: "Reputation +5"
+  delayed_consequence: "3 sessions later, a merchant offers a discount"
+  causal_chain_visible_to_player: "none -- the spare happened 3 sessions ago and the discount appears unrelated"
+  player_can_learn_the_system: "Only through extensive community discussion or source material deep-dive"
+
+notes:
+  - "This mechanic creates the illusion of a living world but undermines player agency"
+  - "Players cannot optimize what they cannot see"
+  - "Players cannot avoid punishment they don't know they're being punished for"
+  - "The delayed consequence pattern (action in session 5, effect in session 8) defeats experiential learning"

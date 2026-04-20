@@ -1,0 +1,49 @@
+id: proactive-vs-reactive
+name: "Proactive Prevention vs Reactive Damage"
+type: tensions
+description: "The core asymmetry between caster and martial roles. Casters prevent threats (proactive), martials respond to threats (reactive). Prevention is categorically superior: it eliminates future damage entirely rather than trading HP for HP. This is not a balance issue -- it's a category error where two roles are on different axes of effectiveness."
+tradition: d20
+tags: [balance, asymmetry, action-economy, role-design]
+depends_on: [progression/cleric-class.yaml, progression/fighter-class.yaml, mechanics/divine-casting.yaml, mechanics/martial-combat.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Martial and caster roles should offer equally impactful but different approaches to threats"
+  rationale: "Role choice should reflect playstyle preference, not effectiveness hierarchy"
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: true
+
+poles:
+  a:
+    name: "Proactive Prevention (Caster)"
+    description: "Remove or neutralize threats before they deal damage. One action eliminates multiple rounds of incoming damage. Scales with spell level (qualitative jumps in prevention capability)."
+    supported_by: [progression/cleric-class.yaml, mechanics/divine-casting.yaml, resources/spell-slots-divine.yaml]
+  b:
+    name: "Reactive Damage (Martial)"
+    description: "Respond to threats by dealing damage until the threat is at 0 HP. Requires multiple rounds per threat. Scales linearly (quantitative increases in damage per round)."
+    supported_by: [progression/fighter-class.yaml, mechanics/martial-combat.yaml]
+
+health: a-dominant
+health_notes: "Categorically broken. This is not a tuning problem (making fighters deal more damage won't fix it) -- it's a structural asymmetry where one role operates on a fundamentally more efficient axis. Prevention eliminates the NEED for reaction. The only fix is giving martials proactive tools or limiting caster prevention."
+
+mathematical_proof:
+  scenario: "4 enemies, 50 HP each, dealing 15 damage/round each"
+  fighter_approach:
+    method: "Kill enemies one at a time"
+    rounds_to_clear: 8  # ~25 DPR vs 200 total HP
+    damage_taken: "60 damage per round for 8 rounds = 480 damage taken by party"
+  cleric_approach:
+    method: "Wall of Stone splits enemies, Blade Barrier kills two per round"
+    rounds_to_clear: 2
+    damage_taken: "0 damage (enemies never reach party)"
+  conclusion: "Same encounter. Fighter: 480 party damage taken. Cleric: 0 party damage taken. Prevention wins by infinity."
+
+notes:
+  - "CoDzilla makes this worse: Cleric doesn't even sacrifice martial capability. They can cast AND fight."
+  - "The fix attempted in D&D 4e: give fighters proactive tools (Marks, forced movement, AoE stances). Widely mocked but mathematically sound."
+  - "The fix in D&D 5e: reduce caster prevention tools (concentration limit) and boost martial damage (more attacks). Partial improvement."

@@ -1,0 +1,73 @@
+game: "Degenerate Strategy Test Fixture"
+tradition: d20
+description: "D20 system encoding the Combo Winter / rest-casting degenerate strategy. Unlimited short-rest recovery eliminates resource scarcity, enabling a caster to nova every encounter in round 1. Other players never take a meaningful combat action. One player plays solitaire."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: low
+  target_lethality: moderate
+  target_prep: moderate
+  target_player_count: standard
+
+entity_count:
+  stats: 1
+  resources: 2
+  mechanics: 2
+  progression: 1
+  entities: 0
+  tensions: 1
+
+files:
+  - path: stats/intelligence.yaml
+    id: intelligence
+    depends_on: []
+    affects: [mechanics/arcane-casting.yaml]
+
+  - path: resources/spell-slots.yaml
+    id: spell-slots
+    depends_on: [progression/rest-caster-class.yaml, mechanics/short-rest.yaml]
+    affects: [mechanics/arcane-casting.yaml]
+
+  - path: resources/action-points.yaml
+    id: action-points
+    depends_on: []
+    affects: [mechanics/arcane-casting.yaml]
+
+  - path: mechanics/arcane-casting.yaml
+    id: arcane-casting
+    depends_on: [stats/intelligence.yaml, resources/spell-slots.yaml, resources/action-points.yaml, progression/rest-caster-class.yaml]
+    affects: []
+
+  - path: mechanics/short-rest.yaml
+    id: short-rest
+    depends_on: []
+    affects: [resources/spell-slots.yaml]
+
+  - path: progression/rest-caster-class.yaml
+    id: rest-caster-class
+    depends_on: []
+    affects: [mechanics/arcane-casting.yaml, resources/spell-slots.yaml, mechanics/short-rest.yaml]
+
+  - path: tensions/resource-scarcity-vs-recovery.yaml
+    id: resource-scarcity-vs-recovery
+    depends_on: [resources/spell-slots.yaml, mechanics/short-rest.yaml, progression/rest-caster-class.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 16
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: progression/rest-caster-class.yaml
+      dependents: 4
+    - path: resources/spell-slots.yaml
+      dependents: 3
+    - path: mechanics/short-rest.yaml
+      dependents: 2
+    - path: stats/intelligence.yaml
+      dependents: 1

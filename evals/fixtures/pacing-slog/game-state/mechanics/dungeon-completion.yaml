@@ -1,0 +1,43 @@
+id: dungeon-completion
+name: "Dungeon Completion Loop"
+type: mechanics
+description: "Each dungeon follows an identical structure: explore 8-12 rooms, defeat 3-5 encounters, solve 1-2 puzzles, defeat the guardian, claim the MacGuffin fragment. The loop is repeated 12 times with no structural variation. Dungeon 1 and dungeon 12 are mechanically identical processes at different power scales."
+tradition: d20
+tags: [dungeon, loop, repetition, pacing]
+depends_on:
+  - stats/party-level.yaml
+  - resources/session-time.yaml
+affects:
+  - resources/macguffin-fragments.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Party enters a dungeon to claim a MacGuffin fragment"
+cost:
+  - resource: session-time
+    amount: "3-4 sessions"
+
+resolution:
+  method: standard-d20-encounter-sequence
+  structure:
+    rooms: "8-12 per dungeon"
+    combat_encounters: "3-5 per dungeon"
+    puzzles: "1-2 per dungeon"
+    boss: "1 guardian per dungeon"
+    reward: "1 MacGuffin fragment"
+
+variation_between_dungeons:
+  theme: "Different (ice, fire, shadow, etc.) but mechanically cosmetic"
+  structure: "Identical room/encounter/puzzle/boss template"
+  length: "Constant (3-4 sessions regardless of party level)"
+  difficulty_relative_to_party: "Constant (scales with party level)"
+  unique_mechanics: "None -- no dungeon introduces rules that change subsequent dungeons"
+  narrative_consequence: "None -- completing dungeon 6 does not change the approach to dungeon 7"
+
+loop_fatigue_indicators:
+  - "By dungeon 4-5, players have seen the full mechanical vocabulary of the dungeon loop"
+  - "No new encounter types, puzzle mechanics, or structural surprises after dungeon 3"
+  - "The only novelty is cosmetic theming (fire vs ice vs shadow)"
+  - "Players who enjoy tactical combat may remain engaged; all other archetypes will feel repetition"

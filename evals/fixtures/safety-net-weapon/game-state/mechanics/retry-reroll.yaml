@@ -1,0 +1,69 @@
+id: retry-reroll
+name: "Retry Reroll (Safety Net)"
+type: mechanics
+description: "The safety-net mechanic. On any failed d20 check, spend a reroll token to roll again, replacing the original result entirely. Intended to reduce frustration from critical failures. Exploited because: (1) no cost beyond the token, (2) replaces the result (no penalty), (3) low-bonus characters benefit disproportionately, and (4) tokens regenerate every session."
+tradition: custom
+tags: [safety-net, reroll, exploit-mechanism]
+depends_on: [resources/reroll-tokens.yaml, mechanics/skill-check.yaml, stats/luck-score.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "After any failed d20 check (including natural 1)"
+cost:
+  - resource: resources/reroll-tokens.yaml
+    amount: 1
+
+resolution:
+  method: d20-reroll
+  stat: stats/skill-bonus.yaml
+  dc: "Same DC as original check"
+  success: "Original failure is erased. Action succeeds."
+  failure: "Original failure stands. Token is consumed."
+  note: "Reroll replaces the original result entirely. No penalty for using it."
+
+exploit_analysis:
+  intended_use:
+    scenario: "Player rolls nat 1 on a dramatic check. Spends token. Gets a second chance. Feels good."
+    frequency: "1-2 times per session"
+    emotional_value: "High -- turns a memorable bad moment into a memorable good moment"
+  exploited_use:
+    scenario: "Player deliberately builds low-bonus character, maximizes Luck. Enters session with 4-5 tokens. Uses them on the 4-5 most important checks. Effective success rate on important checks exceeds high-bonus characters."
+    frequency: "4-5 times per session (every important check)"
+    strategic_value: "High -- tokens become the primary success mechanism"
+
+  math_comparison:
+    normal_build:
+      skill_bonus: "+7"
+      reroll_tokens: 2
+      success_rate_dc_15: "70% base. With 2 rerolls on worst checks: ~73% effective."
+    exploit_build:
+      skill_bonus: "+1"
+      reroll_tokens: 4
+      success_rate_dc_15: "35% base. With 4 rerolls on key checks: ~57.75% on targeted checks."
+      success_rate_dc_10: "55% base. With 4 rerolls: ~79.75% on targeted checks."
+      note: "Exploit build approaches normal build's success rate on targeted checks while having DOUBLE the token budget."
+
+  deeper_exploit:
+    discovery: "Players realize they can trigger rerolls more often by attempting MORE low-bonus checks."
+    strategy: "Attempt every possible check with low bonuses. Each attempt has a 5% chance of nat-1 + reroll. Over 20 checks per session, expect 1 bonus reroll from nat-1s alone."
+    metagame: "The build warps play style: attempt everything, fail often, rely on rerolls for the checks that matter."
+
+missing_constraints:
+  - "No penalty on the reroll (should be: reroll at -2 or -4)"
+  - "No limit on which checks can be rerolled (should be: only nat-1, not all failures)"
+  - "No escalating cost (should be: 2nd reroll costs 2 tokens, 3rd costs 3)"
+  - "No opportunity cost (should be: using a token provokes consequences or uses your reaction)"
+
+interactions:
+  - "Reroll tokens have no cost beyond existence. Using one is always correct when available."
+  - "Low-bonus characters benefit more from rerolls because their margin of failure is wider."
+  - "Session-refresh means no long-term consequence for burning all tokens."
+  - "MtG parallel: London Mulligan lets combo decks freely search for key cards because the mulligan cost is too low."
+
+notes:
+  - "The safety net becomes a weapon when the cost of using it is zero."
+  - "Fix options: reroll at a penalty (-2 or -4), limit to natural 1 only, tokens don't refresh automatically, escalating token cost."
+  - "The design lesson: every safety net needs friction. Free retries become optimal strategy."

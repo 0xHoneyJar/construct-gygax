@@ -1,0 +1,32 @@
+id: martial-vs-caster
+name: "Martial vs Caster Power Parity"
+type: tensions
+description: "The design tension between martial and magical classes. At low levels, martials trade resource independence for lower peak power. At high levels, this bargain collapses as caster capabilities eclipse martial contribution entirely."
+tradition: d20
+tags: [balance, scaling, class-design]
+depends_on: [progression/fighter-class.yaml, progression/wizard-class.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Martial and caster classes should offer meaningfully different playstyles that remain viable at all levels"
+  rationale: "Class choice should be about preference, not about which class is objectively superior"
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: false
+
+poles:
+  a:
+    name: "Martial Reliability"
+    description: "Consistent, resource-independent combat effectiveness. Always functional, never spectacular."
+    supported_by: [progression/fighter-class.yaml, mechanics/melee-attack.yaml]
+  b:
+    name: "Caster Versatility"
+    description: "Resource-gated but exponentially scaling power. Limited uses per day but each use is transformative."
+    supported_by: [progression/wizard-class.yaml, mechanics/spell-casting.yaml, resources/spell-slots.yaml]
+
+health: b-dominant
+health_notes: "Collapsed at high levels. Caster versatility doesn't just exceed martial reliability -- it renders it irrelevant. The intended tradeoff (consistency vs peak power) fails because caster resources scale faster than martial consistency improves."

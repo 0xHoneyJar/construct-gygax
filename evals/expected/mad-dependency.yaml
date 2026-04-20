@@ -1,0 +1,79 @@
+fixture: mad-dependency
+expected_findings:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    category: mad-dependency
+    description_contains: "stat budget"
+    entity_refs:
+      - stats/strength.yaml
+      - stats/dexterity.yaml
+      - stats/wisdom.yaml
+      - stats/constitution.yaml
+
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    category: mad-dependency
+    description_contains: "point-buy"
+    entity_refs:
+      - progression/monk-class.yaml
+      - tensions/stat-budget-vs-class-demands.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: mad-dependency
+    description_contains: "ki"
+    entity_refs:
+      - resources/ki-pool.yaml
+      - stats/wisdom.yaml
+
+  - skill: augury
+    layer: resolution
+    severity: Warning
+    category: mad-dependency
+    description_contains: "AC"
+    entity_refs:
+      - mechanics/unarmored-defense.yaml
+      - stats/dexterity.yaml
+      - stats/wisdom.yaml
+
+  - skill: cabal
+    signal: frustration
+    archetype: Optimizer
+    description_contains: "monk"
+
+  - skill: cabal
+    signal: confusion
+    archetype: Newcomer
+    description_contains: "stat"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "single-stat"
+
+  - skill: lore
+    tradition: d20
+    heuristic: "class-stat-budget-should-fit-creation-system"
+    severity: Critical
+    description_contains: "MAD"
+    entity_refs:
+      - progression/monk-class.yaml
+      - tensions/stat-budget-vs-class-demands.yaml
+
+expected_absent:
+  - skill: augury
+    layer: progression
+    severity: Critical
+    reason: "Monk progression table itself is functional -- unarmed damage scales, abilities unlock on schedule. The failure is at character creation (stat allocation), not in the level-up system."
+
+  - skill: augury
+    layer: action-economy
+    severity: Critical
+    reason: "Flurry of Blows action economy works as designed (extra attacks for full attack action). The problem is that the attacks miss and deal low damage due to underfunded stats, not that the action economy is broken."
+
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    reason: "Session pacing is unaffected. The Monk's weakness is continuous, not pacing-dependent. Encounters don't drag because of MAD -- the Monk simply underperforms consistently."

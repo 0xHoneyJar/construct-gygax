@@ -232,6 +232,29 @@ If the user explicitly says a design is final or locked, set `non_negotiable: tr
 - If the user says "I don't know yet" or "TBD," leave the `intent` block absent from that entity. Do NOT write a placeholder intent.
 - Keep prompts short and specific. Reference the actual mechanic or tension name and the concrete numbers.
 
+### Phase 3.6: Design Parameters
+
+After intent capture and before game-state generation, ask the user about game-level design parameters. These shape how downstream analysis tools calibrate their thresholds.
+
+**All fields are optional.** If the user skips a question, that field is omitted from `index.yaml` and analysis tools use tradition-appropriate defaults (see the defaults table in Phase 5).
+
+Ask in a single batch:
+
+> "A few quick questions about the overall design targets. Skip any you're not sure about yet — I'll use sensible defaults for your tradition."
+>
+> 1. **Session length** — Is this designed for short sessions (<2h), medium (2-4h), long (4h+), or multi-session campaigns?
+> 2. **Target audience** — Newcomers, intermediate players, enthusiasts, or system mastery crowd?
+> 3. **Variance** — Should outcomes feel predictable (low), balanced (medium), or dramatic/swingy (high)?
+> 4. **Lethality** — Gentle (consequences rarely permanent), moderate, or brutal (death is common)?
+> 5. **Prep** — Zero-prep, light, moderate, or heavy?
+> 6. **Player count** — Solo, small (2-3), standard (4-5), or large (6+)?
+
+Record answers in the `design_parameters` section of `index.yaml`. For any the user skips or says "I don't know," leave that field absent (do NOT write a default value — let analysis tools resolve defaults at read time).
+
+**Skip this phase entirely if:**
+- The user has already specified design parameters via `/homebrew --set-intent`
+- The source document contains explicit audience/scope sections that answer these questions (extract programmatically)
+
 ### Phase 4: Game-State Generation
 
 Generate YAML files for every game element you have extracted or learned through interview. Follow the schema defined in `skills/attune/resources/game-state-schema.md` exactly.
@@ -248,8 +271,10 @@ description: "What this is and what it does in the game"
 tradition: d20|pbta|fitd|osr|cepheus|freeform|custom
 tags: []
 
-depends_on: []    # Paths relative to game-state/
-affects: []       # Paths relative to game-state/
+status: active|stub|deprecated  # Optional. Default: active (omit for normal entities)
+
+depends_on: []    # Paths relative to game-state/. Required (empty array for leaf nodes).
+affects: []       # Paths relative to game-state/. Required (empty array for leaf nodes).
 
 # Optional on most entity types; required on tensions (see Phase 3.5)
 intent:
@@ -307,6 +332,23 @@ last_modified_at: "ISO-8601"
 6. **Write files using the Write tool.** Do NOT use heredocs or Bash echo. Use the Write tool for every YAML file.
 7. **Target fewer than 30 files** for a typical TTRPG system. Combine minor elements into broader entities rather than creating one file per spell, per item, etc. For example, create `entities/wizard-spells-1st.yaml` rather than individual files for each 1st-level spell.
 8. **Descriptions should be analytical**, not just restating the rules. "Physical power. Affects melee attacks, carrying capacity, Athletics" is better than "Strength is an ability score."
+9. **Auto-infer stubs for unresolved references.** After generating all entities, collect every path referenced in `depends_on`, `affects`, `resolution.stat`, and `cost[].resource`. For any reference that doesn't resolve to a generated entity, create a **stub entity**:
+   ```yaml
+   id: {inferred-from-path}
+   name: "{Inferred Name}"
+   type: {inferred-from-directory}
+   status: stub
+   description: "[STUB] Inferred from {referencing-entity} dependency. Awaiting enrichment."
+   tradition: {same as game tradition}
+   tags: [stub]
+   depends_on: []
+   affects: []
+   created_by: attune-inferred
+   created_at: "ISO-8601"
+   last_modified_by: attune-inferred
+   last_modified_at: "ISO-8601"
+   ```
+   Stubs have no type-specific fields. They exist to satisfy graph references. Report stub count to user after generation: "Created N stub entities for unresolved references. Run /attune again with source material to enrich them."
 
 ### Phase 5: Index Generation
 
@@ -318,6 +360,24 @@ tradition: d20|pbta|fitd|osr|cepheus|freeform|custom
 description: "Brief description of the game"
 created_at: "ISO-8601"
 last_modified_at: "ISO-8601"
+
+design_parameters:              # All optional. Missing fields use tradition defaults.
+  target_session_length: short|medium|long|campaign
+  target_audience: newcomer|intermediate|enthusiast|mastery
+  target_variance: low|medium|high
+  target_lethality: gentle|moderate|brutal
+  target_prep: zero-prep|light|moderate|heavy
+  target_player_count: solo|small|standard|large
+
+# Tradition defaults (used when a field is omitted):
+#   | Parameter      | d20        | pbta         | fitd         | osr       | cepheus     | freeform  | custom       |
+#   |----------------|------------|--------------|--------------|-----------|-------------|-----------|--------------|
+#   | session_length | long       | medium       | medium       | medium    | long        | short     | medium       |
+#   | audience       | intermediate| intermediate| intermediate| enthusiast| enthusiast  | newcomer  | intermediate |
+#   | variance       | medium     | medium       | medium       | high      | low         | low       | medium       |
+#   | lethality      | moderate   | moderate     | moderate     | brutal    | moderate    | gentle    | moderate     |
+#   | prep           | moderate   | light        | light        | moderate  | moderate    | zero-prep | moderate     |
+#   | player_count   | standard   | standard     | standard     | standard  | standard    | standard  | standard     |
 
 entity_count:
   stats: 0
@@ -334,19 +394,27 @@ files:
     affects: [mechanics/melee-attack.yaml]
   # ... every file listed
 
-dependency_graph_summary:
-  most_depended_on: []
-  orphaned: []
-  circular: []
+graph_integrity:
+  resolved_references: 0    # Count of depends_on/affects entries pointing to existing entities
+  stub_count: 0             # Count of entities with status: stub
+  stubs: []                 # List of stub file paths
+  orphaned: []              # Entities with zero incoming AND zero outgoing edges
+  circular: []              # Circular dependency chains (should always be empty)
+  most_depended_on:
+    - path: stats/strength.yaml
+      dependents: 4
 ```
 
 **Index rules:**
-- `entity_count` must match the actual number of files in each directory.
-- `files` must list EVERY game-state file with its `path`, `id`, `depends_on`, and `affects`.
-- `dependency_graph_summary` must be computed by analyzing all cross-references:
-  - `most_depended_on`: files that appear most frequently in other files' `depends_on` lists
-  - `orphaned`: files with empty `depends_on` AND empty `affects` (no connections)
-  - `circular`: any circular dependency chains (should be empty; flag if found)
+- `entity_count` must match the actual number of files in each directory. Stub entities count toward their type's total.
+- `files` must list EVERY game-state file (including stubs) with its `path`, `id`, `depends_on`, and `affects`.
+- `graph_integrity` must be computed by analyzing all cross-references:
+  - `resolved_references`: count all `depends_on`/`affects` entries that point to existing files
+  - `stub_count` and `stubs`: count and list entities with `status: stub`
+  - `orphaned`: entities with empty `depends_on` AND empty `affects` AND zero appearances in any other entity's dependency lists
+  - `circular`: circular dependency chains detected via topological sort (should be empty; flag if found)
+  - `most_depended_on`: files sorted by incoming reference count (how many other entities list this in `depends_on`)
+- **Backwards compatibility:** If an existing index uses `dependency_graph_summary`, convert it to `graph_integrity` on regeneration. Add `resolved_references`, `stub_count`, `stubs` fields with computed values.
 
 ### Phase 6: Validation
 
@@ -363,15 +431,17 @@ For each generated YAML file, verify:
 
 #### 6b: Cross-Reference Integrity
 
-- [ ] Every path in `depends_on` and `affects` points to a file that actually exists in game-state
-- [ ] Cross-references are bidirectional where appropriate: if A `affects` B, then B should `depends_on` A
+- [ ] Every path in `depends_on` and `affects` resolves to an existing file in game-state (including stubs created in Phase 4 rule 9). If a reference still doesn't resolve after stub creation, that is a validation error -- either create an additional stub or remove the broken reference.
+- [ ] Cross-references are bidirectional where appropriate: if A `affects` B, then B should `depends_on` A. Asymmetry is a **warning** (fix it), not an error (don't block).
 - [ ] No file references itself
+- [ ] No circular dependency chains. Detect via topological sort. If circular dependencies exist, report them in `graph_integrity.circular` as a warning, not an error.
+- [ ] `depends_on` and `affects` are present on ALL entities (including stubs). Missing fields are a schema violation -- add empty arrays `[]` for leaf nodes.
 
 #### 6c: Index Consistency
 
 - [ ] `entity_count` matches actual file counts
 - [ ] Every file in the directory tree appears in `files`
-- [ ] `dependency_graph_summary` is accurate
+- [ ] `graph_integrity` is accurate (resolved_references, stub_count, stubs, orphaned, circular, most_depended_on)
 
 #### 6d: Repair
 

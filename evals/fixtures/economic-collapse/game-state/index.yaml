@@ -1,0 +1,73 @@
+game: "Economic Collapse Test Fixture"
+tradition: d20
+description: "Simplified d20 economy encoding the Ultima Online hyperinflation pattern. Craft-and-sell loop generates unlimited gold with no matching sinks."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: low
+  target_lethality: moderate
+  target_prep: moderate
+  target_player_count: standard
+
+entity_count:
+  stats: 1
+  resources: 2
+  mechanics: 2
+  progression: 0
+  entities: 1
+  tensions: 1
+
+files:
+  - path: stats/crafting-skill.yaml
+    id: crafting-skill
+    depends_on: []
+    affects: [mechanics/crafting.yaml]
+
+  - path: resources/gold.yaml
+    id: gold
+    depends_on: [mechanics/npc-trade.yaml, mechanics/crafting.yaml]
+    affects: [tensions/player-economy-vs-intended-economy.yaml]
+
+  - path: resources/raw-materials.yaml
+    id: raw-materials
+    depends_on: []
+    affects: [mechanics/crafting.yaml]
+
+  - path: entities/npc-shopkeeper.yaml
+    id: npc-shopkeeper
+    depends_on: []
+    affects: [mechanics/npc-trade.yaml, resources/gold.yaml]
+
+  - path: mechanics/crafting.yaml
+    id: crafting
+    depends_on: [stats/crafting-skill.yaml, resources/raw-materials.yaml]
+    affects: [mechanics/npc-trade.yaml, resources/gold.yaml]
+
+  - path: mechanics/npc-trade.yaml
+    id: npc-trade
+    depends_on: [entities/npc-shopkeeper.yaml]
+    affects: [resources/gold.yaml]
+
+  - path: tensions/player-economy-vs-intended-economy.yaml
+    id: player-economy-vs-intended-economy
+    depends_on: [resources/gold.yaml, mechanics/crafting.yaml, mechanics/npc-trade.yaml, entities/npc-shopkeeper.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 18
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: resources/gold.yaml
+      dependents: 4
+    - path: mechanics/crafting.yaml
+      dependents: 4
+    - path: mechanics/npc-trade.yaml
+      dependents: 4
+    - path: entities/npc-shopkeeper.yaml
+      dependents: 2

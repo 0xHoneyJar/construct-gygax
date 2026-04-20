@@ -1,0 +1,41 @@
+id: macguffin-fragments
+name: "MacGuffin Fragments"
+type: resources
+description: "The 12 quest-critical artifacts, each obtained by completing a separate dungeon. The collection count is the sole measure of main-quest progress. There are no alternative sources, no partial credit, no shortcuts, and no way to obtain more than one per dungeon."
+tradition: d20
+tags: [quest-resource, macguffin, collection, pacing]
+depends_on:
+  - mechanics/dungeon-completion.yaml
+affects:
+  - progression/quest-arc.yaml
+  - tensions/treadmill-fatigue.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+economy:
+  generation: "1 fragment per dungeon completion (no alternatives)"
+  consumption: "All 12 required simultaneously to unlock the finale"
+  pool_type: cumulative-collection
+  total_required: 12
+  max_obtainable: 12
+  sources:
+    - dungeon_completion: 1
+  alternative_sources: none
+  shortcuts: none
+  consolidation: none
+
+progress_granularity:
+  increment: "1/12 per dungeon (8.3% of total quest progress)"
+  sessions_per_increment: "3-4 sessions per dungeon"
+  total_sessions: "36-48 sessions for quest completion"
+  perceived_progress_per_session: "~2.5% of total quest (imperceptible)"
+
+pacing_analysis:
+  act_1_fragments: "0-4 (sessions 1-16)"
+  act_2_fragments: "5-8 (sessions 17-32)"
+  act_3_fragments: "9-12 (sessions 33-48)"
+  narrative_escalation: "None -- dungeon 11 feels mechanically identical to dungeon 3"
+  reward_curve: "Flat -- each fragment has equal narrative weight and no intermediate payoffs"
+  comparison_to_functional_pacing: "A well-paced quest would include milestones at 3, 6, and 9 fragments that unlock new abilities, reveal narrative twists, or change the campaign's dynamics"

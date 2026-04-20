@@ -1,0 +1,37 @@
+id: cleric-class
+name: "Cleric (CoDzilla)"
+type: progression
+description: "Full divine caster with medium BAB, d8 hit die, heavy armor, and shield proficiency. The CoDzilla problem: Cleric has 9-level casting progression AND martial combat capability. No meaningful tradeoff between casting power and combat effectiveness."
+tradition: d20
+tags: [caster, divine, codzilla, proactive]
+depends_on: []
+affects: [mechanics/divine-casting.yaml, resources/spell-slots-divine.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+progression_table:
+  1: {features: [spellcasting-1st, turn-undead, domain-powers], bab: 0, hit_die: d8, max_spell_level: 1, armor: heavy}
+  3: {features: [spellcasting-2nd], bab: 2, max_spell_level: 2}
+  5: {features: [spellcasting-3rd], bab: 3, max_spell_level: 3}
+  7: {features: [spellcasting-4th], bab: 5, max_spell_level: 4}
+  9: {features: [spellcasting-5th], bab: 6, max_spell_level: 5}
+  11: {features: [spellcasting-6th], bab: 8, max_spell_level: 6}
+  13: {features: [spellcasting-7th], bab: 9, max_spell_level: 7}
+  15: {features: [spellcasting-8th], bab: 11, max_spell_level: 8}
+  17: {features: [spellcasting-9th], bab: 12, max_spell_level: 9}
+  20: {features: [], bab: 15, max_spell_level: 9}
+
+codzilla_analysis:
+  casting: "Full 9-level divine. Prepares from entire list daily. No spellbook limitation."
+  martial: "Medium BAB (3/4), heavy armor, shield, martial weapons via War domain."
+  buff_stacking: "Divine Power (4th) grants full BAB + bonus damage. Righteous Might (5th) grants size increase + STR/CON. Together = fighter-equivalent melee + full casting."
+  cost: "2 spell slots to become a better fighter than the fighter, while retaining spellcasting."
+
+scaling_notes:
+  - "Level 1-4: Heal bot with moderate melee. Fighter is the clear combatant."
+  - "Level 5-8: Proactive spells emerge (Wind Wall, Searing Light). Fighter starts losing relevance."
+  - "Level 9-12: CoDzilla online. Divine Power + Righteous Might = fighter + full caster in one body."
+  - "Level 13-16: Blade Barrier, Antilife Shell, Word of Recall. Fighter is a bodyguard for a god."
+  - "Level 17-20: Miracle, Mass Heal, Gate. Fighter's contribution is statistically insignificant."

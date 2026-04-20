@@ -1,0 +1,28 @@
+id: melee-attack
+name: "Melee Attack"
+type: mechanics
+description: "Standard melee weapon attack. Damage scales linearly with level via base attack bonus and static strength modifier. No multiplicative scaling."
+tradition: d20
+tags: [combat, martial]
+depends_on: [stats/strength.yaml, progression/fighter-class.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Standard action in combat"
+cost: []
+
+resolution:
+  method: d20-roll
+  stat: stats/strength.yaml
+  dc: "target AC"
+  success: "Deal weapon damage + STR modifier"
+  failure: "Miss, no effect"
+
+interactions:
+  - "Base attack bonus scales linearly: +1/level for fighter"
+  - "Damage per hit is static: 1d8+STR (longsword). No level scaling on damage dice."
+  - "Extra attacks at BAB +6, +11, +16 but at cumulative -5 penalty"
+  - "DPR at level 1: ~5.5. DPR at level 10: ~16.5. DPR at level 20: ~27.5. LINEAR growth."

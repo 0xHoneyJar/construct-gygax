@@ -1,0 +1,24 @@
+id: cognitive-overload
+name: "Option Paralysis from Excessive Unique Subsystems (Fall from Heaven pattern)"
+failure_archetype: cognitive-overload
+tradition: d20
+description: |
+  Encodes a d20 system with 15 character classes, each introducing 3+ unique
+  subsystems with no shared vocabulary. A player choosing a class must parse
+  45+ mechanical concepts before making an informed decision. Class descriptions
+  use jargon without explaining effects (no mouse-over equivalent). This mirrors
+  the Fall from Heaven mod's 21-faction problem: each faction adds unique mechanics
+  that players can't evaluate without playing dozens of hours first.
+source: "grimoires/gygax/references/design-failure-postmortem.md, Section 5"
+tests_skills:
+  - augury (cognitive-load)
+  - cabal (Newcomer)
+  - cabal (Anxious Player)
+  - lore
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: high
+  target_player_count: standard

@@ -1,0 +1,30 @@
+id: party-level
+name: "Party Level"
+type: stats
+description: "Average party level, which advances through XP from dungeon completion. Determines dungeon difficulty scaling. Because dungeons scale with party level, increased power does not translate to faster quest completion -- the treadmill speed is constant."
+tradition: d20
+tags: [core-stat, party, level, scaling]
+depends_on: []
+affects:
+  - mechanics/dungeon-scaling.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 1
+  max: 20
+  typical: 3-15
+  at_quest_start: 3
+  at_quest_end: 15
+
+progression_rate:
+  xp_per_dungeon: "Approximately 1 level per dungeon"
+  dungeons_to_complete: 12
+  levels_gained: "~12 (level 3 to 15)"
+
+notes:
+  - "Party level increases but dungeon difficulty scales to match, so time-per-dungeon remains constant"
+  - "Power growth is real but does not create the feeling of accelerating progress toward the goal"
+  - "A level 15 party still takes 3-4 sessions per dungeon because the dungeon is scaled to level 15"

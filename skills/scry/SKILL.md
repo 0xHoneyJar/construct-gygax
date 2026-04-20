@@ -95,12 +95,16 @@ Check for conflicts: glob `grimoires/gygax/forks/*/` to see if the name already 
    - **Preserve:** Intent fields unchanged in the fork
    - **Shift:** Prompt for new intent summary and rationale for each affected entity; update in fork
 
-3. Update the fork's `index.yaml` to reflect all changes:
+3. **Graph enforcement (v3.1):** Apply the same graph validation as `/attune` Phase 6 to the forked game-state:
+   - New dependencies must resolve to existing entities in the fork or trigger stub creation
+   - Update `graph_integrity` section in the fork's index.yaml
+   - If the change creates new stubs, report them: "Fork created N new stubs for unresolved references."
+4. Update the fork's `index.yaml` to reflect all changes:
    - Update entity counts if entities were added or removed
    - Update file list entries
    - Update `last_modified_at` to current timestamp
    - Set `last_modified_by: scry`
-   - Regenerate `dependency_graph_summary` if the dependency structure changed
+   - Regenerate `graph_integrity` if the dependency structure changed
 4. Validate every modified YAML file: required fields present, cross-references point to files that exist within the fork, tradition is valid.
 
 Do NOT modify any files in `grimoires/gygax/game-state/` (the main game-state). All changes happen in the fork only.
@@ -248,6 +252,16 @@ Compare the fork's analysis results against main game-state to produce a unified
 ## Summary
 
 [2-4 sentences: what changed, the most significant numerical impact, the most significant experiential impact, and an overall assessment.]
+
+## Graph Integrity Delta (v3.1)
+
+| Metric | Main | Fork | Delta |
+|--------|------|------|-------|
+| Resolved references | N | N | +/-N |
+| Stubs | N | N | +/-N |
+| Orphaned entities | N | N | +/-N |
+
+[If the fork created new stubs, list them. If the fork resolved existing stubs, note that.]
 
 ## Numerical Deltas
 

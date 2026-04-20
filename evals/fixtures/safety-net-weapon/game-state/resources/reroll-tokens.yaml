@@ -1,0 +1,40 @@
+id: reroll-tokens
+name: "Reroll Tokens"
+type: resources
+description: "Per-session tokens granting free rerolls on any failed d20 check. Intended as a frustration reducer (nobody likes rolling a 1 on an important check). Exploited as a primary resource: stack Luck to generate tokens, then use tokens to guarantee success on critical checks."
+tradition: custom
+tags: [safety-net, per-session, exploit-currency]
+depends_on: [stats/luck-score.yaml]
+affects: [mechanics/retry-reroll.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  min: 0
+  max_formula: "ceil(Luck / 2)"
+  max_examples:
+    luck_3: 2
+    luck_5: 3
+    luck_8: 4
+    luck_10: 5
+  recovery:
+    trigger: session-start
+    amount: full
+
+token_value_analysis:
+  intended_value: "Insurance against bad luck. Use when you roll a 1 on a DC 15 check with +7 bonus. Reroll gives 65% chance of success."
+  exploited_value: "Guaranteed second chance on any check. Use on DC 10 checks with +0 bonus. First roll has 55% success; reroll adds another 55% chance. Effective success rate: ~80%."
+  value_per_token:
+    high_bonus_character: "Small -- you were likely to succeed anyway."
+    low_bonus_character: "Huge -- you were likely to fail, and the reroll is your primary success path."
+
+depletion_consequence: "No safety net for remainder of session. Normal d20 rolls only."
+pressure_rating: low  # Replenishes every session, no long-term scarcity
+
+notes:
+  - "The token economy has no sink. Tokens refresh every session regardless of use."
+  - "No cost to using a token (no action, no resource expenditure, no narrative consequence)."
+  - "The MtG parallel: free mulligans became 'free looks at your deck' for combo players."
+  - "A safety net with no cost becomes a floor that raises the effective success rate for everyone, but ESPECIALLY for low-skill characters."

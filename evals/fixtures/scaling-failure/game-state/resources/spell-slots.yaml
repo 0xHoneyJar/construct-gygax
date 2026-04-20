@@ -1,0 +1,29 @@
+id: spell-slots
+name: "Spell Slots"
+type: resources
+description: "Daily spell capacity by level. Each spell slot allows one spell cast of that level. Higher-level slots unlock exponentially more powerful effects."
+tradition: d20
+tags: [caster, daily]
+depends_on: [progression/wizard-class.yaml]
+affects: [mechanics/spell-casting.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  min: 0
+  max_by_level:
+    1: 2     # 2 first-level slots
+    3: 4     # 3 first + 1 second
+    5: 7     # 3+2+2
+    7: 11    # 3+3+2+1+1+1
+    10: 16
+    15: 25
+    20: 34
+  recovery:
+    trigger: long-rest
+    amount: full
+
+depletion_consequence: "Cannot cast spells. Must rely on cantrips (at-will, but minimal damage)."
+pressure_rating: medium

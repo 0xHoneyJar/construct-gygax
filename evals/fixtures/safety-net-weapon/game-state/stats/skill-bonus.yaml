@@ -1,0 +1,45 @@
+id: skill-bonus
+name: "Skill Bonus"
+type: stats
+description: "Modifier added to d20 rolls. Range from +0 (untrained) to +15 (fully optimized). The safety-net exploit inverts the incentive: low bonuses trigger more natural 1s, which trigger more rerolls, which paradoxically increase expected successes."
+tradition: custom
+tags: [resolution, skill, exploit-vector]
+depends_on: []
+affects: [mechanics/skill-check.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 0
+  max: 15
+  typical: 3-8
+
+used_by:
+  - "All d20 skill checks (d20 + skill bonus vs DC)"
+  - "Higher bonus = less likely to roll a natural 1 that matters"
+
+exploit_inversion:
+  normal_incentive: "Maximize skill bonus to succeed more often"
+  exploited_incentive: "Minimize skill bonus to trigger more natural 1 rerolls"
+  math:
+    high_bonus_player:
+      bonus: "+8"
+      chance_of_nat_1: "5%"
+      rerolls_per_20_checks: 1
+      note: "Rarely triggers safety net. Succeeds through raw bonus."
+    low_bonus_player:
+      bonus: "+1"
+      chance_of_nat_1: "5%"
+      rerolls_per_20_checks: 1
+      note: "Same 5% nat-1 rate, but the reroll is MORE VALUABLE because the low-bonus player needs every second chance."
+    deliberate_exploit:
+      strategy: "Take actions with +0 bonus where DC is low (DC 10). Natural 1 is a guaranteed failure even with the reroll. BUT: the reroll has a 50% chance of rolling 10+, succeeding anyway."
+      effective_success_rate: "52.25% (47.5% first roll + 5% * 50% reroll = 47.5% + 2.5% + bonus from reroll)"
+      note: "The exploit is subtle: it doesn't give MORE successes per roll, but it eliminates the COST of failure."
+
+notes:
+  - "The 5% natural 1 rate is constant regardless of bonus. The EXPLOITATION is in the value of the reroll."
+  - "A reroll on nat 1 is worth more to a low-bonus character because they can't afford to lose any rolls."
+  - "The real exploit emerges when combined with the retry mechanic: see mechanics/retry-reroll.yaml"

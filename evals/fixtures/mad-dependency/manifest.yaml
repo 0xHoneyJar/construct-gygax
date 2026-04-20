@@ -1,0 +1,18 @@
+id: mad-dependency
+name: "Multiple Ability Dependency (D&D 3.x Monk pattern)"
+failure_archetype: mad-dependency
+tradition: d20
+description: |
+  Encodes the Multiple Ability Dependency (MAD) failure. A class (Monk) requires
+  high scores in STR, DEX, CON, and WIS simultaneously. Standard 25-point-buy
+  budget can optimally fund 2 high stats (16, 14) with the rest at 10-12. Result:
+  the class can never meet its own prerequisites. AC, attack, damage, saves, and
+  ki abilities all underperform because the stat budget is spread too thin.
+source: "grimoires/gygax/references/design-failure-postmortem.md"
+tests_skills:
+  - augury (resolution)
+  - augury (resource-economy)
+  - cabal (Optimizer + Newcomer divergence)
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate

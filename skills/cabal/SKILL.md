@@ -83,16 +83,22 @@ The panel selection and rationale are documented in every report header.
 ### Step 1: Load Game-State and Previous Reports
 
 1. Check that `grimoires/gygax/game-state/index.yaml` exists. If not: "No game attuned yet. Run `/attune` first."
-2. Read `index.yaml` for the full entity manifest.
+2. Read `index.yaml` for the full entity manifest, graph integrity, and **design parameters**.
 3. Load archetype definitions from `skills/cabal/resources/archetypes.yaml`. Adjust behavioral weightings based on the game's tradition.
 4. Glob `grimoires/gygax/playtest-reports/*.md` for previous reports. Read them for regression baseline.
 5. If first run, note: "No regression baseline."
+6. Read `design_parameters` from `index.yaml`. Use for panel selection weighting (Step 2) and signal sensitivity (Step 5).
 
 ### Step 2: Assemble Panel
 
 1. Parse archetype flags from invocation. If explicit flags, use those.
 2. If no flags, determine scenario type from the invocation and select context-aware default panel (see table above).
-3. State the panel selection in the output: "Panel: Optimizer, Rules Lawyer, Newcomer (selected for new mechanic review)"
+3. **Design parameter weighting (v3.1):**
+   - `target_audience: newcomer` → always include Newcomer and Anxious Player in the panel, even if not in the context-aware default. Weight their signals higher in the findings summary.
+   - `target_audience: mastery` → always include Optimizer and Veteran. Weight Newcomer signals lower.
+   - `target_session_length: short` → weight pacing-related signals (Dead time, Decision paralysis) higher.
+   - `target_player_count: large` → always include GM. Weight Cognitive overload signals higher.
+4. State the panel selection in the output: "Panel: Optimizer, Rules Lawyer, Newcomer (selected for new mechanic review; Newcomer/Anxious added per design_parameters.target_audience: newcomer)"
 
 ### Step 2.5: Read Intent
 
@@ -102,6 +108,52 @@ Before running the walkthrough, read `intent` fields from all in-scope entities:
 - The dungeon's intent (if scope includes dungeons)
 
 Build an "intent context" the archetypes can reference during the walkthrough. An archetype seeing an asymmetric mechanic should know whether that asymmetry is designer-intended.
+
+### Step 2.7: Structural Pre-Pass (v3.1)
+
+Before constructing scenarios or running walkthroughs, perform a structural analysis of the game-state to ground archetype reasoning in concrete data. This pre-pass produces data that archetypes reference in their "sees" and "chooses" reasoning.
+
+**2.7a: Graph Traversal**
+
+1. Identify the scenario's target entities (the mechanic, encounter, or system being tested).
+2. Walk the dependency graph 2 hops in each direction from each target entity.
+3. Build a local entity map with depth annotations (how many hops from the target).
+4. For stub entities in the map, note: `[STUB — no structural data available]`.
+
+**2.7b: Probability Snapshot**
+
+For each mechanic in the entity map that has a `resolution` field:
+1. Determine the dice system from `resolution.method`.
+2. Invoke the appropriate probability script (using the same script decision matrix as `/augury` — see `scripts/MANIFEST.yaml`):
+   - d20 roll → `dice-probability.ts`
+   - 2d6/3d6 sum → `bell-curve.ts`
+   - Dice pool → `dice-pool.ts`
+   - Advantage/disadvantage → `advantage.ts`
+   - Exploding dice → `exploding-dice.ts`
+3. Store for each mechanic: P(success), P(failure), P(special outcomes), expected value, variance.
+4. For mechanics without explicit resolution (narrative triggers, GM fiat): note `[no-probability — prompt-driven analysis]`.
+
+**2.7c: Resource Pressure Map**
+
+For each resource in the entity map:
+1. Identify all mechanics in the map that consume this resource (via `cost` fields).
+2. Estimate depletion rate: cost per use × expected uses per scenario scope.
+3. Estimate recovery rate: recovery amount × recovery trigger frequency per scenario scope.
+4. Compute net pressure = depletion rate − recovery rate.
+5. Flag resources where:
+   - Net pressure is strongly positive → **draining** (resource will run out during scenario)
+   - Net pressure is strongly negative → **surplus** (resource never creates meaningful tension)
+   - Net pressure is near zero → **balanced**
+
+**2.7d: Decision Point Map**
+
+For each mechanic in the entity map that involves a player-facing choice:
+1. List available options at the decision point.
+2. For each option: expected outcome (from probability snapshot), resource cost (from entity `cost` field), downstream consequences (walk `affects` from the mechanic).
+3. Flag:
+   - **Dominant option**: one option is strictly better than all others (higher success rate AND lower cost AND no worse consequences)
+   - **False choice**: two+ options resolve to identical outcomes
+   - **Information-hidden choice**: outcome depends on unknowns the player can't assess
 
 ### Step 3: Construct Scenario
 
@@ -144,6 +196,14 @@ When an archetype encounters an entity with stated intent, the archetype's 'Choo
 - Resolution uses the actual mechanics from game-state. Roll outcomes, resource costs, consequences.
 - Every beat gets exactly one experience signal per archetype.
 
+**Structural grounding (v3.1):**
+Archetypes MUST reference pre-pass data when available:
+- **Optimizer** cites success rates from probability snapshot. Example: "Resolution has 50.0% success at DOSE 4 (dice-probability.ts). Words resource has surplus pressure (-1.5/scene). Optimal play: spend words aggressively."
+- **Newcomer** cites graph depth and entity count. Example: "This decision requires understanding 3 connected entities (dose → resolution → crossroads). No fallback in dependency chain."
+- **GM** cites simultaneous state tracking from the entity map. Example: "At this beat, GM tracks: DOSE threshold per PC, CROSSROADS counter, scene timer, word pool — 4 concurrent states."
+- **Optimizer/Rules Lawyer** cite dominant options or false choices from decision point map.
+- When pre-pass data is not available for a particular beat (narrative-only moment, no mechanics engaged), archetypes reason from prompt context and the signal is tagged accordingly.
+
 ### Step 5: Track Experience Signals
 
 Each signal has concrete, mechanically-grounded triggers:
@@ -165,6 +225,12 @@ Experience signals are NEVER suppressed by intent. If the Newcomer is confused, 
 - Every beat gets exactly one signal per archetype.
 - Signals must be grounded: "Confusion because DOSE threshold is referenced but never explained in the mechanic description" -- not "this seems confusing."
 - If no strong signal applies, use the one closest to the archetype's experience at that moment.
+
+**Signal citation requirements (v3.1):**
+- When a signal can be supported by pre-pass data, cite it and tag `[structurally-grounded]`. Example: `"Confusion [structurally-grounded]: resolution requires cross-referencing dose (stats/) → resolution (mechanics/) → crossroads (mechanics/) [graph depth: 3, no fallback mechanic in dependency chain]"`
+- When a signal is based on narrative judgment rather than structural data, tag `[prompt-grounded]`. Example: `"Excitement [prompt-grounded]: the fiction reaches a dramatic peak as the character's identity inverts"`
+- Target: at least 50% of signals in a report should be `[structurally-grounded]`. If this threshold isn't met, note it in the report methodology section.
+- Both tag types are valid findings — structural grounding adds precision, not legitimacy.
 
 ### Step 6: Detect Experience Divergence
 
@@ -234,10 +300,36 @@ Write to `grimoires/gygax/playtest-reports/YYYY-MM-DD-scope-description.md`.
 **Scenario:** [description] ([scale: moment|encounter|session|campaign-arc])
 **Entities Tested:** [count]
 **Previous Reports:** [count] (or "None -- first run")
+**Design Parameters:** [active parameters, or "not set (tradition defaults)"]
 
 ## Executive Summary
 
 [2-4 sentences: what was tested, most important finding, overall health.]
+
+## Scenario Analysis (v3.1)
+
+Data from the structural pre-pass (Step 2.7). This is what the archetypes are reasoning from.
+
+### Entity Graph
+Target: [target entity path]
+Connected entities (2-hop): [list with graph paths]
+
+### Probability Snapshot
+| Mechanic | System | P(success) | P(failure) | P(special) | Source |
+|----------|--------|------------|------------|------------|--------|
+| [name] | [dice system] | X% | Y% | Z% | [script name + input] |
+
+### Resource Pressure
+| Resource | Depletion/scope | Recovery/scope | Net Pressure | Rating |
+|----------|----------------|----------------|--------------|--------|
+| [name] | X | Y | Z | draining/surplus/balanced |
+
+### Decision Points
+| Decision | Options | Dominant? | Notes |
+|----------|---------|-----------|-------|
+| [description] | [count] | [yes/no/situational] | [key observation] |
+
+[Tables may be empty or abbreviated for simple games. Omit tables with no data.]
 
 ## Scenario
 

@@ -1,0 +1,46 @@
+id: martial-combat
+name: "Martial Combat (Reactive Damage)"
+type: mechanics
+description: "Fighter's combat capability. Limited to dealing damage to threats that have already materialized. Cannot prevent encounters, control battlefields, or remove threats without reducing them to 0 HP over multiple rounds. Purely reactive."
+tradition: d20
+tags: [combat, martial, reactive, asymmetry-victim]
+depends_on: [stats/strength-fighter.yaml, progression/fighter-class.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Standard/full attack action in combat"
+cost: []
+
+resolution:
+  method: d20-roll
+  stat: stats/strength-fighter.yaml
+  dc: "target AC"
+  success: "Deal weapon damage + STR modifier"
+  failure: "Miss, no effect"
+
+reactive_limitation:
+  turn_sequence: "Enemy acts first (or simultaneously) -> Fighter responds with damage -> Repeat until enemy at 0 HP"
+  damage_dealt_before_threat_removed: "Enemy acts for 2-5 rounds before dying to fighter damage"
+  comparison: "Cleric removes threat in round 1 with a single spell. No enemy actions occur."
+
+damage_output:
+  level_5: "~15 DPR (2d6+7 greatsword, 1 attack)"
+  level_10: "~35 DPR (2d6+7 greatsword, 2 attacks)"
+  level_15: "~50 DPR (2d6+9 greatsword, 3 attacks)"
+  level_20: "~65 DPR (2d6+10 greatsword, 4 attacks)"
+  note: "Monster HP at these levels: 100, 200, 300, 400+. Fighter needs 3-7 rounds to kill."
+
+interactions:
+  - "Fighter can only affect targets within melee range. No ranged, no AoE, no battlefield control."
+  - "Iterative attacks at -5 penalty per extra attack. 3rd and 4th attacks miss frequently."
+  - "No resource expenditure means no burst capability. Damage is the same every round."
+  - "Fighter MUST engage the threat to affect it. Cleric can prevent the threat from ever engaging."
+  - "Fighter damage is valuable only when prevention has failed or is unavailable. It's the backup plan."
+
+notes:
+  - "The fighter is not BAD at dealing damage. The problem is that dealing damage is categorically inferior to preventing damage."
+  - "Even a perfectly optimized fighter with STR 20 and a +5 weapon is solving the wrong problem if a Wall of Stone could have prevented the encounter entirely."
+  - "Reactive damage has one advantage: it's unlimited (no spell slots). But unlimited uses of an inferior strategy don't make it superior."

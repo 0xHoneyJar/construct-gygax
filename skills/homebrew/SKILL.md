@@ -87,6 +87,18 @@ No design document is written for `--set-intent` — this is intent-only, not a 
 
 **Backwards compatibility:** Entities with the old single-axis `intent:` block (summary + rationale + non_negotiable) are treated as `mechanical_intent` with no `experiential_intent`. The old shape continues to work; the new shape adds the experiential axis alongside it.
 
+### `/homebrew --set-intent design-parameters`
+
+Set or update game-level design parameters on the current game-state. These live in `index.yaml` under `design_parameters` and shape how `/augury`, `/cabal`, `/lore`, and `/delve` calibrate their analytical thresholds.
+
+**Workflow:**
+
+1. Load `grimoires/gygax/game-state/index.yaml`.
+2. Show current design parameters if present. For missing fields, show the tradition default that will be used.
+3. Ask the user to confirm or change each parameter (same questions as `/attune` Phase 3.6). All fields are skippable.
+4. Write updated `design_parameters` section to `index.yaml`. Remove fields the user explicitly clears. Leave absent fields absent (tradition defaults apply at analysis time).
+5. Write a changelog entry recording the parameter change.
+
 ## Workflow
 
 ### Step 1: Load Game-State
@@ -250,12 +262,14 @@ Once the user confirms the design:
 - Follow the game-state schema exactly (see `skills/attune/resources/game-state-schema.md`).
 - Set `created_by: homebrew` and `last_modified_by: homebrew` with current ISO-8601 timestamps.
 - Validate every YAML file before writing: required fields present, cross-references point to files that exist (or are being created in the same batch), tradition is valid.
+- **Graph validation:** For each new or modified `depends_on`/`affects` entry, verify the target exists in game-state. If a target doesn't exist, create a **stub entity** following the stub schema from `/attune` Phase 4 rule 9 (with `created_by: homebrew-inferred`). Report stubs to user.
+- **Impact analysis:** When modifying an entity that appears in other entities' `depends_on` lists, display: "Impact analysis: N entities depend on {entity}. Changes may affect: {list of dependent entity paths}."
 
 **7b. Update index.yaml:**
-- Add new files to the `files:` list with their `id`, `depends_on`, and `affects`.
-- Update `entity_count` totals.
+- Add new files (including any stubs) to the `files:` list with their `id`, `depends_on`, and `affects`.
+- Update `entity_count` totals (stubs count toward their type's total).
 - Update `last_modified_at`.
-- Regenerate `dependency_graph_summary` (most_depended_on, orphaned, circular).
+- Regenerate `graph_integrity` section: `resolved_references`, `stub_count`, `stubs`, `orphaned`, `circular`, `most_depended_on`.
 
 **7c. Write design document:**
 - Write a human-readable design document to `grimoires/gygax/designs/YYYY-MM-DD-description.md`.

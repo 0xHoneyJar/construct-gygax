@@ -6,7 +6,7 @@ schema_version: 3
 
 name: "Gygax"
 slug: gygax
-version: 3.0.0
+version: 3.1.0
 
 description: "TTRPG systems analyst — design, balance, playtest, and experiment with persistent game-state, cross-system comparison, intent-aware analysis, and dungeon evaluation"
 short_description: "TTRPG systems analysis and design collaboration"

@@ -1,0 +1,43 @@
+id: action-points
+name: "Action Points (Nova Currency)"
+type: resources
+description: "Per-encounter action economy. Each round grants 1 standard + 1 move + 1 bonus action. The degenerate strategy exploits this by ending the encounter in round 1, meaning only the first-turn action allotment matters. All other players' action points in rounds 2+ are wasted because there's nothing left to fight."
+tradition: d20
+tags: [action-economy, per-round, exploit-victim]
+depends_on: []
+affects: [mechanics/arcane-casting.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  per_round:
+    standard: 1
+    move: 1
+    bonus: 1
+    reaction: 1
+  recovery:
+    trigger: start-of-turn
+    amount: full
+
+nova_analysis:
+  round_1_caster:
+    standard: "Cast highest-level AoE spell (e.g., Fireball, Chain Lightning)"
+    bonus: "Quickened second spell (Metamagic or class feature)"
+    total_output: "60-120 damage to all enemies"
+    encounter_state: "Most or all enemies dead"
+  round_1_fighter:
+    standard: "One melee attack (15-20 damage to one target)"
+    move: "Close distance to nearest enemy"
+    total_output: "15-20 damage to one target"
+    encounter_state: "One enemy lightly wounded"
+  rounds_2_plus:
+    caster: "Nothing to do. Encounter is over."
+    fighter: "Nothing to do. Encounter is over."
+    other_players: "Nothing to do. Encounter is over."
+
+notes:
+  - "The degenerate strategy converts the entire party's combat into a caster solitaire."
+  - "Other players' action points are effectively wasted: by the time their turn comes, the fight is over."
+  - "MtG parallel: combo player takes 10-minute turn; opponent never gets to play."

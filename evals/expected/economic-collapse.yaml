@@ -1,0 +1,68 @@
+fixture: economic-collapse
+expected_findings:
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    category: economic-collapse
+    description_contains: "source"
+    entity_refs:
+      - resources/gold.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    category: economic-collapse
+    description_contains: "sink"
+    entity_refs:
+      - resources/gold.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: feedback-loop-missing
+    description_contains: "fixed price"
+    entity_refs:
+      - mechanics/npc-trade.yaml
+      - entities/npc-shopkeeper.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: exploit-vector
+    description_contains: "crafting"
+    entity_refs:
+      - mechanics/crafting.yaml
+      - resources/raw-materials.yaml
+
+  - skill: lore
+    tradition: d20
+    heuristic: "resource-scarcity-drives-engagement"
+    severity: Critical
+    description_contains: "scarcity"
+    entity_refs:
+      - resources/gold.yaml
+      - tensions/player-economy-vs-intended-economy.yaml
+
+  - skill: lore
+    tradition: d20
+    heuristic: "sinks-must-match-sources"
+    severity: Critical
+    description_contains: "sink"
+    entity_refs:
+      - resources/gold.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "There is no resolution mechanic failure. The d20 crafting check works as designed. The problem is economic, not procedural."
+
+  - skill: augury
+    layer: progression
+    severity: Critical
+    reason: "No progression system exists in this fixture. The economic collapse is independent of character level scaling."
+
+  - skill: augury
+    layer: action-economy
+    severity: Critical
+    reason: "Action economy is not at issue. Crafting occurs in downtime, not during combat rounds. The failure is in the resource flow, not in action allocation."

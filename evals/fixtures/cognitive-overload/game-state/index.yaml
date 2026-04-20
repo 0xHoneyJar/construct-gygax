@@ -1,0 +1,71 @@
+game: "Cognitive Overload Test Fixture"
+tradition: d20
+description: "d20 system with 15 character classes each using 3+ unique subsystems. Encodes the Fall from Heaven faction-bloat pattern -- too many mechanically distinct options with no shared vocabulary, inadequate descriptions, and no way for players to evaluate choices without extensive play experience."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: high
+  target_player_count: standard
+
+entity_count:
+  stats: 1
+  resources: 1
+  mechanics: 2
+  progression: 0
+  entities: 1
+  tensions: 2
+
+files:
+  - path: stats/ability-scores.yaml
+    id: ability-scores
+    depends_on: []
+    affects: [mechanics/class-subsystems.yaml]
+
+  - path: resources/class-selection.yaml
+    id: class-selection
+    depends_on: []
+    affects: [mechanics/class-subsystems.yaml, entities/class-roster.yaml]
+
+  - path: mechanics/class-subsystems.yaml
+    id: class-subsystems
+    depends_on: [stats/ability-scores.yaml, resources/class-selection.yaml]
+    affects: [tensions/option-paralysis.yaml]
+
+  - path: mechanics/description-opacity.yaml
+    id: description-opacity
+    depends_on: [mechanics/class-subsystems.yaml]
+    affects: [tensions/option-paralysis.yaml, tensions/expertise-gate.yaml]
+
+  - path: entities/class-roster.yaml
+    id: class-roster
+    depends_on: [resources/class-selection.yaml]
+    affects: [mechanics/class-subsystems.yaml]
+
+  - path: tensions/option-paralysis.yaml
+    id: option-paralysis
+    depends_on: [mechanics/class-subsystems.yaml, mechanics/description-opacity.yaml, entities/class-roster.yaml]
+    affects: []
+
+  - path: tensions/expertise-gate.yaml
+    id: expertise-gate
+    depends_on: [mechanics/description-opacity.yaml, entities/class-roster.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 20
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: mechanics/class-subsystems.yaml
+      dependents: 3
+    - path: mechanics/description-opacity.yaml
+      dependents: 2
+    - path: resources/class-selection.yaml
+      dependents: 2

@@ -1,0 +1,71 @@
+game: "Design Trap Test Fixture"
+tradition: d20
+description: "Simplified d20 system encoding the Toughness feat trap -- a static +3 HP option in a system where HP scales per level, making the bonus negligible by mid-game while consuming a rare feat slot."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: moderate
+  target_player_count: standard
+
+entity_count:
+  stats: 1
+  resources: 1
+  mechanics: 1
+  progression: 1
+  entities: 2
+  tensions: 1
+
+files:
+  - path: stats/constitution.yaml
+    id: constitution
+    depends_on: []
+    affects: [mechanics/hp-calculation.yaml]
+
+  - path: resources/feat-slots.yaml
+    id: feat-slots
+    depends_on: [progression/character-progression.yaml]
+    affects: [entities/feat-toughness.yaml, entities/feat-dodge.yaml]
+
+  - path: mechanics/hp-calculation.yaml
+    id: hp-calculation
+    depends_on: [stats/constitution.yaml, progression/character-progression.yaml]
+    affects: []
+
+  - path: progression/character-progression.yaml
+    id: character-progression
+    depends_on: []
+    affects: [mechanics/hp-calculation.yaml, resources/feat-slots.yaml]
+
+  - path: entities/feat-toughness.yaml
+    id: feat-toughness
+    depends_on: [resources/feat-slots.yaml, mechanics/hp-calculation.yaml]
+    affects: [mechanics/hp-calculation.yaml]
+
+  - path: entities/feat-dodge.yaml
+    id: feat-dodge
+    depends_on: [resources/feat-slots.yaml]
+    affects: []
+
+  - path: tensions/static-vs-scaling-options.yaml
+    id: static-vs-scaling-options
+    depends_on: [entities/feat-toughness.yaml, entities/feat-dodge.yaml, progression/character-progression.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 18
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: progression/character-progression.yaml
+      dependents: 3
+    - path: resources/feat-slots.yaml
+      dependents: 2
+    - path: mechanics/hp-calculation.yaml
+      dependents: 2

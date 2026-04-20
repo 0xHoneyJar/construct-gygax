@@ -1,0 +1,53 @@
+id: arcane-casting
+name: "Arcane Casting (Nova Deployment)"
+type: mechanics
+description: "The delivery mechanism for the degenerate strategy. With full spell slots from rest-chaining, the caster dumps maximum-level AoE spells in round 1, ending the encounter before initiative order completes. The mechanic itself is not broken -- it's the unlimited resource availability that makes it degenerate."
+tradition: d20
+tags: [combat, caster, nova, degenerate]
+depends_on: [stats/intelligence.yaml, resources/spell-slots.yaml, resources/action-points.yaml, progression/rest-caster-class.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Standard action (or bonus action with Quicken)"
+cost:
+  - resource: resources/spell-slots.yaml
+    amount: 1
+
+resolution:
+  method: save-or-half
+  stat: stats/intelligence.yaml
+  dc: "10 + spell level + INT modifier"
+  success: "Full spell damage/effect to all targets in area"
+  failure: "Half damage (still significant for AoE)"
+
+nova_turn_example:
+  level_10:
+    standard_action: "Chain Lightning (6th level) -- 10d6 to primary, 5d6 to 3 secondary = ~95 total damage"
+    bonus_action: "Quickened Fireball (3rd level) -- 8d6 in 20ft radius = ~28 per target"
+    total_round_1: "~175 damage across all enemies"
+    average_enemy_hp: "~70 at CR 8"
+    enemies_killed_round_1: "2-3 of 4"
+    remaining_party_contribution_needed: "Minimal cleanup"
+
+  level_15:
+    standard_action: "Meteor Swarm (9th level) -- 40d6 in four 40ft spheres = ~140 per target"
+    bonus_action: "Quickened Fireball -- 8d6 = ~28 per target"
+    total_round_1: "~168 per target across encounter"
+    average_enemy_hp: "~130 at CR 15"
+    enemies_killed_round_1: "All"
+    remaining_party_contribution_needed: "None"
+
+interactions:
+  - "With unlimited short-rest recovery, the caster always enters combat with FULL slots."
+  - "Full slots means the caster can always nova (dump highest-level spells in round 1)."
+  - "Nova output exceeds total enemy HP at most CR-appropriate encounters."
+  - "Other players never take a meaningful combat action."
+  - "The GM must either ban rest-chaining or design every encounter to survive round 1 nova."
+
+notes:
+  - "This is the TTRPG equivalent of combo winter: one player plays solitaire."
+  - "The social cost is higher in TTRPG than card games: 3-5 players sit and watch for entire combat."
+  - "The mechanic (casting) is fine. The resource system (unlimited recovery) is the exploit vector."

@@ -1,0 +1,30 @@
+id: npc-shopkeeper
+name: "NPC Shopkeeper"
+type: entities
+description: "Generic NPC vendor. Buys any item at a fixed percentage of list price with unlimited gold reserves. Sells raw materials at fixed prices. Never adjusts prices based on supply or demand. Acts as an infinite gold source."
+tradition: d20
+tags: [npc, economy, infinite-source]
+depends_on: []
+affects: [mechanics/npc-trade.yaml, resources/gold.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+behavior:
+  buys_from_players: true
+  buy_price_formula: "item_list_price * 0.5"
+  sells_to_players: true
+  sell_price_formula: "item_list_price * 1.0"
+  gold_reserve: unlimited
+  inventory_limit: none
+  price_adjustment: none
+  restock_rate: instant
+
+economy_role:
+  source_or_sink: "source"
+  notes: |
+    The shopkeeper acts as a pure gold source. Every transaction where a player
+    sells a crafted item injects gold into the player economy. The shopkeeper
+    never runs out of gold and never reduces buy prices. There is no feedback
+    mechanism to throttle this source.

@@ -1,0 +1,35 @@
+id: hp-calculation
+name: "Hit Point Calculation"
+type: mechanics
+description: "HP scales per level: roll hit die (d10) + CON modifier each level. Total HP grows linearly with level, making any static HP bonus a shrinking fraction of the total."
+tradition: d20
+tags: [survival, scaling, per-level]
+depends_on:
+  - stats/constitution.yaml
+  - progression/character-progression.yaml
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+formula: "HP = sum(1..level, hit_die + CON_modifier)"
+hit_die: d10
+average_per_level_by_con:
+  CON_10: 5.5   # d10 average, +0 modifier
+  CON_14: 7.5   # d10 average, +2 modifier
+  CON_16: 8.5   # d10 average, +3 modifier
+
+expected_hp_totals:
+  # Using CON 14 (+2 modifier) as typical
+  1: 12    # max first die (10) + 2
+  3: 27    # 12 + 2*(5.5+2) = 12 + 15
+  5: 42    # 12 + 4*(7.5) = 42
+  10: 79.5 # 12 + 9*(7.5) = 79.5
+  15: 117  # 12 + 14*(7.5) = 117
+  20: 154.5 # 12 + 19*(7.5) = 154.5
+
+scaling_notes:
+  - "HP grows ~7.5/level with CON 14. A static +3 bonus is less than half a level's HP."
+  - "At level 1: +3 HP is 25% of total (12 HP). At level 5: 7.1% (42 HP). At level 10: 3.8% (79.5 HP)."
+  - "Any flat HP bonus is a textbook diminishing return against per-level scaling."

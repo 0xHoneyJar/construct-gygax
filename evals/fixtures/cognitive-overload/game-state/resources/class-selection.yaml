@@ -1,0 +1,32 @@
+id: class-selection
+name: "Class Selection"
+type: resources
+description: "The irrevocable choice of one class from a pool of 15, made at character creation before the player has experienced any gameplay. Each class brings entirely different mechanical subsystems. The selection cannot be changed later and determines the player's entire mechanical experience."
+tradition: d20
+tags: [build-resource, class, irrevocable, character-creation]
+depends_on: []
+affects:
+  - mechanics/class-subsystems.yaml
+  - entities/class-roster.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+economy:
+  generation: "1 class choice at character creation"
+  consumption: "Permanent -- selecting a class locks out 14 other mechanical experiences"
+  pool_type: permanent-allocation
+  options_available: 15
+
+decision_pressure:
+  - "Made at session 0 before any gameplay experience"
+  - "Irrevocable without GM permission to rebuild"
+  - "Each option routes into a completely different subsystem -- not a spectrum but 15 distinct games"
+  - "Optimal ability score allocation depends on class choice, creating a circular dependency for new players"
+
+cognitive_load:
+  unique_subsystems_to_evaluate: 45
+  average_unique_keywords_per_class: 8
+  shared_keywords_across_classes: 3
+  evaluation_note: "A player attempting to make an informed choice must understand 45 subsystems and ~120 unique keywords, of which only ~3 appear in more than one class"

@@ -1,0 +1,21 @@
+id: safety-net-weapon
+name: "Safety Net Weaponized (MtG Mulligan / Reroll Exploit)"
+failure_archetype: safety-net-weapon
+tradition: custom
+description: |
+  Encodes the MtG Mulligan pattern adapted to TTRPG: a safety-net mechanic
+  (free reroll on natural 1) intended to reduce frustration becomes an exploit
+  vector. Players discover that low-bonus characters roll 1s more often on
+  effective checks (because they need higher raw rolls to succeed), triggering
+  more rerolls. By intentionally building characters with +0 to +2 bonuses
+  instead of +5 to +8, they access more reroll opportunities. The reroll
+  replaces the original result entirely, converting a failed check into a
+  second chance at success with no downside.
+source: "grimoires/gygax/references/design-failure-postmortem.md"
+tests_skills:
+  - augury (resolution)
+  - augury (cognitive-load)
+  - cabal (Optimizer + Rules Lawyer)
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate

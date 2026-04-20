@@ -2,6 +2,15 @@ game: "D&D 5e SRD Core"
 slug: 5e-srd
 tradition: d20
 description: "Pre-attuned 5e SRD combat math baseline. Use as a comparison reference for homebrew deviation analysis via /augury. Install via /attune --reference 5e-srd."
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: moderate
+  target_player_count: standard
+
 created_at: "2026-04-13T00:00:00Z"
 last_modified_at: "2026-04-13T00:00:00Z"
 
@@ -161,13 +170,21 @@ files:
       - mechanics/attack-roll.yaml
     affects: []
 
-dependency_graph_summary:
+graph_integrity:
+  resolved_references: 64
+  stub_count: 0
+  stubs: []
   most_depended_on:
-    - mechanics/d20-resolution.yaml     # 4 direct dependents
-    - mechanics/attack-roll.yaml        # 5 direct dependents
-    - progression/generic-pc-class.yaml # 4 direct dependents
-    - stats/constitution.yaml           # 2 direct dependents
-    - resources/spell-slots-abstract.yaml # 2 direct dependents
+    - path: mechanics/d20-resolution.yaml
+      dependents: 4
+    - path: mechanics/attack-roll.yaml
+      dependents: 5
+    - path: progression/generic-pc-class.yaml
+      dependents: 4
+    - path: stats/constitution.yaml
+      dependents: 2
+    - path: resources/spell-slots-abstract.yaml
+      dependents: 2
   orphaned: []
   circular: []
 

@@ -1,0 +1,16 @@
+id: economic-collapse
+name: "Hyperinflationary Economy (Ultima Online pattern)"
+failure_archetype: economic-collapse
+tradition: d20
+description: |
+  Encodes a TTRPG economy where gold generation exceeds consumption.
+  NPC shopkeepers act as infinite gold sources by purchasing player-crafted
+  items at fixed prices. No meaningful gold sinks exist. Currency becomes
+  irrelevant through hyperinflation.
+source: "grimoires/gygax/references/design-failure-postmortem.md, Section 3"
+tests_skills:
+  - augury (resource-economy)
+  - lore
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate

@@ -1,0 +1,71 @@
+game: "Communication Failure Test Fixture"
+tradition: custom
+description: "Custom system encoding the Fall from Heaven hidden-interaction pattern -- mechanics whose effects are not communicated to players. Blessings secretly reduce encounter rates, crafting skill unlocks hidden vendor discounts, reputation triggers invisible world events. Players interact with these systems constantly but cannot make informed decisions because the feedback loops are invisible."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: long
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: moderate
+  target_player_count: standard
+
+entity_count:
+  stats: 1
+  resources: 1
+  mechanics: 3
+  progression: 0
+  entities: 1
+  tensions: 1
+
+files:
+  - path: stats/reputation.yaml
+    id: reputation
+    depends_on: []
+    affects: [mechanics/hidden-world-events.yaml]
+
+  - path: resources/divine-favor.yaml
+    id: divine-favor
+    depends_on: [mechanics/blessing-system.yaml]
+    affects: [mechanics/hidden-encounter-reduction.yaml]
+
+  - path: mechanics/blessing-system.yaml
+    id: blessing-system
+    depends_on: []
+    affects: [resources/divine-favor.yaml, mechanics/hidden-encounter-reduction.yaml]
+
+  - path: mechanics/hidden-encounter-reduction.yaml
+    id: hidden-encounter-reduction
+    depends_on: [resources/divine-favor.yaml, mechanics/blessing-system.yaml]
+    affects: [tensions/invisible-feedback.yaml]
+
+  - path: mechanics/hidden-world-events.yaml
+    id: hidden-world-events
+    depends_on: [stats/reputation.yaml]
+    affects: [tensions/invisible-feedback.yaml]
+
+  - path: entities/crafting-vendor-thresholds.yaml
+    id: crafting-vendor-thresholds
+    depends_on: []
+    affects: [tensions/invisible-feedback.yaml]
+
+  - path: tensions/invisible-feedback.yaml
+    id: invisible-feedback
+    depends_on: [mechanics/hidden-encounter-reduction.yaml, mechanics/hidden-world-events.yaml, entities/crafting-vendor-thresholds.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 16
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: tensions/invisible-feedback.yaml
+      dependents: 0
+    - path: mechanics/hidden-encounter-reduction.yaml
+      dependents: 2
+    - path: mechanics/blessing-system.yaml
+      dependents: 2

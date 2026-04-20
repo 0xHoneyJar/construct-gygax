@@ -1,0 +1,36 @@
+id: unarmored-defense
+name: "Unarmored Defense"
+type: mechanics
+description: "Monk AC = 10 + DEX mod + WIS mod. Requires TWO high stats to match what a fighter gets from a single equipment purchase (full plate). The AC formula is the most visible symptom of MAD: it looks elegant but demands an impossible stat budget."
+tradition: d20
+tags: [defense, mad-symptom]
+depends_on: [stats/dexterity.yaml, stats/wisdom.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Passive (always active when unarmored)"
+cost: []
+
+resolution:
+  method: passive
+  formula: "10 + DEX modifier + WIS modifier"
+
+ac_comparison:
+  monk_dex14_wis14: 14  # 10 + 2 + 2
+  monk_dex16_wis16: 16  # 10 + 3 + 3 (costs 20 of 25 point-buy, leaves nothing for STR/CON)
+  monk_dex18_wis18: 18  # 10 + 4 + 4 (impossible on 25 point-buy)
+  fighter_full_plate: 18  # bought with gold, no stat investment
+  fighter_full_plate_shield: 20  # bought with gold, no stat investment
+
+interactions:
+  - "Fighter buys AC 18 for 1500gp. Monk needs DEX 18 + WIS 18 for the same AC -- impossible on point-buy."
+  - "To reach AC 16, monk spends 20 of 25 point-buy points on DEX 16 + WIS 16. Leaves 5 points for STR and CON."
+  - "With 5 remaining points: STR 12, CON 10. Attack modifier +1, HP per level +0."
+  - "The elegance trap: AC = 10 + DEX + WIS LOOKS like a cool class feature. It's actually a tax that consumes 80% of the stat budget."
+
+notes:
+  - "This is the entry point for the MAD death spiral: AC forces DEX+WIS high, which forces STR+CON low, which makes the monk fragile AND weak in the same body"
+  - "No other class pays two stats for a defense that another class buys with gold"

@@ -1,0 +1,82 @@
+fixture: proactive-reactive
+expected_findings:
+  - skill: augury
+    layer: action-economy
+    severity: Critical
+    category: proactive-reactive-asymmetry
+    description_contains: "prevention"
+    entity_refs:
+      - mechanics/divine-casting.yaml
+      - mechanics/martial-combat.yaml
+
+  - skill: augury
+    layer: action-economy
+    severity: Critical
+    category: proactive-reactive-asymmetry
+    description_contains: "proactive"
+    entity_refs:
+      - mechanics/divine-casting.yaml
+      - progression/cleric-class.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: role-overlap
+    description_contains: "CoDzilla"
+    entity_refs:
+      - progression/cleric-class.yaml
+      - resources/spell-slots-divine.yaml
+
+  - skill: augury
+    layer: action-economy
+    severity: Warning
+    category: reactive-inefficiency
+    description_contains: "reactive"
+    entity_refs:
+      - mechanics/martial-combat.yaml
+      - progression/fighter-class.yaml
+
+  - skill: cabal
+    signal: frustration
+    archetype: Optimizer
+    description_contains: "fighter"
+
+  - skill: cabal
+    signal: mastery-reward
+    archetype: Optimizer
+    description_contains: "cleric"
+
+  - skill: cabal
+    signal: dead-time
+    archetype: GM
+    description_contains: "martial"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "proactive"
+
+  - skill: lore
+    tradition: d20
+    heuristic: "roles-must-operate-on-same-effectiveness-axis"
+    severity: Critical
+    description_contains: "asymmetry"
+    entity_refs:
+      - tensions/proactive-vs-reactive.yaml
+      - mechanics/divine-casting.yaml
+      - mechanics/martial-combat.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "The d20 resolution mechanic is standard and functional. Attack rolls, save DCs, and damage rolls all work as designed. The failure is in what actions are AVAILABLE, not in how they resolve."
+
+  - skill: augury
+    layer: progression
+    severity: Critical
+    reason: "Both classes progress as designed. The Cleric gains spell levels on schedule; the Fighter gains BAB and feats on schedule. The problem is that the Cleric's progression unlocks categorically superior actions, not that either progression is internally broken."
+
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    reason: "Encounter pacing is not the issue. If anything, Cleric prevention makes encounters faster. The problem is role relevance, not session timing."

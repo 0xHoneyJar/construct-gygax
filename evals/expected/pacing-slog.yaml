@@ -1,0 +1,80 @@
+fixture: pacing-slog
+expected_findings:
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    category: pacing-slog
+    description_contains: "session"
+    entity_refs:
+      - resources/macguffin-fragments.yaml
+      - resources/session-time.yaml
+
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    category: pacing-slog
+    description_contains: "milestone"
+    entity_refs:
+      - progression/quest-arc.yaml
+
+  - skill: augury
+    layer: pacing
+    severity: Warning
+    category: repetition
+    description_contains: "variation"
+    entity_refs:
+      - mechanics/dungeon-completion.yaml
+      - entities/dungeon-roster.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: treadmill
+    description_contains: "scaling"
+    entity_refs:
+      - mechanics/dungeon-scaling.yaml
+      - stats/party-level.yaml
+
+  - skill: cabal
+    signal: dead-time
+    archetype: Storyteller
+    description_contains: "narrative"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Explorer
+    description_contains: "repetition"
+
+  - skill: cabal
+    signal: dead-time
+    archetype: Newcomer
+    description_contains: "progress"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "combat"
+
+  - skill: lore
+    tradition: d20
+    heuristic: "milestone-pacing"
+    severity: Critical
+    description_contains: "milestone"
+    entity_refs:
+      - progression/quest-arc.yaml
+      - resources/macguffin-fragments.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "The d20 resolution system works correctly. Individual encounter resolution is functional. The failure is in macro-pacing, not in micro-resolution."
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    reason: "The system is not mechanically complex -- it is mechanically repetitive. Cognitive load per session is manageable; the problem is that 48 sessions of manageable load produces fatigue through sameness."
+
+  - skill: augury
+    layer: action-economy
+    severity: Critical
+    reason: "Combat action economy within individual encounters is standard d20. The failure is that the campaign requires too many encounters with no structural variation, not that individual encounters are poorly designed."

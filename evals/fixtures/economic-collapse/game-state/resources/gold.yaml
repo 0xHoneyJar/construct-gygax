@@ -1,0 +1,53 @@
+id: gold
+name: "Gold"
+type: resources
+description: "Primary currency. Generation vastly outpaces consumption. NPC shops purchase player items at fixed prices with unlimited gold reserves, creating an infinite source. No meaningful sinks exist to drain accumulated currency."
+tradition: d20
+tags: [economy, currency, broken-economy]
+depends_on: [mechanics/npc-trade.yaml, mechanics/crafting.yaml]
+affects: [tensions/player-economy-vs-intended-economy.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  min: 0
+  max: unlimited
+  starting: 100
+  generation:
+    - source: "NPC shop purchases (sell crafted items)"
+      rate: "50-200 gp per crafted item, repeatable without limit"
+      trigger: "Player sells item to NPC shopkeeper"
+      cap: none
+    - source: "Monster loot"
+      rate: "10-50 gp per encounter"
+      trigger: "Combat encounter completion"
+      cap: none
+    - source: "Quest rewards"
+      rate: "100-500 gp per quest"
+      trigger: "Quest completion"
+      cap: none
+  consumption:
+    - sink: "Buying equipment from NPC shops"
+      rate: "One-time purchases, players stop buying once equipped"
+      notes: "Finite demand. Once a player owns a longsword they never buy another."
+    - sink: "Inn and rations"
+      rate: "1-2 gp per day"
+      notes: "Trivial relative to income. Negligible drain."
+  recovery:
+    trigger: none
+    amount: "Gold is never removed from the economy by the system"
+
+depletion_consequence: "Cannot purchase items, but crafting bypasses the need to buy."
+pressure_rating: none
+
+economy_analysis:
+  net_flow: "Massively positive. A single crafting cycle generates 30-180 gp profit."
+  time_to_irrelevance: "By session 3, players have more gold than anything costs."
+  missing_sinks:
+    - "No taxes or tariffs"
+    - "No consumable costs that scale with level"
+    - "No item degradation or repair costs"
+    - "No gold-gated progression (training costs, guild fees)"
+    - "No auction house or player-to-player economy to redistribute"

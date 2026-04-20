@@ -1,0 +1,38 @@
+id: luck-score
+name: "Luck Score"
+type: stats
+description: "A custom stat that governs the number of free rerolls per session. Higher Luck = more rerolls. The exploit: players invest in Luck INSTEAD of skill bonuses, farming reroll opportunities rather than direct competence."
+tradition: custom
+tags: [custom, safety-net, exploit-enabler]
+depends_on: []
+affects: [resources/reroll-tokens.yaml, mechanics/retry-reroll.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 1
+  max: 10
+  typical: 3-5
+
+used_by:
+  - "Determines reroll tokens per session (Luck / 2, rounded up)"
+  - "Some GMs allow Luck checks as a catch-all skill"
+
+reroll_tokens_granted:
+  luck_1: 1
+  luck_3: 2
+  luck_5: 3
+  luck_7: 4
+  luck_10: 5
+
+exploit_build:
+  optimized_character: "Luck 8 (+0 other skills). 4 reroll tokens per session. Makes 4 low-DC checks per session with guaranteed second chances."
+  normal_character: "Luck 3 (+5 to primary skills). 2 reroll tokens per session. Succeeds through competence."
+  comparison: "Optimized build converts Luck investment into skill check insurance. Low skill bonus doesn't matter when you get 4 free rerolls targeting the checks you care about most."
+
+notes:
+  - "Luck is the stat that feeds the safety-net exploit."
+  - "In intended design, Luck is a 'fun' stat that occasionally saves you. In exploited play, it's the primary stat."
+  - "MtG parallel: the London Mulligan was designed as a safety net but became a deckbuilding constraint (build greedy manabases because mulligans are free)."

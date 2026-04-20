@@ -1,0 +1,28 @@
+id: wisdom-cleric
+name: "Wisdom (Cleric)"
+type: stats
+description: "Primary stat for divine casting. Single-stat dependency means the Cleric can maximize WIS with leftover budget for STR and CON, enabling both proactive spellcasting AND reactive melee combat."
+tradition: d20
+tags: [caster, divine, single-stat]
+depends_on: []
+affects: [mechanics/divine-casting.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 3
+  max: 20
+  typical: 16-18
+  modifier_formula: "floor((value - 10) / 2)"
+
+used_by:
+  - "Spell save DC (10 + spell level + WIS modifier)"
+  - "Bonus spell slots per day"
+  - "Turn Undead (CHA-based but WIS affects spell selection)"
+
+notes:
+  - "Cleric only NEEDS WIS. Remaining 9-15 points go to STR 14 and CON 14."
+  - "Result: full caster power PLUS medium armor PLUS d8 hit die PLUS martial weapons."
+  - "This is the CoDzilla foundation: no tradeoff between casting power and martial survivability."

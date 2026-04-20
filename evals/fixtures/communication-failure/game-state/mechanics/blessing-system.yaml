@@ -1,0 +1,46 @@
+id: blessing-system
+name: "Blessing System"
+type: mechanics
+description: "Players perform blessings at shrines to generate Divine Favor and gain temporary buffs. The visible mechanics are documented: spend an action at a shrine, gain 1-3 Divine Favor, choose a temporary buff. The hidden mechanic is not: accumulated Divine Favor secretly reduces random encounter rates. The blessing system appears to be a simple buff economy but is actually a core survival mechanic."
+tradition: custom
+tags: [blessing, shrine, divine-favor, hidden-interaction]
+depends_on: []
+affects:
+  - resources/divine-favor.yaml
+  - mechanics/hidden-encounter-reduction.yaml
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Player character interacts with a shrine"
+cost:
+  - resource: action
+    amount: 1
+    context: "exploration turn"
+
+resolution:
+  method: automatic
+  outcomes:
+    blessing_performed:
+      divine_favor_gain: "1-3 (based on shrine tier)"
+      temporary_buff: "Choice of: +1 to next skill check, advantage on next save, or +2 temp HP"
+
+documented_interactions:
+  - "Shrines are scattered throughout the world (marked on maps)"
+  - "Higher-tier shrines grant more Divine Favor"
+  - "Divine Favor decays by 1 per long rest"
+  - "Some advanced blessings cost Divine Favor"
+
+undocumented_interactions:
+  - target: mechanics/hidden-encounter-reduction.yaml
+    nature: "Divine Favor total passively reduces encounter frequency"
+    documented_anywhere: false
+  - target: "NPC disposition"
+    nature: "NPCs in temple districts react more favorably to characters with high Divine Favor"
+    documented_anywhere: false
+
+player_perception:
+  what_players_think_it_does: "Optional buff system -- nice to have when near a shrine, not worth going out of your way"
+  what_it_actually_does: "Core survival mechanic that significantly reduces encounter attrition when maintained. Players who ignore shrines face 30-60% more combat encounters."
+  consequence_of_gap: "Players who understand the hidden system have dramatically easier campaigns. Players who don't face significantly more random encounters and attribute the difficulty to bad luck."

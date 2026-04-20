@@ -3,6 +3,15 @@ tradition: pbta
 description: "Pre-attuned PbtA baseline reference game-state. Grounds Gygax analysis in Apocalypse World 2E's core architecture: 2d6+stat resolution, three-tier outcomes (10+/7-9/6-), move-as-tripwire, MC Agenda + Principles, soft vs hard moves. Use as comparison baseline for 'how does my narrative mechanic compare to PbtA's approach?'"
 underlying_model: "Conflict Model (Apocalypse World style) — see metadata.yaml for contrast with Relating Model (Under Hollow Hills) and Adventure Model"
 compiled_from: "grimoires/loa/context/pbta-masterclass.md"
+
+design_parameters:
+  target_session_length: medium
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: light
+  target_player_count: standard
+
 created_at: "2026-04-13T00:00:00Z"
 last_modified_at: "2026-04-13T00:00:00Z"
 
@@ -204,21 +213,17 @@ files:
       - mechanics/act-under-fire.yaml
     affects: []
 
-dependency_graph_summary:
+graph_integrity:
+  resolved_references: 68
+  stub_count: 0
+  stubs: []
   most_depended_on:
-    - id: mechanics/resolution-2d6.yaml
+    - path: mechanics/resolution-2d6.yaml
       dependents: 7
-      note: "All 5 stats, mc-move-hard, weak-hit-as-fork, fiction-vs-mechanics"
-    - id: mechanics/fiction-mechanics-fiction-loop.yaml
+    - path: mechanics/fiction-mechanics-fiction-loop.yaml
       dependents: 4
-      note: "Architectural root — move-as-tripwire, resolution-2d6, mc-move-soft, mc-move-hard all derive from it"
-    - id: mechanics/move-as-tripwire.yaml
+    - path: mechanics/move-as-tripwire.yaml
       dependents: 3
-      note: "Key differentiator from non-PbtA 2d6 systems; act-under-fire, resolution-2d6, fiction-vs-mechanics"
-  hub_stats:
-    - "All 5 stats feed into resolution-2d6.yaml — stat selection is the primary player-facing lever"
-    - "fiction-mechanics-fiction-loop.yaml is the architectural root — all mechanics derive from it"
-    - "move-as-tripwire.yaml is the structural separator: games that use 2d6 but lack tripwire architecture are not PbtA-native"
   orphaned: []
   circular: []
 

@@ -1,0 +1,51 @@
+id: divine-casting
+name: "Divine Casting (Proactive Prevention)"
+type: mechanics
+description: "Cleric spellcasting. The critical asymmetry: divine spells can PREVENT threats entirely (walls, wards, banishments, dominations) in a single action. This is categorically superior to dealing damage after a threat has already acted. One proactive spell replaces multiple rounds of reactive combat."
+tradition: d20
+tags: [combat, caster, proactive, asymmetry-source]
+depends_on: [stats/wisdom-cleric.yaml, resources/spell-slots-divine.yaml, progression/cleric-class.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Standard action in combat"
+cost:
+  - resource: resources/spell-slots-divine.yaml
+    amount: 1
+
+resolution:
+  method: save-or-effect
+  stat: stats/wisdom-cleric.yaml
+  dc: "10 + spell level + WIS modifier"
+  success: "Spell effect applies (prevention, control, or healing)"
+  failure: "Often half effect or delayed effect; many prevention spells have no save"
+
+proactive_spell_examples:
+  level_3: "Wind Wall -- negates all ranged attacks through the area. Entire archer encounter neutralized."
+  level_5: "Wall of Stone -- physically divides the battlefield. Melee enemies cannot reach the party."
+  level_6: "Blade Barrier -- 11d6 damage wall. Enemies must cross it or be permanently blocked."
+  level_7: "Repulsion -- no creature can approach within 10 ft. Melee combat impossible."
+  level_8: "Antimagic Field -- suppresses all magic in area. Enemy casters neutralized."
+  level_9: "Miracle -- literally anything. Reality bends to Cleric's will."
+
+action_economy_advantage:
+  proactive_action_cost: "1 standard action (cast spell)"
+  proactive_total_rounds: 1
+  reactive_damage_to_match: "Fighter must deal equivalent of prevented damage over 3-5 rounds"
+  reactive_total_rounds: "3-5"
+  efficiency_ratio: "3:1 to 5:1 in favor of proactive prevention"
+
+interactions:
+  - "1 Wall of Stone replaces 3-5 rounds of fighter damage output"
+  - "Dominate Person removes a threat AND adds it to your side. Net 2x swing."
+  - "Blade Barrier deals passive damage while the caster acts normally. Free damage + continued casting."
+  - "Even 'reactive' Cleric spells (Heal) are more efficient than fighter damage because they extend the party's action economy."
+  - "CoDzilla: Cleric casts Divine Power + Righteous Might and fights AS WELL as a fighter while retaining full casting. No equivalent martial buff."
+
+notes:
+  - "The fundamental asymmetry: prevention operates on THREATS, reaction operates on DAMAGE. Threats contain damage, but damage doesn't prevent threats."
+  - "A dead enemy deals 0 damage forever. A Wall prevents damage every round it stands. Reactive damage only reduces future damage incrementally."
+  - "This is not a balance knob -- it's a category error in the design. Proactive and reactive are not on the same axis."

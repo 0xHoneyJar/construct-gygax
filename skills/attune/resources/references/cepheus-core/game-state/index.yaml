@@ -1,6 +1,15 @@
 game: "Cepheus Engine Core"
 tradition: cepheus
 description: "Pre-attuned reference game-state for Cepheus Engine (2D6 SRD), derived from classic Traveller (1977). Covers core resolution, the Effect system, six characteristics, the lifepath career system, and the four primary design tensions of the Cepheus/Traveller tradition. Excludes starship combat, world generation (UWP), full trade rules, and Third Imperium setting material."
+
+design_parameters:
+  target_session_length: long
+  target_audience: enthusiast
+  target_variance: low
+  target_lethality: moderate
+  target_prep: moderate
+  target_player_count: standard
+
 created_at: "2026-04-13T00:00:00Z"
 last_modified_at: "2026-04-13T00:00:00Z"
 
@@ -191,11 +200,17 @@ files:
       - mechanics/skill-level.yaml
     affects: []
 
-dependency_graph_summary:
+graph_integrity:
+  resolved_references: 77
+  stub_count: 0
+  stubs: []
   most_depended_on:
-    - mechanics/resolution-2d6-plus-8.yaml  # All stats feed into it; all mechanics descend from it
-    - mechanics/skill-level.yaml             # Required by resolution, unskilled-penalty, lifepath-gain, tensions
-    - progression/lifepath-careers.yaml      # Required by skill-level, lifepath-gain, entities, mortgage tension
+    - path: mechanics/resolution-2d6-plus-8.yaml
+      dependents: 5
+    - path: mechanics/skill-level.yaml
+      dependents: 4
+    - path: progression/lifepath-careers.yaml
+      dependents: 5
   orphaned: []
   circular: []
 

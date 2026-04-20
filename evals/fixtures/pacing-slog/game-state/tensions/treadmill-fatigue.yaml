@@ -1,0 +1,42 @@
+id: treadmill-fatigue
+name: "Treadmill Fatigue"
+type: tensions
+description: "The tension between the campaign's demand for sustained engagement over 36-48 sessions and the absence of pacing tools to maintain that engagement. The quest structure requires marathon commitment but provides sprint-length motivation."
+tradition: d20
+tags: [pacing, fatigue, engagement, attrition, quest-design]
+depends_on:
+  - resources/macguffin-fragments.yaml
+  - resources/session-time.yaml
+  - progression/quest-arc.yaml
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "The main quest should sustain player engagement across its full duration"
+  rationale: "A quest that takes 48 sessions needs pacing infrastructure -- milestones, escalation, variation, and intermediate rewards. A quest that takes 4 sessions can coast on initial momentum."
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: false
+
+poles:
+  a:
+    name: "Epic Scope"
+    description: "The quest is long and demanding, requiring sustained commitment. Completing it should feel like a genuine achievement."
+    supported_by: [resources/macguffin-fragments.yaml, progression/quest-arc.yaml]
+  b:
+    name: "Session-Level Engagement"
+    description: "Each session should feel rewarding and purposeful, with visible progress and meaningful choices."
+    supported_by: []
+
+health: a-dominant
+health_notes: "The quest achieves epic scope by brute repetition rather than narrative or mechanical escalation. Session-level engagement relies entirely on tactical combat enjoyment, which serves only a subset of player archetypes. There are no intermediate rewards, no narrative milestones, and no pacing variation. The structure assumes infinite player patience and zero real-world scheduling disruption."
+
+fatigue_timeline:
+  sessions_1_to_8: "Initial enthusiasm. Players are exploring the quest structure and their characters are growing."
+  sessions_9_to_16: "Repetition becomes visible. Players have completed 2-4 dungeons and recognize the pattern."
+  sessions_17_to_24: "Midpoint. No narrative milestone marks this as significant. Progress is 4-6/12. Player conversations shift from 'what happens next' to 'how many more of these are there.'"
+  sessions_25_to_36: "Slog. Completion is theoretically close but 3-4 more dungeons remain. Scheduling difficulties compound. One player may have dropped."
+  sessions_37_to_48: "If the group reaches this point, completion is driven by sunk-cost commitment rather than engagement."
