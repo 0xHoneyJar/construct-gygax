@@ -1,0 +1,65 @@
+id: path-scoring
+name: "Path Scoring (Convergent Payoff Curves)"
+type: mechanics
+description: "The scoring engine that converts path-specific actions into victory points. Each path uses a different formula (set collection, area majority, engine building, etc.) but all formulas converge on ~2.5 VP per action. The mathematical convergence is the root cause of the false-choice failure -- different mechanics producing identical expected values."
+tradition: eurogame
+tags: [scoring, convergence, false-choice, point-salad]
+depends_on: [resources/action-budget.yaml, resources/trade-goods.yaml, mechanics/worker-placement-actions.yaml]
+affects: [stats/victory-points.yaml, tensions/path-equivalence.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "End of game (final scoring) plus interim scoring at rounds 4, 7, 10"
+cost: []
+
+resolution:
+  method: deterministic
+  stat: null
+  dc: null
+  success: "Calculate VP from accumulated path progress"
+  failure: null
+
+scoring_formulas:
+  trade:
+    mechanic: "Set collection: score VP for complete sets of trade good types"
+    formula: "3 VP per complete set of 3 different goods + 1 VP per leftover good"
+    expected_per_action: 2.45
+    ceiling: 54
+    floor: 44
+  building:
+    mechanic: "Tile placement: score VP for adjacency bonuses and completed rows"
+    formula: "2 VP per building + 1 VP per adjacency bonus (max 2 per building)"
+    expected_per_action: 2.50
+    ceiling: 54
+    floor: 46
+  agriculture:
+    mechanic: "Engine building: fields produce increasing goods each round"
+    formula: "1 VP per field at end + cumulative harvest bonuses (1 VP per 3 goods harvested)"
+    expected_per_action: 2.55
+    ceiling: 55
+    floor: 47
+  culture:
+    mechanic: "Card drafting: score VP for cultural set bonuses"
+    formula: "Triangular scoring: 1/3/6/10/15 VP for 1/2/3/4/5 cards in a set"
+    expected_per_action: 2.50
+    ceiling: 55
+    floor: 45
+  military:
+    mechanic: "Area majority: score VP for controlling regions"
+    formula: "6/3/1 VP for 1st/2nd/3rd in each of 4 regions"
+    expected_per_action: 2.45
+    ceiling: 54
+    floor: 44
+
+convergence_proof:
+  observation: "All five paths yield 2.45-2.55 VP/action. Over 20 actions, the expected score range is 49-51."
+  variance_source: "Nearly all score variance comes from within-path tactical variance (tile draws, card availability), not between-path strategic choice."
+  information_value_of_path_choice: "~0 VP. Choosing the 'right' path provides no edge."
+  comparison: "In Terraforming Mars, the best engine can outperform the worst by 30+ points. Path choice matters."
+
+notes:
+  - "The scoring formulas are individually well-designed. The problem is that they all land in the same range."
+  - "A fix would introduce context-dependent modifiers: e.g., trade scores more when opponents play military, creating a metagame."
+  - "Alternatively, steepen the payoff curves so commitment to one path yields exponentially more than dabbling."

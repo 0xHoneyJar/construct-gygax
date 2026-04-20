@@ -116,66 +116,197 @@ Whether you are filling gaps after ingestion or building from scratch, the inter
 
 **For guided interview (no source):** Walk through these areas in order, building understanding incrementally.
 
-#### 3a: Game Identity
+#### 3a: Game Identity (All Traditions)
 
 Ask about (skip if already known from source):
 - What is the game called?
-- What tradition does it follow? (Offer the list: d20, PbtA, FitD, OSR, Cepheus, freeform, custom)
+- What tradition does it follow? (Offer the full list: d20, PbtA, FitD, OSR, Cepheus, freeform, custom, eurogame, autobattler, roguelike, deckbuilder, ccg, 4x, tactics, social-deduction, cooperative, idle, extraction, looter, immersive-sim)
 - One-sentence description of what makes this game different
-- What is the core resolution mechanic? (Roll d20+mod vs DC, roll 2d6+stat, dice pool, etc.)
+- What is the core loop? (What does a player DO on their turn / in a round / in a session?)
 
-#### 3b: Stats and Attributes
+**After tradition is identified, branch the interview:**
 
-Ask about (skip if already extracted):
+#### TTRPG Branch (d20, pbta, fitd, osr, cepheus, freeform, custom)
+
+**3b: Stats and Attributes**
 - What stats/attributes do characters have?
 - What are their ranges? (e.g., 1-20 with modifiers, -1 to +3)
 - How are they generated? (Point buy, random roll, fixed array)
 - What does each stat affect mechanically?
 
-#### 3c: Resources and Pools
-
-Ask about:
+**3c: Resources and Pools**
 - What do characters spend? (HP, spell slots, stamina, stress, ammo, luck, etc.)
 - How do they recover? (Rest, downtime, moves, abilities)
-- What happens when a resource hits zero or max? (Death, trauma, out of action)
+- What happens when a resource hits zero or max?
 
-#### 3d: Core Mechanics
-
-Ask about:
-- What are the basic actions a character can take? (Attack, cast, move, help, etc.)
+**3d: Core Mechanics**
+- What are the basic actions a character can take?
 - How does the core resolution work step-by-step?
-- What are the possible outcomes? (For PbtA: 10+/7-9/6-. For d20: success/fail)
+- What are the possible outcomes?
 - Are there reactions, interrupts, or triggered abilities?
 - How does combat flow? (Initiative, turns, rounds, action economy)
 
-#### 3e: Progression
-
-Ask about:
+**3e: Progression**
 - How do characters advance? (XP, milestones, advances, fiction triggers)
-- What do they gain? (Features, stat increases, new moves, new abilities)
-- Are there levels, tiers, or phases of play?
+- What do they gain?
 - How does power scale from start to endgame?
 
-#### 3f: Entities
-
-Ask about:
+**3f: Entities**
 - What character types exist? (Classes, playbooks, archetypes)
 - Are there monsters/NPCs with stat blocks?
 - What items, equipment, or gear matters mechanically?
-- Are there spells, powers, or special abilities with their own rules?
 
-#### 3g: Tensions (Observed or Designed)
+#### Board Game Branch (eurogame, deckbuilder, cooperative)
+
+**3b: Components and Properties**
+- What are the key game pieces? (Cards, tiles, tokens, boards, dice)
+- What measurable properties do they have? (Value, cost, power, victory points)
+
+**3c: Resources and Economy**
+- What resources do players collect and spend? (Money, wood, workers, cards, actions)
+- How do resources enter the game? (Starting supply, generation per turn, market)
+- What are the resource sinks? (Buying, building, trading, scoring)
+
+**3d: Actions and Resolution**
+- What can a player do on their turn? (Place workers, play cards, buy, trade, build)
+- How are outcomes determined? (Deterministic, auction, majority, dice, card draw)
+- What is the turn structure?
+
+**3e: Scoring and End Conditions**
+- How do players score? (Victory points, objectives, area control, set collection)
+- What triggers the end of the game?
+- Are there multiple victory paths?
+
+**3f: Player Interaction**
+- How do players affect each other? (Blocking, trading, attacking, competing for resources)
+
+#### Tactical / Combat Branch (autobattler, tactics)
+
+**3b: Units and Attributes**
+- What types of units/characters exist?
+- What stats define them? (HP, attack, speed, range, cost)
+- How are teams/squads composed?
+
+**3c: Resources**
+- What economy drives the game? (Gold, mana, action points, items)
+- How do resources flow between phases? (Income per round, interest, level-up bonuses)
+
+**3d: Combat and Resolution**
+- How is combat resolved? (Automated, turn-based grid, real-time)
+- What role does positioning play?
+- What synergies exist between unit types?
+
+**3e: Progression**
+- How do units/teams improve within a match? (Leveling, items, augments)
+- Is there progression between matches? (Ranked, unlocks, meta-progression)
+
+#### Card Game Branch (ccg)
+
+**3b: Card Types and Properties**
+- What card types exist? (Creatures, spells, lands, artifacts)
+- What is the cost system? (Mana, energy, resources per turn)
+- What keywords or abilities do cards have?
+
+**3c: Deck Construction**
+- How are decks built? (Minimum/maximum size, copy limits, format restrictions)
+- What archetypes exist? (Aggro, control, combo, midrange)
+
+**3d: Turn Structure and Resolution**
+- What is the turn structure? (Draw, play, attack, pass)
+- How do cards interact? (Stack/priority, combat, targeting)
+
+**3e: Win Conditions**
+- How does a player win? (Life total, deck out, alternate conditions)
+
+#### Social Game Branch (social-deduction)
+
+**3b: Roles and Information**
+- What roles exist? (Town, mafia, neutral, special)
+- What does each role know? (Own role, other roles, partial information)
+- What information is public vs hidden?
+
+**3c: Actions and Phases**
+- What is the phase structure? (Day/night, discussion/vote, action/resolution)
+- What can players do in each phase?
+
+**3d: Elimination and End Conditions**
+- How are players eliminated?
+- What triggers the end? (All evil eliminated, evil majority, special condition)
+
+#### Run-Based Branch (roguelike, extraction, looter)
+
+**3b: Run Structure**
+- What does one run/session look like? (Enter, explore, fight, loot, extract/die)
+- How long is a typical run?
+
+**3c: Build and Progression**
+- What choices define a build? (Items, abilities, upgrades, path selection)
+- What persists between runs? (Unlocks, currency, meta-progression)
+- What is lost on failure? (Everything, some items, progress)
+
+**3d: Loot and Rewards**
+- How is loot distributed? (Random drops, shop, crafting, guaranteed)
+- What rarity system exists?
+- What drives the desire to replay? (Better loot, harder difficulty, different builds)
+
+#### Strategy Branch (4x)
+
+**3b: Phases and Scope**
+- What are the major phases? (Early expansion, mid-game development, late-game conflict)
+- What is the map structure?
+
+**3c: Tech and Progression**
+- How does the tech tree work?
+- What unlocks are available and when?
+
+**3d: Victory Conditions**
+- What victory conditions exist? (Military, science, cultural, economic, score)
+- Are they balanced?
+
+**3e: Diplomacy and Interaction**
+- How do players/factions interact? (Trade, war, alliance, espionage)
+
+#### Incremental Branch (idle)
+
+**3b: Core Loop**
+- What is the basic click/action cycle?
+- What numbers grow and how?
+
+**3c: Prestige and Reset**
+- When and why does the player prestige/reset?
+- What carries over?
+- How does the game change after prestige?
+
+**3d: Automation**
+- What automates and when?
+- What meaningful decisions remain after automation?
+
+#### Systems Branch (immersive-sim)
+
+**3b: Player Abilities**
+- What can the player do? (Combat, stealth, hacking, magic, social)
+- How are abilities acquired and upgraded?
+
+**3c: Level Structure**
+- How are levels/areas structured? (Linear, hub, open world)
+- How do areas interconnect?
+
+**3d: Systemic Interactions**
+- What systems interact with each other? (Fire + oil, hacking + security, stealth + light)
+- Can problems be solved multiple ways?
+
+#### 3g: Tensions (All Traditions)
 
 After gathering the above, identify and confirm tensions:
 - "Based on what you've described, I see a tension between [X] and [Y]. Is that intentional?"
-- "Your resource recovery is tied to [rest type], but combat drains [resource] at [rate]. This creates a pacing tension around [observation]. Does that match your design intent?"
+- Surface tradition-specific tensions (e.g., for eurogame: "engine building vs point racing", for roguelike: "risk-taking vs safe play")
 
 **Interview guidelines:**
 - Ask 2-4 questions at a time, not a wall of 20
 - After each round, summarize what you now understand before asking more
-- Be specific -- "How does Strength affect melee attacks?" not "Tell me about stats"
-- If the user says "it's like 5e" or "standard PbtA moves", use your knowledge to fill in the standard version and ask what differs
-- Stop interviewing when you have enough to generate at least stats, resources, and core mechanics. Entities and tensions can be sparse initially.
+- Be specific — "How does the worker placement interact with the resource market?" not "Tell me about your mechanics"
+- If the user says "it's like Dominion" or "standard eurogame", use your knowledge of that tradition to fill in defaults and ask what differs
+- Stop interviewing when you have enough to generate at least the core loop, key resources, and primary mechanics. Entities and tensions can be sparse initially.
 
 ### Phase 3.5: Intent Capture
 
@@ -248,6 +379,8 @@ Ask in a single batch:
 > 4. **Lethality** — Gentle (consequences rarely permanent), moderate, or brutal (death is common)?
 > 5. **Prep** — Zero-prep, light, moderate, or heavy?
 > 6. **Player count** — Solo, small (2-3), standard (4-5), or large (6+)?
+> 7. **Player interaction** — Direct conflict, indirect competition, cooperative, or solo?
+> 8. **Randomness** — None (deterministic), low, medium, or high?
 
 Record answers in the `design_parameters` section of `index.yaml`. For any the user skips or says "I don't know," leave that field absent (do NOT write a default value — let analysis tools resolve defaults at read time).
 
@@ -268,7 +401,7 @@ id: unique-kebab-case-id
 name: "Human Readable Name"
 type: stats|resources|mechanics|progression|entities|tensions
 description: "What this is and what it does in the game"
-tradition: d20|pbta|fitd|osr|cepheus|freeform|custom
+tradition: d20|pbta|fitd|osr|cepheus|freeform|custom|autobattler|roguelike|deckbuilder|ccg|4x|tactics|eurogame|social-deduction|cooperative|idle|extraction|looter|immersive-sim
 tags: []
 
 status: active|stub|deprecated  # Optional. Default: active (omit for normal entities)
@@ -356,7 +489,7 @@ After writing all entity files, generate or update `grimoires/gygax/game-state/i
 
 ```yaml
 game: "Game Name"
-tradition: d20|pbta|fitd|osr|cepheus|freeform|custom
+tradition: d20|pbta|fitd|osr|cepheus|freeform|custom|autobattler|roguelike|deckbuilder|ccg|4x|tactics|eurogame|social-deduction|cooperative|idle|extraction|looter|immersive-sim
 description: "Brief description of the game"
 created_at: "ISO-8601"
 last_modified_at: "ISO-8601"
@@ -368,8 +501,12 @@ design_parameters:              # All optional. Missing fields use tradition def
   target_lethality: gentle|moderate|brutal
   target_prep: zero-prep|light|moderate|heavy
   target_player_count: solo|small|standard|large
+  target_interaction: direct-conflict|indirect-competition|cooperative|solo
+  target_randomness: none|low|medium|high
 
 # Tradition defaults (used when a field is omitted):
+#
+# TTRPG traditions:
 #   | Parameter      | d20        | pbta         | fitd         | osr       | cepheus     | freeform  | custom       |
 #   |----------------|------------|--------------|--------------|-----------|-------------|-----------|--------------|
 #   | session_length | long       | medium       | medium       | medium    | long        | short     | medium       |
@@ -378,6 +515,31 @@ design_parameters:              # All optional. Missing fields use tradition def
 #   | lethality      | moderate   | moderate     | moderate     | brutal    | moderate    | gentle    | moderate     |
 #   | prep           | moderate   | light        | light        | moderate  | moderate    | zero-prep | moderate     |
 #   | player_count   | standard   | standard     | standard     | standard  | standard    | standard  | standard     |
+#   | interaction    | cooperative| cooperative  | cooperative  | cooperative| cooperative| cooperative| cooperative |
+#   | randomness     | medium     | medium       | medium       | medium    | low         | none      | medium       |
+#
+# Non-TTRPG traditions:
+#   | Parameter      | autobattler | roguelike | deckbuilder | ccg     | 4x      | tactics | eurogame |
+#   |----------------|-------------|-----------|-------------|---------|---------|---------|----------|
+#   | session_length | medium      | medium    | medium      | short   | long    | medium  | medium   |
+#   | audience       | intermediate| intermediate| intermediate| intermediate| enthusiast| intermediate| enthusiast |
+#   | variance       | medium      | high      | medium      | medium  | medium  | medium  | low      |
+#   | lethality      | moderate    | brutal    | gentle      | moderate| moderate| moderate| gentle   |
+#   | prep           | zero-prep   | zero-prep | zero-prep   | light   | moderate| zero-prep| light   |
+#   | player_count   | large       | solo      | standard    | solo    | solo    | solo    | standard |
+#   | interaction    | indirect-competition | solo | indirect-competition | direct-conflict | direct-conflict | direct-conflict | indirect-competition |
+#   | randomness     | medium      | high      | medium      | medium  | medium  | low     | low      |
+#
+#   | Parameter      | social-deduction | cooperative | idle   | extraction | looter   | immersive-sim |
+#   |----------------|-----------------|-------------|--------|-----------|----------|---------------|
+#   | session_length | short           | medium      | campaign| medium   | campaign | long          |
+#   | audience       | newcomer        | newcomer    | newcomer| enthusiast| intermediate| intermediate|
+#   | variance       | high            | medium      | low    | high      | medium   | low           |
+#   | lethality      | moderate        | moderate    | gentle | brutal    | moderate | moderate      |
+#   | prep           | zero-prep       | light       | zero-prep| zero-prep| zero-prep| zero-prep    |
+#   | player_count   | large           | standard    | solo   | standard  | solo     | solo          |
+#   | interaction    | social          | cooperative | solo   | direct-conflict | solo | solo         |
+#   | randomness     | low             | medium      | none   | medium    | high     | none          |
 
 entity_count:
   stats: 0
@@ -426,7 +588,7 @@ For each generated YAML file, verify:
 - [ ] All common base fields are present (`id`, `name`, `type`, `description`, `tradition`, `tags`, `depends_on`, `affects`, `created_by`, `created_at`, `last_modified_by`, `last_modified_at`)
 - [ ] `id` is kebab-case and unique within its entity type directory
 - [ ] `type` matches the directory the file lives in (`stats/` files have `type: stats`)
-- [ ] `tradition` is one of: d20, pbta, fitd, osr, cepheus, freeform, custom
+- [ ] `tradition` is one of: d20, pbta, fitd, osr, cepheus, freeform, custom, autobattler, roguelike, deckbuilder, ccg, 4x, tactics, eurogame, social-deduction, cooperative, idle, extraction, looter, immersive-sim
 - [ ] Type-specific required fields are present (e.g., `range` for stats, `pool` for resources)
 
 #### 6b: Cross-Reference Integrity

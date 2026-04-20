@@ -1,0 +1,83 @@
+fixture: eurogame-point-salad
+expected_findings:
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: false-choice
+    description_contains: "convergence"
+    entity_refs:
+      - mechanics/path-scoring.yaml
+      - stats/victory-points.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    category: flat-payoff
+    description_contains: "VP per action"
+    entity_refs:
+      - mechanics/path-scoring.yaml
+      - resources/action-budget.yaml
+
+  - skill: augury
+    layer: action-economy
+    severity: Warning
+    category: false-scarcity
+    description_contains: "blocking"
+    entity_refs:
+      - mechanics/worker-placement-actions.yaml
+      - resources/action-budget.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: inert-resource
+    description_contains: "trade goods"
+    entity_refs:
+      - resources/trade-goods.yaml
+
+  - skill: cabal
+    signal: dead-time
+    archetype: Optimizer
+    description_contains: "path choice"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Veteran
+    description_contains: "meaningless"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "false choice"
+
+  - skill: lore
+    tradition: eurogame
+    heuristic: "paths-must-differentiate-on-outcome"
+    severity: Critical
+    description_contains: "convergence"
+    entity_refs:
+      - entities/victory-paths.yaml
+      - tensions/path-equivalence.yaml
+
+  - skill: lore
+    tradition: eurogame
+    heuristic: "blocking-must-have-cost"
+    severity: Warning
+    description_contains: "interaction"
+    entity_refs:
+      - mechanics/worker-placement-actions.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "Worker placement resolution is deterministic and functions correctly. The problem is not how actions resolve but that all actions yield equivalent outcomes."
+
+  - skill: augury
+    layer: progression
+    severity: Critical
+    reason: "No progression system exists in this fixture. The score convergence is inherent in the scoring formulas, not in a leveling or advancement mechanic."
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    reason: "Cognitive load is moderate and appropriate for a eurogame. The problem is not that the game is hard to understand but that understanding it reveals the choices are meaningless."

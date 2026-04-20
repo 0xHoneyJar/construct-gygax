@@ -52,7 +52,7 @@ VALID_LAYERS="resolution action-economy resource-economy progression pacing cogn
 VALID_SIGNALS="confusion excitement dead-time decision-paralysis frustration cool-moment cognitive-overload mastery-reward"
 VALID_ARCHETYPES="Optimizer Explorer Storyteller Rules Lawyer Newcomer Chaos Agent GM Anxious Player Veteran"
 VALID_SEVERITIES="Critical Warning Observation"
-VALID_TRADITIONS="d20 pbta fitd osr cepheus freeform custom"
+VALID_TRADITIONS="d20 pbta fitd osr cepheus freeform custom autobattler roguelike deckbuilder ccg 4x tactics eurogame social-deduction cooperative idle extraction looter immersive-sim"
 VALID_ENTITY_TYPES="stats resources mechanics progression entities tensions"
 
 echo "Gygax Evaluation Harness — Structural Validation"

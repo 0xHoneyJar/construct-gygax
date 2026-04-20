@@ -1,0 +1,90 @@
+fixture: social-deduction-elimination
+expected_findings:
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    category: dead-time
+    description_contains: "first night"
+    entity_refs:
+      - mechanics/night-phase.yaml
+      - resources/alive-players.yaml
+
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    category: premature-elimination
+    description_contains: "zero actions"
+    entity_refs:
+      - mechanics/night-phase.yaml
+      - stats/player-information.yaml
+
+  - skill: augury
+    layer: action-economy
+    severity: Critical
+    category: zero-agency
+    description_contains: "eliminated"
+    entity_refs:
+      - resources/alive-players.yaml
+      - mechanics/day-phase.yaml
+
+  - skill: augury
+    layer: pacing
+    severity: Warning
+    category: idle-time
+    description_contains: "30 minutes"
+    entity_refs:
+      - resources/alive-players.yaml
+      - tensions/elimination-pacing.yaml
+
+  - skill: cabal
+    signal: frustration
+    archetype: Newcomer
+    description_contains: "eliminated"
+
+  - skill: cabal
+    signal: dead-time
+    archetype: Storyteller
+    description_contains: "watch"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Anxious Player
+    description_contains: "random"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "first-night"
+
+  - skill: lore
+    tradition: social-deduction
+    heuristic: "never-eliminate-before-first-action"
+    severity: Critical
+    description_contains: "meaningful"
+    entity_refs:
+      - mechanics/night-phase.yaml
+      - tensions/elimination-pacing.yaml
+
+  - skill: lore
+    tradition: social-deduction
+    heuristic: "dead-time-kills-retention"
+    severity: Critical
+    description_contains: "idle"
+    entity_refs:
+      - resources/alive-players.yaml
+      - mechanics/day-phase.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "The deduction and voting mechanics work as designed. Day-phase discussion, accusation, and majority vote are all functional social deduction mechanics. The failure is in pacing, not resolution."
+
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    reason: "There is no resource economy failure. The player pool shrinks as intended by the rules. The problem is WHEN it shrinks (too early), not that it shrinks at all."
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    reason: "Cognitive load is appropriate for the genre. Social deduction is inherently accessible. The problem is not complexity but exclusion."

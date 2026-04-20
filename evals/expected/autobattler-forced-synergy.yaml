@@ -1,0 +1,90 @@
+fixture: autobattler-forced-synergy
+expected_findings:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    category: multiplicative-stacking
+    description_contains: "multiplicative"
+    entity_refs:
+      - entities/trait-synergies.yaml
+      - stats/unit-combat-stats.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: economic-distortion
+    description_contains: "gold"
+    entity_refs:
+      - resources/gold-economy.yaml
+      - mechanics/drafting-phase.yaml
+
+  - skill: augury
+    layer: action-economy
+    severity: Critical
+    category: degenerate-strategy
+    description_contains: "draft"
+    entity_refs:
+      - mechanics/drafting-phase.yaml
+      - entities/trait-synergies.yaml
+
+  - skill: augury
+    layer: resolution
+    severity: Warning
+    category: no-counterplay
+    description_contains: "counter"
+    entity_refs:
+      - entities/trait-synergies.yaml
+      - mechanics/automated-combat.yaml
+
+  - skill: cabal
+    signal: excitement
+    archetype: Optimizer
+    description_contains: "force"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Chaos Agent
+    description_contains: "creative"
+
+  - skill: cabal
+    signal: dead-time
+    archetype: Veteran
+    description_contains: "solved"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "single comp"
+
+  - skill: lore
+    tradition: autobattler
+    heuristic: "multiplicative-bonuses-need-caps"
+    severity: Critical
+    description_contains: "multiplicative"
+    entity_refs:
+      - entities/trait-synergies.yaml
+      - tensions/forced-meta.yaml
+
+  - skill: lore
+    tradition: autobattler
+    heuristic: "contestation-must-self-balance"
+    severity: Critical
+    description_contains: "shared pool"
+    entity_refs:
+      - mechanics/drafting-phase.yaml
+      - entities/unit-roster.yaml
+
+expected_absent:
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    reason: "Game pacing is appropriate. Rounds resolve at normal speed. The problem is strategic diversity, not temporal structure."
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    reason: "The game is actually less cognitively demanding in the forced meta -- players don't need to evaluate alternatives. Cognitive load is low, which is part of the staleness problem."
+
+  - skill: augury
+    layer: progression
+    severity: Critical
+    reason: "No progression system exists. Each game is self-contained. The failure is within a single game's draft and combat systems."

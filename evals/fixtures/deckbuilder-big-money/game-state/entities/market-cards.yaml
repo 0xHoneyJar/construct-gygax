@@ -1,0 +1,70 @@
+id: market-cards
+name: "Market Card Supply"
+type: entities
+description: "The 10 kingdom card piles available for purchase, plus base treasure and VP supplies. The kingdom cards are the engine components -- but they cost 3-5 coins, provide effects that require other cards to be useful, and don't draw replacement cards. Buying an engine card dilutes your deck without guaranteeing the card will appear when needed."
+tradition: deckbuilder
+tags: [market, kingdom-cards, supply]
+depends_on: []
+affects: [mechanics/buy-phase.yaml, progression/engine-scaling.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+base_supply:
+  copper: {cost: 0, coins: 1, copies: 60}
+  silver: {cost: 3, coins: 2, copies: 40}
+  gold: {cost: 6, coins: 3, copies: 30}
+  estate: {cost: 2, vp: 1, copies: 24}
+  duchy: {cost: 5, vp: 3, copies: 12}
+  province: {cost: 8, vp: 6, copies: 8}
+
+kingdom_cards:
+  village:
+    cost: 3
+    effect: "+1 Card, +2 Actions"
+    role: "Action enabler (lets you play multiple actions)"
+    standalone_value: "0 net cards, 0 net coins"
+    combo_value: "Unlocks multi-action turns"
+    note: "Does nothing alone. Requires other action cards to be useful."
+  smithy:
+    cost: 4
+    effect: "+3 Cards"
+    role: "Draw engine"
+    standalone_value: "+2 net cards (draw 3, played 1)"
+    combo_value: "Draws into combo pieces"
+    note: "Best standalone engine card. Still worse than Silver for buying power."
+  market:
+    cost: 5
+    effect: "+1 Card, +1 Action, +1 Buy, +1 Coin"
+    role: "Swiss army knife"
+    standalone_value: "+1 coin, net neutral hand size"
+    combo_value: "Provides +Buy for double purchases"
+    note: "Costs 5 but only adds 1 coin. Silver costs 3 and adds 2 coins."
+  workshop:
+    cost: 3
+    effect: "Gain a card costing up to 4"
+    role: "Free card acquisition"
+    standalone_value: "Gain a Silver-equivalent without paying"
+    combo_value: "Accelerates engine assembly"
+    note: "Decent ROI but gains go to discard, not hand. Slow."
+  woodcutter:
+    cost: 3
+    effect: "+1 Buy, +2 Coins"
+    role: "Buy accelerator"
+    standalone_value: "+2 coins (same as Silver, but costs an action)"
+    combo_value: "Enables double-buy turns"
+    note: "Strictly worse than Silver as a standalone card."
+
+engine_viability_assessment:
+  best_engine_combo: "Village + Smithy chain"
+  cards_needed: "3 Villages + 2 Smithys = 5 cards, 17 coins"
+  turns_to_assemble: "8-10 turns"
+  expected_output_when_online: "Draw 10+ cards per turn, generate 8-12 coins"
+  problem: "By turn 10, Big Money has already bought 3 Provinces"
+
+notes:
+  - "No kingdom card in this market is better than Silver on a per-coin basis when bought standalone."
+  - "Engine cards only exceed Silver value when combined -- but combinations are unreliable in a 5-card draw."
+  - "The market lacks trashing (to thin dead cards), cantrips (to maintain hand quality), and cheap +Actions (to enable combos on budget)."
+  - "Fix: include a trasher, make Villages cost 2, or give engine cards +1 Card baseline so they don't dilute."

@@ -1,0 +1,63 @@
+id: role-assignments
+name: "Role Assignments"
+type: entities
+description: "Secret role distribution at game start. 2 wolves, 1 seer, 1 doctor, 4 villagers in an 8-player game. Role assignment is random and hidden. The seer and doctor have night actions; villagers have none. If the seer or doctor is killed night 1, the village loses a critical role before it activates. If a villager is killed night 1, a player with NO special abilities sat down only to be told they're dead."
+tradition: social-deduction
+tags: [roles, secret, assignment]
+depends_on: []
+affects: [mechanics/night-phase.yaml, mechanics/day-phase.yaml, stats/player-information.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+role_distribution:
+  wolves: 2
+  seer: 1
+  doctor: 1
+  villagers: 4
+  total: 8
+
+role_details:
+  wolf:
+    night_action: "Choose a player to kill"
+    day_action: "Blend in, deflect suspicion, accuse villagers"
+    agency: "high (always has an action)"
+    elimination_impact: "Wolves are never eliminated at night. They always get to play."
+  seer:
+    night_action: "Choose a player to investigate (learn if wolf or not)"
+    day_action: "Use gathered info to guide village discussion"
+    agency: "high (unique information advantage)"
+    elimination_impact: "If killed night 1: investigation never happens. Village loses primary info tool."
+  doctor:
+    night_action: "Choose a player to protect from night kill"
+    day_action: "Standard villager discussion"
+    agency: "medium (protective action but no info generation)"
+    elimination_impact: "If killed night 1: no protection was ever used. Role was wasted."
+  villager:
+    night_action: "None. Sit with eyes closed."
+    day_action: "Discuss, accuse, vote"
+    agency: "low (no special abilities)"
+    elimination_impact: "If killed night 1: player had literally zero game actions. Sat down, got a card, died."
+
+first_night_kill_probabilities:
+  any_given_player: 0.125
+  villager: 0.50
+  seer: 0.125
+  doctor: 0.125
+  wolf: 0.0
+  note: "Wolves are never first-night victims. They always participate. Every other player has a 12.5% chance of immediate elimination."
+
+villager_night_1_death_experience:
+  actions_taken: 0
+  information_gained: 0
+  social_interactions: 0
+  contribution_to_game: "Role reveal on death (minimal information for survivors)"
+  play_time: "30 seconds (receive role card, close eyes, told you're dead)"
+  wait_time: "30-45 minutes"
+
+notes:
+  - "50% chance the first-night victim is a vanilla villager -- a player with no special role, no night action, nothing."
+  - "That player's entire game experience is: sit down, receive card, close eyes, open eyes, you're dead, watch."
+  - "Fix: no elimination until after the first day phase. Night 1 could wound instead of kill, or reveal partial information."
+  - "Blood on the Clocktower fixes this by giving every player a unique ability and letting dead players retain one vote."

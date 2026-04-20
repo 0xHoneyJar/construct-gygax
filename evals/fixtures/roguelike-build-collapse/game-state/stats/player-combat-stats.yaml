@@ -1,0 +1,65 @@
+id: player-combat-stats
+name: "Player Combat Stats"
+type: stats
+description: "Base combat statistics modified by items and build choices. Attack damage, attack speed, lifesteal percentage, AoE radius, armor, and HP. The Vampire Lifesteal build stacks lifesteal percentage with AoE damage to create healing that scales with enemy count -- more enemies means more healing, inverting the intended difficulty curve."
+tradition: roguelike
+tags: [combat, stats, scaling]
+depends_on: []
+affects: [mechanics/combat-resolution.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+base_stats:
+  attack_damage:
+    base: 10
+    per_floor_scaling: "+2"
+    item_scaling: "+5 to +25 per item"
+  attack_speed:
+    base: 1.0
+    unit: "attacks per second"
+  lifesteal:
+    base: 0.0
+    note: "No innate lifesteal. Must be acquired from items."
+  aoe_radius:
+    base: 0
+    unit: "tiles"
+    note: "No innate AoE. Single-target by default."
+  armor:
+    base: 5
+    damage_reduction_formula: "armor / (armor + 100)"
+  max_hp:
+    base: 100
+    per_floor_scaling: "+0 (does not scale naturally)"
+
+lifesteal_interaction:
+  formula: "healing_per_attack = damage_dealt * lifesteal_percentage * enemies_hit"
+  single_target_example:
+    damage: 50
+    lifesteal: 0.25
+    enemies: 1
+    healing: 12.5
+  aoe_example:
+    damage: 50
+    lifesteal: 0.25
+    enemies: 6
+    healing: 75
+    note: "AoE lifesteal heals 75 HP per attack against 6 enemies. Max HP is 100. Effectively invincible."
+
+vampire_build_vs_base:
+  base_stats_floor_10:
+    damage_per_second: 30
+    healing_per_second: 0
+    effective_hp: 100
+    survival_time: "12 seconds against floor 10 enemies"
+  vampire_build_floor_10:
+    damage_per_second: 75
+    healing_per_second: 93
+    effective_hp: "infinite (healing exceeds incoming damage)"
+    survival_time: "infinite"
+
+notes:
+  - "The core problem: lifesteal heals per-enemy-hit, not per-attack. AoE multiplies healing linearly with enemy count."
+  - "This means the 'harder' a floor is (more enemies), the MORE the Vampire build heals. Difficulty is inverted."
+  - "Fix: cap lifesteal healing per attack (not per hit), or make lifesteal and AoE mutually exclusive."

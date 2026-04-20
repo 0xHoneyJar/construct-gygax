@@ -1,0 +1,56 @@
+id: engine-scaling
+name: "Engine Scaling (Too Little, Too Late)"
+type: progression
+description: "The engine's power curve over the course of the game. Engines start weak (turns 1-5: investment phase), become mediocre (turns 6-10: partial assembly), and become strong (turns 11-15: online). But the game ends at turn 14-16. The engine has 1-3 turns of actual advantage -- not enough to overcome Big Money's 10-turn head start on VP acquisition."
+tradition: deckbuilder
+tags: [engine, scaling, timing, progression]
+depends_on: [mechanics/draw-and-play.yaml, resources/deck-composition.yaml]
+affects: [stats/buying-power.yaml, tensions/engine-vs-big-money.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+progression_table:
+  turns_1_5:
+    phase: "Investment"
+    engine_buying_power: 3.0
+    big_money_buying_power: 5.2
+    engine_purchases: "Action cards (building the machine)"
+    engine_vp_purchased: 0
+    big_money_vp_purchased: 3
+  turns_6_10:
+    phase: "Assembly"
+    engine_buying_power: 5.5
+    big_money_buying_power: 6.8
+    engine_purchases: "Mix of actions and first treasures/VP"
+    engine_vp_purchased: 6
+    big_money_vp_purchased: 18
+  turns_11_15:
+    phase: "Online"
+    engine_buying_power: 8.2
+    big_money_buying_power: 7.4
+    engine_purchases: "VP cards (engine finally producing surplus)"
+    engine_vp_purchased: 24
+    big_money_vp_purchased: 42
+    note: "Engine outspends Big Money per-turn but started buying VP 6 turns later."
+
+cumulative_comparison:
+  total_vp_big_money_turn_15: 48
+  total_vp_engine_turn_15: 32
+  vp_gap: 16
+  provinces_equivalent: "2.6 provinces (~16 VP)"
+  note: "The engine would need 4-5 extra turns of being 'online' to close this gap. The game doesn't give them."
+
+scaling_failure_diagnosis:
+  root_cause: "Engine cards cost too much relative to game length"
+  setup_turns_needed: 10
+  game_turns_available: 15
+  exploitation_window: "5 turns (33% of game)"
+  big_money_exploitation_window: "12 turns (80% of game)"
+  ratio: "Big Money exploits 2.4x longer than Engine"
+
+notes:
+  - "This is a classic setup-vs-payoff timing failure. The engine DOES eventually outperform -- just not in time."
+  - "Dominion solved this by including powerful trashers and +Action/+Draw cards that accelerate engine assembly."
+  - "Fix: shorten engine setup (cheaper cards, cantrips), extend game length (more provinces), or penalize Big Money (VP cards cost more, treasures have diminishing returns)."

@@ -1,0 +1,55 @@
+id: alive-players
+name: "Alive Player Pool"
+type: resources
+description: "The pool of active players. Shrinks by 1-2 per full round (night kill + day vote). This is the game's primary resource -- each elimination narrows the deduction space but also removes a participant. The design failure is in the rate of early elimination: the pool shrinks before players have had time to generate meaningful play."
+tradition: social-deduction
+tags: [players, elimination, attrition]
+depends_on: [mechanics/night-phase.yaml, mechanics/day-phase.yaml]
+affects: [tensions/elimination-pacing.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  starting: 8
+  min: 2
+  elimination_rate: "1-2 per round (night + day)"
+
+attrition_timeline:
+  round_0: {alive: 8, eliminated: 0, eliminated_with_zero_actions: 0}
+  round_1: {alive: 6, eliminated: 2, eliminated_with_zero_actions: 1, note: "Night kill (0 actions) + day vote (target had 1 day phase)"}
+  round_2: {alive: 4, eliminated: 4, eliminated_with_zero_actions: 1, note: "Second night kill victim had 1 day phase"}
+  round_3: {alive: 3, eliminated: 5, note: "Game often ends here (3 players, 1 wolf = wolf wins or final vote)"}
+  round_4: {alive: 2, eliminated: 6, note: "Endgame if it reaches this point"}
+
+idle_time_per_eliminated:
+  first_night_victim:
+    active_minutes: 0
+    idle_minutes: 35
+    game_total_minutes: 40
+    active_ratio: 0.00
+  first_day_victim:
+    active_minutes: 8
+    idle_minutes: 27
+    game_total_minutes: 40
+    active_ratio: 0.20
+  second_night_victim:
+    active_minutes: 12
+    idle_minutes: 18
+    game_total_minutes: 40
+    active_ratio: 0.30
+  survivor:
+    active_minutes: 35
+    idle_minutes: 0
+    game_total_minutes: 40
+    active_ratio: 0.88
+
+experience_equity:
+  gini_coefficient: 0.42
+  note: "A Gini coefficient of 0.42 for play-time distribution means severe inequality. Some players get a full game, others get nothing."
+
+notes:
+  - "Player elimination works when everyone has had meaningful play time. The first-night kill violates this."
+  - "One Night Ultimate Werewolf solved this by removing elimination entirely -- all deduction, one vote, no idle time."
+  - "Blood on the Clocktower solved this by giving dead players a final vote, keeping them engaged."

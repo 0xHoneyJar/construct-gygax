@@ -1,0 +1,339 @@
+tradition: idle
+name: "Idle/Incremental Game Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for idle and incremental games (Cookie Clicker, Melvor Idle, NGU Idle,
+  Idle Slayer, Antimatter Dimensions, Realm Grinder, etc.). Distilled from the incremental
+  games community, developer postmortems, r/incremental_games discourse, and the collective
+  design wisdom of a genre built entirely on feedback loops and number psychology.
+
+heuristics:
+  # --- PROGRESSION ---
+
+  - id: prestige-curve-flatness
+    name: "Prestige Curve Flatness"
+    category: progression
+    severity: critical
+    tradition_specific: true
+    description: |
+      The prestige curve defines when resetting becomes attractive. Too flat: the bonus from
+      prestiging is marginal, so players never reset and the game stalls in a linear grind.
+      Too steep: players feel forced to prestige every few minutes, never experiencing the
+      satisfaction of a long run. The ideal curve makes early prestiges feel transformative
+      (2-5x multiplier) and later prestiges feel incremental but still worthwhile.
+    detection: |
+      Check prestige mechanics for the multiplier formula. Plot prestige bonus against time
+      invested per run. If the first prestige yields less than 2x speed improvement, the curve
+      is too flat. If optimal play requires prestiging every 5 minutes or less, the curve is
+      too steep. Look for an inflection point where prestige value per time invested peaks.
+
+  - id: prestige-resource-carryover
+    name: "Prestige Resource Carryover Balance"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      What carries over after prestige defines the game's long-term identity. Too much carryover:
+      prestige feels meaningless, just a multiplier bump. Too little: players repeat the exact
+      same early game every run, which is tedious by the third cycle. The best designs let players
+      skip mastered content (auto-unlock early upgrades) while preserving the feeling that
+      prestige was a meaningful reset.
+    detection: |
+      Catalog resources and upgrades. Divide into "reset on prestige" and "persists through
+      prestige." If persistent resources trivialize the first 80% of a fresh run, carryover
+      is too generous. If the player must manually re-buy the same 20 upgrades every prestige,
+      the early game repetition will cause attrition.
+
+  - id: meaningful-rebirth-bonuses
+    name: "Meaningful Rebirth Bonuses"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      Each prestige layer must offer qualitatively new mechanics, not just bigger numbers.
+      A prestige that only gives "+X% to all production" is a number change. A prestige that
+      unlocks a new resource type, a new automation tier, or a new mini-game gives the player
+      a reason to engage again. Without new mechanics, prestige is just "do the same thing but
+      faster," which has a shelf life of 2-3 resets before boredom sets in.
+    detection: |
+      Check each prestige layer for new mechanics introduced. If a prestige layer only grants
+      numerical multipliers or percentage bonuses without introducing new systems, resource
+      types, or interaction patterns, the rebirth lacks qualitative depth. Count unique mechanics
+      per prestige tier -- fewer than 2 new systems per tier signals a content-thin reset.
+
+  - id: feature-unlock-pacing
+    name: "Feature Unlock Pacing"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      New features (automation, prestige layers, mini-games, new resource types) must arrive
+      at a cadence that sustains curiosity. Front-loading all features in the first hour leaves
+      nothing to discover. Spacing features too far apart creates deserts where nothing new
+      happens for days. The ideal pattern: a new feature every 15-30 minutes in early game,
+      every few hours in mid-game, and every few days in late game.
+    detection: |
+      Map feature unlock times across the full progression timeline. If more than 3 features
+      unlock in the first 30 minutes and then nothing new appears for 4+ hours, the pacing
+      is front-loaded. If the longest gap between feature unlocks exceeds 2x the previous gap,
+      there is a content desert. Check if the game communicates upcoming features to sustain
+      anticipation.
+
+  - id: tutorial-onboarding-flow
+    name: "Tutorial and Onboarding Flow"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      Idle games must teach their own vocabulary (prestige, ascension, automation, offline
+      gains). A tutorial that explains everything upfront overwhelms. No tutorial leaves players
+      confused by unfamiliar mechanics. The best onboarding introduces one concept at a time,
+      lets the player experience it, then introduces the next. Crucially, the tutorial must
+      teach "when to prestige" -- the single most confusing moment for new idle players.
+    detection: |
+      Check for tutorial or onboarding mechanics. If the game has a prestige system but no
+      guidance on when to first prestige, new players will either prestige too early (losing
+      progress for minimal gain) or too late (grinding past the optimal reset point). Check if
+      the tutorial covers: basic production, first upgrade, first automation, first prestige.
+
+  # --- RESOURCES ---
+
+  - id: soft-hard-currency-balance
+    name: "Soft vs Hard Currency Balance"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Soft currency (earned through play) and hard currency (premium, often purchased) must
+      coexist without the hard currency rendering soft currency meaningless. If premium currency
+      buys permanent multipliers that dwarf anything earnable through play, free players hit
+      walls that paying players skip. This is the central design tension of F2P idle games,
+      and getting it wrong kills either revenue or retention.
+    detection: |
+      Identify all currency types and their sources. If any purchasable resource provides a
+      permanent multiplier exceeding what 24 hours of active play earns, the pay-to-progress
+      ratio is aggressive. If hard currency is purely cosmetic, check whether the game can
+      sustain itself financially. Look for "whale traps" -- purchases that stack multiplicatively.
+
+  - id: upgrade-cost-scaling
+    name: "Upgrade Cost Scaling Curve"
+    category: resources
+    severity: critical
+    tradition_specific: true
+    description: |
+      Upgrade costs must scale in harmony with income growth. If costs scale exponentially but
+      income scales linearly, the player hits a wall. If income scales faster than costs, the
+      game trivializes itself. The standard approach is exponential cost with exponential income,
+      tuned so that the time between meaningful upgrades remains roughly constant (2-5 minutes
+      for active play, 30-60 minutes for idle phases).
+    detection: |
+      Extract upgrade cost formulas and income growth curves. Plot the ratio of cost-to-income
+      over progression. If the ratio increases monotonically, the player is falling behind and
+      will hit a wall. If it decreases, the game accelerates and trivializes. The ideal: a
+      roughly constant ratio with periodic compressions (prestige resets the ratio).
+
+  - id: ad-monetization-pressure
+    name: "Ad Monetization Pressure on Design"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      When ad-watching provides meaningful bonuses (2x production for 4 hours, instant
+      resource injection, skip timers), the game's pacing is designed around the assumption
+      that players watch ads. This means non-ad pacing is deliberately degraded to make ads
+      feel necessary. If removing all ad bonuses makes the game feel broken or stalled, the
+      design has been compromised by monetization.
+    detection: |
+      Identify all ad-reward mechanics. Remove their bonuses from the progression model and
+      check if the game still progresses at a reasonable pace. If removing ad bonuses doubles
+      or triples the time between meaningful progression events, the base pacing is artificially
+      slowed to sell ad-watches.
+
+  # --- PACING ---
+
+  - id: idle-to-active-ratio
+    name: "Idle-to-Active Ratio"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      The ratio of idle time (game progresses without input) to active time (player makes
+      meaningful decisions) defines the game's identity. Pure idle with no active decisions
+      becomes a screensaver. Pure active with no idle component is just a clicker with extra
+      steps. The ratio should match the target audience: casual players want 90% idle / 10%
+      active. Engaged players want 50/50 with rich active phases.
+    detection: |
+      Measure the duration of active decision-making sessions versus idle accumulation phases.
+      If a player can be away for 8 hours and return to make decisions for less than 30 seconds,
+      the active phase is too thin. If the game demands attention every 2 minutes to avoid
+      efficiency loss, it is not actually an idle game.
+
+  - id: decision-density
+    name: "Decision Density Between Idle Phases"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When a player returns from an idle phase, they should face a cluster of meaningful
+      decisions: which upgrades to buy, whether to prestige, where to allocate resources,
+      which automation to adjust. If returning from idle means clicking one button and going
+      idle again, the game has no decision density. Each return should feel like opening a
+      puzzle box, not checking a progress bar.
+    detection: |
+      Count distinct decisions available after a typical idle accumulation period. If fewer
+      than 3 meaningful choices exist on return (where "meaningful" means the outcome differs
+      based on choice), decision density is too low. Check if the game queues up decisions
+      during idle time or if all decisions are immediately obvious.
+
+  - id: wall-detection
+    name: "Progress Wall Detection"
+    category: pacing
+    severity: critical
+    tradition_specific: true
+    description: |
+      A wall is where progress effectively stops: income cannot reach the next upgrade cost
+      in any reasonable timeframe. Walls kill idle games because the core promise is "you are
+      always progressing." Intentional walls (before prestige points) must be clearly signaled
+      so the player knows to prestige. Unintentional walls (bad cost scaling, missing upgrades)
+      feel like the game is broken.
+    detection: |
+      For each upgrade tier, compute time-to-next-upgrade at current income rate. If any gap
+      exceeds 10x the average gap for that progression phase, a wall exists. Check if walls
+      coincide with prestige thresholds (intentional) or occur mid-progression (unintentional).
+      Unintentional walls often appear where two exponential curves diverge.
+
+  - id: offline-progression-value
+    name: "Offline Progression Value"
+    category: pacing
+    severity: critical
+    tradition_specific: true
+    description: |
+      When a player closes the game and returns 8 hours later, what do they find? Nothing:
+      player churns. A tiny trickle: player feels punished for having a life. A generous
+      accumulation: player feels rewarded for patience. Too much: player has nothing to do
+      because offline gains already bought everything. The offline rate should be meaningful
+      but less than active play, creating an incentive to check in without punishing absence.
+    detection: |
+      Compare offline income rate against active income rate. If offline rate is 0% of active,
+      the game punishes closing it. If offline is less than 10% of active, gains feel negligible.
+      If offline is 50%+ of active, there is little reason to play actively. The sweet spot is
+      typically 20-40% of active income, with a cap on maximum offline accumulation time.
+
+  - id: long-term-retention-hooks
+    name: "Long-Term Retention Hooks"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      After the initial progression rush fades (days 1-7), what keeps players returning? Daily
+      rewards, limited-time events, challenge modes, community milestones, seasonal content,
+      or deep prestige layers that take weeks to exhaust. Without retention hooks, the game
+      peaks at day 3 and declines. The hooks must offer new experiences, not just bigger numbers
+      -- "do the same loop but the numbers are larger" is not retention.
+    detection: |
+      Identify mechanics that activate on a daily, weekly, or seasonal cadence. If no time-gated
+      content exists, the game relies entirely on its progression depth for retention. Check if
+      prestige layers introduce genuinely new systems or just reset numbers. If the game has no
+      content that is exclusive to day-7+ players, long-term retention is unsupported.
+
+  # --- MECHANICS ---
+
+  - id: automation-gate-timing
+    name: "Automation Gate Timing"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Automation (auto-buy upgrades, auto-prestige, auto-collect) is the idle genre's core
+      quality-of-life mechanic. Gate it too early and players feel they have nothing to do.
+      Gate it too late and players burn out on repetitive clicking before they reach the
+      interesting parts. Each automation tier should unlock when the manual version of that
+      action has been performed enough times that the player understands it and is tired of it.
+    detection: |
+      Map automation unlock points against the number of times a player would manually perform
+      the automated action before unlocking it. If automation for a 30-second loop unlocks after
+      100+ manual cycles, the grind is excessive. If it unlocks after fewer than 10 cycles, the
+      player never learns why the automation matters.
+
+  - id: number-presentation-legibility
+    name: "Number Presentation and Legibility"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Idle games produce absurdly large numbers. When numbers exceed what players can parse
+      (1.23e45 vs 1.24e45), the numbers lose meaning and the game's feedback loop breaks.
+      Notation matters: scientific notation is precise but opaque. Named notation (1.23 Billion)
+      is readable but imprecise at high scales. Custom notation (aa, ab, ac) is compact but
+      requires learning. The game must choose a system and commit to it.
+    detection: |
+      Check number display formatting at various progression stages. If numbers exceed 6 digits
+      without a formatting system, readability degrades. If the game uses scientific notation
+      exclusively, check whether players can meaningfully distinguish between adjacent values.
+      If custom notation is used, check if it is documented and learnable.
+
+  - id: idle-loop-compression
+    name: "Idle Loop Compression"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      As players progress, earlier loops should compress. What took 30 minutes in the first run
+      should take 5 minutes in the fifth run and be automatic by the tenth. If early-game loops
+      never compress (the player must manually click through 50 upgrades every prestige), the
+      game fails to respect the player's time. Compression is the reward for mastery.
+    detection: |
+      Measure the time to complete early-game milestones across successive prestige cycles.
+      If the time does not decrease by at least 50% per prestige cycle (through automation,
+      bulk-buy, or skip mechanics), loop compression is insufficient. Check if any loop phase
+      remains static in duration despite prestige bonuses.
+
+  - id: ascension-layer-depth
+    name: "Ascension Layer Depth"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Many idle games have multiple prestige layers (prestige, transcendence, ascension, etc.).
+      Each layer must feel distinct: different resource types, different decision spaces, different
+      time scales. If layer 2 is just "prestige your prestige currency," it adds length without
+      depth. Antimatter Dimensions succeeds because each layer introduces genuinely new mechanics.
+      Most games fail by making each layer a numerical wrapper around the same loop.
+    detection: |
+      Count prestige layers. For each layer beyond the first, check if it introduces at least
+      2 new mechanics, resource types, or decision patterns. If any layer only provides a
+      numerical multiplier to the layer below without new systems, it lacks depth. Check if
+      the time scale between layers increases (minutes -> hours -> days).
+
+  - id: click-damage-vs-idle-damage
+    name: "Click Damage vs Idle Damage Scaling"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      In games with both clicking and idle damage, the two must scale in parallel or one
+      becomes irrelevant. If click damage falls behind, clicking feels pointless. If idle
+      damage falls behind, the game is not actually idle -- it is a clicker. The transition
+      from "clicking matters" to "idle dominates" should be a deliberate progression milestone,
+      not an accidental imbalance.
+    detection: |
+      Compare click damage scaling against idle/automatic damage scaling across progression.
+      If click damage is less than 1% of idle damage at any point, clicking is vestigial.
+      If click damage is always dominant, the idle component is decorative. Check if the
+      transition point is designed (marked by an automation unlock) or accidental.
+
+  - id: resource-sink-sustainability
+    name: "Resource Sink Sustainability"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      Every resource needs a sink -- a way to spend it that keeps pace with generation. Without
+      sinks, resources accumulate indefinitely and the game loses economic tension. Common sinks:
+      prestige resets, expensive upgrades, respec costs, cosmetics, gambling/gacha mechanics.
+      If generation permanently outpaces consumption, the resource becomes meaningless.
+    detection: |
+      For each resource type, compare generation rate against all available sinks. If a resource
+      can accumulate without bound (no sink consumes it faster than it generates), it will
+      eventually lose meaning. Check if prestige acts as a periodic sink. If any resource has
+      no sink at all, it is a design oversight.

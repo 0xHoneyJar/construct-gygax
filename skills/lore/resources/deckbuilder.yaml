@@ -1,0 +1,275 @@
+tradition: deckbuilder
+name: "Deckbuilder Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for deckbuilding games (Dominion, Star Realms, Ascension, Clank!, Aeon's End,
+  Slay the Spire as deckbuilder, etc.). Focused on deck composition economics, engine efficiency,
+  shuffle variance, buy-row dynamics, and the tension between building and scoring.
+
+heuristics:
+  # --- ECONOMY ---
+
+  - id: big-money-dominance
+    name: "Big Money Problem"
+    category: economy
+    severity: critical
+    tradition_specific: true
+    description: |
+      When the optimal strategy is to ignore engine-building entirely and just buy the highest-value
+      currency/point cards directly, the deckbuilding mechanic is vestigial. This is the canonical
+      deckbuilder failure mode. If "buy gold, buy provinces" beats most engines, the game's
+      engine-building cards are either too slow, too expensive, or too unreliable to justify
+      their opportunity cost.
+    detection: |
+      Simulate or test a "buy only money and victory points" strategy against engine-building
+      strategies. If big money wins more than 40% of the time against any engine, or if it
+      consistently outperforms bottom-tier engines, the problem exists. Check if the game's
+      best engine needs more than 6 turns to outpace pure money-buying in per-turn purchasing
+      power.
+
+  - id: deck-thinning-always-correct
+    name: "Deck Thinning — Always Correct"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      If trashing/removing cards from your deck is always the optimal play regardless of context,
+      deck thinning isn't a strategic choice — it's a mandatory first step that experienced
+      players automate while new players lose by not knowing it. Thinning should compete with
+      other priorities: sometimes a thick deck with good average card quality should be viable.
+    detection: |
+      Compare win rates of aggressive thinning strategies (trash to minimum deck size) vs.
+      moderate or no-thinning strategies. If aggressive thinning wins more than 60% of matchups,
+      thinning is too universally correct. Check if any viable strategy relies on deck size or
+      if cards exist that reward a larger deck. If every competitive deck converges on the same
+      small size, the game has a thinning orthodoxy.
+
+  - id: engine-ceiling-deckbuilder
+    name: "Engine Ceiling — Unbounded Deck Engine"
+    category: economy
+    severity: critical
+    tradition_specific: true
+    description: |
+      A deck engine without a ceiling — where the player draws their entire deck every turn and
+      generates unlimited resources — solves the game. Once achieved, every subsequent turn is
+      identical and the player can buy any card. The game needs a mechanism to prevent "draw
+      your whole deck" from being trivially achievable: hand limits, draw costs, or ensuring
+      that thinning to a perfect cycle requires sacrificing scoring potential.
+    detection: |
+      Check if any combination of available cards allows a player to reliably draw their entire
+      deck in a single turn by mid-game. If a 3-4 card combo achieves full-deck draw and those
+      cards are all affordable by turn 8, the engine ceiling is missing. Calculate the maximum
+      theoretical resources per turn for the strongest engine and compare to the cost of the
+      most expensive card — if the engine generates 3x+ that cost, it's unbounded.
+
+  - id: buy-row-randomness
+    name: "Buy-Row Randomness"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      In games with a shared market row (Ascension, Star Realms), what appears in the buy row
+      is random. When the power variance between cards in the market deck is high, the game is
+      decided by who happens to have money when the best card appears. This is "luck of the
+      draw" at the market level rather than the deck level, and it feels worse because it's
+      visible and you can't plan for it.
+    detection: |
+      Calculate the power variance of cards that appear in the shared market. If the strongest
+      and weakest cards in the market deck differ by more than 3x in value-per-cost, high-roll
+      buys are too impactful. Check if any card in the market is so strong that buying it when
+      available is always correct regardless of strategy — this creates a "buy on sight" problem
+      that removes strategic choice.
+
+  - id: terminal-action-balance
+    name: "Terminal vs. Action Card Balance"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Terminal cards (those that end your action chain) and action cards (those that extend it)
+      must be balanced so that both have a role. If terminals are too strong, engines don't matter
+      because you only play one card per turn anyway. If actions are too strong, terminals become
+      dead draws and deck quality is purely about action density. The tension between "strong
+      single effect" and "chain of weaker effects" is the core deckbuilder dilemma.
+    detection: |
+      Compare the per-card value of terminal cards vs. action-chain cards. If terminal cards
+      average less than 1.5x the value of a single action card in a chain, there's no reason
+      to play terminals. If they average more than 3x, there's no reason to build chains. Also
+      check if competitive decks ever mix terminals and actions or if they're always pure one
+      type.
+
+  - id: turn-tempo-stagnation
+    name: "Turn Tempo Stagnation"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      The excitement of deckbuilders comes from turns getting more powerful over time — doing
+      more, buying more, seeing your engine work. When turns don't noticeably increase in power
+      from the early game to the mid game, the engine never feels like it's accelerating. This
+      "flat tempo" makes the game feel like a grind where you're doing roughly the same thing
+      every turn with slightly different cards.
+    detection: |
+      Measure average resources generated per turn at turns 5, 10, 15, and 20. If the increase
+      from turn 5 to turn 15 is less than 50%, tempo is stagnant. Also check "cards played per
+      turn" — if this number doesn't grow meaningfully as the game progresses, the engine-building
+      isn't translating into more dynamic turns. Compare early turns to late turns qualitatively:
+      are late turns doing fundamentally different things or just slightly bigger numbers?
+
+  - id: deck-dilution-trap
+    name: "Deck Dilution Trap"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      New players buy everything that looks good, not realizing that every card added to their
+      deck reduces the probability of drawing their best cards. This "deck dilution" trap is
+      especially punishing when the game doesn't communicate deck composition clearly. A good
+      deckbuilder either teaches this lesson gently or provides enough deck manipulation that
+      dilution is recoverable.
+    detection: |
+      Compare the win rate of players who buy more than the median number of cards per game vs.
+      those who buy fewer. If over-buyers consistently lose, check if the game provides any
+      information about deck composition (discard pile visibility, deck tracker, card count).
+      If dilution is the #1 new player mistake and the game provides no feedback about it,
+      the onboarding is failing.
+
+  - id: combo-reliability
+    name: "Combo Reliability"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Card combos should be exciting to assemble but not 100% reliable to execute every turn.
+      If a 2-3 card combo can be drawn together every turn (because the deck is thin enough),
+      the game becomes repetitive. If the combo almost never comes together (because the deck
+      is too thick or draw is too limited), it's not worth building. The sweet spot is combos
+      that fire 40-60% of turns, creating variable but hopeful turns.
+    detection: |
+      Calculate the probability of drawing a 2-card combo in a 5-card hand given typical deck
+      sizes at each game stage. If the probability exceeds 80% by mid-game (due to thinning and
+      draw), combos are too reliable. If it stays below 25% even in a well-built deck, they're
+      too unreliable. Also check if any combo is so powerful that the game is effectively decided
+      whenever it fires.
+
+  - id: empty-shuffle-timing
+    name: "Empty Shuffle Timing"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      The shuffle point — when your draw pile runs out and your discard becomes your new draw
+      pile — is a critical pacing mechanism. Cards bought recently enter after the next shuffle,
+      creating a delay. If shuffles happen too frequently (tiny decks), every purchase is
+      immediately impactful and there's no delayed gratification. If too infrequently (bloated
+      decks), new purchases take forever to appear and the game feels unresponsive.
+    detection: |
+      Calculate the average number of turns between shuffles at each game stage. If a player
+      shuffles every 1-2 turns consistently, the deck is too thin and there's no shuffle
+      anticipation. If shuffles happen fewer than once every 8 turns, newly purchased cards
+      take too long to appear. Also check if players time major purchases relative to shuffle
+      points — if they don't, the mechanic isn't creating interesting decisions.
+
+  - id: gain-to-trash-ratio
+    name: "Gain-to-Trash Ratio"
+    category: economy
+    severity: medium
+    tradition_specific: true
+    description: |
+      The ratio of cards entering the deck to cards leaving it determines whether decks grow,
+      shrink, or stay stable. If gaining far outpaces trashing, decks bloat and dilute. If
+      trashing outpaces gaining, decks become tiny perfect machines too quickly. The game should
+      offer tension between acquiring new cards and maintaining deck quality, not make one
+      trivially easy.
+    detection: |
+      Track the average cards gained vs. cards trashed per turn across a typical game. If the
+      ratio exceeds 3:1 (gaining vs. trashing) and no upper limit on deck size applies, decks
+      will bloat. If trashing is so accessible that players can maintain a 10-card deck while
+      buying powerful cards every turn, the gain-to-trash balance is broken. Check if the best
+      trash cards are cheap and plentiful or rare and expensive.
+
+  - id: card-pricing-distortion
+    name: "Card Pricing — Over/Undercosted"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      Every card has a cost, and that cost should reflect its power level relative to alternatives.
+      Undercosted cards warp the game around themselves — buying them is always correct. Overcosted
+      cards are never bought and might as well not exist. In a fixed supply game (Dominion), this
+      means some kingdom configurations are solved. In a market-row game, it means dead cards
+      clog the market.
+    detection: |
+      Calculate a "value per cost" metric for each card based on its typical contribution to
+      winning decks. If any card's value-per-cost exceeds the average by more than 2x, it's
+      undercosted. If it's below 0.5x the average, it's overcosted. Check if any card is a
+      "must buy" (appears in more than 80% of winning decks when available) or "never buy"
+      (appears in fewer than 5%).
+
+  - id: opening-strategy-dominance
+    name: "Opening Strategy Dominance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When one opening sequence (specific cards bought on turns 1-3) is strictly dominant
+      regardless of what else is available, the game's first few turns are solved. Players
+      execute the same opening every time and the game "starts" on turn 4. This is especially
+      damaging in games with fixed starting decks where the opening is highly scripted.
+    detection: |
+      Analyze the first 3-4 purchases of winning games. If the same opening sequence appears in
+      more than 50% of wins, dominance exists. Check if deviating from the dominant opening has
+      a measurable win-rate penalty. In games with variable setups, check if the dominant opening
+      is the same regardless of what kingdom/market cards are available.
+
+  - id: card-interaction-transparency
+    name: "Card Interaction Transparency"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Players need to be able to read cards and understand how they interact with other cards
+      in their deck. If combo potential is hidden behind complex conditional triggers, keyword
+      stacking, or ambiguous timing rules, only experienced players can evaluate cards correctly.
+      A new player should be able to look at two cards and intuit whether they work well together.
+    detection: |
+      Count the number of conditional triggers, keywords, and timing-dependent interactions per
+      card. If the average card has more than 2 conditional clauses, complexity is high. Check
+      if card synergies are discoverable from reading the card text alone or if they require
+      system knowledge (timing rules, stack resolution, keyword interactions) not present on the
+      cards themselves.
+
+  - id: pile-exhaustion-timing
+    name: "Pile Exhaustion Timing"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      In games where depleting supply piles triggers the end (Dominion's 3-pile rule), players
+      can manipulate game length by targeting specific piles. This is strategic when it creates
+      interesting timing pressure but degenerate when one player can rush the ending before
+      others' engines come online. The end condition should reflect game completion, not be a
+      weapon.
+    detection: |
+      Track which piles are depleted first and whether pile-rushing is a viable strategy. If
+      buying cheap cards to empty piles wins more than 30% of games, the end condition is
+      exploitable. Check if the game's pacing (engine maturity vs. pile depletion rate) aligns
+      so that the ending naturally occurs when engines peak, not before.
+
+  - id: alternating-advantage
+    name: "Alternating Advantage"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      In two-player deckbuilders, the first player gets an extra turn relative to their opponent
+      in the opening. Since deckbuilder openings are when the engine foundation is laid, this
+      extra turn can be decisive. The game should either compensate the second player (extra
+      starting card, first pick of market) or ensure turn order rotates. One-sided advantage
+      over an entire game is especially harmful in a genre with tight margins.
+    detection: |
+      Compare first-player vs. second-player win rates across a large sample. If first-player
+      win rate exceeds 55% in two-player games, an advantage exists. Check if any compensation
+      mechanism is in place and whether it adequately offsets the advantage. Also check if turn
+      order advantage compounds (first player buys the best card, denying it to second player,
+      on turn 1).

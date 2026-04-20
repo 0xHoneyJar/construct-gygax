@@ -1,0 +1,52 @@
+id: worker-placement-actions
+name: "Worker Placement Actions"
+type: mechanics
+description: "Core action resolution. Players place workers on board spaces to execute path-specific actions. Each space is exclusive (blocked once claimed per round). However, the blocking creates no meaningful tension because every path has equivalent backup spaces -- being blocked never forces a costly detour."
+tradition: eurogame
+tags: [worker-placement, action-selection, false-scarcity]
+depends_on: [resources/action-budget.yaml]
+affects: [resources/trade-goods.yaml, mechanics/path-scoring.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Player places a worker on an unoccupied board space"
+cost:
+  - resource: resources/action-budget.yaml
+    amount: 1
+
+resolution:
+  method: worker-placement
+  stat: null
+  dc: null
+  success: "Execute the action associated with the space"
+  failure: null
+
+spaces_per_path:
+  trade: 4
+  building: 4
+  agriculture: 4
+  culture: 4
+  military: 4
+  total: 20
+
+blocking_analysis:
+  spaces_per_round: 20
+  workers_per_round_4_players: 8
+  blocking_probability: 0.40
+  effective_cost_of_being_blocked:
+    vp_loss: 0.1
+    note: "Backup spaces yield 95-100% of the primary space's value. Being blocked costs ~0.1 VP on average."
+  intended_blocking_cost: "Should force path-switching or timing decisions worth 2-5 VP"
+  actual_blocking_cost: "Negligible. Every path has redundant spaces of near-equal value."
+
+interactions:
+  - "Worker placement is supposed to create indirect competition -- blocking opponents from key spaces."
+  - "With 20 spaces for 8 workers, blocking is infrequent. With backup spaces of equal value, blocking is painless."
+  - "The result: player interaction is cosmetic. Each player is effectively playing a solo optimization puzzle."
+  - "Turn order provides no advantage because no space is meaningfully better than its backup."
+
+notes:
+  - "Compare to Agricola: being blocked from the 'plow field' space has cascading consequences. Here, being blocked has none."
+  - "The worker placement mechanic exists but creates no tension. It's a delivery mechanism for actions, not a competitive system."

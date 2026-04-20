@@ -11,7 +11,7 @@ id: unique-kebab-case-id           # Unique within entity type
 name: "Human Readable Name"        # Display name
 type: stats|resources|mechanics|progression|entities|tensions
 description: "What this is and what it does in the game"
-tradition: d20|pbta|fitd|osr|cepheus|freeform|custom
+tradition: d20|pbta|fitd|osr|cepheus|freeform|custom|autobattler|roguelike|deckbuilder|ccg|4x|tactics|eurogame|social-deduction|cooperative|idle|extraction|looter|immersive-sim
 tags: []                           # Freeform tags for querying
 
 depends_on: []                     # Paths relative to game-state/
@@ -238,6 +238,58 @@ interactions:
   - "Cannot dodge if stamina < 2"
   - "Cannot dodge if reaction already used this round"
   - "Heavy armor imposes disadvantage on the check"
+```
+
+### Resolution Methods (v4)
+
+The `resolution.method` field accepts any of these values. Augury adapts its analysis based on method type.
+
+**Dice-based** (probability scripts available):
+- `d20-roll`, `ability-check`, `saving-throw` — d20 + modifier vs DC
+- `2d6-roll`, `roll-2d6-plus-stat` — 2d6+stat with threshold bands
+- `dice-pool` — roll Nd6, count successes
+- `advantage`, `disadvantage` — roll 2, keep best/worst
+- `exploding` — recursive aces
+
+**Non-dice** (structural analysis):
+- `auction` — players bid resources for outcomes
+- `worker-placement` — place tokens to claim action slots
+- `area-majority` — most presence in a region wins control
+- `simultaneous-choice` — all players choose secretly, reveal together
+- `drafting` — pick from a shared pool in turn order
+- `card-play` — play cards from hand for effects
+- `pattern-matching` — spatial or set collection for scoring
+- `real-time` — speed-based resolution
+- `negotiation` — outcomes from player agreement
+- `deduction` — logical elimination of hidden information
+- `deterministic` — fixed outcomes from known inputs (pure strategy)
+- `automated` — system resolves without player input (autobattler combat phase)
+
+Non-dice example:
+
+```yaml
+id: worker-placement-action
+name: "Place Worker"
+type: mechanics
+description: "Place one worker on an unoccupied action space to claim its effect. Blocks other players from that space this round."
+tradition: eurogame
+tags: [core-action, resource-generation]
+
+trigger: "On your turn, if you have an unplaced worker"
+cost:
+  - resource: resources/workers.yaml
+    amount: 1
+
+resolution:
+  method: worker-placement
+  stat: null
+  success: "Gain the action space's effect (resources, points, or special action)"
+  failure: null  # Worker placement doesn't fail — if the space is available, it works
+  blocking: "Other players cannot use this space until next round"
+
+interactions:
+  - "First player advantage: earlier placement gets first pick of spaces"
+  - "Blocking is the primary interaction — choosing a space denies it to opponents"
 
 depends_on:
   - resources/stamina.yaml

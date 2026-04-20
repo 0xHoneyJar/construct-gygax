@@ -1,0 +1,57 @@
+id: victory-points
+name: "Victory Points"
+type: stats
+description: "The single win condition. All five paths feed into this same pool. The design failure is visible here: final VP totals cluster in a tight band (47-53) regardless of path chosen. Standard deviation across strategies is ~2.1 VP in a 50-point game -- statistically insignificant. The game's decision space is wide but its outcome space is flat."
+tradition: eurogame
+tags: [scoring, win-condition, false-choice]
+depends_on: []
+affects: [tensions/path-equivalence.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 0
+  max: 80
+  typical: 47-53
+  theoretical_max: 80
+  practical_max: 55
+
+scoring_by_path:
+  trade:
+    expected: 49
+    std_dev: 2.3
+    best_case: 54
+    worst_case: 44
+  building:
+    expected: 50
+    std_dev: 1.8
+    best_case: 54
+    worst_case: 46
+  agriculture:
+    expected: 51
+    std_dev: 2.0
+    best_case: 55
+    worst_case: 47
+  culture:
+    expected: 50
+    std_dev: 2.2
+    best_case: 55
+    worst_case: 45
+  military:
+    expected: 49
+    std_dev: 2.4
+    best_case: 54
+    worst_case: 44
+
+convergence_analysis:
+  cross_path_variance: 2.1
+  within_path_variance: 2.1
+  ratio: 1.0
+  interpretation: "When between-path variance equals within-path variance, path selection explains 0% of score variance. All variance comes from tactical execution and randomness, not strategic choice."
+
+notes:
+  - "A well-designed point salad has paths that score differently depending on context (opponent actions, board state, card draws)."
+  - "This system's paths score the same regardless of context. The 'choice' of path is aesthetic, not strategic."
+  - "Compare to Wingspan: different engines score differently based on card availability, creating real strategic variance."

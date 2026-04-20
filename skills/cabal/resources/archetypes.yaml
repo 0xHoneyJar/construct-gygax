@@ -108,6 +108,162 @@ archetypes:
           - "Is there a dominant conversion path that outperforms all others?"
           - "Does the game's unique economy have undercosted or overcosted options?"
           - "Where do the game's own optimization pressures push player behavior?"
+      eurogame:
+        risk_tolerance: low
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Engine efficiency"
+        secondary_focus: "Resource conversion ratios"
+        engagement_style: "Calculate optimal conversion chains, maximize points per action"
+        key_questions:
+          - "What is the most efficient resource conversion path?"
+          - "Is there a dominant engine that outscales all others?"
+          - "Which action spaces are undervalued?"
+          - "What is the optimal turn order for engine assembly?"
+      autobattler:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Draft value and synergy optimization"
+        secondary_focus: "Economy timing and interest breakpoints"
+        engagement_style: "Evaluate unit synergies per gold spent, optimize econ-to-power transition timing"
+        key_questions:
+          - "What is the highest-value unit at each cost tier?"
+          - "When is the optimal transition from econ to rolling?"
+          - "Which synergy compositions have the highest win rate per gold invested?"
+          - "Are there pivot points where switching comps is mathematically correct?"
+      roguelike:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Build path optimization"
+        secondary_focus: "Risk/reward assessment per room and floor"
+        engagement_style: "Map item synergy trees, calculate expected value of each room path"
+        key_questions:
+          - "What is the highest expected-value build path from a given starting item?"
+          - "Which room rewards justify the risk of entering?"
+          - "Are there dominant item combos that trivialize later floors?"
+          - "Does the meta-progression system create power curves that bypass run difficulty?"
+      deckbuilder:
+        risk_tolerance: low
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Card buy efficiency"
+        secondary_focus: "Deck thinning priority and draw consistency"
+        engagement_style: "Calculate cost-per-effect for every card, optimize deck composition curve"
+        key_questions:
+          - "What is the optimal deck size for draw consistency?"
+          - "When should you thin versus add cards?"
+          - "Which cards have the highest impact per cost at each game stage?"
+          - "Is there a dominant buy order that outperforms adaptive purchasing?"
+      ccg:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Mana curve optimization"
+        secondary_focus: "Matchup win rates and sideboard efficiency"
+        engagement_style: "Build to maximize win rate across the expected metagame, tune mana curve to minimize dead draws"
+        key_questions:
+          - "What is the optimal mana curve for the current meta?"
+          - "Which matchups are unwinnable, and what is the cost of teching against them?"
+          - "Are there undercosted cards that warp deckbuilding around them?"
+          - "Does the resource system allow consistent execution of the intended game plan?"
+      4x:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Expansion timing and tech path efficiency"
+        secondary_focus: "Resource generation per turn, snowball detection"
+        engagement_style: "Calculate optimal expand-versus-invest timing, map tech tree for highest-yield paths"
+        key_questions:
+          - "What is the optimal number of expansions before consolidating?"
+          - "Which tech path produces the earliest power spike?"
+          - "Does early aggression outperform long-term economic play?"
+          - "Are there runaway leader dynamics that make comebacks impossible?"
+      tactics:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Unit positioning and ability combo chains"
+        secondary_focus: "Action economy per unit, terrain exploitation"
+        engagement_style: "Map optimal unit placement, calculate damage-per-turn across ability rotations"
+        key_questions:
+          - "What is the highest-damage ability combo chain per turn?"
+          - "Which unit compositions cover the most tactical scenarios?"
+          - "Does positioning math reward careful play or is brute force viable?"
+          - "Are there ability interactions that produce multiplicative rather than additive value?"
+      social-deduction:
+        risk_tolerance: high
+        optimization_drive: high
+        system_engagement: deep
+        primary_focus: "Information gathering efficiency"
+        secondary_focus: "Vote manipulation and statistical deduction"
+        engagement_style: "Track information revealed per action, optimize voting strategy for maximum information yield"
+        key_questions:
+          - "What is the optimal claim strategy for each role?"
+          - "Can voting patterns be used to deduce hidden roles with statistical reliability?"
+          - "Is there a dominant strategy for the informed minority that the uninformed majority cannot counter?"
+          - "Does the information economy favor deduction or social manipulation?"
+      cooperative:
+        risk_tolerance: low
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Group action optimization"
+        secondary_focus: "Role efficiency and action sequencing"
+        engagement_style: "Calculate optimal action distribution across players, maximize group output per round"
+        key_questions:
+          - "Is there an optimal role assignment that outperforms all others?"
+          - "Does the game reward specialization or generalization across the group?"
+          - "Can one player's optimization carry a suboptimal group?"
+          - "What is the minimum viable efficiency to clear the game's challenges?"
+      idle:
+        risk_tolerance: low
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Prestige timing and automation investment"
+        secondary_focus: "Offline efficiency curves, upgrade priority order"
+        engagement_style: "Calculate optimal prestige cycles, map automation unlock order for maximum throughput"
+        key_questions:
+          - "What is the mathematically optimal prestige timing?"
+          - "Which automation upgrades produce the highest long-term throughput?"
+          - "Is there an optimal active-versus-idle play ratio?"
+          - "Does the prestige multiplier curve have diminishing returns that create natural reset points?"
+      extraction:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Risk/reward per raid"
+        secondary_focus: "Loot value assessment and extraction route optimization"
+        engagement_style: "Calculate expected value per raid accounting for loss probability, optimize loadout investment"
+        key_questions:
+          - "What is the expected value of each raid given gear risk?"
+          - "Which loadout minimizes investment while maximizing survival probability?"
+          - "Is there a loot tier that offers disproportionate value relative to risk?"
+          - "Does the extraction economy reward aggressive play or conservative ratting?"
+      looter:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Build min-maxing"
+        secondary_focus: "Drop rate farming and time-to-reward ratios"
+        engagement_style: "Calculate optimal stat distributions, identify highest-value farming targets per hour"
+        key_questions:
+          - "What is the mathematically optimal stat allocation for each build?"
+          - "Which farming activity has the highest reward per time invested?"
+          - "Are there breakpoints where specific stat thresholds unlock disproportionate power?"
+          - "Does the loot table have pity mechanics or is the grind purely probabilistic?"
+      immersive-sim:
+        risk_tolerance: medium
+        optimization_drive: very_high
+        system_engagement: deep
+        primary_focus: "Ability combination exploitation"
+        secondary_focus: "Speedrun paths and systemic interaction chains"
+        engagement_style: "Map every ability interaction, find combinations that bypass intended challenge progression"
+        key_questions:
+          - "Which ability combinations produce emergent effects the designers did not intend?"
+          - "Can environmental systems be chained to trivialize combat encounters?"
+          - "What is the fastest route through each level using systemic exploitation?"
+          - "Are there dominant ability loadouts that make all other approaches obsolete?"
 
   - id: explorer
     name: "The Explorer"
@@ -210,6 +366,162 @@ archetypes:
           - "Where does the game's unique design space have unexplored corners?"
           - "Do the game's subsystems interact in ways the designer did not document?"
           - "What happens when you combine mechanics from different parts of the game?"
+      eurogame:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Underused action spaces and off-meta strategies"
+        secondary_focus: "Alternative win conditions and unusual engine paths"
+        engagement_style: "Ignore the dominant strategy, build engines around overlooked mechanics"
+        key_questions:
+          - "Are there viable strategies that no one pursues because a dominant path exists?"
+          - "Can you win through an action space most players ignore?"
+          - "Do the game's secondary mechanics connect to the core loop or sit disconnected?"
+          - "How many meaningfully different engine types does the game support?"
+      autobattler:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Off-meta compositions and trait combinations"
+        secondary_focus: "Undervalued units and uncommon synergy paths"
+        engagement_style: "Draft units no one else is taking, build around traits the meta ignores"
+        key_questions:
+          - "Are there viable compositions outside the established meta?"
+          - "Which unit traits have unexplored synergies?"
+          - "Can you build around a single undervalued unit as a carry?"
+          - "Does the game support creative drafting or punish deviation from optimal comps?"
+      roguelike:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Unusual item combinations and secret interactions"
+        secondary_focus: "Hidden rooms, secret content, and easter eggs"
+        engagement_style: "Take every item nobody picks, explore every optional path, test every weird combo"
+        key_questions:
+          - "Are there hidden synergies between items that appear unrelated?"
+          - "Does the game reward exploring optional or secret content?"
+          - "How many meaningfully different run archetypes can you construct?"
+          - "Are there items or paths that exist but are never worth taking?"
+      deckbuilder:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Unusual deck archetypes and card interactions"
+        secondary_focus: "Cards that nobody buys and why"
+        engagement_style: "Build decks around the worst-rated cards, test every unusual card combination"
+        key_questions:
+          - "Are there card interactions the designer did not intend?"
+          - "Can you build a viable deck around a card everyone considers weak?"
+          - "How many distinct deck archetypes does the card pool support?"
+          - "Are there cards that exist in the pool but have no viable use case?"
+      ccg:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Rogue deck archetypes and off-meta card choices"
+        secondary_focus: "Cross-faction synergies and unconventional win conditions"
+        engagement_style: "Build decks around forgotten cards and unusual win conditions"
+        key_questions:
+          - "Are there viable deck archetypes outside the established tiers?"
+          - "Which cards have unexplored interactions across sets or factions?"
+          - "Can alternate win conditions compete with the standard damage race?"
+          - "Does the card pool have dead design space -- cards with no home in any deck?"
+      4x:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Unusual victory paths and underused game systems"
+        secondary_focus: "Diplomacy, culture, and non-military strategies"
+        engagement_style: "Pursue every victory condition except the most common one, test peripheral systems"
+        key_questions:
+          - "Are non-military victory conditions genuinely viable or just theoretical?"
+          - "Do peripheral systems like trade, diplomacy, or espionage have real depth?"
+          - "Can you build a civilization around an unusual specialty and remain competitive?"
+          - "Which map types or starting conditions unlock strategies unavailable otherwise?"
+      tactics:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Unconventional unit roles and terrain exploitation"
+        secondary_focus: "Non-combat objectives and unusual class builds"
+        engagement_style: "Use units in roles they were not designed for, find creative terrain interactions"
+        key_questions:
+          - "Can you repurpose units for roles outside their intended class function?"
+          - "Does the terrain system offer creative tactical options beyond cover bonuses?"
+          - "Are there viable strategies that avoid direct combat entirely?"
+          - "How many meaningfully different squad compositions does the game support?"
+      social-deduction:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: broad
+        primary_focus: "Unusual claim strategies and social experimentation"
+        secondary_focus: "Meta-game manipulation and unconventional play patterns"
+        engagement_style: "Try play patterns nobody expects -- false claims, deliberate suspicion, reverse psychology"
+        key_questions:
+          - "Does the game reward creative social play or only logical deduction?"
+          - "Can unconventional claim strategies succeed against experienced players?"
+          - "Are there roles or abilities with unexplored strategic potential?"
+          - "Does the game's social space have room for play the designer did not anticipate?"
+      cooperative:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Unconventional role assignments and strategy paths"
+        secondary_focus: "Whether suboptimal but creative approaches are viable"
+        engagement_style: "Swap expected roles, try unorthodox strategies, explore every optional objective"
+        key_questions:
+          - "Can the game be completed with unconventional role assignments?"
+          - "Are there alternative strategies beyond the obvious optimal path?"
+          - "Do optional objectives or side content offer meaningful variety?"
+          - "Does the game punish creative approaches or accommodate them?"
+      idle:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Hidden mechanics and secret progression paths"
+        secondary_focus: "Underused upgrade trees and alternative progression routes"
+        engagement_style: "Explore every upgrade path, look for hidden content and secret mechanics"
+        key_questions:
+          - "Are there hidden layers or secret mechanics beyond the visible progression?"
+          - "Do alternative upgrade paths lead to meaningfully different gameplay?"
+          - "Is there content that most players never discover?"
+          - "Does the game have sufficient variety to sustain exploration or is it a single track?"
+      extraction:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Map secrets and unusual gameplay approaches"
+        secondary_focus: "Non-combat objectives and hidden interactions"
+        engagement_style: "Explore every corner of every map, test every environmental interaction, find hidden stashes"
+        key_questions:
+          - "Does the map reward thorough exploration or punish lingering?"
+          - "Are there hidden interactions between items, environment, and AI?"
+          - "Can you play the extraction loop in a non-combat style and still progress?"
+          - "How much of the game's content is off the beaten path?"
+      looter:
+        risk_tolerance: high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Off-meta builds and unusual gear combinations"
+        secondary_focus: "Hidden loot, secret areas, and underused item sets"
+        engagement_style: "Build around gear nobody uses, explore every area, test every item interaction"
+        key_questions:
+          - "Are there viable builds outside the established meta?"
+          - "Do off-meta gear sets enable meaningfully different playstyles?"
+          - "Is there hidden or secret content that rewards thorough exploration?"
+          - "How many genuinely distinct build fantasies does the loot system support?"
+      immersive-sim:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: broad
+        primary_focus: "Emergent systemic interactions and environmental storytelling"
+        secondary_focus: "Hidden paths, secret areas, and unintended solutions"
+        engagement_style: "Test every environmental interaction, find routes the designer may not have intended"
+        key_questions:
+          - "How many different ways can each challenge be approached?"
+          - "Do the game's systems interact in ways that create genuinely emergent solutions?"
+          - "Are there hidden areas or paths that reward creative exploration?"
+          - "Does the game acknowledge and support unintended solutions or only intended ones?"
 
   - id: storyteller
     name: "The Storyteller"
@@ -312,6 +624,162 @@ archetypes:
           - "Where do the game's unique mechanics create narrative moments no other system could?"
           - "Do the game's consequences feel dramatically appropriate or arbitrary?"
           - "Does the system reward the kind of stories it claims to be about?"
+      eurogame:
+        risk_tolerance: medium
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Thematic coherence of mechanics"
+        secondary_focus: "Whether the game tells a story through its systems or just uses a theme as wallpaper"
+        engagement_style: "Play through and ask: does the theme emerge from play or is it pasted on?"
+        key_questions:
+          - "Do the mechanics produce moments that feel thematically resonant?"
+          - "Does the game's theme influence decisions or is it purely cosmetic?"
+          - "Can you narrate a coherent story from a game session, or is it just abstract optimization?"
+          - "Do the game's scoring conditions tell a story about what you built?"
+      autobattler:
+        risk_tolerance: medium
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Unit fantasy and composition narrative"
+        secondary_focus: "Whether fights feel like stories or stat checks"
+        engagement_style: "Watch combat rounds play out, ask if they produce dramatic moments or just number comparisons"
+        key_questions:
+          - "Do unit abilities create memorable combat moments or just damage calculations?"
+          - "Does building a composition feel like assembling a team with identity?"
+          - "Are comeback moments possible, or does the stronger board always win cleanly?"
+          - "Does the draft phase tell a story of adaptation and rivalry?"
+      roguelike:
+        risk_tolerance: high
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Run narrative and emergent storytelling"
+        secondary_focus: "Whether death feels dramatic or just resetting a spreadsheet"
+        engagement_style: "Play through runs looking for emergent stories -- does each run feel like a unique tale?"
+        key_questions:
+          - "Does each run produce a story worth retelling?"
+          - "Does death feel like a dramatic conclusion or an arbitrary reset?"
+          - "Do item discoveries create 'turning point' moments in the run's narrative?"
+          - "Does the game's lore integrate with the mechanical loop or sit separate from it?"
+      deckbuilder:
+        risk_tolerance: medium
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Card flavor and deck identity"
+        secondary_focus: "Whether card combos feel like executing a plan or just triggering effects"
+        engagement_style: "Build decks that feel like a coherent concept, check if mechanics support the fantasy"
+        key_questions:
+          - "Do card names and art align with their mechanical effects?"
+          - "Does building a deck feel like crafting a strategy with an identity?"
+          - "Do big combo turns feel dramatic or just mathematically inevitable?"
+          - "Does the game's flavor text contribute to a world you care about?"
+      ccg:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: narrative
+        primary_focus: "Deck fantasy and match narrative arc"
+        secondary_focus: "Whether matches have dramatic tension or are decided in the first few turns"
+        engagement_style: "Play matches looking for dramatic moments -- comebacks, clutch draws, decisive plays"
+        key_questions:
+          - "Do matches build toward a dramatic climax or fizzle out?"
+          - "Does the deck's mechanical identity match its thematic fantasy?"
+          - "Are there 'story moments' -- unexpected turns that change the game's narrative?"
+          - "Does the card lore create a world worth investing in?"
+      4x:
+        risk_tolerance: medium
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Civilization narrative and historical arc"
+        secondary_focus: "Whether diplomacy and conflict produce memorable stories"
+        engagement_style: "Play a full game asking: is this the story of a civilization, or a spreadsheet with a map?"
+        key_questions:
+          - "Does your civilization feel like it has a unique story by game's end?"
+          - "Do diplomatic interactions create memorable rivalries and alliances?"
+          - "Does the tech tree tell a story of cultural evolution?"
+          - "Are wars dramatic events or just number comparisons resolved on a map?"
+      tactics:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: narrative
+        primary_focus: "Character identity and battle drama"
+        secondary_focus: "Whether unit abilities feel like character expression or just stat modifiers"
+        engagement_style: "Play battles looking for dramatic moments -- clutch saves, heroic sacrifices, desperate last stands"
+        key_questions:
+          - "Do characters develop identity through gameplay or are they interchangeable units?"
+          - "Do battles produce dramatic moments or just optimal execution sequences?"
+          - "Does unit death feel meaningful or is it just resource attrition?"
+          - "Can the story of a battle be retold in a way that sounds exciting?"
+      social-deduction:
+        risk_tolerance: high
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Social drama and betrayal narrative"
+        secondary_focus: "Whether reveals feel like dramatic twists or just information dumps"
+        engagement_style: "Play for the drama -- does the game produce moments of genuine surprise, tension, and betrayal?"
+        key_questions:
+          - "Do role reveals produce genuine dramatic moments?"
+          - "Does the game create stories players retell afterward?"
+          - "Is the tension felt socially or just logically?"
+          - "Does the game's theme enhance the social dynamics or is it decorative?"
+      cooperative:
+        risk_tolerance: medium
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Shared narrative and group drama"
+        secondary_focus: "Whether victories feel earned and losses feel dramatic"
+        engagement_style: "Play through looking for moments of shared triumph, sacrifice, and tension"
+        key_questions:
+          - "Does the game produce moments where the group genuinely celebrates or despairs together?"
+          - "Do near-losses feel more dramatic than easy wins?"
+          - "Does each player's contribution feel like a meaningful part of the group's story?"
+          - "Is the game's antagonist system (AI, timer, deck) a compelling narrative adversary?"
+      idle:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Progression fantasy and scale narrative"
+        secondary_focus: "Whether growth feels like a journey or just numbers getting bigger"
+        engagement_style: "Track the progression arc -- does the game create a sense of journey and transformation?"
+        key_questions:
+          - "Does the progression feel like building something meaningful or just incrementing counters?"
+          - "Do prestige resets feel like a narrative new chapter or just a mechanical reset?"
+          - "Does the game's visual and thematic presentation support the growth fantasy?"
+          - "Is there a sense of discovery as you progress, or just more of the same?"
+      extraction:
+        risk_tolerance: high
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Raid narrative and tension arc"
+        secondary_focus: "Whether survival feels dramatic or just mechanical"
+        engagement_style: "Play through raids looking for emergent stories -- close calls, narrow escapes, dramatic betrayals"
+        key_questions:
+          - "Does each raid feel like a story with rising tension and a climax?"
+          - "Do encounters with other players produce memorable narratives?"
+          - "Does the risk of loss create genuine dramatic tension or just frustration?"
+          - "Is the world atmospheric enough to support emergent storytelling?"
+      looter:
+        risk_tolerance: medium
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Power fantasy and gear identity"
+        secondary_focus: "Whether loot drops feel like discoveries or just statistical events"
+        engagement_style: "Play through the loot cycle asking: does this gear make me feel like my character concept?"
+        key_questions:
+          - "Does gear feel like it defines your character or is it just stat sticks?"
+          - "Do rare drops feel like discoveries worth celebrating?"
+          - "Does the grind loop produce a satisfying power fantasy arc?"
+          - "Does the game's world and lore make you care about why you are fighting?"
+      immersive-sim:
+        risk_tolerance: high
+        optimization_drive: very_low
+        system_engagement: narrative
+        primary_focus: "Environmental storytelling and player-authored narrative"
+        secondary_focus: "Whether systemic interactions produce stories or just physics demonstrations"
+        engagement_style: "Play through levels as a story -- does the environment tell tales, do your choices create a personal narrative?"
+        key_questions:
+          - "Does the environment tell stories through detail, not exposition?"
+          - "Do your mechanical choices feel like character-defining narrative decisions?"
+          - "Do systemic interactions produce moments worth retelling?"
+          - "Does the game support multiple narrative interpretations of the same space?"
 
   - id: rules-lawyer
     name: "The Rules Lawyer"
@@ -417,6 +885,162 @@ archetypes:
           - "Where do two of the game's own rules produce contradictory outcomes?"
           - "What situations does the game imply will happen but provides no rules for?"
           - "Are the game's unique mechanics internally consistent or do they rely on unstated assumptions?"
+      eurogame:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Scoring condition ambiguity and timing edge cases"
+        secondary_focus: "Turn order interactions and simultaneous action resolution"
+        engagement_style: "Read every scoring condition literally, construct scenarios where rules conflict"
+        key_questions:
+          - "Are all scoring conditions unambiguous in every possible board state?"
+          - "What happens when two players take conflicting simultaneous actions?"
+          - "Does the turn structure handle all possible player action sequences?"
+          - "Are tiebreaker conditions defined for every possible scoring tie?"
+      autobattler:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Ability trigger order and simultaneous effect resolution"
+        secondary_focus: "Targeting priority ambiguity, AI behavior edge cases"
+        engagement_style: "Construct board states where multiple abilities trigger simultaneously, test resolution order"
+        key_questions:
+          - "Is the order of ability resolution defined for every simultaneous trigger?"
+          - "How does targeting priority resolve when multiple valid targets exist?"
+          - "Are there board states where the AI behavior produces contradictory actions?"
+          - "Does the combat simulation produce consistent results or are there hidden random factors?"
+      roguelike:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Item interaction edge cases and status effect stacking"
+        secondary_focus: "Proc order ambiguity and undefined item combinations"
+        engagement_style: "Combine every item with every other item, test status effect stacking limits"
+        key_questions:
+          - "Is the proc order defined when multiple items trigger on the same event?"
+          - "Do status effects stack, refresh, or override -- and is this consistent?"
+          - "Are there item combinations that produce undefined or inconsistent behavior?"
+          - "Does the game define what happens when contradictory effects apply simultaneously?"
+      deckbuilder:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Card interaction timing and resolution order"
+        secondary_focus: "When-played versus ongoing effect ambiguity"
+        engagement_style: "Construct hands where multiple card effects interact, test resolution order"
+        key_questions:
+          - "Is card resolution order defined when multiple effects trigger simultaneously?"
+          - "Do 'when played' effects resolve before or after the card's primary effect?"
+          - "Are there card combinations that produce undefined game states?"
+          - "Does the discard/shuffle timing create ambiguous situations?"
+      ccg:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Stack resolution and priority edge cases"
+        secondary_focus: "Keyword interaction ambiguity, replacement effect conflicts"
+        engagement_style: "Build scenarios with multiple triggered abilities on the stack, test every keyword interaction"
+        key_questions:
+          - "Is the priority system fully defined for every possible game state?"
+          - "How do replacement effects resolve when multiple apply to the same event?"
+          - "Are keyword interactions defined for every possible combination?"
+          - "What happens when a card references a game state that no longer exists?"
+      4x:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Simultaneous turn resolution and diplomatic agreement enforcement"
+        secondary_focus: "Combat resolution ambiguity, border case territory control"
+        engagement_style: "Construct scenarios where simultaneous actions conflict, test diplomatic rule enforcement"
+        key_questions:
+          - "How does the game resolve simultaneous conflicting orders?"
+          - "Are diplomatic agreements mechanically enforced or merely social contracts?"
+          - "What happens when territory control is ambiguous due to simultaneous movement?"
+          - "Does the combat system produce consistent results for identical inputs?"
+      tactics:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Ability interaction edge cases and targeting ambiguity"
+        secondary_focus: "Movement and positioning rules gaps, reaction trigger order"
+        engagement_style: "Construct complex board states where multiple abilities interact, test every trigger condition"
+        key_questions:
+          - "Is the reaction and trigger order fully defined for all possible ability chains?"
+          - "How does the game resolve targeting when conditions change mid-ability?"
+          - "Are movement rules unambiguous for every possible terrain configuration?"
+          - "Do area-of-effect abilities have clearly defined edge cases for partial coverage?"
+      social-deduction:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Role interaction edge cases and timing windows"
+        secondary_focus: "Simultaneous night action resolution, dead player information access"
+        engagement_style: "Construct scenarios with conflicting role abilities, test every edge case in the night phase"
+        key_questions:
+          - "How do conflicting night actions resolve when targeting each other?"
+          - "Are the rules for dead player communication unambiguous?"
+          - "Does the game define what happens when a role's target becomes invalid?"
+          - "Are voting procedures defined for every possible tie and abstention scenario?"
+      cooperative:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Rule ambiguity in enemy AI behavior"
+        secondary_focus: "Player communication restrictions and action timing gaps"
+        engagement_style: "Test every enemy AI decision point for ambiguity, construct edge cases in player action timing"
+        key_questions:
+          - "Is the enemy AI decision tree fully deterministic and unambiguous?"
+          - "Are communication restrictions between players clearly defined?"
+          - "What happens when multiple game effects trigger simultaneously with no defined order?"
+          - "Does the difficulty scaling system produce consistent and predictable results?"
+      idle:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Offline calculation accuracy and rounding edge cases"
+        secondary_focus: "Upgrade interaction conflicts and prestige timing precision"
+        engagement_style: "Test math at extreme values, look for rounding errors and overflow conditions"
+        key_questions:
+          - "Does offline calculation match real-time calculation at all timescales?"
+          - "How does the game handle rounding when multiple multipliers stack?"
+          - "Are there number overflow or precision issues at extreme progression values?"
+          - "Do upgrade descriptions match their actual mathematical implementation?"
+      extraction:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Netcode and hit registration ambiguity"
+        secondary_focus: "Loot ownership rules, spawn timing edge cases"
+        engagement_style: "Test every contested interaction -- simultaneous kills, loot grabs, extraction timing windows"
+        key_questions:
+          - "How does the game resolve simultaneous actions between players?"
+          - "Are loot ownership rules unambiguous when multiple players interact with the same item?"
+          - "Is the extraction timing window precisely defined?"
+          - "Do damage calculations match stated weapon statistics in all conditions?"
+      looter:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Stat calculation transparency and tooltip accuracy"
+        secondary_focus: "Buff stacking rules, damage formula edge cases"
+        engagement_style: "Test every damage formula, compare tooltips to actual values, find stacking inconsistencies"
+        key_questions:
+          - "Do tooltips accurately describe the actual mechanical effect?"
+          - "Is the buff stacking order (additive vs. multiplicative) documented and consistent?"
+          - "Are there damage formula edge cases that produce unexpected results?"
+          - "Do conditional effects activate consistently under all qualifying conditions?"
+      immersive-sim:
+        risk_tolerance: low
+        optimization_drive: medium
+        system_engagement: exhaustive
+        primary_focus: "Physics system edge cases and AI behavior inconsistency"
+        secondary_focus: "Ability description versus actual behavior, detection system reliability"
+        engagement_style: "Test every ability against its description, find physics interactions that produce inconsistent results"
+        key_questions:
+          - "Do abilities behave exactly as their descriptions state in all contexts?"
+          - "Is the AI detection system consistent and predictable?"
+          - "Are there physics interactions that produce logically impossible results?"
+          - "Does the stealth system have clearly defined and consistent detection thresholds?"
 
   - id: newcomer
     name: "The Newcomer"
@@ -523,6 +1147,162 @@ archetypes:
           - "Does the game define its own terms or borrow undefined jargon from other traditions?"
           - "Where does the game assume you already know how TTRPGs work?"
           - "Is there a clear 'what do I do on my turn?' answer in the text?"
+      eurogame:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "First-game comprehension and iconography clarity"
+        secondary_focus: "Whether the game teaches itself through play or requires pre-reading"
+        engagement_style: "Open the box, read the quick-start, try to play -- flag every moment of confusion"
+        key_questions:
+          - "Can a new player understand the iconography without the rulebook open?"
+          - "Does the game teach its core loop through the first few turns?"
+          - "How many turns before a new player understands what they are trying to do?"
+          - "Is the scoring system comprehensible during play or only at final count?"
+      autobattler:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Draft comprehension and unit readability"
+        secondary_focus: "Whether synergies are discoverable without external guides"
+        engagement_style: "Play a first match with no guide -- can you understand what units do and why compositions matter?"
+        key_questions:
+          - "Can a new player read a unit's ability and understand what it does?"
+          - "Are synergy traits visible and comprehensible during the draft phase?"
+          - "Does the game explain why you lost, or just that you lost?"
+          - "How many matches before the core loop clicks?"
+      roguelike:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "First-run comprehension and death fairness"
+        secondary_focus: "Whether item descriptions are self-explanatory"
+        engagement_style: "Start a run cold, die, and ask: did I understand what killed me and what I could have done differently?"
+        key_questions:
+          - "Does the game explain its mechanics during the first run or require death as tutorial?"
+          - "Are item descriptions understandable without wiki lookup?"
+          - "Is the first death fair and educational or random and confusing?"
+          - "Can a new player distinguish between meaningful choices and noise?"
+      deckbuilder:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Card text readability and buy decision clarity"
+        secondary_focus: "Whether the game teaches deck strategy or assumes card game literacy"
+        engagement_style: "Play a first game, try to understand when to buy and what to buy based only on card text"
+        key_questions:
+          - "Is card text self-explanatory or does it require keyword knowledge?"
+          - "Does the game teach when to buy versus when to play, or assume you know?"
+          - "Can a new player evaluate card value without experience?"
+          - "Is the concept of deck thinning discoverable or does it require outside knowledge?"
+      ccg:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Starter deck comprehension and keyword overload"
+        secondary_focus: "Whether a new player can play a match without a mentor"
+        engagement_style: "Play the starter deck against AI or a patient opponent, flag every moment of confusion"
+        key_questions:
+          - "Can a new player understand the starter deck's strategy from the cards alone?"
+          - "How many keywords must be learned before a first match makes sense?"
+          - "Does the game explain the resource system or assume card game familiarity?"
+          - "Is the first-match experience educational or overwhelming?"
+      4x:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "First-turn decision overload and tutorial quality"
+        secondary_focus: "Whether the game's scope is comprehensible to someone who has never played the genre"
+        engagement_style: "Start a new game, try to take the first 10 turns based on in-game guidance alone"
+        key_questions:
+          - "Does the tutorial teach priorities or just controls?"
+          - "How many decisions face a new player on turn one?"
+          - "Can a new player understand what they should be doing in the first era?"
+          - "Is the game's scope intimidating or gradually revealed?"
+      tactics:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Unit ability comprehension and action clarity"
+        secondary_focus: "Whether positioning matters are intuitive or require study"
+        engagement_style: "Play the first battle using only in-game information, flag every moment of confusion"
+        key_questions:
+          - "Can a new player understand each unit's role from their abilities?"
+          - "Is the action economy clear -- what can I do on my turn?"
+          - "Does the game teach positioning importance through play or require pre-study?"
+          - "Are failure states (unit death, mission loss) explained before they occur?"
+      social-deduction:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Role comprehension and phase structure clarity"
+        secondary_focus: "Whether a new player knows what they are supposed to do each phase"
+        engagement_style: "Receive a role card, try to understand your objective and what to do each phase"
+        key_questions:
+          - "Does the role card explain what you should be doing?"
+          - "Is the phase structure clear to someone who has never played a deduction game?"
+          - "Can a new player participate meaningfully or are they easy prey for experienced players?"
+          - "Does the game explain how to discuss, vote, and accuse?"
+      cooperative:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Role clarity and turn structure comprehension"
+        secondary_focus: "Whether a new player can contribute without being carried"
+        engagement_style: "Join a game with experienced players, try to understand what you should do on your turn"
+        key_questions:
+          - "Can a new player contribute meaningfully or do experienced players make all decisions?"
+          - "Is the turn structure clear enough that a new player knows when to act?"
+          - "Does the game explain the lose condition before players encounter it?"
+          - "Is there guidance for what a good action looks like?"
+      idle:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Onboarding flow and progression clarity"
+        secondary_focus: "Whether the game explains its layers or just adds them"
+        engagement_style: "Open the game, play for 15 minutes, assess whether you understand the core loop"
+        key_questions:
+          - "Does the game explain its core loop in the first few minutes?"
+          - "Is the purpose of each currency and resource apparent?"
+          - "When new mechanics unlock, does the game explain them or assume you will figure it out?"
+          - "Is the prestige concept explained before the player hits the wall?"
+      extraction:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "First-raid survival comprehension"
+        secondary_focus: "Whether the game teaches its stakes and extraction mechanics before punishing you"
+        engagement_style: "Enter the first raid with no external knowledge, assess whether you understand what to do"
+        key_questions:
+          - "Does the game explain what you lose on death before your first raid?"
+          - "Are map objectives and extraction points clearly communicated?"
+          - "Can a new player distinguish threats from background elements?"
+          - "Is the inventory and loadout system comprehensible without a guide?"
+      looter:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Gear evaluation clarity and build guidance"
+        secondary_focus: "Whether a new player can tell an upgrade from a sidegrade"
+        engagement_style: "Play through early content, try to make gear and build decisions from in-game information"
+        key_questions:
+          - "Can a new player tell which gear is better without external tools?"
+          - "Does the game explain stats, or does it assume familiarity with RPG conventions?"
+          - "Is there build guidance or does the game dump all options at once?"
+          - "How many hours before the core gameplay loop is understandable?"
+      immersive-sim:
+        risk_tolerance: low
+        optimization_drive: very_low
+        system_engagement: surface
+        primary_focus: "Controls, abilities, and interaction discoverability"
+        secondary_focus: "Whether the game teaches systemic thinking or assumes it"
+        engagement_style: "Play the first level, try every interaction -- can you discover the game's systemic nature on your own?"
+        key_questions:
+          - "Does the game teach that systems interact, or does it assume you will experiment?"
+          - "Are ability effects and interactions discoverable through play?"
+          - "Is the first level a good teacher of the game's design philosophy?"
+          - "Can a new player distinguish between intended interactions and bugs?"
 
   - id: chaos-agent
     name: "The Chaos Agent"
@@ -625,6 +1405,162 @@ archetypes:
           - "What guidance does the GM have when players do something the game never anticipated?"
           - "Do the game's unique mechanics constrain or enable creative play?"
           - "Where does going off-script expose gaps in the game's own framework?"
+      eurogame:
+        risk_tolerance: very_high
+        optimization_drive: low
+        system_engagement: experiential
+        primary_focus: "Rule-bending action interpretations"
+        secondary_focus: "Unintended action space interactions"
+        engagement_style: "Take actions in orders nobody expects, combine action spaces in ways the designer did not foresee"
+        key_questions:
+          - "Can you use action spaces in sequences the designer did not anticipate?"
+          - "Does the game handle players who deliberately play suboptimally to create chaos?"
+          - "Are there kingmaker scenarios where a losing player can decide the winner?"
+          - "What happens when a player's goal is entertainment rather than points?"
+      autobattler:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Absurd compositions and off-meta experiments"
+        secondary_focus: "Exploiting AI targeting quirks"
+        engagement_style: "Build compositions no guide recommends, exploit positioning and AI behavior for unexpected results"
+        key_questions:
+          - "Can deliberately bad compositions produce surprising wins through AI quirks?"
+          - "Does unit positioning allow for creative exploits the meta ignores?"
+          - "What happens when you build a comp designed to produce the funniest combat, not the best?"
+          - "Can you grief or disrupt other players' strategies through unconventional drafting?"
+      roguelike:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Absurd item combinations and sequence breaking"
+        secondary_focus: "Using items for unintended purposes"
+        engagement_style: "Take every cursed item, combine things that should not go together, try to break the run in creative ways"
+        key_questions:
+          - "Can items be combined to produce effects the designer clearly did not intend?"
+          - "Does the game handle sequence breaking gracefully?"
+          - "Can you softlock yourself with creative but legal choices?"
+          - "What is the funniest possible run versus the most efficient?"
+      deckbuilder:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Absurd deck compositions"
+        secondary_focus: "Buy strategies nobody would recommend"
+        engagement_style: "Buy every card, buy no cards, buy only the weirdest ones -- test the limits of deck construction"
+        key_questions:
+          - "What happens if you buy one card type exclusively?"
+          - "Can you build a deck so unusual it breaks the game's expected flow?"
+          - "Does the game handle degenerate deck states gracefully?"
+          - "Can you win with a strategy the designer would consider trolling?"
+      ccg:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Jank combos and unintended card interactions"
+        secondary_focus: "Alternate win conditions nobody pursues"
+        engagement_style: "Build the jankiest deck possible, find card interactions the designers never tested together"
+        key_questions:
+          - "Are there card interactions that produce absurd but technically legal game states?"
+          - "Can you build a deck whose primary purpose is creating bizarre board states?"
+          - "Does the game have answers for strategies it did not anticipate?"
+          - "What is the most cards you can play in a single turn through creative chaining?"
+      4x:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Diplomatic chaos and unconventional victory approaches"
+        secondary_focus: "Exploiting AI behavior and game systems in unintended ways"
+        engagement_style: "Declare war on everyone, ally with everyone, play purely for chaos -- test the game's social and systemic resilience"
+        key_questions:
+          - "Can a player whose goal is chaos rather than victory break the diplomatic system?"
+          - "Does the AI handle unexpected player behavior or does it only respond to standard strategies?"
+          - "Can you win through a strategy the game never intended?"
+          - "What happens when you abuse the trade or diplomacy system in bad faith?"
+      tactics:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Creative ability misuse and environmental exploitation"
+        secondary_focus: "Using movement and positioning in unintended ways"
+        engagement_style: "Use every ability for something other than its intended purpose, exploit terrain in creative ways"
+        key_questions:
+          - "Can abilities be used on unexpected targets or in unintended contexts?"
+          - "Does the terrain system allow for creative exploits the designer did not plan?"
+          - "Can you complete missions through unintended approaches?"
+          - "What happens when you move units to positions the game did not expect?"
+      social-deduction:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Social chaos and unpredictable play patterns"
+        secondary_focus: "Breaking social conventions within game rules"
+        engagement_style: "Play in ways nobody expects -- random accusations, reverse psychology, deliberate self-sabotage to test group reactions"
+        key_questions:
+          - "What happens when a player acts irrationally within the rules?"
+          - "Can chaotic play patterns be distinguished from skilled deception?"
+          - "Does the game survive a player who prioritizes entertainment over their win condition?"
+          - "Can you break the social fabric of the game without breaking any rules?"
+      cooperative:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Off-script strategies and creative rule application"
+        secondary_focus: "Whether the game handles unexpected group decisions"
+        engagement_style: "Propose the strategy nobody would try, use abilities in unintended ways, test the group's flexibility"
+        key_questions:
+          - "Can the group succeed with a strategy the designer never intended?"
+          - "Does the game handle players who use abilities in unexpected ways?"
+          - "What breaks when the group ignores the 'obvious' correct strategy?"
+          - "Can one chaotic player derail a cooperative game, and is that a design problem?"
+      idle:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "System exploitation and unintended interactions"
+        secondary_focus: "Time manipulation and offline mechanic abuse"
+        engagement_style: "Mess with the clock, buy upgrades in wrong orders, look for exploitable interactions"
+        key_questions:
+          - "Can the game be exploited by manipulating device time?"
+          - "What happens when you buy upgrades in an order the game did not intend?"
+          - "Are there exploitable interactions between systems that compound unexpectedly?"
+          - "Can you soft-lock or break the progression by doing things in the wrong order?"
+      extraction:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Social manipulation and creative map exploitation"
+        secondary_focus: "Using game mechanics for unintended purposes"
+        engagement_style: "Betray allies, bait other players, use items and map features in creative and unintended ways"
+        key_questions:
+          - "Can the social dynamics be exploited -- baiting, betrayal, deception?"
+          - "Do map features allow for creative ambushes or exploits?"
+          - "Can items be used for purposes the designer did not intend?"
+          - "What happens when a player prioritizes chaos over extraction?"
+      looter:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Absurd builds and unintended ability interactions"
+        secondary_focus: "Using gear and abilities in creative off-label ways"
+        engagement_style: "Build the weirdest character possible, stack effects in unintended ways, find the jank"
+        key_questions:
+          - "Can abilities be combined to produce effects the designer did not intend?"
+          - "Does the game handle absurd stat distributions gracefully?"
+          - "Can you soft-lock content by building a character that breaks expected power curves?"
+          - "What is the funniest viable build?"
+      immersive-sim:
+        risk_tolerance: very_high
+        optimization_drive: very_low
+        system_engagement: experiential
+        primary_focus: "Physics and system abuse for creative problem-solving"
+        secondary_focus: "Sequence breaking through emergent mechanics"
+        engagement_style: "Stack objects, combine abilities in ways nobody intended, solve every problem with the weirdest possible approach"
+        key_questions:
+          - "Can the physics system be exploited to bypass intended challenges?"
+          - "What is the most absurd but technically valid solution to each obstacle?"
+          - "Can you reach areas or trigger events out of intended sequence?"
+          - "Do the game's systems interact in ways that produce genuinely hilarious outcomes?"
 
   - id: gm
     name: "The GM"
@@ -731,6 +1667,162 @@ archetypes:
           - "Does the game's unique structure increase or decrease prep requirements?"
           - "Where does the GM have to make judgment calls with insufficient guidance?"
           - "Can a GM sustain this game over a campaign, or does the workload escalate?"
+      eurogame:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Teach complexity and rules explanation burden"
+        secondary_focus: "Setup time, component management, and rules lookup frequency"
+        engagement_style: "Simulate teaching the game to new players -- track every rule you must explain and every lookup you must make"
+        key_questions:
+          - "How long does it take to teach the core rules to a new group?"
+          - "How often must you consult the rulebook during play?"
+          - "Is setup time proportional to the game's depth, or excessive?"
+          - "Can the game be taught incrementally or must everything be explained upfront?"
+      autobattler:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Spectator comprehension and match pacing"
+        secondary_focus: "Whether the game is readable to observers and new players watching"
+        engagement_style: "Watch matches from a teaching perspective -- can you explain what is happening and why?"
+        key_questions:
+          - "Can a spectator or new player understand what is happening in a fight?"
+          - "Does the game's pacing allow time to explain during play?"
+          - "Are synergies and compositions readable from the board state?"
+          - "How much external knowledge is needed to coach a new player?"
+      roguelike:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Death explanation and learning curve fairness"
+        secondary_focus: "Whether the game teaches through death or just punishes through it"
+        engagement_style: "Guide a new player through their first runs -- is the game a good teacher or a frustrating one?"
+        key_questions:
+          - "Does the game provide enough feedback on why you died?"
+          - "Is the learning curve a gradient or a cliff?"
+          - "Can a mentor teach the game during play or does it require pre-briefing?"
+          - "Does the meta-progression smooth the learning curve or just mask bad teaching?"
+      deckbuilder:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Teaching card evaluation and deck concepts"
+        secondary_focus: "Setup time and card organization burden"
+        engagement_style: "Teach the game to a non-card-gamer -- how much conceptual load must be explained before play?"
+        key_questions:
+          - "Can 'buy cards, build a deck' be explained quickly to someone new to the genre?"
+          - "Is the card market readable or does it require constant explanation?"
+          - "How much setup and teardown time does the physical game require?"
+          - "Does the game teach deck strategy through play or require pre-instruction?"
+      ccg:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "New player onboarding burden and collection barrier"
+        secondary_focus: "Rules complexity for teaching and tournament organization"
+        engagement_style: "Evaluate from the perspective of someone running events and teaching new players"
+        key_questions:
+          - "How long does it take to teach the game to someone who has never played a CCG?"
+          - "Does the starter experience require supplemental purchases to be competitive?"
+          - "How many rules must a judge know to run an event fairly?"
+          - "Is the game accessible to casual players or does it require competitive investment?"
+      4x:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Game length management and pacing control"
+        secondary_focus: "Teaching complexity and player downtime between turns"
+        engagement_style: "Run a multiplayer game, track every moment of player confusion, downtime, and pacing loss"
+        key_questions:
+          - "How long do turns take, and does downtime between turns cause player disengagement?"
+          - "Can the game be taught to new players during play or does it require a dedicated teach session?"
+          - "Is game length predictable or does it vary wildly?"
+          - "Does the host need to manage diplomacy disputes, or does the game handle them?"
+      tactics:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Turn time management and analysis paralysis mitigation"
+        secondary_focus: "Setup complexity and scenario balance"
+        engagement_style: "Run a session, track how long turns take, where players stall, and where rules need clarification"
+        key_questions:
+          - "How long does an average turn take, and does this scale badly with more units?"
+          - "Does the game prevent or encourage analysis paralysis?"
+          - "How much setup and scenario prep is required?"
+          - "Are pre-built scenarios balanced, or does the host need to adjust?"
+      social-deduction:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Moderation burden and player conflict management"
+        secondary_focus: "Rule explanation speed and phase transition clarity"
+        engagement_style: "Moderate a game with new players -- track every confusion point and conflict moment"
+        key_questions:
+          - "How much moderator effort is required for a smooth game?"
+          - "Can the game be explained in under 5 minutes to a new group?"
+          - "Does the game create player conflict the moderator must manage?"
+          - "Are elimination mechanics handled in a way that keeps eliminated players engaged?"
+      cooperative:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Quarterbacking prevention and group engagement"
+        secondary_focus: "Difficulty calibration and house rule needs"
+        engagement_style: "Run a game, watch for one player dominating decisions, track whether all players are engaged"
+        key_questions:
+          - "Does the game prevent one player from dictating all decisions?"
+          - "Is the difficulty calibrated for the intended audience or does it require house rules?"
+          - "Can all players contribute meaningfully regardless of experience level?"
+          - "Does the game maintain engagement when losing seems inevitable?"
+      idle:
+        risk_tolerance: low
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Player retention mechanics and monetization pressure"
+        secondary_focus: "Whether the game respects the player's time and attention"
+        engagement_style: "Evaluate the game as a long-term experience -- does it respect you or manipulate you?"
+        key_questions:
+          - "Does the game use dark patterns to drive engagement or purchases?"
+          - "Is progress meaningful without spending money?"
+          - "Does the game respect offline time or punish you for not checking in?"
+          - "Are notification and timer mechanics designed for the player or for retention metrics?"
+      extraction:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "New player protection and matchmaking fairness"
+        secondary_focus: "Community toxicity management and gear disparity"
+        engagement_style: "Evaluate the new player experience -- can someone new have fun, or is the gear gap insurmountable?"
+        key_questions:
+          - "Does matchmaking protect new players from experienced, geared opponents?"
+          - "Is the gear disparity between new and veteran players manageable?"
+          - "Does the game have tools to manage toxic player behavior?"
+          - "Can a new player learn the game without being griefed into quitting?"
+      looter:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Group content accessibility and build diversity encouragement"
+        secondary_focus: "Whether the game supports varied group compositions"
+        engagement_style: "Evaluate group play -- can different builds contribute, or does the meta demand specific compositions?"
+        key_questions:
+          - "Does group content require specific builds or welcome diverse compositions?"
+          - "Can a casual player contribute meaningfully to group activities?"
+          - "How much external research is required to participate in endgame content?"
+          - "Does the game provide in-game tools for group formation and coordination?"
+      immersive-sim:
+        risk_tolerance: medium
+        optimization_drive: low
+        system_engagement: holistic
+        primary_focus: "Difficulty accessibility and multiple viable playstyles"
+        secondary_focus: "Whether the game accommodates different skill levels and play preferences"
+        engagement_style: "Evaluate whether the game is accessible to people with different playstyles and skill levels"
+        key_questions:
+          - "Does the game accommodate players who prefer stealth, combat, or social approaches equally?"
+          - "Are difficulty options meaningful or do they just change damage numbers?"
+          - "Can a player who does not enjoy the 'intended' playstyle still have a good experience?"
+          - "Does the game explain its systemic nature or assume the player will discover it?"
 
   - id: anxious-player
     name: "The Anxious Player"
@@ -837,6 +1929,162 @@ archetypes:
           - "Are the game's biggest decisions reversible or permanent?"
           - "Does the game distinguish between 'you made a bad choice' and 'you did not know the hidden rule'?"
           - "Where does the game's unique structure create decision paralysis versus meaningful tension?"
+      eurogame:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Decision overwhelm at action selection"
+        secondary_focus: "Penalty severity for suboptimal moves"
+        engagement_style: "At every action space, ask: how bad is it if I pick wrong? Can I recover from a bad early game?"
+        key_questions:
+          - "How punishing is a suboptimal first few turns?"
+          - "Can you fall behind early and still recover, or is the game effectively decided in the opening?"
+          - "How many viable options exist at each decision point, and can a new player evaluate them?"
+          - "Does the scoring system create anxiety about hidden point totals?"
+      autobattler:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Loss streak anxiety and economy death spiral"
+        secondary_focus: "Whether the game punishes experimentation with elimination"
+        engagement_style: "Lose several rounds in a row -- how does it feel? Is recovery possible or does losing snowball into elimination?"
+        key_questions:
+          - "Can a loss streak be recovered from, or does falling behind guarantee elimination?"
+          - "Does the economy system punish experimentation with your composition?"
+          - "Is there a safety net for players who commit to a bad strategy?"
+          - "Does the game communicate how close to elimination you are?"
+      roguelike:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Permadeath frustration and progress loss"
+        secondary_focus: "Whether the game respects time invested when you die"
+        engagement_style: "Die after a long run -- how does it feel? Is anything preserved or is all progress lost?"
+        key_questions:
+          - "Does permadeath feel fair or like wasted time?"
+          - "Is there meaningful meta-progression that preserves effort across deaths?"
+          - "Can you identify the mistake that killed you, or does death feel random?"
+          - "How much time is lost on an average death, and does that create anxiety about risky choices?"
+      deckbuilder:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Buy decision anxiety and deck-ruining fear"
+        secondary_focus: "Whether bad purchases are recoverable"
+        engagement_style: "Face a buy decision -- how stressful is it? Can one bad buy ruin the whole deck?"
+        key_questions:
+          - "Can a single bad purchase ruin your deck, or is it recoverable?"
+          - "Is there enough information to evaluate cards, or must you guess?"
+          - "Does the game punish experimentation with unrecoverable deck pollution?"
+          - "How much does falling behind in the early game compound into an unwinnable state?"
+      ccg:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Collection anxiety and competitive pressure"
+        secondary_focus: "Whether the game is fun when losing and whether investment feels wasted on rotation"
+        engagement_style: "Play against a stronger collection -- how does the power gap feel? Lose a match -- is it educational or demoralizing?"
+        key_questions:
+          - "Does the collection system create anxiety about having the 'right' cards?"
+          - "Is losing to a better collection frustrating or motivating?"
+          - "Does card rotation or banning make previous investments feel wasted?"
+          - "Can a player with a budget collection have fun in competitive formats?"
+      4x:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Early-game vulnerability and snowball anxiety"
+        secondary_focus: "Whether falling behind is recoverable or a slow inevitable loss"
+        engagement_style: "Fall behind in the early game -- is there a recovery path, or must you sit through a slow loss?"
+        key_questions:
+          - "Can a player who falls behind early recover, or are they playing out a loss?"
+          - "Does the game telegraph threats before they become fatal?"
+          - "How long must a losing player sit through a game they cannot win?"
+          - "Is early aggression from other players survivable for a player focused on building?"
+      tactics:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Unit death permanence and mission failure severity"
+        secondary_focus: "Whether mistakes are recoverable within a battle"
+        engagement_style: "Make a positioning mistake, lose a unit -- how permanent is the damage? Can you recover or is the mission lost?"
+        key_questions:
+          - "Is unit loss permanent, and if so, does it create anxiety about every move?"
+          - "Can a single positioning mistake cascade into mission failure?"
+          - "Does the game allow mistakes to be recovered from, or does every error compound?"
+          - "Are there difficulty options that reduce the permanence of failure?"
+      social-deduction:
+        risk_tolerance: very_low
+        optimization_drive: very_low
+        system_engagement: cautious
+        primary_focus: "Social pressure and accusation anxiety"
+        secondary_focus: "Whether the game protects players from personal attacks disguised as gameplay"
+        engagement_style: "Play as the accused -- how does it feel? Is social pressure fun tension or genuine discomfort?"
+        key_questions:
+          - "Does being accused feel like exciting gameplay or personal attack?"
+          - "Can a socially anxious player participate without being forced into the spotlight?"
+          - "Does early elimination leave players with nothing to do?"
+          - "Is there a way to participate quietly, or does the game demand vocal engagement?"
+      cooperative:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Blame avoidance and individual failure impact"
+        secondary_focus: "Whether one player's mistake can lose the game for everyone"
+        engagement_style: "Make a suboptimal play -- does it feel like you let the group down? Is individual failure visible?"
+        key_questions:
+          - "Can one player's mistake cause the entire group to lose?"
+          - "Is individual failure visible to the group, creating blame dynamics?"
+          - "Does the game provide enough information to make confident decisions?"
+          - "Is there a quarterbacking dynamic where one player corrects your 'mistakes'?"
+      idle:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "FOMO mechanics and irreversible upgrade decisions"
+        secondary_focus: "Whether the game creates anxiety about missing time-limited content"
+        engagement_style: "Miss a day, check back -- does the game make you feel behind? Make an upgrade choice -- is it reversible?"
+        key_questions:
+          - "Does the game create anxiety about missing daily rewards or time-limited events?"
+          - "Are upgrade or prestige decisions reversible if you made a mistake?"
+          - "Does the game punish absence, creating obligation rather than enjoyment?"
+          - "Is there a respec option when you invest in the wrong upgrades?"
+      extraction:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Gear loss anxiety and raid entry stress"
+        secondary_focus: "Whether the risk of loss creates fun tension or paralysis"
+        engagement_style: "Equip valuable gear, enter a raid -- how much anxiety does the loss potential create? Is it fun or paralyzing?"
+        key_questions:
+          - "Does the risk of losing gear create exciting tension or dread?"
+          - "Is there a low-stakes mode for learning maps and mechanics?"
+          - "Can you recover from losing your best gear, or does it set you back catastrophically?"
+          - "Does the game telegraph danger before you commit your loadout?"
+      looter:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Build commitment anxiety and respec availability"
+        secondary_focus: "Whether the grind feels rewarding or punishing"
+        engagement_style: "Invest in a build, discover it is suboptimal -- can you fix it or must you start over?"
+        key_questions:
+          - "Can you respec your build, or is every decision permanent?"
+          - "Does investing in a suboptimal build waste hours of grind?"
+          - "Is the gear grind rewarding at each step, or does it feel like punishment until the endpoint?"
+          - "Does the game communicate build viability before you commit resources?"
+      immersive-sim:
+        risk_tolerance: very_low
+        optimization_drive: low
+        system_engagement: cautious
+        primary_focus: "Save system fairness and failure recovery"
+        secondary_focus: "Whether stealth failure cascades into unrecoverable situations"
+        engagement_style: "Fail a stealth section, trigger an alarm -- is recovery possible, or must you reload?"
+        key_questions:
+          - "Does the save system protect against catastrophic loss of progress?"
+          - "Can a failed stealth approach be recovered, or does it force a reload?"
+          - "Are there multiple viable approaches when the 'ideal' plan fails?"
+          - "Does the game punish cautious play or accommodate it?"
 
   - id: veteran
     name: "The Veteran"
@@ -940,6 +2188,162 @@ archetypes:
           - "What does mastery of this game look like, and is it rewarding?"
           - "Does the game's progression system (if any) sustain interest or become rote?"
           - "Are there emergent dynamics that only appear after extended play?"
+      eurogame:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Strategic depth after many plays"
+        secondary_focus: "Whether the meta evolves or calcifies"
+        engagement_style: "Play the game 50 times mentally -- does the strategy space remain open, or has it been solved?"
+        key_questions:
+          - "Does the game have enough strategic depth to sustain dozens of plays?"
+          - "Does the meta evolve as players improve, or does it converge on a single dominant strategy?"
+          - "Are there emergent strategic layers that only become visible with experience?"
+          - "Does variable setup (maps, markets, modules) meaningfully extend the game's lifespan?"
+      autobattler:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Meta staleness and patch dependency"
+        secondary_focus: "Whether skill expression increases with mastery"
+        engagement_style: "Project forward 200 games -- does skill expression grow, or does the game depend on patch rotations for freshness?"
+        key_questions:
+          - "Does skill expression continue to grow with experience, or does it plateau?"
+          - "Is the game dependent on balance patches for freshness, or is the base design deep enough?"
+          - "Do new compositions emerge over time, or has the meta been solved?"
+          - "Does high-level play feel meaningfully different from intermediate play?"
+      roguelike:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Run variety after hundreds of attempts"
+        secondary_focus: "Whether mastery opens new playstyles or just better execution of the same ones"
+        engagement_style: "Project forward 500 runs -- are you still discovering new things, or is every run a known pattern?"
+        key_questions:
+          - "Does the game generate sufficient variety to prevent runs from feeling same-y?"
+          - "Does mastery unlock new playstyles or just faster execution of known strategies?"
+          - "Are there skill ceilings high enough to sustain long-term improvement?"
+          - "Does the game have hidden depth that reveals itself only after extensive play?"
+      deckbuilder:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Replay value and strategic discovery after many sessions"
+        secondary_focus: "Whether card pool depth sustains long-term interest"
+        engagement_style: "Play through the full card pool many times -- are there still new strategies to discover?"
+        key_questions:
+          - "Does the card pool have enough depth to sustain discovery over dozens of plays?"
+          - "Are there advanced strategies that only become visible with deep experience?"
+          - "Do expansions add meaningful depth or just volume?"
+          - "Is there a skill ceiling high enough to differentiate experienced and expert players?"
+      ccg:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Format health and long-term competitive depth"
+        secondary_focus: "Whether the meta rewards innovation or just netdecking"
+        engagement_style: "Evaluate the game's competitive ecosystem -- does it reward long-term mastery and innovation?"
+        key_questions:
+          - "Does the competitive format reward deckbuilding innovation or just piloting known lists?"
+          - "Is there meaningful skill expression that separates good players from great ones?"
+          - "Does the set release cadence keep the format fresh or destabilize it?"
+          - "Can a long-term player remain engaged without spending continuously?"
+      4x:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Late-game strategic variety and replayability"
+        secondary_focus: "Whether different maps and opponents produce genuinely different games"
+        engagement_style: "Play 20 full games mentally -- does each game tell a different story, or do they converge on familiar patterns?"
+        key_questions:
+          - "Does the game produce genuinely different experiences across multiple playthroughs?"
+          - "Do different civilizations and map types create meaningfully different strategic challenges?"
+          - "Does diplomacy with human players add enough depth to sustain long-term play?"
+          - "Is there a solved-game state, or does the strategy space remain open?"
+      tactics:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Campaign variety and advanced tactical expression"
+        secondary_focus: "Whether mastery reveals new tactics or just better execution of known ones"
+        engagement_style: "Play through multiple campaigns -- does the tactical space remain interesting, or are the same solutions always optimal?"
+        key_questions:
+          - "Does mastery reveal advanced tactics invisible to beginners?"
+          - "Do different unit compositions create genuinely different tactical problems?"
+          - "Is there a campaign-level strategic layer that sustains interest beyond individual battles?"
+          - "Does the game's difficulty scale with player mastery, or does it become trivial?"
+      social-deduction:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Metagame evolution with a consistent group"
+        secondary_focus: "Whether the game rewards reading people over reading rules"
+        engagement_style: "Play 50 games with the same group -- does the social metagame keep evolving, or do players become predictable?"
+        key_questions:
+          - "Does the social metagame evolve with a consistent group?"
+          - "Can experienced players always read newcomers, or does the game protect against that?"
+          - "Does the role variety sustain interest over many sessions?"
+          - "Is there a skill ceiling for social deduction, or does it plateau quickly?"
+      cooperative:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Challenge escalation and long-term engagement"
+        secondary_focus: "Whether the game offers increasing difficulty that rewards mastery"
+        engagement_style: "Beat the game at its highest difficulty -- is there still a reason to play, or has it been solved?"
+        key_questions:
+          - "Does the game offer escalating challenges that reward mastery?"
+          - "After beating the hardest difficulty, is there still engagement?"
+          - "Does the game's randomness create genuine replay variety or just noise?"
+          - "Can the group develop advanced strategies that deepen over time?"
+      idle:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Endgame content and prestige depth"
+        secondary_focus: "Whether the game has a meaningful endgame or just bigger numbers"
+        engagement_style: "Project to the endgame -- is there a satisfying conclusion, or does it just trail off into infinity?"
+        key_questions:
+          - "Does the game have a meaningful endgame or does it just produce bigger numbers forever?"
+          - "Do later prestige layers add genuine new mechanics or just multiplier resets?"
+          - "Is there a point where the game is 'complete,' and is that satisfying?"
+          - "Does the game reward long-term optimization knowledge accumulated over months?"
+      extraction:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Endgame engagement and map mastery reward"
+        secondary_focus: "Whether PvP depth and economy sustain long-term play"
+        engagement_style: "Project forward 500 raids -- is there still something to learn, or is every raid the same?"
+        key_questions:
+          - "Does map mastery open advanced strategies or just reduce risk?"
+          - "Does the PvP element provide enough unpredictability for long-term engagement?"
+          - "Is the endgame economy motivating or have you already acquired everything meaningful?"
+          - "Does the game introduce new challenges at high player-skill levels?"
+      looter:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Endgame build variety and loot motivation"
+        secondary_focus: "Whether the grind remains rewarding at high investment levels"
+        engagement_style: "Project to endgame -- when you have best-in-slot gear, is there still a reason to play?"
+        key_questions:
+          - "Does the endgame offer meaningful build variety or does everyone converge on the same meta?"
+          - "Is there content that challenges even optimized builds?"
+          - "Does the loot system sustain motivation past the initial gearing curve?"
+          - "Do seasonal resets or new content provide genuine freshness or just reset the treadmill?"
+      immersive-sim:
+        risk_tolerance: high
+        optimization_drive: medium
+        system_engagement: deep
+        primary_focus: "Replay depth and emergent discovery on subsequent playthroughs"
+        secondary_focus: "Whether mastery reveals new approaches or just faster execution"
+        engagement_style: "Play through three times with different approaches -- does the game reveal new layers each time?"
+        key_questions:
+          - "Does the game reward replaying with different builds and approaches?"
+          - "Are there emergent interactions only visible to experienced players?"
+          - "Does the systemic depth sustain interest across multiple playthroughs?"
+          - "Is there a mastery curve for systemic play that rewards long-term investment?"
 
 # Weighting scale reference:
 #   very_low:  Rarely engages with this dimension

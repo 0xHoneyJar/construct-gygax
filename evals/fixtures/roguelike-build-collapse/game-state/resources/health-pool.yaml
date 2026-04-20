@@ -1,0 +1,56 @@
+id: health-pool
+name: "Health Pool"
+type: resources
+description: "The player's primary survival resource. Base 100 HP with no natural scaling. Health items are rare. Most builds must manage health carefully across floors, spending it as a resource to progress. The Vampire Lifesteal build bypasses health management entirely -- AoE lifesteal regenerates HP faster than enemies can deal damage, converting health from a scarce resource into an infinite one."
+tradition: roguelike
+tags: [health, survival, resource-management]
+depends_on: [mechanics/combat-resolution.yaml]
+affects: [tensions/build-diversity-collapse.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  base: 100
+  max: 150
+  scaling: "none (does not increase with floors)"
+  recovery:
+    between_floors: "0 (no free healing)"
+    healing_items: "rare (1 per 3 floors average, heals 30 HP)"
+    lifesteal: "percentage of damage dealt per hit"
+  note: "Health is meant to be a depleting resource. Each floor should cost health, creating attrition pressure."
+
+attrition_by_build:
+  glass_cannon:
+    hp_lost_per_floor: 35
+    hp_recovered_per_floor: 10
+    net_hp_per_floor: -25
+    floors_survivable: 4
+    note: "High damage, no sustain. Fast but fragile. Must end run quickly."
+  tank:
+    hp_lost_per_floor: 15
+    hp_recovered_per_floor: 10
+    net_hp_per_floor: -5
+    floors_survivable: 20
+    note: "Slow but steady. Manages health carefully. Typical roguelike experience."
+  balanced:
+    hp_lost_per_floor: 25
+    hp_recovered_per_floor: 10
+    net_hp_per_floor: -15
+    floors_survivable: 7
+    note: "Middle ground. Must find health items to survive deep floors."
+  vampire_lifesteal:
+    hp_lost_per_floor: 20
+    hp_recovered_per_floor: 93
+    net_hp_per_floor: +73
+    floors_survivable: "unlimited"
+    note: "HEALS more than it takes. Health pool is always full. Attrition does not exist for this build."
+
+attrition_curve_intended: "Linear decline. Each floor costs health. Deep floors require careful resource management and build optimization."
+attrition_curve_actual: "Vampire build inverts the curve. Health INCREASES per floor (more enemies = more healing). The 'harder' the game gets, the easier it becomes."
+
+notes:
+  - "Health-as-attrition-resource is the core tension of roguelikes. Remove it and the genre's central question ('how deep can I go?') becomes trivial."
+  - "Hades solved this by making lifesteal heal a flat amount (not percentage) and capping total healing per encounter."
+  - "Slay the Spire solved this by having no lifesteal -- all healing is from specific, limited cards/relics."

@@ -1,0 +1,78 @@
+id: deck-composition
+name: "Deck Composition"
+type: resources
+description: "The player's deck, comprising treasure cards, action cards, and victory point cards. Big Money keeps the deck lean (mostly treasures + starting cards + VP cards). Engine strategies dilute the deck with action cards that may or may not appear in useful combinations. Deck dilution is the engine's hidden cost -- more cards means less consistency."
+tradition: deckbuilder
+tags: [deck, composition, dilution]
+depends_on: [mechanics/buy-phase.yaml]
+affects: [mechanics/draw-and-play.yaml, stats/buying-power.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+starting_deck:
+  total: 10
+  coppers: 7
+  estates: 3
+  average_hand_value: 3.5
+  draw_size: 5
+
+deck_trajectory_big_money:
+  turn_5:
+    total: 14
+    treasures: 11
+    vp_cards: 3
+    actions: 0
+    avg_hand_value: 5.2
+    consistency: 0.85
+  turn_10:
+    total: 19
+    treasures: 14
+    vp_cards: 5
+    actions: 0
+    avg_hand_value: 6.8
+    consistency: 0.78
+  turn_15:
+    total: 24
+    treasures: 16
+    vp_cards: 8
+    actions: 0
+    avg_hand_value: 7.4
+    consistency: 0.72
+
+deck_trajectory_engine:
+  turn_5:
+    total: 16
+    treasures: 8
+    vp_cards: 3
+    actions: 5
+    avg_hand_value: 3.0
+    consistency: 0.45
+    note: "Actions dilute treasure density. Many hands draw actions without combo pieces."
+  turn_10:
+    total: 22
+    treasures: 9
+    vp_cards: 3
+    actions: 10
+    avg_hand_value: 5.5
+    consistency: 0.55
+    note: "Engine starting to fire but inconsistent. 1 in 3 hands whiffs."
+  turn_15:
+    total: 26
+    treasures: 10
+    vp_cards: 4
+    actions: 12
+    avg_hand_value: 8.2
+    consistency: 0.65
+    note: "Engine online but game is nearly over. Only 1-3 turns to capitalize."
+
+dilution_analysis:
+  engine_dead_draws_per_game: 4.5
+  big_money_dead_draws_per_game: 1.2
+  note: "Engine strategies draw 3.3 more 'dead' hands (hands that can't buy anything useful). Each dead hand is a lost turn."
+
+notes:
+  - "The deck IS the resource. Big Money treats it as a simple accumulator. Engine strategies treat it as a machine."
+  - "The problem: the machine takes too long to build and runs too few cycles before the game ends."
+  - "Fix: extend game length, add deck thinning to starting abilities, or make engine cards cheaper."

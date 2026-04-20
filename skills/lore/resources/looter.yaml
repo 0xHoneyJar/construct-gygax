@@ -1,0 +1,446 @@
+tradition: looter
+name: "Looter/ARPG Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for looter games and action RPGs (Diablo, Path of Exile, Destiny, The
+  Division, Warframe, Borderlands, Last Epoch, Grim Dawn, Monster Hunter, etc.). Distilled
+  from decades of loot system design, community theorycrafting, developer GDC talks, and the
+  accumulated wisdom of a genre whose central promise is "one more drop."
+
+heuristics:
+  # --- RESOURCES ---
+
+  - id: loot-distribution-drop-rates
+    name: "Loot Distribution and Drop Rate Tuning"
+    category: resources
+    severity: critical
+    tradition_specific: true
+    description: |
+      Drop rates are the heartbeat of a looter. Too generous: players gear up in hours and
+      have nothing to chase. Too stingy: players grind for days without upgrades and quit.
+      The ideal creates a steady drip of small upgrades (1-2% better) punctuated by rare
+      moments of genuine excitement (a build-defining unique). The drop curve should follow
+      a power law: common items rain, rares trickle, build-changers are memorable events.
+    detection: |
+      Examine drop rate distributions across rarity tiers. If the rarest tier drops more than
+      once per hour of play, it is not rare -- it is uncommon with a rare label. If the rarest
+      tier drops less than once per 20 hours, the chase item is effectively inaccessible. Check
+      if the distribution creates regular small-win moments (every 5-10 minutes) alongside
+      rare big-win moments.
+
+  - id: rarity-inflation
+    name: "Rarity Inflation"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      When "Legendary" items drop like rain, the word "Legendary" means nothing. Rarity
+      inflation occurs when the game adds tiers above the original cap (Mythic, Primal,
+      Ancient, Ethereal) because the original rare tier was devalued by generous drop rates.
+      Each inflation cycle trains players that current-tier loot is future vendor trash.
+      Diablo 3's legendary->ancient->primal chain is the canonical cautionary tale.
+    detection: |
+      Count rarity tiers. If more than 5 tiers exist, or if the original "highest" tier has
+      been superseded by 2+ additional tiers, rarity inflation has occurred. Check if the
+      most common rarity tier ever drops items worth using at endgame. If not, that tier is
+      noise -- visual clutter that the player must ignore.
+
+  - id: chase-item-probability
+    name: "Chase Item Probability"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Chase items (the specific drops players farm for) must be rare enough to feel special
+      but achievable enough that players believe they will get one. If a chase item has a
+      0.01% drop rate from a boss that takes 5 minutes to kill, the expected farm time is
+      83 hours. At that point, most players will never see it. The player must be able to
+      feel "I am making progress toward this item" even if the progress is probabilistic.
+    detection: |
+      Identify chase items (items referenced in build guides, community wishlists, or endgame
+      progression gates). Calculate expected acquisition time: (1 / drop_rate) * time_per_attempt.
+      If expected time exceeds 30 hours of targeted farming, the chase is demoralizing. If
+      below 2 hours, the item is not a chase -- it is a guaranteed reward with extra steps.
+
+  - id: crafting-vs-drop-value
+    name: "Crafting vs Drop Value"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Crafting and dropping are competing item acquisition paths. If crafting produces better
+      items than drops, the loot loop dies -- why kill monsters when the workbench is more
+      rewarding? If drops are always better than crafted items, crafting is vestigial. The
+      ideal: crafting improves dropped items (reroll a stat, add a socket, upgrade a tier)
+      rather than replacing the drop as the primary acquisition method. Crafting should enhance
+      the loot loop, not circumvent it.
+    detection: |
+      Compare best-in-slot achievable through crafting vs best-in-slot achievable through drops.
+      If crafted items can exceed dropped items in every slot, crafting dominates. If crafting
+      cannot produce items competitive with mid-tier drops, it is irrelevant. Check if crafting
+      uses materials obtained from the loot loop (maintaining the loop) or from separate sources
+      (creating a parallel progression track).
+
+  - id: duplicate-protection
+    name: "Duplicate Protection"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Getting the same rare item for the fifth time when you need one specific different item
+      is demoralizing. Duplicate protection (bad luck protection, pity timers, token exchange
+      systems) ensures that repeated engagement eventually yields the desired outcome. Without
+      it, probability can create infinite droughts. With too much protection, every item is
+      guaranteed and the excitement of random drops disappears.
+    detection: |
+      Check for pity timer, token exchange, or duplicate-mitigation mechanics. If none exist
+      and chase items have drop rates below 5%, unlucky players will have dramatically worse
+      experiences than average players. If protection guarantees the item within a fixed number
+      of attempts, check whether that number is reasonable (under 2x the expected drop count).
+
+  - id: trading-market-economy
+    name: "Trading and Market Economy"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      Player trading transforms the loot game from "find what you need" to "find anything
+      valuable and trade for what you need." This fundamentally changes the experience: every
+      drop has potential value, but the personal excitement of finding YOUR item is replaced
+      by the merchant's satisfaction of finding A VALUABLE item. Free trade also introduces
+      RMT, market manipulation, and wealth inequality. Restricting trade preserves the
+      personal loot experience but makes specific-item farming agonizing.
+    detection: |
+      Check for trading mechanics. If unrestricted trading exists, check for anti-RMT measures
+      and market health indicators (price stability, item velocity). If no trading exists,
+      check if targeted farming for specific items is viable or if acquisition is purely random.
+      If "bind on pickup" exists, check which items it applies to and whether it covers the
+      right tier (chase items should bind; common items should trade).
+
+  # --- PROGRESSION ---
+
+  - id: build-diversity
+    name: "Build Diversity (Endgame Viability)"
+    category: progression
+    severity: critical
+    tradition_specific: true
+    description: |
+      If only 3 of 30 possible builds can clear endgame content, the game has a build diversity
+      problem. Players who invest 50+ hours into a build only to discover it cannot compete at
+      endgame feel betrayed. The design must either make all builds viable at endgame (different
+      speeds, same capability) or clearly communicate which builds are endgame-viable before
+      players commit. Path of Exile's build diversity is the genre benchmark; Diablo 3's set-
+      dependency is the cautionary tale.
+    detection: |
+      Count distinct builds that can complete the highest-difficulty endgame content. Divide by
+      total theoretically possible builds. If fewer than 30% of builds are endgame-viable, build
+      diversity is poor. Check if the game provides respec mechanics -- if respec is cheap, poor
+      build diversity is less punishing. If respec is expensive or impossible, it is devastating.
+
+  - id: power-creep-across-seasons
+    name: "Power Creep Across Seasons"
+    category: progression
+    severity: critical
+    tradition_specific: true
+    description: |
+      Each new season/patch adds items and abilities that must be exciting enough to drive
+      engagement. The easiest path: make new items stronger than old ones. This creates power
+      creep: last season's best-in-slot becomes this season's mid-tier. Over multiple seasons,
+      early-game damage numbers that started at hundreds reach millions, enemy HP inflates to
+      match, and the numbers lose meaning. The alternative -- lateral power (new options, not
+      stronger options) -- is harder to design but sustainable.
+    detection: |
+      Compare top-end player damage output across 3+ seasons/patches. If damage increases by
+      more than 30% per season without corresponding enemy HP increases, power creep is active.
+      If both damage and enemy HP inflate in parallel, it is number inflation (cosmetic creep).
+      Check if items from 2+ seasons ago are ever used in current endgame builds -- if never,
+      power creep has invalidated old content.
+
+  - id: stat-budget-item-level-inflation
+    name: "Stat Budget and Item Level Inflation"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      Item level (ilvl) systems tie item power to a numerical tier. As ilvl increases, stat
+      budgets grow, making lower-ilvl items obsolete. This creates a treadmill: each content
+      patch raises the ilvl cap, invalidating previous gear. The treadmill sustains engagement
+      (always something to chase) but also frustrates (gear is temporary, never "done"). The
+      design must decide: is gear a permanent investment or a seasonal rental?
+    detection: |
+      Check for item level or gear score systems. If new content always raises the ilvl cap
+      by a fixed amount, the treadmill is in effect. Check if any items transcend the treadmill
+      (unique effects that remain valuable regardless of ilvl). If every item is replaceable
+      by a higher-ilvl version with no unique characteristics, the loot system is a pure
+      number treadmill.
+
+  - id: set-bonus-dependency
+    name: "Set Bonus Dependency"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      Set bonuses (wear 4 pieces of the same set for a massive bonus) create exciting
+      collection goals but dangerous design traps. If set bonuses are so powerful that builds
+      without a complete set cannot compete, every build collapses to "which set do I wear?"
+      This destroys mix-and-match itemization -- the core joy of looter games. Individual
+      items should be interesting on their own. Sets should be one path, not the only path.
+    detection: |
+      Check for set bonus mechanics. If set bonuses provide more than 50% of a build's total
+      power, they are a dependency rather than an option. Check if competitive builds exist
+      that use zero set pieces. If every top build requires a complete set, set bonuses have
+      replaced individual item evaluation as the core loot decision.
+
+  - id: mastery-prestige-systems
+    name: "Mastery and Prestige Systems"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      After hitting max level, players need continued progression: paragon levels, mastery
+      ranks, endgame skill points. These post-cap systems extend engagement but risk creating
+      infinite power scaling that trivializes content. Good post-cap systems provide diminishing
+      returns (each point matters less) or lateral options (more builds, not more power). Bad
+      ones create an infinite vertical climb where a player with 1000 paragon levels is literally
+      unkillable by a player with 100.
+    detection: |
+      Check for post-level-cap progression. If post-cap progression provides linear power
+      scaling with no diminishing returns, the gap between invested and casual players grows
+      without bound. If post-cap progression has a soft cap (useful for 100 points, negligible
+      after 500), the power gap is bounded. Check if post-cap power affects PvP balance.
+
+  - id: gear-score-vs-skill-expression
+    name: "Gear Score vs Skill Expression"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      Gear score (a single number summarizing item power) simplifies matchmaking and content
+      gating but flattens the nuance of builds. A player with gear score 600 from optimized
+      synergistic items performs vastly differently than one with gear score 600 from random
+      high-ilvl pieces. If the game uses gear score as its primary power metric, build
+      optimization is invisible and skill expression through itemization is unrewarded.
+    detection: |
+      Check for gear score or power level aggregation mechanics. If content gates use gear
+      score rather than specific stat thresholds, the system rewards wearing any high-level
+      gear rather than building synergistic loadouts. Check if two characters with identical
+      gear scores can have dramatically different effective power due to build optimization.
+
+  # --- PACING ---
+
+  - id: endgame-loop-engagement
+    name: "Endgame Loop Engagement"
+    category: pacing
+    severity: critical
+    tradition_specific: true
+    description: |
+      The endgame loop (the activity players repeat after finishing the campaign) IS the game
+      for most players. If the endgame is "run the same 3 dungeons at increasing difficulty,"
+      it becomes stale within a week. Good endgame loops offer variety (map variety, modifier
+      variety, challenge variety), meaningful choices (which content to run based on desired
+      rewards), and a sense of progression (each run improves something, even marginally).
+    detection: |
+      Catalog endgame activities and their reward structures. If fewer than 5 distinct endgame
+      activities exist, variety is low. If all activities share the same reward pool, there is
+      no reason to choose between them. If any single activity is more than 2x as efficient as
+      others, it will be the only activity anyone runs. Check if endgame introduces mechanics
+      not present in the campaign.
+
+  - id: seasonal-content-pacing
+    name: "Seasonal Content Pacing"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Seasonal content (new mechanics, items, and activities each season) keeps the game fresh
+      but creates design debt. If each season adds a new system that is abandoned next season,
+      the game accumulates mechanical bloat. If seasonal content is too thin, players consume
+      it in days and leave. The ideal: each season adds one deep system that integrates with
+      the core game, with previous seasons' best ideas folded into the base game.
+    detection: |
+      Count seasonal mechanics across 3+ seasons. If each season adds a mechanic that is
+      removed or irrelevant next season, the game has a content treadmill rather than content
+      growth. If seasonal content can be fully consumed in under 1 week of play, it is too
+      thin. Check if previous seasonal mechanics remain accessible and relevant.
+
+  - id: difficulty-scaling-vs-gear-scaling
+    name: "Difficulty Scaling vs Gear Scaling"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When difficulty tiers scale enemy HP and damage by percentages, and gear scales player
+      power by similar percentages, the player experience is identical at every tier -- just
+      with bigger numbers. This is the "treadmill illusion": the player feels powerful because
+      numbers go up, but the actual challenge is unchanged. Good difficulty scaling introduces
+      new mechanics, enemy behaviors, or environmental challenges at higher tiers, not just
+      larger health pools.
+    detection: |
+      Compare difficulty tier scaling against gear power scaling. If both scale by the same
+      percentage per tier (e.g., enemies get 50% more HP, player deals 50% more damage), the
+      tiers are cosmetically different but mechanically identical. Check if higher difficulty
+      tiers introduce any qualitatively new challenges (new attack patterns, affixes, or
+      environmental hazards) beyond numerical scaling.
+
+  # --- MECHANICS ---
+
+  - id: loot-filter-necessity
+    name: "Loot Filter Necessity"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When so many items drop that players need a filter to hide most of them, the drop system
+      has a signal-to-noise problem. Loot filters are a player-created solution to a design
+      problem: the game drops too much junk. If 95% of drops are instantly vendored or ignored,
+      those drops add no value -- they are visual and cognitive clutter. The game should either
+      drop less loot of higher average quality, or provide robust built-in filtering.
+    detection: |
+      Estimate the percentage of drops that are immediately discarded without inspection at
+      endgame. If more than 80% of drops are auto-vendored, the game over-produces loot. Check
+      if loot filters exist (community-made or built-in). If community loot filters are
+      considered mandatory (referenced in all new-player guides), the base drop experience
+      is broken.
+
+  - id: stat-complexity-vs-readability
+    name: "Stat Complexity vs Readability"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Complex stat interactions (critical hit chance * critical damage * attack speed *
+      elemental penetration * skill multiplier) create deep build optimization but make item
+      comparison impossible without spreadsheets. If a player cannot tell whether Item A or
+      Item B is better without external tools, the stat system has failed at readability.
+      Complexity is good; opacity is bad. The game must surface the relevant comparison.
+    detection: |
+      Count the number of stats that affect a character's primary output (damage, healing,
+      survivability). If more than 8 multiplicative stats interact, manual comparison is
+      impractical. Check if the game provides a DPS/EHP calculator, stat comparison UI, or
+      simulated performance metric. If players rely on external tools for basic item comparison,
+      readability has failed.
+
+  - id: elemental-resistance-gearing
+    name: "Elemental Resistance Gearing Tax"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When endgame content requires specific resistance thresholds (75% fire resist, capped
+      all resists), resistance becomes a tax: gear slots must be devoted to meeting the cap
+      before any offensive stats can be considered. If the resistance cap is too high, most
+      gear slots are consumed by defensive requirements. If too low or nonexistent, survivability
+      has no gearing cost and glass-cannon builds dominate.
+    detection: |
+      Check for elemental resistance mechanics and endgame damage types. If reaching the
+      required resistance cap consumes more than 50% of available gear affixes, the tax is
+      too high. If resistance has no cap and can be stacked indefinitely, check if any
+      content bypasses resistance entirely (making the investment pointless).
+
+  - id: skill-gem-socket-economy
+    name: "Skill/Socket System Economy"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Systems where skills are items (gems, runes, cards) that socket into gear create
+      interesting constraints: you have more skills than sockets, so you must choose. But
+      if the socket economy is too tight (not enough sockets for a basic build), the system
+      is frustrating. If too loose (every skill socketed with room to spare), the constraint
+      is decorative. The socket limit should force exactly one painful cut per build.
+    detection: |
+      Count available socket slots against the number of skills a typical build wants to use.
+      If builds can fit every desired skill with sockets to spare, the economy is too loose.
+      If builds must cut 3+ desired skills, the economy may be too tight. Check if socket
+      availability scales with progression (creating a natural "build unlocks over time" feel).
+
+  - id: boss-loot-exclusivity
+    name: "Boss Loot Table Exclusivity"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Boss-specific loot (items that only drop from a particular boss) gives bosses identity
+      and gives players farming targets. But exclusivity must be balanced: if every build-
+      defining item is locked to a specific boss, players grind one boss for hours, ignoring
+      all other content. If no items are boss-exclusive, all bosses are interchangeable and
+      none are memorable. The ideal: some exclusive items per boss, with the most critical
+      build items available from multiple sources.
+    detection: |
+      Check drop tables for boss-specific items. If more than 50% of build-defining items
+      are exclusive to a single boss, farming patterns will be narrow. If zero items are
+      boss-exclusive, bosses lack identity. Check if the most-farmed boss (by community data
+      or design intent) has the most desirable exclusive drops -- if so, that boss IS the
+      endgame, and all other content is filler.
+
+  - id: respec-cost-commitment
+    name: "Respec Cost and Commitment"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Respec (respecialization) defines how permanent build choices are. Free respec: players
+      experiment freely, but builds feel disposable and "build identity" is weak. Expensive
+      respec: players are afraid to experiment, follow guides slavishly, and feel trapped in
+      bad builds. The sweet spot depends on game identity: hardcore looters (PoE) use expensive
+      respec to create build commitment. Casual looters (D3) use free respec to encourage
+      experimentation. Neither is wrong, but the cost must match the audience.
+    detection: |
+      Check for respec mechanics and their cost. If respec is free and instant, check whether
+      builds have meaningful identity (if everyone swaps builds per activity, builds are
+      loadouts, not identities). If respec costs more than 10% of a character's total invested
+      time/resources, it punishes experimentation and encourages following guides over discovery.
+
+  - id: legendary-power-as-build-enabler
+    name: "Legendary Power as Build Enabler"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      The best legendary/unique items do not just add numbers -- they change how abilities
+      work. "Your fireball now splits into 3 smaller fireballs" transforms a build. "+15%
+      fire damage" does not. Build-enabling legendaries are the genre's highest design
+      achievement: they make the loot chase exciting because each drop could change your
+      playstyle. If legendaries are just stat sticks with bigger numbers, the loot system
+      misses its potential.
+    detection: |
+      Categorize legendary/unique items by effect type: numerical bonus (stat stick) vs
+      mechanical modifier (build enabler). If more than 70% of legendaries are stat sticks,
+      the legendary tier is not living up to its potential. Check if the most sought-after
+      items are build enablers -- this confirms that players value mechanical novelty over
+      numerical superiority.
+
+  - id: endgame-currency-bloat
+    name: "Endgame Currency Bloat"
+    category: economy
+    severity: medium
+    tradition_specific: true
+    description: |
+      Mature looter games accumulate currencies: crafting orbs, seasonal tokens, raid currencies,
+      PvP points, reputation tokens, transmog tokens, and more. Each currency made sense when
+      introduced, but collectively they create a management burden. When players need a
+      spreadsheet to track their 15 currency types, the economy has bloated. Each currency
+      must justify its existence by creating a unique decision point.
+    detection: |
+      Count distinct currency or token types at endgame. If more than 8 currencies exist,
+      check which ones create unique decisions vs which are just "grind X to buy Y." If any
+      two currencies are interchangeable (both buy similar things at similar rates), they should
+      be merged. Check if any currency has no meaningful sink (accumulates indefinitely).
+
+  - id: seasonal-character-vs-permanent
+    name: "Seasonal vs Permanent Character Tension"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Games with seasonal characters (progress resets each season) and permanent characters
+      (standard league, non-seasonal) must balance both. If seasonal bonuses are too strong,
+      permanent characters feel like second-class citizens. If permanent characters accumulate
+      too much legacy power, the game cannot be balanced for new players. The seasonal model
+      works when each season offers a fresh experience that justifies starting over.
+    detection: |
+      Check for seasonal vs permanent progression tracks. If seasonal characters have access
+      to exclusive mechanics or items unavailable to permanent characters, the seasonal track
+      is the "real" game. If permanent characters have accumulated years of power that seasonal
+      characters cannot match, the permanent track is unapproachable for new players. Check
+      if seasonal content eventually migrates to the permanent game.

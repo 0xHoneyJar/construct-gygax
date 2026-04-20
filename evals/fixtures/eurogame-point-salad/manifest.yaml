@@ -1,0 +1,24 @@
+id: eurogame-point-salad
+name: "Point Salad Equilibrium (Castles of Burgundy anti-pattern)"
+failure_archetype: false-choice
+tradition: eurogame
+description: |
+  Encodes a eurogame where every victory path converges on ~50 points regardless
+  of strategy. Trade routes, building chains, agricultural bonuses, and cultural
+  sets all yield statistically equivalent outcomes. The game presents the illusion
+  of strategic depth -- five distinct paths with different mechanics -- but the
+  payoff curves are so flat that path selection is meaningless. No path dominates,
+  but no path differentiates either. Players make 40+ decisions per game that have
+  no impact on final score variance. The design failure is not imbalance but
+  homogeneity: every strategy is equally good, which means no strategy matters.
+source: "grimoires/gygax/references/design-failure-postmortem.md"
+tests_skills:
+  - augury (resource-economy)
+  - augury (action-economy)
+  - cabal (Optimizer + Strategist)
+  - lore
+design_parameters:
+  target_session_length: medium
+  target_audience: intermediate
+  target_interaction: indirect
+  target_randomness: low

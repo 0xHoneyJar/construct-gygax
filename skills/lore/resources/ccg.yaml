@@ -1,0 +1,277 @@
+tradition: ccg
+name: "Collectible Card Game Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for collectible and trading card games (Magic: The Gathering, Hearthstone,
+  Yu-Gi-Oh!, Flesh and Blood, Marvel Snap, KeyForge, etc.). Focused on mana economies, card
+  advantage theory, meta health, archetype balance, and the long-term sustainability of card
+  pools.
+
+heuristics:
+  # --- ECONOMY ---
+
+  - id: mana-curve-violation
+    name: "Mana Curve Violation"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      The mana curve is the foundational constraint of most CCGs — you can play one 1-drop on
+      turn 1, a 2-drop on turn 2, etc. Violations occur when cards circumvent this pacing
+      (free spells, cost reduction, mana cheating) so aggressively that the intended tempo
+      structure breaks. When 8-mana cards routinely land on turn 4, the game's entire costing
+      framework is invalid and every card is mispriced.
+    detection: |
+      Identify all mana-cheating effects (cost reduction, alternate costs, ramp, free plays)
+      and calculate the earliest turn each card can realistically be played. If more than 20%
+      of competitively played cards routinely hit the board 2+ turns before their mana cost
+      suggests, the curve is being violated at scale. Check if the intended turn-by-turn pacing
+      matches the actual competitive game flow.
+
+  - id: card-advantage-dominant-axis
+    name: "Card Advantage as Dominant Axis"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Card advantage (having more cards in hand/play than your opponent) is always good, but
+      when it becomes the only axis that matters — when the player with more cards always wins
+      regardless of card quality, board state, or life total — the game collapses into "who
+      draws more cards." Other axes (tempo, board position, life as resource) should compete
+      with raw card count.
+    detection: |
+      Correlate win rate with card advantage differential at key game moments (turn 5, turn 10).
+      If the player with more cards in hand wins more than 75% of the time regardless of other
+      factors, card advantage is too dominant. Check if the best decks all rely on card draw as
+      their primary engine and whether aggro/tempo strategies can compete by trading cards for
+      speed.
+
+  - id: tempo-value-collapse
+    name: "Tempo vs. Value Tradeoff Collapse"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      Healthy CCGs maintain a tension between tempo (playing proactively, spending mana
+      efficiently now) and value (generating long-term advantage through card quality). When
+      cards provide both tempo AND value simultaneously — a creature that's efficiently costed
+      and draws a card on entry — the tradeoff collapses. There's no cost to playing value
+      cards on tempo, so the strategic axis disappears.
+    detection: |
+      Identify cards that are both on-curve for stats AND generate additional resources (draw,
+      tokens, graveyard value). If the top-played creatures at each mana cost provide both a
+      competitive body and card advantage, the tradeoff has collapsed. Check if pure tempo cards
+      (vanilla stat sticks) are ever competitively viable — if not, tempo as a strategy is dead.
+
+  - id: archetype-matchup-rps
+    name: "Archetype Matchup Rock-Paper-Scissors"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When the meta resolves into hard counters (aggro beats combo, combo beats control, control
+      beats aggro) with 70%+ win rates in favored matchups, games are decided at deck selection,
+      not during play. Some matchup spread is healthy, but when the range is too wide, queuing
+      into your counter feels like a coin flip loss. Good design keeps even unfavored matchups
+      at 40-45%.
+    detection: |
+      Build a matchup matrix for the top 5 archetypes. If any matchup exceeds 65-35, the
+      matchup is too polarized. If the matrix forms a clean cycle (A beats B beats C beats A)
+      with all matchups at 60%+ for the favored side, the meta is RPS. Check if sideboard
+      access compresses these matchups or if best-of-one play is particularly distorted.
+
+  - id: meta-polarization
+    name: "Meta Polarization — Few Decks Dominate"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      A healthy meta supports 8-12 competitive archetypes. When 2-3 decks represent more than
+      50% of the competitive field, the meta is polarized. This crushes deck diversity, makes
+      the game feel "solved," and drives player attrition. Often caused by one card or mechanic
+      that's head and shoulders above alternatives, pulling all viable strategies toward it.
+    detection: |
+      Measure meta share of each archetype at competitive events. If the top 3 decks exceed
+      60% of the field, or if a single deck exceeds 25%, the meta is polarized. Also check the
+      "viable deck" count — how many archetypes maintain a positive win rate against the field.
+      If fewer than 5 archetypes are viable, diversity is insufficient.
+
+  - id: design-space-consumption
+    name: "Design Space Consumption"
+    category: scaling
+    severity: critical
+    tradition_specific: true
+    description: |
+      Every powerful card printed constrains what can be printed in the future. When a card is
+      so strong that any new card with a similar effect must be weaker (or break the game), it
+      has consumed design space. This leads to "power creep or irrelevance" — new sets must
+      either top old cards (creep) or print worse versions (player disappointment). The long-
+      term health of a CCG depends on not printing cards that foreclose future design.
+    detection: |
+      Identify cards that have been competitively relevant for more than 3 expansion cycles
+      without being part of a deliberately evergreen set. If a card has suppressed an entire
+      mechanic or card type (no new X is playable because old-X is too good), it has consumed
+      design space. Check if the design team has had to explicitly avoid printing certain effects
+      because of existing cards.
+
+  - id: mana-flood-screw
+    name: "Mana Flood/Screw"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      In games with separate resource cards (lands in MTG), drawing too many resources (flood)
+      or too few (screw) creates non-games where one player never gets to play. This variance
+      is the most-criticized aspect of MTG-style systems. Modern CCGs increasingly move toward
+      guaranteed resource progression (Hearthstone crystals, Flesh and Blood pitch system) to
+      eliminate this feel-bad.
+    detection: |
+      Calculate the probability of being unable to play spells on turns 1-3 due to insufficient
+      resources (screw) and the probability of drawing 3+ consecutive resource cards in the
+      mid-late game (flood). If either exceeds 15% in a well-built deck, the resource system
+      has a screw/flood problem. Check if the game provides any mitigation (mulligans, card
+      filtering, dual-use resource cards).
+
+  - id: first-player-advantage-ccg
+    name: "First-Player Advantage"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Going first provides tempo advantage (you deploy threats one turn earlier), but going
+      second typically provides card advantage (an extra card in hand). When the tempo advantage
+      of going first outweighs the card advantage of going second, first player has a structural
+      edge. This is especially problematic in aggressive metas where the tempo of deploying
+      threats first is decisive.
+    detection: |
+      Compare win rates by play/draw across all archetypes. If overall first-player win rate
+      exceeds 55%, the advantage is too large. Check if specific archetypes (aggro, tempo) have
+      first-player win rates above 60%. Evaluate whether the draw compensation (extra card) is
+      sufficient or if additional mechanisms are needed. Also check if the advantage varies by
+      format (best-of-one vs. best-of-three).
+
+  - id: silver-bullet-sideboarding
+    name: "Silver Bullet Sideboarding"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When sideboard cards are so narrowly powerful that they single-handedly win matchups
+      (Rest in Peace vs. graveyard decks, Stony Silence vs. artifacts), post-sideboard games
+      become "did you draw your hate card?" This reduces strategic depth to a coinflip and makes
+      the sideboard a game of gotcha rather than a tool for nuanced adjustment.
+    detection: |
+      Identify sideboard cards with matchup-specific win-rate impacts exceeding 20 percentage
+      points when drawn. If any single sideboard card swings a matchup from unfavorable to
+      heavily favorable, silver bullets are too strong. Check if the format has adequate answers
+      to sideboard hate (ways to remove enchantments, play around graveyard hate) so that
+      bullets don't auto-win.
+
+  - id: win-condition-diversity
+    name: "Win Condition Diversity"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      A healthy CCG supports multiple paths to victory: combat damage, alternate win conditions,
+      resource exhaustion (mill/fatigue), combo kills. When all competitive decks win the same
+      way (usually combat damage), the game loses strategic variety. But if non-combat wins are
+      too accessible, they can feel non-interactive and frustrating. Win conditions should be
+      diverse but all require investment and offer counterplay.
+    detection: |
+      Categorize competitive decks by primary win condition. If more than 80% win through the
+      same method, diversity is low. Check if alternate win conditions are competitively viable
+      or just meme strategies. Also verify that each win condition has meaningful counterplay —
+      if any win condition lacks interactive answers, it will feel unfair regardless of its win
+      rate.
+
+  - id: card-text-complexity-creep
+    name: "Card Text Complexity Creep"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      As a CCG ages, new cards must compete with an ever-larger pool, leading to increasingly
+      complex card text to create novel effects. When the average card requires reading multiple
+      times to understand, or when interactions between complex cards create ambiguous board
+      states, the game's barrier to entry rises and game play slows. Every year of a CCG's life
+      makes it harder for new players to join.
+    detection: |
+      Measure average word count per card across expansion sets over time. If word count is
+      trending upward by more than 10% per year, complexity is creeping. Check if the number of
+      unique keywords per set is increasing. Also track the frequency of judge calls or rules
+      questions at competitive events — rising frequency indicates that complexity is outpacing
+      player comprehension.
+
+  - id: tribal-synergy-parasitism
+    name: "Tribal/Synergy Parasitism"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Parasitic mechanics are synergies that only work with other cards in the same set or
+      tribe and contribute nothing to the broader card pool. A "merfolk lord" that only buffs
+      merfolk is parasitic — it's dead outside merfolk decks. This limits deckbuilding creativity
+      and creates all-or-nothing tribal decks. Good synergies have baseline utility plus bonus
+      value in the right context.
+    detection: |
+      Identify cards with tribal or mechanic-specific synergies and check if they have any
+      utility outside their designated archetype. If more than 50% of a set's cards are only
+      playable within one specific archetype, the set is parasitic. Check if tribal support
+      cards have a reasonable floor (are they playable, if weak, without the full tribal package?)
+      or if they're blank cards outside their tribe.
+
+  - id: removal-efficiency
+    name: "Removal Efficiency"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      The cost of removing a threat vs. deploying it defines the pace and style of the game.
+      If removal is too cheap (1 mana kills anything), aggressive and midrange strategies can't
+      stick threats, and the game becomes control mirrors. If removal is too expensive (always
+      costs more than the threat), threats go unanswered, and whoever deploys first wins. The
+      removal-to-threat cost ratio should hover around 1:1 for fair cards.
+    detection: |
+      Compare the mana cost of the most-played removal spells to the mana cost of the most-
+      played threats. If removal consistently costs less than the threats it answers, control
+      is structurally favored. If removal costs more, aggro/tempo is favored. Calculate the
+      "mana efficiency ratio" of answers to threats — it should stay between 0.7 and 1.3 for a
+      balanced environment. Check if unconditional removal exists and at what cost.
+
+  - id: cantrip-power-level
+    name: "Cantrip Power Level"
+    category: economy
+    severity: medium
+    tradition_specific: true
+    description: |
+      Cantrips — cheap spells that replace themselves by drawing a card — are the glue of many
+      CCG decks. When cantrips are too powerful (providing a meaningful effect PLUS card draw
+      for 1 mana), they enable overly consistent combo decks and make deck sizes functionally
+      smaller. When they're too weak, decks lack the filtering to find key cards and variance
+      increases. Cantrip power is a meta dial.
+    detection: |
+      Evaluate cantrips (1-2 cost spells that draw a card) by their secondary effect. If any
+      cantrip's secondary effect would be playable on its own at 1 more mana, the cantrip is
+      too strong — you're getting a free draw. Check if the most-played cantrips appear in more
+      than 60% of all competitive decks, indicating they're format staples rather than build-
+      around decisions.
+
+  - id: finisher-accessibility
+    name: "Finisher Accessibility"
+    category: economy
+    severity: medium
+    tradition_specific: true
+    description: |
+      Games need to end. If powerful finisher cards (the 7+ mana game-ending threats) are too
+      rare, too expensive to acquire, or too easily answered, games grind indefinitely. If
+      they're too accessible or too resilient, games end abruptly without counterplay. The
+      finisher should be the reward for surviving to the late game, not a card you auto-include
+      because it wins on its own.
+    detection: |
+      Check the average game length in turns and compare it to the turn when finisher-class
+      cards become playable. If games regularly end before finishers can be deployed, aggro is
+      too fast or finishers are too expensive. If games regularly stall for 5+ turns after
+      finishers are available, finishers are too weak. Also check if finisher-class cards have
+      meaningful counterplay (can be answered for reasonable mana) or if they're "resolve this
+      and win."

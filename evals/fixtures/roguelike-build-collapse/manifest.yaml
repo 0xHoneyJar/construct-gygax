@@ -1,0 +1,24 @@
+id: roguelike-build-collapse
+name: "Dominant Build Collapse (Slay the Spire Wraith Form Anti-pattern)"
+failure_archetype: degenerate-strategy
+tradition: roguelike
+description: |
+  Encodes a roguelike where one build path (Vampire Lifesteal) is so dominant
+  that discovering it trivializes all content. The build combines lifesteal with
+  AoE damage to create an unkillable feedback loop: deal damage to heal, heal
+  to survive longer, survive longer to deal more damage. Every other build
+  requires careful resource management and risk assessment. Vampire Lifesteal
+  requires only finding 2-3 key items in the first 3 floors. Once assembled,
+  the build auto-wins every seed regardless of enemy composition, boss modifiers,
+  or floor hazards. Run variance collapses to "did I find the core items?"
+source: "grimoires/gygax/references/design-failure-postmortem.md"
+tests_skills:
+  - augury (resource-economy)
+  - augury (progression)
+  - cabal (Explorer + Optimizer)
+  - lore
+design_parameters:
+  target_session_length: medium
+  target_audience: intermediate
+  target_interaction: none
+  target_randomness: high

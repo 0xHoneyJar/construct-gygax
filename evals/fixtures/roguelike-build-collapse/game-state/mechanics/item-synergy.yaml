@@ -1,0 +1,69 @@
+id: item-synergy
+name: "Item Synergy System"
+type: mechanics
+description: "Items provide bonuses that interact with each other. Most synergies are additive (stacking flat bonuses). The Vampire Lifesteal synergy is multiplicative: lifesteal percentage * damage * enemies_hit. This multiplicative interaction creates exponential returns from what appear to be linear item choices. The synergy system lacks caps, diminishing returns, or anti-synergy mechanics."
+tradition: roguelike
+tags: [synergy, items, multiplicative, uncapped]
+depends_on: [resources/item-drops.yaml]
+affects: [mechanics/combat-resolution.yaml, entities/build-archetypes.yaml, tensions/build-diversity-collapse.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Passive (items apply effects continuously)"
+cost: []
+
+resolution:
+  method: deterministic
+  stat: null
+  dc: null
+  success: "Item effects stack and interact as described"
+  failure: null
+
+synergy_types:
+  additive:
+    examples: ["+10 damage", "+20 armor", "+15 HP"]
+    scaling: "Linear. 3 damage items = 3x the bonus."
+    cap: "none (but returns diminish naturally as base stats grow)"
+    note: "Most item bonuses are additive. Stacking works but with soft diminishing returns."
+  multiplicative:
+    examples: ["+25% lifesteal", "+30% AoE radius", "+15% attack speed"]
+    scaling: "Exponential when combined. Lifesteal * AoE * speed = cubic scaling."
+    cap: "NONE"
+    note: "No cap, no diminishing returns, no mutual exclusion. This is the exploit vector."
+
+vampire_synergy_chain:
+  item_1:
+    name: "Crimson Fang"
+    effect: "+15% lifesteal"
+    standalone: "Heals 15% of single-target damage. Moderate sustain."
+  item_2:
+    name: "Blood Vortex"
+    effect: "+10% lifesteal, attacks hit all enemies within 3 tiles"
+    standalone: "Adds AoE and minor lifesteal. Decent clear speed."
+  combined:
+    effective_lifesteal: 0.25
+    aoe_enemies_hit: "4-8 per attack"
+    healing_per_attack: "50-100 HP (against 4-8 enemies at 50 damage)"
+    note: "Two items create functional immortality. Third item is gravy."
+  item_3:
+    name: "Sanguine Burst"
+    effect: "+50% damage when above 80% HP"
+    standalone: "Conditional damage boost. Hard to maintain for other builds."
+    with_lifesteal: "Always active. Lifesteal keeps HP above 80% permanently."
+    note: "Third item turns the feedback loop from 'unkillable' to 'unkillable AND highest damage.'"
+
+missing_constraints:
+  - "No cap on lifesteal percentage"
+  - "No cap on healing per attack or per second"
+  - "No per-attack vs per-hit distinction for lifesteal"
+  - "No anti-synergy items (items that weaken other item types)"
+  - "No enemy heal-reduction effects"
+  - "No mutually exclusive item tags"
+
+notes:
+  - "The synergy system is the root cause. Each item is reasonable in isolation. Their interaction is broken."
+  - "Isaac-style roguelikes intentionally create broken combos but balance through rarity and mutual exclusion."
+  - "Hades caps lifesteal at a flat amount and makes sustain items compete for the same item slot."
+  - "Fix: make lifesteal per-attack (not per-hit), add a healing cap per second, or make AoE and lifesteal items share a slot."

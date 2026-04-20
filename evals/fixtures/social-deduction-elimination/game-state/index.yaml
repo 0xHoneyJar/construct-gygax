@@ -1,0 +1,70 @@
+game: "First-Night Elimination Test Fixture"
+tradition: social-deduction
+description: "A social deduction game where the first-night kill eliminates a player before they've taken any meaningful action. The eliminated player watches for 30-45 minutes. With 8 players, each player has a 12.5% chance of immediate elimination and a 25% chance of elimination before their first real deduction opportunity."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: medium
+  target_audience: casual
+  target_variance: high
+  target_lethality: high
+  target_prep: none
+  target_player_count: standard
+  target_interaction: direct
+  target_randomness: low
+
+entity_count:
+  stats: 1
+  resources: 1
+  mechanics: 2
+  progression: 0
+  entities: 1
+  tensions: 1
+
+files:
+  - path: stats/player-information.yaml
+    id: player-information
+    depends_on: []
+    affects: [mechanics/day-phase.yaml]
+
+  - path: resources/alive-players.yaml
+    id: alive-players
+    depends_on: [mechanics/night-phase.yaml, mechanics/day-phase.yaml]
+    affects: [tensions/elimination-pacing.yaml]
+
+  - path: mechanics/night-phase.yaml
+    id: night-phase
+    depends_on: []
+    affects: [resources/alive-players.yaml]
+
+  - path: mechanics/day-phase.yaml
+    id: day-phase
+    depends_on: [stats/player-information.yaml, resources/alive-players.yaml]
+    affects: [resources/alive-players.yaml]
+
+  - path: entities/role-assignments.yaml
+    id: role-assignments
+    depends_on: []
+    affects: [mechanics/night-phase.yaml, mechanics/day-phase.yaml, stats/player-information.yaml]
+
+  - path: tensions/elimination-pacing.yaml
+    id: elimination-pacing
+    depends_on: [resources/alive-players.yaml, mechanics/night-phase.yaml, mechanics/day-phase.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 14
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: resources/alive-players.yaml
+      dependents: 3
+    - path: mechanics/night-phase.yaml
+      dependents: 2
+    - path: mechanics/day-phase.yaml
+      dependents: 2
+    - path: stats/player-information.yaml
+      dependents: 2

@@ -1,0 +1,98 @@
+fixture: roguelike-build-collapse
+expected_findings:
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    category: uncapped-feedback-loop
+    description_contains: "lifesteal"
+    entity_refs:
+      - mechanics/item-synergy.yaml
+      - resources/health-pool.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    category: attrition-inversion
+    description_contains: "healing"
+    entity_refs:
+      - resources/health-pool.yaml
+      - stats/player-combat-stats.yaml
+
+  - skill: augury
+    layer: progression
+    severity: Critical
+    category: difficulty-inversion
+    description_contains: "floor"
+    entity_refs:
+      - progression/floor-scaling.yaml
+      - mechanics/combat-resolution.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: restart-exploitation
+    description_contains: "restart"
+    entity_refs:
+      - resources/item-drops.yaml
+
+  - skill: augury
+    layer: action-economy
+    severity: Warning
+    category: degenerate-strategy
+    description_contains: "auto-pilot"
+    entity_refs:
+      - entities/build-archetypes.yaml
+      - mechanics/combat-resolution.yaml
+
+  - skill: cabal
+    signal: dead-time
+    archetype: Explorer
+    description_contains: "same run"
+
+  - skill: cabal
+    signal: excitement
+    archetype: Optimizer
+    description_contains: "lifesteal"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Veteran
+    description_contains: "diversity"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "dominant build"
+
+  - skill: lore
+    tradition: roguelike
+    heuristic: "every-synergy-needs-a-ceiling"
+    severity: Critical
+    description_contains: "uncapped"
+    entity_refs:
+      - mechanics/item-synergy.yaml
+      - tensions/build-diversity-collapse.yaml
+
+  - skill: lore
+    tradition: roguelike
+    heuristic: "difficulty-must-scale-against-all-builds"
+    severity: Critical
+    description_contains: "inversion"
+    entity_refs:
+      - progression/floor-scaling.yaml
+      - resources/health-pool.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "Combat resolution works correctly. Damage, lifesteal, and AoE calculations are all mathematically sound. The problem is in the item interaction design, not in how combat resolves."
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    reason: "Cognitive load is appropriate for a roguelike. The game is not hard to understand. The problem is that understanding it reveals a dominant strategy, not that the system is confusing."
+
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    reason: "Run pacing is appropriate. Floors take the right amount of time, bosses appear at expected intervals. The failure is strategic (one build dominates), not temporal (runs take too long or too short)."

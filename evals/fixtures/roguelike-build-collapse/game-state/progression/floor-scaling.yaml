@@ -1,0 +1,50 @@
+id: floor-scaling
+name: "Floor Scaling (Difficulty Curve)"
+type: progression
+description: "Enemy stats scale per floor: more HP, more damage, more enemies per room. The intended effect is increasing attrition pressure. The actual effect for Vampire builds is increasing healing output -- more enemies per room means more lifesteal targets. The difficulty curve is inverted for the dominant build: later floors are EASIER because they provide more healing."
+tradition: roguelike
+tags: [scaling, difficulty, floors, progression]
+depends_on: [mechanics/combat-resolution.yaml]
+affects: [resources/item-drops.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+progression_table:
+  floor_1: {enemy_count: 3, enemy_hp: 30, enemy_damage: 5, total_floor_dps: 15}
+  floor_5: {enemy_count: 5, enemy_hp: 60, enemy_damage: 10, total_floor_dps: 50}
+  floor_10: {enemy_count: 8, enemy_hp: 120, enemy_damage: 15, total_floor_dps: 120}
+  floor_15: {enemy_count: 10, enemy_hp: 200, enemy_damage: 20, total_floor_dps: 200}
+  floor_20: {enemy_count: 12, enemy_hp: 300, enemy_damage: 25, total_floor_dps: 300}
+  boss_floor: {enemy_count: 1, enemy_hp: 1500, enemy_damage: 50, total_floor_dps: 50}
+
+intended_vs_actual:
+  intended:
+    attrition: "Enemies deal more damage per floor. Player health erodes. Deep floors require optimized builds."
+    pressure: "Increasing enemy count spreads player damage thin. AoE becomes valuable but not dominant."
+    climax: "Boss floors test sustained single-target damage and defense."
+  actual_for_vampire:
+    attrition: "More enemies = more lifesteal targets = more healing. Attrition is negative (player GAINS health)."
+    pressure: "Increasing enemy count increases lifesteal healing. The harder the floor, the more the Vampire heals."
+    climax: "Boss floor is the only challenge -- single target means reduced healing. But health buffer from cleared floors compensates."
+
+difficulty_inversion:
+  floor_5_vampire_net_hp: "+30/s"
+  floor_10_vampire_net_hp: "+90/s"
+  floor_15_vampire_net_hp: "+120/s"
+  floor_20_vampire_net_hp: "+150/s"
+  trend: "Difficulty decreases per floor for Vampire. The progression curve is inverted."
+
+other_builds_scaling:
+  floor_5_tank_net_hp: "-5/s"
+  floor_10_tank_net_hp: "-25/s"
+  floor_15_tank_net_hp: "-50/s"
+  floor_20_tank_net_hp: "-90/s"
+  trend: "Other builds experience the intended difficulty curve: increasing pressure, eventual death."
+
+notes:
+  - "Difficulty scaling is well-designed FOR builds that don't have uncapped AoE lifesteal."
+  - "The problem is that the scaling mechanism (more enemies) feeds directly into the exploit's healing formula."
+  - "Fix: scale difficulty through enemy DAMAGE and HP, not enemy COUNT. Or add healing-reduction modifiers on later floors."
+  - "Alternative: later floors spawn enemies with anti-heal auras that reduce lifesteal by 50-75%."

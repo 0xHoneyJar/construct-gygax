@@ -45,7 +45,7 @@ mkdir -p ".claude/skills/cabal/resources"
 curl -fsSL "$BASE_URL/skills/cabal/resources/archetypes.yaml" -o ".claude/skills/cabal/resources/archetypes.yaml"
 
 mkdir -p ".claude/skills/lore/resources"
-for tradition in d20 pbta fitd osr cepheus; do
+for tradition in d20 pbta fitd osr cepheus autobattler roguelike deckbuilder ccg 4x tactics eurogame social-deduction cooperative idle extraction looter immersive-sim; do
   curl -fsSL "$BASE_URL/skills/lore/resources/$tradition.yaml" -o ".claude/skills/lore/resources/$tradition.yaml"
 done
 

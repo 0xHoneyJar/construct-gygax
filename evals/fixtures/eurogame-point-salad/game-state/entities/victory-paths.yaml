@@ -1,0 +1,55 @@
+id: victory-paths
+name: "Victory Paths (Five Equivalent Routes)"
+type: entities
+description: "The five strategic paths available to players. Each path has unique theming, unique mechanics, and unique resource interactions -- but identical expected payoffs. The paths are a false choice: they look like a strategic decision but function as an aesthetic preference. A player choosing randomly performs as well as a player choosing optimally."
+tradition: eurogame
+tags: [strategy, false-choice, path-equivalence]
+depends_on: [mechanics/path-scoring.yaml]
+affects: [stats/victory-points.yaml, tensions/path-equivalence.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+paths:
+  trade:
+    theme: "Merchant caravans and exotic goods"
+    unique_mechanic: "Set collection with trade route bonuses"
+    decision_points: 8
+    meaningful_decisions: 1
+    note: "Only the final set-completion timing matters. All other decisions are interchangeable."
+  building:
+    theme: "City construction and infrastructure"
+    unique_mechanic: "Tile placement with adjacency scoring"
+    decision_points: 10
+    meaningful_decisions: 2
+    note: "Adjacency placement has some tactical depth, but optimal placement is usually obvious."
+  agriculture:
+    theme: "Farming and harvest cycles"
+    unique_mechanic: "Engine building with compounding yields"
+    decision_points: 10
+    meaningful_decisions: 2
+    note: "Plant early, harvest late. The engine-building arc is predetermined."
+  culture:
+    theme: "Art patronage and festivals"
+    unique_mechanic: "Card drafting with set bonuses"
+    decision_points: 12
+    meaningful_decisions: 3
+    note: "Most decisions per path, but triangular scoring is forgiving -- partial sets still score well."
+  military:
+    theme: "Regional conquest and fortification"
+    unique_mechanic: "Area majority with limited conflict"
+    decision_points: 8
+    meaningful_decisions: 2
+    note: "Only path with direct interaction, but majority thresholds are low enough that ties are common."
+
+cross_path_analysis:
+  switching_cost: "~2 VP (one wasted action to pivot)"
+  switching_frequency: "Rare -- most players commit by round 3"
+  hybrid_viability: "Splitting between two paths scores 48-50 VP. Pure paths score 49-51 VP. Hybrid is slightly worse but within noise."
+  optimal_strategy: "None. Random path selection is within 1 VP of any deliberate strategy."
+
+notes:
+  - "The paths create the experience of choice without the substance. Players discuss strategy, plan paths, and feel engaged -- but the outcomes are predetermined by the flat payoff structure."
+  - "This is a 'theme park' design: each ride is different but they all end in the same place."
+  - "Fix: make paths interact. Trade should benefit from military (protected routes). Agriculture should feed building (materials). Culture should counter military (soft power)."
