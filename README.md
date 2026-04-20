@@ -1,24 +1,24 @@
 # Gygax
 
-A TTRPG systems analyst for the [Loa](https://github.com/0xHoneyJar/loa) ecosystem.
+A game systems analyst for the [Loa](https://github.com/0xHoneyJar/loa) ecosystem.
 
-You design a mechanic. Gygax tells you your stamina system doesn't regenerate in combat, so that dodge reaction you're excited about becomes a trap option after round two. Before your players find out at the table.
+You design a mechanic. Gygax tells you your stamina system doesn't regenerate in combat, so that dodge reaction you're excited about becomes a trap option after round two. You design a eurogame engine. Gygax tells you the big-money strategy dominates all engine-building. You draft an autobattler comp. Gygax tells you one synergy line has a 2x DPS multiplier over everything else. Before your players find out.
 
 Built on [construct-base](https://github.com/0xHoneyJar/construct-base).
 
 ## Why
 
-Designing a TTRPG is juggling twenty interlocking systems in your head. Change one number and three mechanics break in ways you won't notice until session twelve. The feedback loop between "I think this works" and "oh, it definitely doesn't" is measured in weeks of real playtesting.
+Designing a game is juggling interlocking systems in your head. Change one number and three mechanics break in ways you won't notice until someone finds the exploit. The feedback loop between "I think this works" and "oh, it definitely doesn't" is measured in weeks of real playtesting.
 
-Gygax shortens that loop to minutes. Not by replacing playtesting — by catching the structural problems before you ever sit down at a table.
+Gygax shortens that loop to minutes. Not by replacing playtesting — by catching the structural problems before anyone sits down to play.
 
 **What makes it different from just asking an LLM about game design:**
 
-- **It remembers.** Gygax maintains structured game-state across sessions. When you're designing your spell system, it still knows about your stamina system. Cross-system interactions are where the real bugs hide.
-- **It does math, not vibes.** "Seems overpowered" isn't actionable. "47 DPR against a 180 HP pool gives a TTK of 3.8 seconds — below your target of 6-8" is.
-- **It argues with you.** Nine simulated player archetypes stress-test your design from every angle — the Optimizer finds the exploit, the Newcomer can't figure out the rules, the GM is drowning in cognitive load. They do it before your real players do.
+- **It remembers.** Gygax maintains structured game-state across sessions. When you're designing your spell system, it still knows about your stamina system. When you're tuning your card economy, it still knows about your scoring paths. Cross-system interactions are where the real bugs hide.
+- **It does math, not vibes.** "Seems overpowered" isn't actionable. "47 DPR against a 180 HP pool gives a TTK of 3.8 seconds" is. For non-dice games, it does structural analysis — slot contention ratios, conversion efficiency, decision-space mapping.
+- **It argues with you.** Nine simulated player archetypes stress-test your design from every angle — the Optimizer finds the exploit, the Newcomer can't figure out the rules, the GM is drowning in cognitive load. Same archetypes work whether you're building a TTRPG, a eurogame, an autobattler, or a roguelike. They adapt their focus to your game's tradition.
 - **It lets you explore.** Fork your game-state, try a change, see the consequences, compare alternatives. Commit the good branch, discard the rest. Design is branching, not linear.
-- **It knows its own limits.** Gygax asks the designer for *intent* — what each mechanic is *supposed* to do — so analysis can distinguish a deliberate asymmetry from a bug. It compares against installed reference systems (5e SRD, PbtA baseline, Cepheus) when you want to see how your design stacks up. And it runs real math via probability scripts when LLM reasoning would be unreliable.
+- **It knows its own limits.** Gygax asks the designer for *intent* — what each mechanic is *supposed* to do — so analysis can distinguish a deliberate asymmetry from a bug. It compares against installed reference systems when you want to see how your design stacks up. And it runs real math via probability scripts when LLM reasoning would be unreliable.
 
 ## Commands
 
@@ -28,7 +28,7 @@ Gygax shortens that loop to minutes. Not by replacing playtesting — by catchin
 | `/homebrew` | Design or refine a mechanic. Gygax checks it against everything that already exists, prompts for intent, logs rationale. |
 | `/augury` | Run the numbers. Probability scripts handle dice pools, bell curves, advantage math, exploding dice. Cross-system comparison via `/augury compare --against 5e-srd`. |
 | `/cabal` | Summon up to nine phantom players to stress-test your design with scenario walkthroughs. Intent-aware — deliberate asymmetries aren't flagged as bugs. |
-| `/lore` | 230+ curated design heuristics across d20, PbtA, FitD, OSR, and Cepheus. Learns per-game — patterns discovered in analysis can be captured and eventually promoted to curated. |
+| `/lore` | 460+ curated design heuristics across 20 traditions — TTRPGs, eurogames, autobattlers, roguelikes, deckbuilders, CCGs, tactics, 4X, and more. Learns per-game — patterns discovered in analysis can be captured and eventually promoted to curated. |
 | `/scry` | Fork your game-state, explore a change, see the impact. Compare branches, commit the best one. Preserves intent across forks. |
 | `/delve` | Analyze dungeons — ecology coherence, Xandering (non-linearity), attrition curves, loot economies, the G.U.A.R.D. framework. |
 | `/gygax` | Where am I? What's in game-state? References installed, learned heuristics captured, recent reports. |
@@ -63,7 +63,7 @@ constructs install gygax
 | **The Explorer** | Wanders off the critical path. Tries every optional system and finds the dead design space. |
 | **The Storyteller** | Asks whether mechanics serve the fiction. Finds where the drama dies. |
 | **The Rules Lawyer** | Reads your text literally. Finds every ambiguity and undefined state. |
-| **The Newcomer** | Has never played a TTRPG. Finds where your game fails to teach itself. |
+| **The Newcomer** | First time playing. Finds where your game fails to teach itself. |
 | **The Chaos Agent** | Goes off-script. "I befriend the monster." Finds where no mechanic covers the action. |
 | **The GM** | Runs the game behind the screen. Finds where cognitive load explodes. |
 | **The Anxious Player** | Overwhelmed by choices. Finds where decision paralysis kills the fun. |
@@ -147,10 +147,11 @@ intent:
 
 Now when augury sees the 66.7% asymmetry, it reports it as an Observation ("working as designed per intent"), not a Warning. Critical findings never suppress — math can't be intentionally broken. But "this is unusual" vs "this is deliberate" is a distinction Gygax can't make without your help.
 
-## Works With Any TTRPG
+## Works With Any Game
 
-Gygax has deep heuristics for established traditions:
+Gygax has curated design heuristics across 20 traditions:
 
+**TTRPGs:**
 - **d20** — D&D, Pathfinder, 13th Age
 - **Powered by the Apocalypse** — Dungeon World, Masks, Monsterhearts
 - **Forged in the Dark** — Blades in the Dark, Scum and Villainy
@@ -158,7 +159,26 @@ Gygax has deep heuristics for established traditions:
 - **Cepheus / Traveller** — 2d6+Effect sci-fi with lifepath and Age of Sail philosophy
 - **Freeform / narrative-first** — Wanderhome, Belonging Outside Belonging
 
-But it also works with games that don't fit any tradition. Journaling RPGs, map-drawing games, lyric games, GMless experiments, games where you play as a landscape — Gygax meets the game where it is. If your game only has two entity types, that's fine. If none of the 230+ curated heuristics apply, Gygax falls back to structural analysis: decision space, loop completeness, player agency, emotional arc. And the heuristics that DO fire on your specific game can be captured as learned lore and — once proven across multiple games — promoted to the curated library.
+**Board & card games:**
+- **Eurogame** — Agricola, Brass, Terraforming Mars
+- **Deckbuilder** — Dominion, Star Realms, Aeon's End
+- **CCG/TCG** — Magic: the Gathering, Hearthstone, Marvel Snap
+- **Cooperative** — Pandemic, Spirit Island, Hanabi
+- **Social deduction** — Blood on the Clocktower, Werewolf, Secret Hitler
+
+**Digital game design:**
+- **Autobattler** — TFT, Super Auto Pets, Storybook Brawl
+- **Roguelike** — Slay the Spire, Hades, Balatro
+- **Tactics** — XCOM, Into the Breach, Fire Emblem
+- **4X** — Civilization, Stellaris, Endless Legend
+- **Idle/Incremental** — Cookie Clicker, Melvor Idle
+- **Extraction** — Escape from Tarkov, Dark and Darker
+- **Looter** — Diablo, Path of Exile, Destiny
+- **Immersive sim** — Deus Ex, Prey, Dishonored
+
+The same analytical tools work across all of them. Augury's six analytical layers (resolution, action economy, resource economy, progression, pacing, cognitive load) apply whether you're checking dice probability in a TTRPG or conversion efficiency in a eurogame. The nine cabal archetypes test the same player mindsets — the Optimizer finds the dominant strategy, the Newcomer hits the onboarding wall, the Veteran tests long-term depth — with behavioral weightings that adapt to each tradition.
+
+For games that don't fit any tradition, use `custom`. Gygax falls back to structural analysis: decision space, loop completeness, player agency, emotional arc. Heuristics that fire on your specific game can be captured as learned lore and — once proven across multiple games — promoted to the curated library.
 
 The goal is always the same: does this design do what you think it does?
 
@@ -175,7 +195,7 @@ Everything Gygax produces is saved as clean, presentable markdown in `grimoires/
 
 ## Scope
 
-TTRPG-focused. Card games, video games, and broader systems design are on the roadmap.
+Any game with systems to analyze. TTRPGs, board games, card games, digital game design documents, autobattlers, roguelikes, tactics games, idle games — if the design can exist in a repo, Gygax can work with it.
 
 ## License
 
