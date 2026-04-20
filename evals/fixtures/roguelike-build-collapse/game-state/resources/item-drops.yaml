@@ -1,0 +1,55 @@
+id: item-drops
+name: "Item Drops (Loot System)"
+type: resources
+description: "Random item rewards after each floor's combat. The drop pool contains 40 items across 6 build archetypes. The Vampire Lifesteal core requires only 2-3 specific items from a pool of 8 lifesteal-tagged items. The probability of assembling the core build in 3 floors is 34% -- high enough that experienced players can reliably force it by restarting runs until the items appear."
+tradition: roguelike
+tags: [loot, items, drop-rates, rng]
+depends_on: [progression/floor-scaling.yaml]
+affects: [mechanics/combat-resolution.yaml, entities/build-archetypes.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  total_items: 40
+  items_per_archetype:
+    vampire: 8
+    glass_cannon: 7
+    tank: 7
+    summoner: 6
+    trap_master: 6
+    balanced: 6
+
+drop_mechanics:
+  items_offered_per_floor: 3
+  choices_per_drop: "pick 1 of 3"
+  weighting: "uniform (all items equally likely)"
+  pity_timer: "none"
+  archetype_seeding: "none (fully random)"
+
+vampire_assembly_probability:
+  core_items_needed: 2
+  core_items_in_pool: 5
+  nice_to_have_items: 3
+  probability_of_1_core_in_3_choices: 0.38
+  probability_of_core_assembled_by_floor_3: 0.34
+  probability_of_core_assembled_by_floor_5: 0.58
+  note: "34% chance of assembling the dominant build by floor 3. Players who reset on bad starts get it within 3 attempts on average."
+
+restart_exploitation:
+  average_restarts_to_hit_vampire_core: 2.9
+  time_per_restart: "45 seconds (die intentionally on floor 1)"
+  time_to_force_vampire_build: "~2.5 minutes of restarting"
+  note: "The dominant strategy is: restart until you get lifesteal items, then auto-win. Run selection replaces run play."
+
+other_build_assembly:
+  glass_cannon_by_floor_3: 0.28
+  tank_by_floor_3: 0.28
+  summoner_by_floor_3: 0.22
+  note: "Other builds have similar assembly rates but dramatically worse outcomes once assembled."
+
+notes:
+  - "The drop system is fair in isolation -- all items are equally weighted. The problem is that one build's items are disproportionately powerful."
+  - "Fix: reduce lifesteal items to 2-3 (making the build harder to assemble), or make lifesteal items mutually exclusive."
+  - "Alternative: add anti-synergy items that punish overcommitting to one build (e.g., 'Cursed Fang: +15% lifesteal, -50% AoE radius')."

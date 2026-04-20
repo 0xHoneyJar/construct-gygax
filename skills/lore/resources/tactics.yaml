@@ -1,0 +1,326 @@
+tradition: tactics
+name: "Tactics Game Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for tactical combat games, both digital (XCOM, Fire Emblem, Into the
+  Breach, Jagged Alliance, Tactics Ogre) and tabletop (Warhammer, Frosthaven, Gloomhaven,
+  Rangers of Shadow Deep). Covers grid-based and hex-based tactical systems where unit
+  positioning, action economy, and squad composition are the primary decision spaces.
+  Distilled from competitive play, romhacking communities, modding scenes, and decades of
+  tactical game design iteration.
+
+heuristics:
+  # --- COMBAT ---
+
+  - id: map-spawn-advantage
+    name: "Map Design Spawn Advantage"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      When deployment zones are asymmetric, one side can start with elevation, cover, or
+      closer proximity to objectives. This is interesting in narrative scenarios (the
+      defenders hold the ridge) but problematic in competitive or procedurally generated
+      maps where spawn advantage silently determines outcomes. XCOM's pod activation system
+      partially solves this by making the player always the aggressor, but symmetric
+      competitive games (tabletop wargames) must ensure deployment zone parity.
+    detection: |
+      Check for deployment zone or spawn position mechanics. If deployment zones are
+      fixed and asymmetric, check whether the advantaged side has compensating disadvantages
+      (fewer units, weaker equipment, time pressure). If deployment is random with no
+      balancing mechanism, check the variance in terrain quality across possible spawn
+      locations.
+
+  - id: unit-composition-balance
+    name: "Unit Composition Balance"
+    category: combat
+    severity: critical
+    tradition_specific: true
+    description: |
+      When one unit type dominates all others regardless of context, composition is solved.
+      If heavy infantry beats everything, the optimal army is all heavy infantry. Healthy
+      composition design creates rock-paper-scissors dynamics where no single unit type is
+      universally optimal: archers beat slow melee, cavalry beats archers, spears beat
+      cavalry, etc. The counter-relationships must be strong enough to matter but not so
+      strong that the wrong composition is an automatic loss.
+    detection: |
+      Map unit type matchups. If any unit type has a positive expected outcome against all
+      other unit types, it is dominant. If any unit type has a negative expected outcome
+      against all others, it is obsolete. Check if counter-relationships exist and whether
+      they are strong enough (>20% advantage) to incentivize mixed composition.
+
+  - id: per-unit-action-economy
+    name: "Per-Unit Action Economy"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      Each unit's turn is a decision point: move, attack, use ability, hold position. If
+      units have only one meaningful action per turn (move-and-attack), tactics are shallow.
+      If units have too many options (move, attack, four abilities, item, overwatch), turns
+      are slow. The sweet spot: 2-3 meaningful choices per unit per turn, with the terrain
+      and enemy position making different choices optimal in different situations. Into the
+      Breach nails this with exactly one move and one action per mech.
+    detection: |
+      Count meaningful actions available per unit per turn. If the average unit has fewer
+      than 2 distinct actions (move + one of attack/ability/item), tactical depth is low.
+      If units average more than 4 distinct actions per turn, cognitive load per unit is
+      high. Multiply by squad size to estimate total decisions per player turn.
+
+  - id: permadeath-recovery
+    name: "Permadeath Recovery Mechanics"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      Permadeath creates consequences but can spiral: losing a leveled unit makes the next
+      mission harder, which causes more losses, which makes the next mission harder still.
+      Without recovery mechanics (recruit replacements, catch-up XP, reduced difficulty
+      after losses), permadeath spirals into an unwinnable state that the player does not
+      recognize until hours later. Fire Emblem and XCOM both suffer from invisible death
+      spirals where the correct decision was to restart 3 hours ago.
+    detection: |
+      Check for permadeath or permanent loss mechanics. If units can be permanently lost,
+      check whether replacement units are available and whether they start at a level
+      competitive with surviving units. If replacement units start at level 1 in a game
+      where enemies scale, the death spiral is present. Check for difficulty adjustment
+      after losses.
+
+  - id: cover-terrain-value
+    name: "Cover / Terrain Value Calibration"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      Cover and terrain bonuses must be significant enough to influence movement decisions
+      but not so strong that being in cover makes a unit invulnerable. If half-cover grants
+      +2 AC in a system where attacks hit on 10+, it shifts hit chance from 55% to 45% --
+      meaningful but not decisive. If cover grants +5 in the same system, hit chance drops
+      to 30% and the game becomes "whoever reaches cover first wins." XCOM's defense values
+      are famously swingy, making cover feel both essential and unreliable.
+    detection: |
+      Check for cover or terrain defense mechanics. Calculate the hit probability shift
+      from cover. If cover changes hit probability by less than 10%, it is too weak to
+      influence positioning. If cover changes hit probability by more than 30%, it is
+      strong enough to make exposed units non-viable. Check if flanking or abilities bypass
+      cover to prevent static play.
+
+  - id: flanking-positioning-rewards
+    name: "Flanking / Positioning Reward Calibration"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      Flanking and rear attacks reward players for maneuvering around enemies rather than
+      attacking head-on. The bonus must be large enough to justify spending movement actions
+      on positioning rather than attacking. If flanking grants +1 to hit, nobody will spend
+      two turns maneuvering for it. If flanking grants automatic critical hits, the entire
+      game reduces to who flanks first. Tactics Ogre's directional damage system makes
+      positioning matter without making it everything.
+    detection: |
+      Check for flanking, facing, or directional attack mechanics. If the flanking bonus
+      is less than 15% improvement in damage or accuracy, it is too weak to incentivize
+      maneuvering. If it exceeds 50% improvement, it dominates all other tactical
+      considerations. Check if enemies have access to the same flanking mechanics to
+      create mutual positioning pressure.
+
+  - id: difficulty-spike-patterns
+    name: "Difficulty Spike Patterns"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      A smooth difficulty curve teaches mechanics progressively and builds player mastery.
+      Spikes -- missions that are dramatically harder than adjacent missions -- break the
+      learning flow and frustrate players. Spikes often occur when a new enemy type, map
+      hazard, or mechanical constraint is introduced without adequate ramp-up. The infamous
+      XCOM 2 Lost missions and Fire Emblem's mid-game ambush chapters are classic spikes.
+    detection: |
+      Check for mission or encounter difficulty progression. If enemy power, count, or
+      mechanical complexity increases by more than 25% between consecutive missions without
+      introducing the new element in a lower-stakes context first, a spike exists. Check
+      if the spike correlates with the introduction of a new mechanic or enemy type.
+
+  - id: ability-combo-accessibility
+    name: "Ability Combo Accessibility"
+    category: combat
+    severity: medium
+    tradition_specific: true
+    description: |
+      Combos (unit A sets up a condition that unit B exploits) add depth but create a
+      knowledge barrier. If the best strategy requires discovering non-obvious interactions
+      between abilities, new players will use abilities in isolation and find the game too
+      hard, while experienced players trivialize encounters with combos. The game should
+      signal combo potential: if freezing an enemy makes the next attack deal double damage,
+      the freeze ability's description should hint at this.
+    detection: |
+      Check for mechanics where one ability's effect modifies the outcome of another
+      ability. If combo damage exceeds non-combo damage by more than 50%, combos are
+      dominant. Check if combo relationships are documented, tutorialized, or visually
+      signaled (status effect icons, ability descriptions mentioning synergy).
+
+  - id: squad-size-cognitive-load
+    name: "Squad Size vs. Cognitive Load"
+    category: combat
+    severity: medium
+    tradition_specific: true
+    description: |
+      Each unit added to the squad increases decisions per turn linearly but tactical
+      depth increases sub-linearly after a threshold. 4 unique units create meaningful
+      squad composition. 12 unique units create analysis paralysis. The sweet spot depends
+      on unit complexity: simple units (move + attack) support larger squads; complex units
+      (move + 4 abilities + items) need smaller squads. Into the Breach's 3 mechs and
+      Gloomhaven's 4 characters hit the sweet spot for their complexity levels.
+    detection: |
+      Multiply squad size by actions per unit to estimate decisions per player turn.
+      If decisions per turn exceed 12, cognitive load is high for most players. If
+      decisions per turn are fewer than 4, tactical depth is low. Check if the game
+      provides any automation or AI assist for units beyond the cognitive threshold.
+
+  - id: rng-miss-frustration
+    name: "RNG Mitigation (Miss Chance Frustration)"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      Missing a 90% hit chance feels terrible because humans overweight unlikely negative
+      outcomes. Missing a 65% hit chance twice in a row feels like the game is cheating.
+      Pure RNG hit resolution creates frustration spikes that skilled play cannot prevent.
+      Mitigation options: guaranteed minimum damage on miss, pity timers, damage ranges
+      instead of hit/miss binary, or XCOM 2's hidden streak-breaking code. Into the Breach
+      eliminated miss chance entirely, proving the mechanic is optional.
+    detection: |
+      Check for hit probability mechanics. If attacks can miss with no partial effect (full
+      damage or zero), check the probability range. If miss chance can exceed 40% for
+      standard attacks, frustration spikes are likely. Check for pity timers, minimum
+      damage, or graze mechanics that soften misses. If none exist, pure RNG governs
+      outcomes.
+
+  - id: enemy-ai-predictability
+    name: "Enemy AI Predictability Spectrum"
+    category: combat
+    severity: medium
+    tradition_specific: true
+    description: |
+      Perfectly predictable AI (always attacks nearest unit) is solvable and boring.
+      Perfectly unpredictable AI (random target selection) prevents planning and feels
+      unfair. The sweet spot: AI follows readable patterns (prioritizes wounded targets,
+      focuses on high-value units, retreats when outnumbered) that the player can learn
+      and exploit. Into the Breach solves this elegantly by showing enemy intent before
+      the player acts, making AI behavior a puzzle input rather than a random variable.
+    detection: |
+      Check for enemy behavior rules or AI patterns. If enemy behavior is fully random
+      (no targeting priority, no self-preservation), the player cannot plan around it.
+      If enemy behavior follows a single rule (always attacks nearest), it is trivially
+      exploitable. Check if the game reveals or hints at enemy intent before the player
+      commits to actions.
+
+  - id: level-design-linearity
+    name: "Level Design Linearity"
+    category: combat
+    severity: medium
+    tradition_specific: true
+    description: |
+      Linear maps (single path from start to objective) produce single-approach battles.
+      Open maps (multiple paths, flanking routes, elevation options) produce varied tactics.
+      But fully open maps can also be solved by a single dominant strategy (rush the
+      objective, ignore everything else). The best tactical maps create 2-3 viable
+      approaches with different risk/reward profiles and force the player to commit to one
+      based on squad composition and enemy placement.
+    detection: |
+      Check for map design guidelines or procedural generation rules. If maps are
+      described as corridors or linear progressions with no branching paths, tactical
+      variety is limited. If maps are fully open with no terrain channeling, dominant
+      strategies may emerge. Check if maps provide 2+ distinct approaches to objectives.
+
+  - id: equipment-upgrade-paths
+    name: "Equipment / Upgrade Path Clarity"
+    category: progression
+    severity: medium
+    tradition_specific: true
+    description: |
+      When unit upgrades are permanent and irreversible (class promotion, weapon
+      modification), unclear upgrade paths become traps. A player who promotes their
+      archer to sniper when assassin was the correct choice for their squad comp has
+      made an unrecoverable mistake they may not recognize for hours. Upgrade paths
+      should either be reversible, clearly signaled in their trade-offs, or have no
+      strictly dominant option at any branch point.
+    detection: |
+      Check for permanent upgrade or class change mechanics. If upgrades are irreversible,
+      check if the trade-offs are clearly communicated before the choice (stats shown,
+      abilities previewed). If any upgrade path is strictly superior (higher stats in all
+      categories), the choice is false and the inferior path is a trap.
+
+  - id: status-effect-duration
+    name: "Status Effect Duration Calibration"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Status effects that last 1 turn are reactive tools (stun this enemy NOW). Effects
+      that last 3+ turns are strategic tools (poison will wear them down over time). Effects
+      that last the entire battle are win conditions (petrify removes a unit permanently).
+      The duration must match the effect's power: a 1-turn blind is a tactical tool; a
+      permanent blind is a save-or-die. If strong effects last too long, they are unfun.
+      If weak effects are too short to matter, they are wasted design space.
+    detection: |
+      Check for status effect mechanics and their durations. If powerful effects (stun,
+      paralyze, charm) last more than 2 turns, they may remove targets from play too long.
+      If utility effects (poison, slow, blind) last only 1 turn, they may be too weak to
+      justify the action spent applying them. Compare effect duration to average combat
+      length.
+
+  - id: overwatch-reactive-fire
+    name: "Overwatch / Reactive Fire Balance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Overwatch (hold action to shoot enemies who move) creates defensive play. If
+      overwatch is too strong (full damage, guaranteed hit on moving targets), the optimal
+      strategy is to never move -- set overwatch and wait. If overwatch is too weak (low
+      accuracy, half damage), it is never worth giving up your turn for it. XCOM 1's
+      overwatch was so strong that "overwatch creep" (inch forward, overwatch, repeat)
+      was the dominant strategy. XCOM 2 added timers to force aggression.
+    detection: |
+      Check for overwatch, opportunity fire, or held action mechanics. If overwatch damage
+      equals or exceeds normal attack damage with no accuracy penalty, it is too strong and
+      incentivizes static play. If overwatch hits at less than 50% of normal accuracy,
+      it is too unreliable to use. Check if the game has mechanics that punish or prevent
+      overwatch camping (timers, flanking bypasses overwatch, limited overwatch ammo).
+
+  - id: height-advantage-dominance
+    name: "Elevation / Height Advantage Dominance"
+    category: combat
+    severity: medium
+    tradition_specific: true
+    description: |
+      Elevation bonuses (accuracy, damage, range) are intuitive and create vertical
+      tactics. But if height advantage is too strong, the game reduces to "whoever reaches
+      high ground first wins." Maps with limited high ground become king-of-the-hill
+      contests where the tactical question is always the same. Elevation should be one
+      factor among several, not the dominant one.
+    detection: |
+      Check for elevation or height mechanics. If height grants both an offensive bonus
+      (accuracy/damage) AND a defensive bonus (harder to hit from below), the combined
+      advantage may be too strong. If more than 60% of optimal play involves securing
+      elevation before engaging, height dominates other tactical considerations.
+
+  - id: healing-action-economy-tax
+    name: "Healing Action Economy Tax"
+    category: combat
+    severity: medium
+    tradition_specific: true
+    description: |
+      Spending an action to heal instead of attack is an action economy tax: you are paying
+      a full action to undo partial damage rather than dealing damage. If healing restores
+      less than one attack's worth of damage, healing is strictly worse than attacking (the
+      best defense is killing the enemy faster). If healing restores more than one attack's
+      worth, turtling with a healer becomes dominant. The math must make healing situationally
+      correct -- worth it when a unit would die next turn, not worth it as a default action.
+    detection: |
+      Compare healing throughput per action against average incoming damage per enemy action
+      and average player damage per action. If healing per action is less than 50% of
+      average incoming damage, healing cannot keep pace and is rarely worth the action.
+      If healing per action exceeds average incoming damage, a single healer can sustain
+      the entire squad indefinitely.

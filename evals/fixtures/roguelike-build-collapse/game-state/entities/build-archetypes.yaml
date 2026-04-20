@@ -1,0 +1,83 @@
+id: build-archetypes
+name: "Build Archetypes"
+type: entities
+description: "The six distinct build paths emergent from the item pool. Five builds offer genuine trade-offs and interesting decisions. One build (Vampire Lifesteal) has no trade-offs -- it gets both the highest effective survivability AND competitive damage. The existence of five well-designed builds makes the dominant build failure more painful: the design ALMOST works."
+tradition: roguelike
+tags: [builds, archetypes, diversity]
+depends_on: [resources/item-drops.yaml, mechanics/item-synergy.yaml]
+affects: [mechanics/combat-resolution.yaml, tensions/build-diversity-collapse.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+archetypes:
+  vampire_lifesteal:
+    core_items: 2
+    total_items: 8
+    win_rate: 0.94
+    avg_floor_reached: 19.2
+    trade_offs: "None. Highest sustain AND competitive damage."
+    skill_expression: "Minimal. Find items, equip them, hold attack button."
+    discovery_time: "5-10 runs"
+    note: "The dominant build. No meaningful weakness. Inverts difficulty curve."
+  glass_cannon:
+    core_items: 3
+    total_items: 7
+    win_rate: 0.31
+    avg_floor_reached: 11.4
+    trade_offs: "Maximum damage but dies in 1-2 hits on later floors."
+    skill_expression: "High. Must dodge perfectly and prioritize targets."
+    note: "Fun and challenging. Requires genuine skill. Still dramatically worse than Vampire."
+  tank:
+    core_items: 2
+    total_items: 7
+    win_rate: 0.42
+    avg_floor_reached: 14.8
+    trade_offs: "High survivability but slow clear times. Bosses become DPS checks."
+    skill_expression: "Medium. Resource management across floors."
+    note: "Consistent but boring at high floors. Bosses are a wall."
+  summoner:
+    core_items: 3
+    total_items: 6
+    win_rate: 0.28
+    avg_floor_reached: 10.2
+    trade_offs: "Summons do damage but player is fragile. Summon AI is unreliable."
+    skill_expression: "Medium. Positioning and summon management."
+    note: "Most unique play pattern but least reliable."
+  trap_master:
+    core_items: 3
+    total_items: 6
+    win_rate: 0.35
+    avg_floor_reached: 12.1
+    trade_offs: "High setup damage but poor reactive combat. Bad against fast enemies."
+    skill_expression: "High. Requires room reading and pre-planning."
+    note: "Rewards tactical thinking. Punished by enemy speed scaling."
+  balanced:
+    core_items: 0
+    total_items: 6
+    win_rate: 0.25
+    avg_floor_reached: 9.8
+    trade_offs: "No specialization. Jack of all trades, master of none."
+    skill_expression: "Low. No synergies to exploit."
+    note: "Default when items don't converge. Functional but outperformed by every focused build."
+
+build_diversity_metrics:
+  viable_builds_at_floor_10: 4
+  viable_builds_at_floor_15: 2
+  viable_builds_at_floor_20: 1
+  note: "Only Vampire consistently reaches floor 20. Build diversity collapses as difficulty increases."
+
+optimal_play_pattern:
+  step_1: "Start run. Check first item drop."
+  step_2: "If lifesteal item offered: take it. Continue."
+  step_3: "If no lifesteal by floor 3: restart."
+  step_4: "With Vampire core: auto-pilot to victory."
+  decision_points_per_run: "1 (build selection at floor 1-3)"
+  note: "The entire run's decision space collapses to the first 3 floors. Everything after is execution."
+
+notes:
+  - "Five of six builds are well-designed with genuine trade-offs. The sixth build makes them irrelevant."
+  - "This is a 'one bad apple' failure: one uncapped synergy ruins an otherwise functional system."
+  - "Slay the Spire avoids this by making every relic trade something away (HP, gold, card slots)."
+  - "Fix: give Vampire items a meaningful cost (e.g., '-30 max HP' on lifesteal items, creating a genuine glass-cannon-with-sustain trade-off)."

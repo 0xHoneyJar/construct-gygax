@@ -1,0 +1,341 @@
+tradition: social-deduction
+name: "Social Deduction Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for social deduction games (Werewolf/Mafia, The Resistance, Blood on
+  the Clocktower, Secret Hitler, Deception: Murder in Hong Kong, One Night Ultimate
+  Werewolf). Covers hidden role games where information asymmetry between informed minority
+  and uninformed majority drives the core gameplay. Distilled from decades of tournament
+  play, game design forums, community balancing efforts, and the hard-won lessons of
+  moderators who have run thousands of sessions.
+
+heuristics:
+  # --- MECHANICS ---
+
+  - id: role-balance-evil-power
+    name: "Role Balance (Evil Too Strong / Too Weak)"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      The core balance question: can the informed minority (evil/traitor team) win a fair
+      percentage of games? If evil wins >60%, good players feel helpless regardless of
+      deduction skill. If evil wins <30%, evil players feel their bluffing skill is
+      irrelevant. The balance depends on: information flow rate, kill power, voting
+      structure, and special role distribution. Blood on the Clocktower achieves near-50%
+      through careful role calibration; classic Mafia often skews evil-favored at low
+      player counts and good-favored at high counts.
+    detection: |
+      Check the ratio of informed (evil) to uninformed (good) players. If evil team size
+      exceeds 1/3 of total players, evil has a structural voting advantage. If evil team
+      is less than 1/5 of total players, evil may lack the votes to influence group
+      decisions. Check if evil has a win condition that bypasses voting (night kills that
+      outpace good's elimination rate).
+
+  - id: information-flow-rate
+    name: "Information Flow Rate"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      Too fast: a single night's information solves the game by day 2. Too slow: the game
+      devolves into random voting because players have no data to reason from. The ideal
+      rate: each round provides enough information to narrow suspicion but not enough to
+      confirm it. Players should feel like they are building a case across multiple rounds,
+      not solving a puzzle in one step or guessing blindly. The Resistance calibrates this
+      by revealing mission results (fail count) without revealing who failed.
+    detection: |
+      Count information-generating events per round (investigations, night action results,
+      role reveals, mission outcomes). If a single round can confirm a player's alignment,
+      the flow is too fast. If three rounds pass with no actionable information, the flow
+      is too slow. Check if information is confirmable (proves innocence/guilt) or merely
+      suggestive (narrows but does not confirm).
+
+  - id: first-night-elimination
+    name: "First-Night Elimination (Spectator Problem)"
+    category: pacing
+    severity: critical
+    tradition_specific: true
+    description: |
+      A player eliminated on the first night before they have taken a single meaningful
+      action spends the rest of the game watching. In a 45-minute Werewolf game, that is
+      40 minutes of spectating. This is the single most commonly cited reason players
+      dislike social deduction games. Solutions: no first-night kills, ghost roles that
+      let eliminated players continue participating, shorter game length so elimination
+      is less painful, or Blood on the Clocktower's ghost vote mechanic.
+    detection: |
+      Check if elimination can occur before all players have taken at least one meaningful
+      action (voted, used an ability, participated in discussion). If a player can be
+      removed from the game before their first turn, first-night elimination is possible.
+      Check for ghost mechanics, spectator roles, or first-night protection rules.
+
+  - id: kingmaking-final-votes
+    name: "Kingmaking in Final Votes"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      In endgame votes (2 good vs 1 evil, or 3 players with split suspicion), a player
+      who cannot win may determine who does win. If a confirmed-good player must choose
+      between two suspects and guesses wrong, they feel responsible for the loss. If a
+      known-evil player's vote determines the outcome between two good players, the game
+      ends on a coin flip rather than deduction. Final-vote dynamics should reward the
+      information gathered throughout the game, not reduce to a 50/50 guess.
+    detection: |
+      Simulate endgame vote scenarios. If the final elimination vote comes down to a
+      binary choice with no additional information to differentiate the options, the
+      endgame is a coin flip. Check if the game provides mechanisms for late-game
+      information (final-round abilities, tie-breaking roles, accumulated evidence)
+      that make the final vote an informed decision.
+
+  - id: role-complexity-ceiling
+    name: "Role Complexity Ceiling"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Simple roles (Villager: no ability; Werewolf: kill at night) are accessible but
+      shallow. Complex roles (Drunk: has the wrong role card; Poisoner: makes one player's
+      ability fail) add depth but create a knowledge barrier. If the game includes 20+
+      unique roles, new players cannot reason about what abilities are in play, making
+      deduction impossible for them. The complexity ceiling should match the target audience:
+      party games need simple roles; enthusiast games can support complex ones if the
+      learning curve is managed.
+    detection: |
+      Count unique roles in the game. If more than 8 roles have unique abilities, new
+      players face a significant knowledge barrier. Check if the game provides a mechanism
+      for role transparency (all roles are public knowledge, role list is displayed) or
+      if players must memorize the role pool. If role interactions create second-order
+      effects (Poisoner cancels Empath reading, which changes Empath's information), count
+      the interaction depth.
+
+  - id: player-count-scaling
+    name: "Player Count Scaling"
+    category: scaling
+    severity: high
+    tradition_specific: true
+    description: |
+      Social deduction games are notoriously sensitive to player count. At 5 players, one
+      evil player must deceive 4 people -- extremely difficult. At 15 players, 4 evil
+      players can hide in a crowd -- extremely easy. The game must scale: adjust evil count,
+      adjust information flow, adjust special role distribution, and adjust discussion time.
+      If the rules say "5-15 players" but provide no scaling guidance, the game works at one
+      count and breaks at others.
+    detection: |
+      Check if role distribution, ability count, or information flow scales with player
+      count. If the evil-to-good ratio changes significantly across the supported player
+      range (e.g., 1:4 at 5 players, 4:11 at 15 players), check if other mechanics
+      compensate. If the same role setup is used for all player counts, the game almost
+      certainly breaks at the extremes.
+
+  - id: accusation-defense-symmetry
+    name: "Accusation / Defense Symmetry"
+    category: social
+    severity: high
+    tradition_specific: true
+    description: |
+      The accuser has a structural advantage: making a specific claim ("I think Alice is
+      evil because X") is easier and more memorable than a general defense ("I am not evil,
+      I have done nothing suspicious"). If the game provides no mechanical defense (reveal
+      information, prove a role, show evidence), accused players rely entirely on social
+      skill, which creates a charisma-dominant meta where confident speakers survive and
+      quiet players are eliminated. Deception: Murder in Hong Kong addresses this by giving
+      all players equal access to physical evidence.
+    detection: |
+      Check if accused players have mechanical options beyond verbal defense. If the only
+      defense is "argue your innocence," the game is charisma-dominant. Check for role
+      reveal mechanics, evidence systems, or investigation abilities that give the accused
+      concrete tools. If defense options exist, check if using them has a cost (revealing
+      your role to evil, spending a limited resource).
+
+  - id: night-action-information-value
+    name: "Night Action Information Value"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Night actions (investigate, protect, kill) generate the information that drives
+      daytime discussion. If night actions produce high-value information (the Seer confirms
+      a player's alignment), the game pivots on that information. If night actions produce
+      low-value information (you learn one player is "not the Werewolf" in a 12-player game),
+      the game relies more on social reads. The information value determines whether the
+      game is primarily deductive (logic puzzle) or primarily social (read behavior).
+    detection: |
+      Check for investigation or information-gathering night actions. Calculate the
+      elimination power of one night's information: does it confirm alignment, narrow
+      suspects by a meaningful percentage, or provide only marginal data? If one
+      investigation can confirm a player's role, the Seer-equivalent is the most
+      important player in the game and protecting/finding them dominates strategy.
+
+  - id: confirmed-player-problem
+    name: "Confirmed Player Problem (Proven Innocent = Boring)"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When a player is mechanically confirmed as good (Seer investigated them, or their
+      role publicly demonstrated innocence), they become a trusted authority whose word
+      carries disproportionate weight. This is boring for the confirmed player (no more
+      suspicion to navigate) and warping for the game (all discussion flows through the
+      confirmed player's endorsements). Blood on the Clocktower addresses this with
+      Poisoner and Drunk roles that make confirmations unreliable.
+    detection: |
+      Check if any mechanic can produce a hard confirmation of a player's alignment
+      (not just a claim, but a mechanically verified result). If hard confirmation is
+      possible, check if any mechanic can produce false confirmations (poisoned
+      investigations, lying roles) that keep doubt alive. If confirmations are always
+      reliable, the confirmed player problem exists.
+
+  - id: tie-breaking-mechanisms
+    name: "Tie-Breaking Mechanism Design"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Tied votes (equal votes for two suspects, or equal votes for "execute" vs. "no
+      execute") are common in social deduction. If the tie-break favors evil (no execution
+      on tie), evil can engineer ties to run out the clock. If the tie-break favors good
+      (execute on tie), good has a lower threshold for eliminating suspects. The tie-break
+      rule is a subtle but important balance lever. Random tie-breaking is the worst option:
+      it adds randomness at the highest-stakes moment.
+    detection: |
+      Check for vote resolution mechanics. If tied votes result in no action (no
+      execution), calculate how often evil can force ties by strategic voting. If tied
+      votes result in random resolution, check if this randomness occurs frequently enough
+      to impact game outcomes. Check if the game provides a tie-breaking role (mayor,
+      sheriff) and whether that role is susceptible to evil manipulation.
+
+  - id: social-pressure-quiet-players
+    name: "Social Pressure on Quiet Players"
+    category: social
+    severity: high
+    tradition_specific: true
+    description: |
+      Social deduction games inherently disadvantage quiet or introverted players: silence
+      is read as suspicious, and players who do not advocate for themselves are eliminated
+      early. This is a structural accessibility problem. Games that provide non-verbal
+      participation channels (voting tokens, written accusations, app-based communication)
+      or that mechanically protect quiet play (no "you must speak" rules) are more inclusive.
+      Games that explicitly encourage targeting quiet players ("if they are not talking, they
+      are hiding something") amplify the problem.
+    detection: |
+      Check if the game's discussion phase has mandatory participation requirements. If
+      silence is mechanically penalized (must speak or lose vote, forced nomination of
+      quiet players) or if strategy guides recommend targeting quiet players, the game
+      pressures introverts. Check for alternative participation channels that do not
+      require vocal advocacy.
+
+  - id: bluffing-skill-ceiling
+    name: "Bluffing Skill Ceiling"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      If evil players need only deny accusations ("I am not the Werewolf"), the bluffing
+      skill floor is low and the game is accessible but shallow. If evil players must
+      maintain a consistent fake role claim across multiple rounds (claiming Seer and
+      providing fake investigation results that do not contradict known information), the
+      skill ceiling is high and skilled bluffers dominate. The game's bluffing demands
+      should match its audience: party games need low floors, enthusiast games benefit
+      from high ceilings.
+    detection: |
+      Check if evil players must actively maintain a false claim or merely deny suspicion.
+      If evil roles require choosing a fake role and generating consistent fake information
+      across rounds, the bluffing skill ceiling is high. If evil players can win by staying
+      quiet and voting strategically, the ceiling is low. Check if the game provides
+      bluffing scaffolding (suggested claims, safe roles to fake).
+
+  - id: moderator-burden
+    name: "Moderator Burden"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Games requiring a dedicated moderator (Werewolf, Blood on the Clocktower) sacrifice
+      one player's experience for everyone else's. The moderator must track night actions,
+      resolve ability interactions, manage information flow, and run discussion -- while not
+      playing the game. High moderator burden leads to errors, slow nights, and difficulty
+      finding willing moderators. App-assisted moderation, self-moderating designs (The
+      Resistance), or rotating moderator roles reduce this burden.
+    detection: |
+      Check for a moderator or game master role. Count the number of simultaneous night
+      actions the moderator must resolve and the number of interaction rules they must
+      track. If the moderator resolves more than 5 night actions with order-dependent
+      interactions, the burden is high. Check if the game provides moderator aids (apps,
+      resolution flowcharts, simplified night orders).
+
+  - id: role-reveal-timing
+    name: "Role Reveal Timing"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When eliminated players reveal their role (Werewolf flips their card), it provides
+      confirmed information: this player was good/evil. This narrows the solution space and
+      accelerates deduction. When eliminated players do NOT reveal (Blood on the Clocktower's
+      optional reveal), the game maintains uncertainty longer. Immediate reveal favors good
+      (they gain confirmed data); hidden roles favor evil (dead good players cannot prove
+      their innocence). The reveal timing is a balance lever often treated as flavor.
+    detection: |
+      Check if eliminated player roles are revealed. If roles are always revealed on death,
+      check if this provides enough information to solve the game by elimination alone (if
+      all dead players are confirmed good, remaining suspects are narrowed). If roles are
+      never revealed, check if the game provides alternative information to compensate for
+      the loss of death-reveal data.
+
+  - id: special-role-information-advantage
+    name: "Special Role Information Advantage"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      The Seer (or equivalent investigator role) has more information than any other good
+      player. This makes them the most valuable target for evil AND the most influential
+      voice in discussion. If the game revolves entirely around "find the Seer, protect the
+      Seer, trust the Seer," non-Seer good players are reduced to supporting cast. The
+      information advantage must be distributed across multiple roles or come with costs
+      (Seer's information is sometimes wrong, Seer cannot vote, Seer must reveal to share)
+      to prevent single-role dominance.
+    detection: |
+      Count information-generating roles. If one role generates more than 50% of the good
+      team's total information, that role dominates the game. Check if information roles
+      have counterplay (poisoning, redirecting, framing) and if multiple information sources
+      exist that can cross-reference each other.
+
+  - id: claim-verification-depth
+    name: "Claim Verification Depth"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When players claim roles ("I am the Doctor, I protected Alice last night"), how
+      verifiable is the claim? In simple games, claims are unverifiable and the game is
+      pure social read. In complex games, claims can be cross-referenced (if Alice was
+      attacked and did not die, the Doctor claim checks out). Deeper verification creates
+      more deductive gameplay but also more complex bluffing: evil must craft claims that
+      survive cross-referencing. The depth of verification determines whether the game is
+      primarily social or primarily logical.
+    detection: |
+      Check if role abilities produce publicly observable effects (someone was protected,
+      a vote was modified, a player was redirected). If abilities produce observable effects,
+      claims about those abilities can be verified by cross-referencing. Count the number
+      of independently verifiable data points per round. If zero, the game is pure social
+      read. If 3+, the game has significant deductive depth.
+
+  - id: game-length-elimination-ratio
+    name: "Game Length to Elimination Ratio"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      If the game lasts 8 rounds and one player is eliminated per round, half the players
+      are spectating by round 4. The ratio of game length to elimination rate determines
+      average spectator time. Short games (One Night: 10 minutes, no elimination) solve this
+      by compressing. Long games (Blood on the Clocktower: 60-90 minutes) solve this with
+      ghost participation. Games that are both long AND have high elimination rates create
+      the worst spectator experience.
+    detection: |
+      Calculate expected eliminations per round (day kills + night kills). Multiply by
+      expected game length in rounds. If more than 40% of players are eliminated before
+      the game's midpoint, spectator time is excessive. Check for ghost mechanics or
+      shortened game variants that mitigate this.

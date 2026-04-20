@@ -1,0 +1,37 @@
+id: buying-power
+name: "Buying Power (Turn Currency)"
+type: stats
+description: "The total coin value available on a given turn, determined by treasure cards drawn. Big Money maximizes buying power directly by adding treasures to the deck. Engine strategies invest buying power into action cards that generate future returns -- but the ROI timeline is too slow."
+tradition: deckbuilder
+tags: [economy, per-turn, buying]
+depends_on: []
+affects: [mechanics/buy-phase.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 0
+  max: 15
+  starting_hand_average: 3.5
+  typical_by_strategy:
+    big_money_turn_5: 5.2
+    big_money_turn_10: 6.8
+    big_money_turn_15: 7.4
+    engine_turn_5: 3.0
+    engine_turn_10: 5.5
+    engine_turn_15: 8.2
+
+crossover_analysis:
+  engine_overtakes_big_money_at: "Turn 13"
+  game_typically_ends_at: "Turn 14-16"
+  turns_of_engine_advantage: "1-3 turns"
+  turns_of_big_money_advantage: "10-12 turns"
+  net_buying_power_advantage: "Big Money: +22 cumulative coins over 15 turns"
+  note: "The engine eventually outperforms Big Money per-turn, but the cumulative advantage from 12 early turns of higher buying power is insurmountable."
+
+notes:
+  - "The fundamental timing problem: engines need setup time, but the game is too short for setup to pay off."
+  - "Big Money has no setup cost. Every treasure card bought immediately increases future buying power."
+  - "Engine cards require 2-3 shuffles to appear, then 1-2 more turns to chain. That's 10+ turns of investment."

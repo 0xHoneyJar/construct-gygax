@@ -1,0 +1,53 @@
+id: path-equivalence
+name: "Strategic Diversity vs Outcome Convergence"
+type: tensions
+description: "The tension between presenting multiple distinct strategic paths (which promises meaningful choice) and having all paths score identically (which makes choice meaningless). The game resolves this tension entirely toward convergence, collapsing strategic diversity into cosmetic diversity."
+tradition: eurogame
+tags: [balance, false-choice, convergence, point-salad]
+depends_on: [stats/victory-points.yaml, mechanics/path-scoring.yaml, entities/victory-paths.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Multiple victory paths should create replayability through distinct strategic experiences"
+  rationale: "Path diversity is the core value proposition of a eurogame. If paths don't matter, the game is a single puzzle with cosmetic skins."
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: true
+
+poles:
+  a:
+    name: "Strategic Diversity"
+    description: "Five paths with different mechanics, resources, and timing create a rich decision space. Players should feel that choosing trade vs military is a consequential strategic commitment."
+    supported_by: [entities/victory-paths.yaml, mechanics/path-scoring.yaml]
+  b:
+    name: "Outcome Convergence"
+    description: "All paths score ~50 VP. Score variance between paths (sigma=2.1) equals variance within paths (sigma=2.1). Path choice explains 0% of outcome variance."
+    supported_by: [stats/victory-points.yaml, mechanics/path-scoring.yaml]
+
+health: b-dominant
+health_notes: "Convergence has completely neutralized diversity. The game presents five strategies but delivers one outcome. Players who analyze the system will realize path choice is meaningless, at which point the game's primary engagement hook (strategic planning) collapses. Players who don't analyze will enjoy the game -- but their enjoyment is based on an illusion the system doesn't support."
+
+false_choice_indicators:
+  path_count: 5
+  meaningful_path_count: 0
+  score_range_between_paths: "49-51 VP"
+  score_range_within_paths: "44-55 VP"
+  information_value_of_path_choice: "~0 VP"
+  decisions_per_game: 40
+  decisions_that_matter: 5-8
+  note: "The 5-8 meaningful decisions are tactical (placement, timing) not strategic (path selection)."
+
+replayability_impact:
+  first_play: "High engagement -- exploring paths feels novel"
+  third_play: "Declining -- experienced players sense the convergence"
+  tenth_play: "Low -- the game 'solves itself' and offers no new strategic territory"
+
+notes:
+  - "This is not imbalance (where one path dominates). It's homogeneity (where no path differentiates)."
+  - "Imbalance is easier to detect and fix. Homogeneity looks like 'good balance' until you run the numbers."
+  - "The fix is NOT to make paths unequal. It's to make path value CONTEXTUAL -- dependent on opponent choices, board state, or variable setup."
+  - "Wingspan avoids this: bird engines score differently based on available cards, creating real strategic variance even though no single strategy dominates."

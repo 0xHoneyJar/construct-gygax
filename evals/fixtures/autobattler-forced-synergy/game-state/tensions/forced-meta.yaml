@@ -1,0 +1,46 @@
+id: forced-meta
+name: "Draft Flexibility vs Composition Dominance"
+type: tensions
+description: "The tension between the draft system's intended flexibility (read the lobby, pivot compositions, adapt to what's available) and the overwhelming dominance of Mech-Assassin (always force this comp regardless of context). The draft's balancing mechanism (shared pool contestation) cannot overcome the raw stat advantage of the dominant synergy."
+tradition: autobattler
+tags: [balance, meta, degenerate, forced-comp]
+depends_on: [entities/trait-synergies.yaml, mechanics/automated-combat.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Drafting should reward adaptation -- reading the lobby and building the best available composition"
+  rationale: "Autobattler skill expression comes from recognizing which comp is open, pivoting at the right time, and optimizing an imperfect hand. If one comp always wins, drafting reduces to a slot machine."
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: true
+
+poles:
+  a:
+    name: "Draft Flexibility"
+    description: "The shared pool and random shop incentivize players to read what's available and adapt. Flexible players who pivot to open compositions should be rewarded."
+    supported_by: [mechanics/drafting-phase.yaml, resources/gold-economy.yaml]
+  b:
+    name: "Composition Dominance"
+    description: "Mech-Assassin's multiplicative stat bonuses create a DPS floor that no other composition can reach. Forcing this comp from any position outperforms flexible play."
+    supported_by: [entities/trait-synergies.yaml, stats/unit-combat-stats.yaml]
+
+health: b-dominant
+health_notes: "The dominant composition has warped the entire game. Draft flexibility -- the core skill of the genre -- is punished. Players who pivot away from Mech-Assassin lose to players who force it. The shared pool's contestation pressure (designed to self-balance) is insufficient because even a 50% complete Mech-Assassin outperforms a 100% complete alternative. The meta is 'force or lose.'"
+
+degenerate_indicators:
+  optimal_strategy: "Always force Mech-Assassin"
+  counterplay_available: false
+  counter_comp_exists: false
+  skill_expression: "minimal (always force the same comp)"
+  lobby_diversity: "1 viable comp out of 8+ possible compositions"
+  game_count_to_solve: "~5 games to discover the dominant comp"
+
+notes:
+  - "This is the autobattler equivalent of a solved game. Once players identify the dominant comp, strategic diversity collapses."
+  - "Healthy autobattler metas have a rock-paper-scissors structure: aggressive comps beat greedy comps, greedy comps beat midrange, midrange beats aggressive."
+  - "Here, one comp beats all others. The RPS structure is broken because one option always wins."
+  - "Fix: nerf multiplicative stacking, add counter-synergy traits, or reduce Mech-Assassin unit availability in the shared pool."

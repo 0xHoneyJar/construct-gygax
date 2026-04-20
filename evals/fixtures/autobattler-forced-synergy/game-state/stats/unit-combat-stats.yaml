@@ -1,0 +1,65 @@
+id: unit-combat-stats
+name: "Unit Combat Stats"
+type: stats
+description: "Base combat statistics for all units. Attack damage, attack speed, crit chance, HP, and armor. The Mech-Assassin synergy stacks multiplicative bonuses on attack speed and crit chance, creating a damage output that scales quadratically while other synergies scale linearly."
+tradition: autobattler
+tags: [combat, stats, scaling]
+depends_on: []
+affects: [mechanics/automated-combat.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+base_ranges:
+  attack_damage:
+    min: 40
+    max: 120
+    typical: 60-80
+  attack_speed:
+    min: 0.5
+    max: 1.2
+    unit: "attacks per second"
+    typical: 0.7-0.9
+  crit_chance:
+    min: 0.0
+    max: 0.25
+    typical: 0.10-0.15
+  crit_multiplier:
+    base: 1.5
+    note: "Fixed 150% damage on crit for all units"
+  hp:
+    min: 500
+    max: 2000
+    typical: 800-1200
+  armor:
+    min: 20
+    max: 80
+    typical: 30-50
+
+dps_formula: "attack_damage * attack_speed * (1 + crit_chance * (crit_multiplier - 1))"
+
+dps_by_composition:
+  mech_assassin:
+    effective_attack_speed: 1.35
+    effective_crit_chance: 0.55
+    effective_dps_per_unit: 116
+    team_dps_6_units: 696
+    note: "50% AS from Mech + 40% crit from Assassin + 1.5x crit multiplier = multiplicative scaling"
+  guardian_sorcerer:
+    effective_attack_speed: 0.75
+    effective_crit_chance: 0.15
+    effective_dps_per_unit: 65
+    team_dps_6_units: 390
+    note: "Best defensive comp. Survives longer but DPS gap is too large."
+  ranger_elementalist:
+    effective_attack_speed: 0.85
+    effective_crit_chance: 0.20
+    effective_dps_per_unit: 74
+    team_dps_6_units: 444
+    note: "Second-highest DPS comp. Still 36% behind Mech-Assassin."
+
+notes:
+  - "The problem is multiplicative stacking. Attack speed * crit chance * crit multiplier creates quadratic scaling."
+  - "Other synergies add flat bonuses (additive). Mech-Assassin multiplies bonuses (multiplicative)."
+  - "Fix: cap multiplicative interactions, or make crit chance and attack speed bonuses from different sources use diminishing returns."

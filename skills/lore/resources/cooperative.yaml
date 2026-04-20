@@ -1,0 +1,367 @@
+tradition: cooperative
+name: "Cooperative Game Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for cooperative games where all players work together against the game
+  system (Pandemic, Spirit Island, Gloomhaven, Arkham Horror LCG, Forbidden Desert,
+  Hanabi, The Crew, Marvel Champions). Covers fully cooperative and cooperative-with-traitor
+  designs. Distilled from extensive play across the cooperative genre, designer
+  retrospectives, BGG analysis threads, and the hard lessons of games where one player
+  played everyone's turns.
+
+heuristics:
+  # --- SOCIAL ---
+
+  - id: alpha-player-quarterbacking
+    name: "Alpha Player / Quarterbacking Problem"
+    category: social
+    severity: critical
+    tradition_specific: true
+    description: |
+      The defining cooperative game failure. When all information is public and one player
+      can see the optimal move for everyone, that player directs the group and others become
+      executors of someone else's plan. This transforms a 4-player game into a 1-player game
+      with an audience. Pandemic is the canonical example: open hands, shared board state,
+      and combinatorial optimization reward the player who thinks fastest, not the group.
+      Solutions: hidden information (Hanabi), simultaneous action selection (Magic Maze),
+      communication restrictions (The Crew), or high enough complexity that no single player
+      can optimize for everyone (Spirit Island).
+    detection: |
+      Check if all game state is publicly visible (open hands, shared board, no hidden
+      information). If yes, check if one player's optimal move depends on other players'
+      actions (if I move here, you should move there). If both conditions are true,
+      quarterbacking is structurally enabled. Check for communication restrictions, hidden
+      information, or simultaneous action selection that structurally prevents it.
+
+  - id: difficulty-curve-shape
+    name: "Difficulty Curve Shape"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Cooperative games need a difficulty arc: early turns should feel manageable (learn the
+      mechanics, establish strategy), mid-game should feel pressured (threats accumulate,
+      resources tighten), and the finale should feel desperate (can we pull this off?). If
+      the game is hardest at the start (before players have tools) and easiest at the end
+      (once the engine is running), the emotional arc is inverted. Pandemic Legacy's
+      escalating crisis model and Spirit Island's growing power curve both achieve strong
+      arcs through different means.
+    detection: |
+      Check how threat generation scales over the course of the game. If threats escalate
+      (more enemies, faster crisis timers, harder events) while player power also grows,
+      compare the rates. If threat growth outpaces power growth, the game gets harder over
+      time (good arc). If power growth outpaces threat growth, the game gets easier (inverted
+      arc). If both are flat, the game has no arc at all.
+
+  - id: role-necessity
+    name: "Role Necessity (Can You Win Without Role X?)"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When one role is required to win (the Medic in Pandemic, the healer in any dungeon
+      crawl), the game has a hidden dependency. If that role is not in play or if the player
+      controlling it plays poorly, the group fails regardless of everyone else's play. This
+      creates resentment ("we lost because you did not heal") and reduces team composition
+      to a checklist. Every role should be valuable but no role should be mandatory. Spirit
+      Island achieves this: every spirit is strong, none is required.
+    detection: |
+      Check if any role has a unique ability that addresses a core game threat (curing
+      diseases, blocking enemy spawns, managing a critical resource) that no other role
+      can perform. If removing that role from the game makes winning statistically
+      impossible or dramatically harder (win rate drops >30%), the role is necessary
+      rather than valuable.
+
+  - id: player-count-scaling-coop
+    name: "Player Count Scaling"
+    category: scaling
+    severity: high
+    tradition_specific: true
+    description: |
+      Cooperative games must scale difficulty with player count. More players means more
+      actions per round, which means more power -- unless the game also scales threats.
+      If the game is balanced for 4 players, 2-player games may be too hard (half the
+      actions, same threats) and solo may be impossible. If balanced for 2, 4-player games
+      may be trivially easy. Scaling mechanisms: adjust threat count, modify hand sizes,
+      change starting resources, or alter the loss condition timer.
+    detection: |
+      Check if threat generation, victory/loss conditions, or resource availability scale
+      with player count. If the same number of enemies spawn regardless of player count,
+      more players makes the game easier. If each player adds threats proportional to their
+      actions, scaling is maintained. Check if the game has been tested at all supported
+      player counts or if balance is stated only for a target count.
+
+  - id: communication-restriction-elegance
+    name: "Communication Restriction Elegance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Communication restrictions prevent quarterbacking by limiting what players can share.
+      Elegant restrictions feel thematic and create interesting decisions (Hanabi: you can
+      see everyone's hand but your own; The Crew: one card hint per round). Inelegant
+      restrictions feel arbitrary and create frustration ("you cannot say the word 'blue'").
+      The restriction should create a puzzle-within-a-puzzle: how do I communicate my
+      situation within the constraint?
+    detection: |
+      Check for communication rules. If communication is fully open, the game is vulnerable
+      to quarterbacking. If restricted, check whether the restriction creates interesting
+      decisions (limited hints, thematic silence) or feels arbitrary (cannot discuss certain
+      topics, timed speaking). Check if the restriction can be trivially circumvented
+      (pointing, facial expressions, coded language) without explicit prohibition.
+
+  - id: shared-vs-individual-authority
+    name: "Shared vs. Individual Decision Authority"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Who decides what a player does on their turn? In pure shared authority (Pandemic),
+      the group discusses and the active player executes consensus. In individual authority
+      (Gloomhaven), each player secretly selects their action and commits. Shared authority
+      enables quarterbacking but feels collaborative. Individual authority prevents
+      quarterbacking but can feel lonely. The best designs give individuals authority over
+      their own actions while making the group collectively responsible for strategy.
+    detection: |
+      Check if action selection is public or private. If players select actions openly and
+      can change based on group discussion, authority is shared. If players commit to actions
+      simultaneously or secretly, authority is individual. Check if the game's decision
+      weight sits primarily in individual actions (what do I do?) or group strategy (what
+      should our plan be?).
+
+  - id: loss-feel-attribution
+    name: "Loss Feel (Our Fault or Random?)"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When the group loses, they should feel "we could have done better" rather than "the
+      deck screwed us." Losses attributed to player decisions are motivating (we will try a
+      different strategy). Losses attributed to randomness are demoralizing (why bother
+      optimizing if the draw determines everything?). The ideal: the game is winnable with
+      perfect play but random elements determine the margin. If perfect play still loses
+      30%+ of the time due to card draw or dice, the randomness overwhelms player agency.
+    detection: |
+      Estimate the win rate with optimal play. If optimal play wins less than 70% of the
+      time, random variance is a significant factor in outcomes. Check if the loss condition
+      can be triggered by a sequence of random events that no player action could have
+      prevented (back-to-back crisis cards in the same region, consecutive bad draws).
+      If unpreventable loss sequences exist, the game can feel arbitrary.
+
+  - id: rubber-band-mechanics
+    name: "Rubber Band / Catch-Up Mechanics"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Cooperative games can spiral in both directions: a lucky early game makes the rest
+      trivial, or an unlucky start makes recovery impossible. Rubber band mechanics pull
+      the game toward its intended difficulty: if players are ahead, threats intensify; if
+      behind, they get relief. Pandemic's infection rate escalation is a one-directional
+      ratchet (always gets harder), while Spirit Island's fear system provides relief as
+      players generate fear (threats become easier to manage). Bidirectional rubber banding
+      keeps the game in its dramatic sweet spot.
+    detection: |
+      Check if any mechanic scales difficulty based on current game state. If threats
+      intensify regardless of player success (pure escalation), the game only has one-way
+      pressure. If threats respond to player performance (harder when winning, easier when
+      losing), rubber banding exists. Check if the rubber band is strong enough to prevent
+      runaway wins or unrecoverable losses.
+
+  - id: hidden-traitor-subplot
+    name: "Hidden Traitor Subplot Integration"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Adding a hidden traitor to a cooperative game (Battlestar Galactica, Shadows over
+      Camelot, Dead of Winter) creates paranoia and information asymmetry. But the traitor
+      must be mechanically supported: if the traitor's only tool is "play badly," their
+      sabotage is indistinguishable from a new player's mistakes, creating toxic accusations.
+      The traitor needs specific sabotage mechanics (play crisis cards, trigger events, steal
+      resources) that are detectable but deniable. The traitor subplot also changes the
+      communication dynamic: open discussion becomes risky because the traitor is listening.
+    detection: |
+      Check for hidden traitor or loyalty mechanics. If a traitor exists, check if they
+      have specific sabotage actions distinct from "play suboptimally." If the only
+      traitor strategy is underperforming, the mechanic cannot distinguish traitor from
+      novice. Check if the game provides an accusation/reveal mechanism and whether false
+      accusations have a cost.
+
+  - id: real-time-vs-turn-based-pressure
+    name: "Real-Time vs. Turn-Based Pressure"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Real-time cooperative games (Space Alert, Escape: The Curse of the Temple, XCOM
+      board game) create urgency through time pressure. Turn-based cooperative games create
+      urgency through resource scarcity and escalating threats. Real-time prevents
+      quarterbacking (no time to optimize) but creates stress and accessibility barriers
+      (players with processing speed differences are disadvantaged). Turn-based allows
+      deliberation but enables quarterbacking. The choice between them is a fundamental
+      design decision about what kind of pressure the game creates.
+    detection: |
+      Check for real-time mechanics (sand timers, app-driven countdowns, simultaneous
+      resolution under time pressure). If real-time, check if the time limit is tight
+      enough to prevent full optimization but generous enough for all players to
+      participate meaningfully. If turn-based, check if any mechanic creates time
+      pressure to prevent unlimited deliberation.
+
+  - id: win-rate-calibration
+    name: "Win Rate Calibration"
+    category: scaling
+    severity: high
+    tradition_specific: true
+    description: |
+      A cooperative game that players always win is boring. One that players always lose is
+      demoralizing. The design target is typically 40-60% win rate for experienced players
+      at the standard difficulty, with difficulty adjustments for different skill levels.
+      Below 30%, players feel the game is unfair. Above 70%, players feel the game lacks
+      challenge. Pandemic at 4 epidemics (~55% win rate) and Spirit Island at difficulty 0
+      (~50% for experienced players) are well-calibrated. The game should provide difficulty
+      knobs (fewer epidemics, scenario modifiers, handicaps) to tune the rate.
+    detection: |
+      Check for difficulty adjustment mechanics (difficulty levels, scenario modifiers,
+      handicap options). If the game has no difficulty adjustment, it is locked to a single
+      win rate that may not suit all groups. If difficulty levels exist, check if they
+      provide meaningful range (from ~70% win rate for beginners to ~30% for experts).
+      Check community reports for actual win rates at various difficulty levels.
+
+  - id: setup-complexity-vs-play-depth
+    name: "Setup Complexity vs. Play Depth Ratio"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      A cooperative game with 45 minutes of setup and 30 minutes of play has an inverted
+      ratio. Setup includes: sorting components, building the board, distributing starting
+      resources, reading scenario rules, and learning or re-learning mechanics. If setup
+      exceeds 50% of play time, the game has a setup problem. Arkham Horror (2nd edition)
+      is the canonical example of a game where setup IS the activity. Solutions: app-assisted
+      setup, modular boards that build during play, or legacy-style permanent modifications
+      that reduce per-session setup.
+    detection: |
+      Estimate setup time by counting: distinct component types to sort, board elements to
+      arrange, per-player setup steps, and rules to review. If first-game setup exceeds
+      expected play time, the ratio is inverted. If experienced-player setup exceeds 30%
+      of play time, setup complexity is high relative to play depth.
+
+  - id: catch-up-after-rules-mistakes
+    name: "Catch-Up After Rules Mistakes"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Cooperative games are especially vulnerable to rules mistakes because there is no
+      opponent to catch errors. If the group discovers mid-game that they have been playing
+      a rule wrong (forgot to add enemies, applied a bonus incorrectly), the game state may
+      be irrecoverably diverged. Games that are resilient to rules mistakes have: state that
+      can be retroactively corrected, difficulty levels that absorb minor errors, or
+      mechanics simple enough that mistakes are rare. Games with cascading state (each
+      round's setup depends on the previous round's resolution) are fragile to errors.
+    detection: |
+      Check for cascading or state-dependent mechanics where an early-game error compounds
+      over time. If the game has mechanics where "if you forgot X on round 1, the game
+      state on round 5 is completely wrong," error resilience is low. Check if the game
+      provides correction guidance ("if you discover a rules error, do X") or if the
+      complexity of state tracking makes errors likely.
+
+  - id: escalation-pacing
+    name: "Escalation Pacing"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Cooperative games need escalation: each round should feel more urgent than the last.
+      But the escalation rate matters. Linear escalation (one more enemy per round) feels
+      steady but can become predictable. Exponential escalation (threats double each round)
+      creates exciting finales but can overwhelm players if they fall behind. Step-function
+      escalation (Pandemic's epidemic cards that ramp infection rate) creates punctuated
+      crises with recovery periods between them. The escalation shape defines the game's
+      emotional rhythm.
+    detection: |
+      Check how threat generation changes over time. If threats increase linearly, compute
+      when threat generation exceeds player capacity to respond. If threats increase
+      exponentially, compute when the tipping point occurs and whether it aligns with the
+      game's intended end time. If escalation is step-function, check whether the steps
+      are spaced to allow recovery and strategy adjustment between them.
+
+  - id: thematic-integration-cooperation
+    name: "Thematic Integration with Cooperation"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      The game's theme should make cooperation feel natural, not forced. Firefighters saving
+      a building (Flash Point) makes cooperative play intuitive. Competitive treasure
+      hunters forced to cooperate by mechanics feels dissonant. The theme also determines
+      how loss feels: losing to a spreading pandemic feels like a worthy challenge; losing
+      to an abstract point threshold feels mechanical. Spirit Island's colonial resistance
+      theme makes every cooperative action feel purposeful because the theme demands
+      collective response to a collective threat.
+    detection: |
+      Check if the game's theme naturally implies cooperation (shared threat, collective
+      goal, mutual dependency) or if cooperation is imposed mechanically on an otherwise
+      competitive premise. If the win/loss condition connects to the theme (stop the
+      disease, save the island, survive the crisis), thematic integration is present.
+      If the loss condition is "run out of cards in the threat deck," the theme is
+      disconnected from the mechanics.
+
+  - id: downtime-between-turns
+    name: "Downtime Between Turns"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      In turn-based cooperative games, non-active players wait for their turn. If turns are
+      long (complex decisions, multiple phases, many actions), downtime is significant. But
+      cooperative games partially solve this because non-active players can discuss strategy
+      and advise the active player (which is either a feature or the quarterbacking problem,
+      depending on implementation). Games with short turns, simultaneous elements, or
+      interrupt mechanics (reactions, assists) keep all players engaged between turns.
+    detection: |
+      Estimate turn length by counting decisions and phases per turn. If a player's turn
+      involves more than 3 sequential decisions with meaningful computation, turns are long.
+      Check if non-active players have mechanical engagement (reactions, assists, planning
+      phases) or if their only engagement is discussion. If turns exceed 5 minutes and
+      non-active players have no mechanical engagement, downtime is problematic.
+
+  - id: information-overload
+    name: "Information Overload at Decision Point"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Cooperative games often present all threats simultaneously: the full board state,
+      all pending crises, every enemy position. This is necessary for strategic planning
+      but can create analysis paralysis, especially for the quarterbacking-prone alpha
+      player who tries to optimize across the entire board. Games that limit visible
+      information (fog of war, face-down threat cards, sequential threat reveals) reduce
+      the optimization space without reducing strategic depth.
+    detection: |
+      Count simultaneously visible threats and decision-relevant information at a typical
+      decision point. If a player must consider more than 8 independent variables to make
+      an optimal decision, information overload is likely. Check if the game segments
+      information (regional threats, phased reveals, priority queues) to reduce the
+      simultaneous decision space.
+
+  - id: solo-mode-integrity
+    name: "Solo Mode Mechanical Integrity"
+    category: scaling
+    severity: medium
+    tradition_specific: true
+    description: |
+      Many cooperative games offer solo play by having one player control multiple
+      characters. This works mechanically but creates a different game: the solo player has
+      perfect information across all characters, can perfectly coordinate actions, and has
+      no social interaction. If the game's primary challenge is coordination under
+      communication constraints, solo mode removes the core challenge. If the challenge is
+      puzzle optimization, solo mode preserves it. The solo mode should be designed, not
+      assumed.
+    detection: |
+      Check if a solo mode exists and how it modifies the rules. If solo play is "control
+      2+ characters with no rule changes," check whether the game's core challenge survives.
+      If the game has communication restrictions, solo mode bypasses them. If the game has
+      hidden information per player, solo mode reveals it. Check if solo-specific rules
+      exist to compensate for these changes.

@@ -1,0 +1,268 @@
+tradition: eurogame
+name: "Eurogame Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for modern eurogame / designer board game traditions (Catan, Terraforming Mars,
+  Wingspan, Brass, Concordia, etc.). Focused on resource conversion, engine building, indirect
+  interaction, and scoring systems where elegant constraint creates meaningful choice.
+
+heuristics:
+  # --- ECONOMY ---
+
+  - id: runaway-leader
+    name: "Runaway Leader Problem"
+    category: economy
+    severity: critical
+    tradition_specific: true
+    description: |
+      When gaining resources or points makes it easier to gain more resources or points, the player
+      who takes an early lead compounds that advantage until the game is effectively decided long
+      before it ends. The remaining players are going through the motions. Classic positive feedback
+      loop with no damping mechanism.
+    detection: |
+      Map the resource flow graph. If any resource output feeds back into its own generation rate
+      without a cap, diminishing return, or catch-up mechanism, a runaway loop exists. Check whether
+      the leader at the midpoint of scored playtests is also the winner more than 70% of the time.
+
+  - id: point-salad-no-tension
+    name: "Point Salad — All Paths Equal"
+    category: scoring
+    severity: high
+    tradition_specific: true
+    description: |
+      When every action awards roughly equal points per unit of effort, strategic differentiation
+      collapses. Players feel busy but never face a real fork. The game becomes an optimization
+      puzzle with a single "do everything evenly" solution rather than a game of competing
+      commitments. Tension requires that choosing one path costs you another.
+    detection: |
+      Calculate expected points-per-action for each major scoring path across a full game.
+      If all paths converge within 10% of each other and no path requires sacrificing another,
+      the scoring system lacks tension. Also check if winners consistently score from 4+ different
+      categories with similar contributions from each.
+
+  - id: engine-ceiling-absence
+    name: "Engine Ceiling — Unbounded Engine"
+    category: economy
+    severity: critical
+    tradition_specific: true
+    description: |
+      An engine-building game needs a ceiling — a point where further investment yields diminishing
+      returns and the player must pivot to scoring. Without it, the optimal strategy is to build
+      engine forever and score in one explosive final turn, which is both un-interactive and
+      reduces the game to "who found the infinite combo first."
+    detection: |
+      Trace the maximum theoretical output of the strongest engine configuration at each round.
+      If output grows exponentially without a cap (hand limit, action limit, board space, resource
+      cap), the engine is unbounded. Check if any player's per-turn resource generation can exceed
+      the total resources available in the supply.
+
+  - id: resource-conversion-dead-end
+    name: "Resource Conversion Dead End"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      In a conversion-chain economy (ore → steel → building), a dead end occurs when a resource
+      can be generated but has no onward conversion or spending outlet at certain game stages.
+      Players holding dead-end resources feel trapped. This often emerges when the action space
+      for spending a resource is gated behind progression the player hasn't reached.
+    detection: |
+      Build the full resource conversion graph. For each resource, verify at least one spending
+      outlet is available at every game stage. Flag any resource that can accumulate above its
+      useful cap or that has generation sources but no sinks in early or late game phases.
+
+  - id: action-space-imbalance
+    name: "Action Space Imbalance"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When one action space or worker-placement spot is clearly superior to all alternatives at
+      a given game phase, the game devolves into a race for that spot. This is fine if it creates
+      interesting blocking decisions, but problematic if missing the spot means a wasted turn with
+      no viable alternative. The weakest action should still feel useful.
+    detection: |
+      Compare the expected value of each available action at early, mid, and late game phases.
+      If any single action's EV exceeds the second-best by more than 50%, and the game doesn't
+      provide adequate compensation for being blocked, the action space is imbalanced. Check if
+      any action is never selected in optimal play.
+
+  - id: turn-order-advantage
+    name: "Turn Order Advantage"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      In games with simultaneous scarcity (worker placement, drafting, limited buy rows), going
+      first provides access to the best options. Without rotation, compensation, or a bidding
+      mechanism for turn order, first player has a persistent structural advantage. This is
+      especially damaging in games with fixed seating order.
+    detection: |
+      Analyze win rates by starting position across playtests. If first player wins more than
+      (1/N + 10%) of the time in an N-player game, turn order advantage is present. Also check
+      if any start-player compensation (fewer starting resources, later draft pick) exists and
+      whether it adequately offsets the advantage.
+
+  - id: interaction-level-mismatch
+    name: "Interaction Level Mismatch"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      The game's marketing or theme promises one level of interaction (cutthroat area control)
+      but the mechanics deliver another (parallel solitaire optimization). This creates a feel-bad
+      mismatch where competitive players are bored and non-competitive players are blindsided.
+      The interaction model should be legible from the first turn.
+    detection: |
+      Categorize each action by interaction type: direct (attacks, steals), indirect (blocking,
+      market manipulation), or solo (personal engine only). If more than 70% of actions are solo
+      but the game frames itself as interactive, or if the only interaction is blocking with no
+      strategic depth to the block, a mismatch exists.
+
+  - id: late-game-determinism
+    name: "Late-Game Determinism"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When the outcome becomes calculable 3-4 rounds before the game ends, the final turns feel
+      rote. Players can count points, see the winner, and lose engagement. Good eurogames
+      maintain uncertainty through hidden scoring, late-game pivots, or endgame bonuses that
+      reward risk. The last round should still matter.
+    detection: |
+      At the 75% mark of the game, calculate the point gap between first and second place and
+      compare it to the maximum points still achievable. If the leader's margin exceeds the
+      trailing player's maximum remaining scoring potential in more than 40% of games, late-game
+      determinism has set in. Check for hidden information that might obscure this.
+
+  - id: complexity-depth-mismatch
+    name: "Complexity vs. Depth Mismatch"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Complexity is the number of rules and exceptions a player must track. Depth is the number
+      of meaningfully different decisions those rules generate. High complexity with low depth
+      means players are doing bookkeeping for decisions that don't matter. The ideal is minimal
+      rules that produce maximum strategic space. Every rule should earn its cognitive cost.
+    detection: |
+      Count the number of distinct rule exceptions, special cases, and conditional triggers.
+      Compare against the number of meaningfully different strategic paths observed in playtests.
+      If the exception count exceeds the strategy count by 3:1 or more, complexity is outpacing
+      depth. Also flag any rule that triggers fewer than once per game on average.
+
+  - id: feeding-the-leader
+    name: "Feeding the Leader"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      When shared or market-based systems allow trailing players' actions to disproportionately
+      benefit the leader — buying a resource that raises its price for the leader who already
+      stockpiled it, or completing a route that the leader can piggyback on. Distinct from
+      runaway leader: here, other players' rational actions structurally benefit first place.
+    detection: |
+      In shared-economy systems (shared markets, connected networks, common board), check if
+      a player's action that benefits themselves by X also benefits the leader by >= 0.5X.
+      Look for shared infrastructure, public goods, or market mechanisms where investment by
+      any player rewards the player with the largest existing stake.
+
+  - id: blocking-only-interaction
+    name: "Blocking as Only Interaction"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      When the sole form of player interaction is denying action spaces, the game becomes a
+      race to avoid being blocked rather than a strategic contest. Blocking is healthy as one
+      tool among many, but when it's the only lever, the player who gets blocked feels punished
+      without recourse and the blocker gains nothing positive — just denial.
+    detection: |
+      Catalog every interaction between players. If all interactions are denial-based (occupying
+      a space, buying the last resource, taking a card) with no positive-sum interactions (trade,
+      alliance, shared benefits), blocking is the only interaction. Check if blocking decisions
+      have strategic depth beyond "take the space my opponent needs."
+
+  - id: math-trading
+    name: "Math Trading"
+    category: social
+    severity: low
+    tradition_specific: true
+    description: |
+      When a trade or negotiation mechanic exists but the optimal exchange rates are calculable,
+      trading becomes arithmetic rather than social negotiation. Both players can compute the
+      "fair" trade and there's no reason to deviate. This makes the trading mechanic a tax on
+      mental math rather than a source of social gameplay.
+    detection: |
+      Check if resource values are fixed and public (no hidden information about what a resource
+      is worth to each player). If all resources have knowable conversion rates to points and
+      no player has private asymmetric valuation, trades resolve to math. Look for whether
+      experienced players converge on identical exchange rates.
+
+  - id: kingmaking-indirect-competition
+    name: "Kingmaking in Indirect Competition"
+    category: social
+    severity: high
+    tradition_specific: true
+    description: |
+      In games with indirect interaction, an eliminated or trailing player can still choose
+      which frontrunner to help or hinder through their remaining actions. This gives a player
+      who cannot win the power to choose the winner, which feels arbitrary and unsatisfying.
+      It's especially toxic when the choice is based on social dynamics rather than game state.
+    detection: |
+      At the point where a trailing player cannot win, check if their remaining actions can
+      differentially impact the two leading players by more than the gap between first and
+      second place. If a non-contender's final turns can swing the winner, kingmaking is
+      structurally possible. Check if any catch-up mechanism prevents players from reaching
+      this state.
+
+  - id: first-player-advantage
+    name: "First-Player Advantage"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Beyond simple turn-order advantage, first-player advantage includes getting the first
+      pick of strategies, claiming the best board positions, and setting up engine components
+      before opponents can contest them. In eurogames with tight economies, one extra turn
+      of engine output can be decisive. This compounds in games where the end trigger is
+      "N rounds" rather than "reach a target."
+    detection: |
+      Compare first-player win rates. Also check if the first player has a structural extra
+      turn at the end (acts last in the final round). In engine-building games, calculate the
+      total additional output from one extra turn of engine operation. If first player gets an
+      extra scoring turn and this exceeds the typical final-score margin, the advantage is
+      decisive.
+
+  - id: end-game-trigger-manipulation
+    name: "End-Game Trigger Manipulation"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When one player can control when the game ends (exhausting a pile, reaching a threshold,
+      triggering final scoring), they can time the ending to maximize their advantage and
+      minimize opponents' unfinished plans. This is a feature when it adds strategic depth
+      but a flaw when it's opaque or when one strategy can rush the ending before others
+      get online. The game should reward the trigger timing as a skill, not a gotcha.
+    detection: |
+      Identify all end-game triggers and check if a single player can unilaterally control
+      them. If one strategy can trigger the ending 30%+ earlier than the average game length,
+      and this disproportionately benefits that strategy, the trigger is exploitable. Check
+      if all major strategies have comparable influence over game length.
+
+  - id: first-game-trap
+    name: "First-Game Trap"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      A strategy that looks strong to new players but is strictly dominated by experienced
+      play. This is acceptable if the game is meant to be replayed and the trap teaches a
+      lesson, but harmful if the trap is so punishing that new players don't want to replay.
+      Good eurogames let new players be competitive even if not optimal.
+    detection: |
+      Identify the most intuitive strategy for a first-time player (the "obvious" move in
+      early turns). If this strategy's win rate is below 10% against experienced players and
+      the score gap is more than 30%, the game has a punishing first-game trap. Check if the
+      rulebook or game structure provides any guidance away from the trap.

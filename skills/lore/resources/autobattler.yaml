@@ -1,0 +1,268 @@
+tradition: autobattler
+name: "Autobattler Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for autobattler / auto-chess games (Teamfight Tactics, Dota Underlords,
+  Super Auto Pets, Storybook Brawl, etc.). Focused on draft economics, synergy thresholds,
+  positioning, lobby-level meta health, and the tension between contested and uncontested play.
+
+heuristics:
+  # --- DRAFT & COMPOSITION ---
+
+  - id: forced-synergy-dominance
+    name: "Forced Synergy — One Comp Always Wins"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      When one trait combination or composition is so statistically dominant that all competitive
+      play converges on forcing it regardless of what's offered, the draft becomes a race for
+      specific units rather than an adaptive puzzle. The game's core promise — reading the lobby
+      and pivoting — collapses into "who highrolls the broken comp first."
+    detection: |
+      Analyze top-4 rates by composition archetype. If any single comp appears in the top 4 of
+      more than 40% of lobbies, or if the top comp's average placement is more than 1.5 places
+      better than the second best, forced synergy is present. Check if this comp is contestable
+      (does it still win when 3+ players force it?).
+
+  - id: draft-position-fairness
+    name: "Draft Fairness Across Positions"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      In carousel, armory, or shared-draft rounds, pick order determines access to key items
+      or units. If the compensation for picking later (being lower HP, getting priority next
+      round) doesn't offset the value gap between first and last pick, draft position becomes
+      a hidden advantage. Losing should give you better picks, not just slightly less bad ones.
+    detection: |
+      Compare the expected value of picks at each draft position (first pick vs. last pick).
+      If the EV gap between first and last exceeds 15% of a typical item/unit's value, and the
+      compensation mechanism (HP-based ordering, streak bonuses) doesn't close it, fairness is
+      compromised. Track whether carousel/draft outcomes correlate with final placement.
+
+  - id: positioning-value-collapse
+    name: "Positioning Value Collapse"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Autobattlers promise that where you place units matters — frontline tanks, backline carries,
+      corner stacking for assassin protection. When positioning stops mattering (because AoE hits
+      everything, or targeting AI is random, or movement abilities negate formation), a major
+      skill axis is removed. The game becomes purely about what you draft, not how you deploy.
+    detection: |
+      Compare win rates of optimized vs. random board placement for each major comp. If random
+      placement achieves within 90% of optimal placement's win rate, positioning has collapsed.
+      Also check if any dominant comp functions identically regardless of unit arrangement, or
+      if AoE abilities consistently hit 70%+ of the board regardless of spread.
+
+  - id: item-economy-inflation
+    name: "Item Economy Inflation"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      When the game gives too many items through PvE rounds, augments, or events, items stop
+      being meaningful decisions and become checkbox requirements. Fully itemized boards by
+      stage 4 mean item choices in stage 5-6 are just marginal upgrades. The scarcity that
+      makes item decisions interesting evaporates.
+    detection: |
+      Count average items per player at each stage. If players are fully itemized (3 items on
+      each carry) before the final third of the game, inflation is present. Check if item
+      decisions in the late game feel meaningful or if players are just completing sets with
+      whatever drops. Track how often players hold completed items with nothing to equip them on.
+
+  - id: lobby-meta-stagnation
+    name: "Lobby Meta Stagnation"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      A healthy autobattler lobby has 6-8 different compositions represented, with players
+      adapting to what others are playing. Stagnation occurs when the meta crystallizes into
+      2-3 comps that everyone forces, and games are decided by who gets the uncontested version.
+      The draft becomes a lottery rather than a skill test.
+    detection: |
+      Track composition diversity across lobbies. If fewer than 4 distinct archetypes appear
+      in the top 4 across a sample of games, the meta is stagnant. Also check the "contestation
+      rate" — how often 3+ players in the same lobby run the same comp. If this exceeds 50% of
+      lobbies, the viable comp pool is too narrow.
+
+  - id: carry-unit-problem
+    name: "Carry Unit Problem"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      When a composition's entire damage output depends on a single unit, the game collapses
+      into "did you find and upgrade the carry?" Everything else is just a shell to keep the
+      carry alive. This reduces draft complexity and makes games feel binary — your carry pops
+      off or it doesn't. Healthy comps distribute threat across multiple units.
+    detection: |
+      Measure damage distribution within compositions. If one unit accounts for more than 60%
+      of a comp's total damage output in simulated fights, the carry problem exists. Also check
+      if removing the carry (CC'd, assassinated, one-shot) results in an immediate loss more
+      than 80% of the time, indicating zero backup damage.
+
+  - id: trait-threshold-cliff
+    name: "Trait/Synergy Threshold Cliff"
+    category: scaling
+    severity: high
+    tradition_specific: true
+    description: |
+      Trait breakpoints (3/6/9 units of a type) should provide meaningful incremental power.
+      A cliff occurs when the jump from one breakpoint to the next is so large that hitting
+      the threshold is mandatory and missing it by one unit makes the comp unplayable. This
+      creates all-or-nothing moments that feel more like a slot machine than a decision.
+    detection: |
+      Compare the power increase at each trait breakpoint. If the jump from tier N to tier N+1
+      exceeds 2x the power of tier N-1 to tier N, a cliff exists. Also check if comps at the
+      lower breakpoint have a top-4 rate below 30% while the next breakpoint has above 60%.
+      The gap between "almost there" and "got it" should not be a binary pass/fail.
+
+  - id: economy-pacing-misalignment
+    name: "Economy Pacing — Breakpoint Timing"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      The gold economy determines when players hit key power spikes (level 7 for 4-costs, level 8
+      for legendaries, interest thresholds). If the economy is too fast, everyone hits breakpoints
+      simultaneously and the game lacks pacing variety. Too slow, and aggressive loss-streaking
+      kills players before they can stabilize. The economy should reward divergent timing.
+    detection: |
+      Map the average gold curve and the round at which players hit key levels (7, 8, 9) and
+      unit upgrades (2-star, 3-star). If 80%+ of players hit the same breakpoints within 1 round
+      of each other, pacing is too uniform. If aggressive leveling and slow economic play reach
+      the same breakpoints at the same time, the economy lacks strategic tension.
+
+  - id: reroll-gambling
+    name: "Reroll Gambling"
+    category: economy
+    severity: medium
+    tradition_specific: true
+    description: |
+      The reroll button is the most addictive and destructive mechanic in autobattlers. Healthy
+      rerolling has an expected value players can reason about (odds of hitting based on pool,
+      level, and contested units). Unhealthy rerolling feels like a slot machine — players dump
+      gold chasing a specific unit with no way to assess their odds. The information to make
+      rerolling a decision rather than a gamble must be accessible.
+    detection: |
+      Check if the game surfaces enough information for players to calculate reroll EV: pool
+      sizes, current shop odds by tier, how many copies opponents hold. If this data is hidden
+      or requires third-party tools to compute, rerolling is gambling. Also check if optimal
+      play ever involves spending more than 30 gold on rerolls in a single round.
+
+  - id: bench-depth-irrelevance
+    name: "Bench Depth Irrelevance"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      The bench should serve as a strategic resource — holding units for upgrades, denying
+      opponents, or keeping pivot options alive. When bench space is so limited or bench units
+      are so useless that players never hold speculative units, the bench becomes just overflow
+      storage for pairs, and a major decision axis (hold vs. sell) vanishes.
+    detection: |
+      Track average bench utilization and the strategic purpose of benched units. If more than
+      80% of bench slots are occupied by pairs waiting for upgrades (rather than speculative
+      holds, denials, or pivot pieces), bench depth is irrelevant as a strategic tool. Check
+      if selling a bench unit to buy a shop unit is correct more than 90% of the time.
+
+  - id: contested-vs-uncontested
+    name: "Contested vs. Uncontested Drafting"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      The tension between forcing a contested comp (higher ceiling but shared pool) and pivoting
+      to an uncontested one (lower ceiling but guaranteed pieces) is the strategic heart of
+      autobattlers. This breaks when uncontested play is always correct (why compete?) or when
+      contested play is always correct (the comp is so broken it wins even split three ways).
+    detection: |
+      Compare average placement of contested comps (3+ players in lobby) vs. uncontested comps
+      (1 player in lobby). If uncontested always outperforms contested regardless of comp
+      strength, or if a specific contested comp still averages top 4 with 3+ players on it,
+      the balance between these modes is broken.
+
+  - id: augment-power-creep
+    name: "Augment/Item Power Creep"
+    category: scaling
+    severity: high
+    tradition_specific: true
+    description: |
+      When augments, items, or hexes introduced in later patches or stages dramatically outscale
+      earlier options, the early choices become meaningless. Players who got strong early augments
+      fall off, and the game is decided by who highrolls the late augment. Power should be
+      distributed across choice points, not concentrated in the last one.
+    detection: |
+      Compare the win-rate delta provided by each augment/item tier (silver vs. gold vs.
+      prismatic). If higher-tier augments provide more than 3x the win-rate improvement of lower
+      tiers, power creep is present. Also check if any single augment at the highest tier has a
+      top-4 rate above 70%, indicating it warps the game around its appearance.
+
+  - id: level-breakpoint-spike
+    name: "Level Breakpoint Spikes"
+    category: scaling
+    severity: medium
+    tradition_specific: true
+    description: |
+      Each level unlocks access to a new unit cost tier, but the power jump should be gradual.
+      When one level (typically 7 or 8) represents a massive spike because its unlocked tier
+      contains disproportionately strong units, the game becomes entirely about racing to that
+      level. All other decisions are just "how do I get to 8 fastest."
+    detection: |
+      Compare the average board power increase per level-up. If any single level provides more
+      than 2x the power increase of adjacent levels, a spike exists. Check if the units unlocked
+      at that level have significantly higher stat budgets, more impactful abilities, or critical
+      synergy completions compared to other tiers.
+
+  - id: transition-comp-trap
+    name: "Transition Comp Trap"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Players often run a "transition comp" in the midgame before pivoting to their final board.
+      A trap occurs when the transition comp is so expensive to build or so dissimilar to viable
+      end-game boards that pivoting costs too much HP or gold. Players get stuck on a board that
+      was only meant to be temporary because the cost of transitioning exceeds the cost of staying.
+    detection: |
+      Map the overlap (shared units, shared items) between common midgame boards and viable
+      endgame boards. If the average unit overlap is below 30%, transitioning requires selling
+      and rebuying most of the board, which is a trap. Check if players who transition late
+      (after a loss streak forces it) have a significantly worse placement than those who
+      committed early.
+
+  - id: late-game-board-lock
+    name: "Late-Game Board Lock"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      In the final stages, when all players have fully assembled boards, the game becomes a
+      static matchup lottery — your fixed board either beats theirs or it doesn't, and there's
+      nothing you can do about it. Healthy late games offer micro-adjustments: positioning swaps,
+      tech-in units, item swaps, or last-second pivots that keep decision-making alive.
+    detection: |
+      Track the number of meaningful board changes players make in the final 3 rounds. If more
+      than 70% of players make zero changes to their board (same units, same items, same
+      positions) in the last 3 rounds, the late game is locked. Check if any late-game
+      adjustment options exist and whether they have measurable impact on outcomes.
+
+  - id: highroll-lowroll-spread
+    name: "Highroll/Lowroll Variance Spread"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Some variance is inherent and desirable in autobattlers — it's what makes each game unique.
+      But when the gap between a highroll game (natural 2-star carry on 2-1, BiS items from PvE)
+      and a lowroll game (no pairs by 3-2, useless components) is so extreme that skill cannot
+      bridge it, the game feels like a coin flip dressed up as strategy.
+    detection: |
+      Compare the placement distribution of the same player/comp archetype across many games.
+      If the standard deviation of placement exceeds 2.0 (on a 1-8 scale), variance is too high.
+      Check if a player making optimal decisions with a bad opener can reliably top-4, or if
+      low-roll starts deterministically lead to bottom-4 regardless of play quality.

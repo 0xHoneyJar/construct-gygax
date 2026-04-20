@@ -1,0 +1,70 @@
+id: trait-synergies
+name: "Trait Synergies (Multiplicative vs Additive)"
+type: entities
+description: "The trait system grants bonuses when multiple units share a trait. Most traits provide additive flat bonuses (+20 armor, +200 HP). Mech and Assassin provide multiplicative percentage bonuses (+50% attack speed, +40% crit chance) that compound with each other. This multiplicative stacking is the root cause of the dominance -- it creates superlinear scaling that additive traits cannot match."
+tradition: autobattler
+tags: [synergy, traits, multiplicative, imbalance]
+depends_on: [mechanics/drafting-phase.yaml]
+affects: [mechanics/automated-combat.yaml, stats/unit-combat-stats.yaml, tensions/forced-meta.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+synergy_table:
+  mech:
+    units_required: [2, 4]
+    bonus_2: "+25% attack speed"
+    bonus_4: "+50% attack speed"
+    scaling: multiplicative
+    note: "Multiplies base attack speed. Stacks with all other damage modifiers."
+  assassin:
+    units_required: [3, 6]
+    bonus_3: "+20% crit chance, +10% crit damage"
+    bonus_6: "+40% crit chance, +25% crit damage"
+    scaling: multiplicative
+    note: "Multiplies effective DPS through crit scaling. Stacks with attack speed."
+  guardian:
+    units_required: [2, 4]
+    bonus_2: "+30 armor to all allies"
+    bonus_4: "+60 armor to all allies"
+    scaling: additive
+    note: "Flat armor. Effective but linear."
+  sorcerer:
+    units_required: [2, 4]
+    bonus_2: "+20% spell power"
+    bonus_4: "+40% spell power"
+    scaling: additive
+    note: "Percentage but only affects spell damage, not auto-attacks."
+  ranger:
+    units_required: [2, 4]
+    bonus_2: "+30% attack speed for 3 seconds at combat start"
+    bonus_4: "+70% attack speed for 3 seconds at combat start"
+    scaling: temporary
+    note: "Strong burst but fades. Mech bonus is permanent."
+  elementalist:
+    units_required: [3]
+    bonus_3: "Summon elemental golem with 2500 HP"
+    scaling: flat
+    note: "One-time summon. No scaling with other traits."
+
+compound_analysis:
+  mech_assassin_4_6:
+    attack_speed_modifier: 1.50
+    crit_chance_total: 0.55
+    crit_damage_total: 1.75
+    effective_dps_multiplier: 2.12
+    note: "DPS is 2.12x base. No other trait combination exceeds 1.45x."
+  guardian_sorcerer_4_4:
+    effective_ehp_multiplier: 1.65
+    effective_dps_multiplier: 1.40
+    note: "Survives 65% longer but deals 34% less damage. Net: still loses."
+  best_counter_comp:
+    name: "None viable"
+    note: "No trait combination counters the multiplicative DPS advantage. Anti-crit or anti-attack-speed traits do not exist."
+
+notes:
+  - "Multiplicative stacking is the #1 balance risk in any trait/synergy system."
+  - "TFT addresses this by making most bonuses additive and capping multiplicative effects."
+  - "Fix: convert Assassin crit to flat bonus (+15 crit chance, not +40%), or add diminishing returns when combining multiplicative traits."
+  - "Alternative fix: add a trait that specifically counters crit (e.g., 'Stalwart: reduce incoming crit damage by 50%')."

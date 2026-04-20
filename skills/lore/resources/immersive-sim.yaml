@@ -1,0 +1,428 @@
+tradition: immersive-sim
+name: "Immersive Sim Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for immersive sims and systemic simulation games (Deus Ex, Dishonored,
+  Prey, System Shock, Thief, Hitman, Arx Fatalis, BioShock, Weird West, Cruelty Squad, etc.).
+  Distilled from the Looking Glass lineage, developer retrospectives (Harvey Smith, Warren
+  Spector, Raphael Colantonio), community analysis, and the design philosophy that the player
+  should be an author, not an audience.
+
+heuristics:
+  # --- MECHANICS ---
+
+  - id: solution-path-diversity
+    name: "Solution Path Diversity"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      The defining contract of immersive sims: every problem must have multiple valid solutions.
+      A locked door should yield to a key, a lockpick, a vent, a stacked crate, a broken window,
+      a hacked terminal, a bribed guard, or brute force. If any obstacle has exactly one solution,
+      the game has betrayed its genre. The number of solutions is less important than the
+      qualitative difference between them -- three paths that all require combat are one path
+      with three skins.
+    detection: |
+      For each obstacle or gate in the design, count distinct solution approaches that use
+      different player skills or systems. If any critical-path obstacle has fewer than 3
+      qualitatively different solutions (stealth, combat, social, tech, environmental), the
+      design fails the immersive sim contract. Check if solutions require different character
+      builds or if all solutions are available to all builds.
+
+  - id: systemic-interaction-depth
+    name: "Systemic Interaction Depth"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      Immersive sims derive their magic from systems combining in ways the designer did not
+      explicitly author. Fire ignites oil, oil floats on water, water conducts electricity,
+      electricity stuns robots. When systems combine emergently, players become inventors.
+      If systems are siloed (fire only damages health, water only extinguishes fire, electricity
+      only powers devices), the game is a collection of mechanics, not a simulation. The test:
+      can players solve problems with system combinations the designer never anticipated?
+    detection: |
+      Map system interactions: which systems affect which other systems? Count pairwise
+      interactions between physics, elemental, AI, and environment systems. If fewer than
+      30% of system pairs have any interaction, the simulation is shallow. Check for "emergent
+      combos" -- interactions that are not explicitly scripted but arise from consistent rules.
+      If all interactions are pre-authored (scripted sequences), emergence is absent.
+
+  - id: ability-gate-pacing
+    name: "Ability Gate Pacing (Metroidvania Lock/Key)"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Ability gates (areas locked behind specific upgrades) structure the world into an
+      expanding possibility space. Too many gates: the world feels linear despite appearing
+      open. Too few: players can go everywhere immediately and the sense of growing power is
+      lost. The ideal pacing reveals 1-2 new accessible areas per major ability gain, creating
+      a rhythm of acquisition and exploration. Critically, ability gates in immersive sims
+      should always have alternative paths for non-standard builds.
+    detection: |
+      Map ability gates against ability acquisition timing. If more than 3 gates exist for a
+      single ability, that ability is a hard dependency and non-standard builds are locked out.
+      Check if every gated area has at least one alternative entry (even if more difficult or
+      costly). If any area is accessible ONLY through one specific ability with no alternative,
+      the design has a Metroidvania gate without Metroidvania build flexibility.
+
+  - id: environmental-readability
+    name: "Environmental Readability"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Players must be able to deduce solutions from the environment itself -- not from UI
+      markers, objective logs, or tutorials. A vent cover that can be removed should look
+      different from a decorative vent. A structural weakness should have visual cracks. An
+      electrified floor should spark. If the environment is not readable, players cannot
+      reason about it, and the sim collapses into trial-and-error. Environmental readability
+      is the immersive sim's substitute for a quest marker.
+    detection: |
+      Check if interactive objects are visually or audibly distinguishable from non-interactive
+      objects. If the game relies on highlight systems (glow effects, outlines, icons) to
+      indicate interactivity, the environment itself is not readable -- the UI is doing the
+      work. Check if hazards are visible before they damage the player. If hazards are invisible
+      until triggered, the design punishes exploration rather than rewarding observation.
+
+  - id: stealth-vs-combat-viability
+    name: "Stealth vs Combat Viability"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      Both stealth and combat must be fully viable paths through the entire game. If stealth
+      breaks down in boss fights (forced combat), the stealth build is betrayed. If combat
+      is trivially easy while stealth requires perfect execution, the game implicitly punishes
+      the harder path. Immersive sims must resist the urge to force boss fights -- if a
+      stealth player finds a way to bypass or trick a boss, the design should allow it.
+    detection: |
+      Check if any encounter or boss is flagged as "combat required" or has no stealth/bypass
+      option. If forced combat encounters exist, stealth builds are incomplete. Compare the
+      difficulty curve for pure stealth vs pure combat playthrough. If stealth completion time
+      exceeds combat by more than 2x, stealth is penalized. If stealth is faster (skip
+      everything), check if stealth feels like engagement or avoidance.
+
+  - id: player-expression-breadth
+    name: "Player Expression Breadth"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Player expression is the range of approaches a player can take that feel meaningfully
+      different. It includes: playstyle (stealth, combat, social), ethics (lethal, non-lethal,
+      chaotic), exploration style (thorough, direct, sequence-breaking), and aesthetic choices
+      (how you solve puzzles, which tools you prefer). If the game has 20 abilities but only
+      3 viable playstyles, expression is narrow. If 5 abilities create 15 distinct approaches,
+      expression is rich.
+    detection: |
+      Count the number of mechanically distinct playstyles the game supports through completion.
+      If fewer than 4 distinct playstyles can complete the game, expression is limited. Check
+      if the game acknowledges different approaches (dialogue changes, NPC reactions, ending
+      variations) or if all paths converge to identical outcomes regardless of approach.
+
+  - id: resource-scarcity-as-puzzle
+    name: "Resource Scarcity as Puzzle Element"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      In immersive sims, limited ammo, health, and tools force creative problem-solving. When
+      you have 3 bullets and 5 enemies, you must think. When you have 300 bullets, you can
+      shoot your way through without engaging the game's systems. Resource scarcity transforms
+      combat from a reflex test into a puzzle. But scarcity must be tuned: too scarce and
+      players feel starved, hoarding everything. The ideal scarcity makes every expenditure
+      feel like a decision without making the player feel deprived.
+    detection: |
+      Compare total available resources (ammo, health, ability charges) against the total
+      resource cost of combat-solving every encounter. If resources exceed combat needs by more
+      than 2x, scarcity is absent and combat-heavy play is never constrained. If resources
+      cover less than 50% of encounters, combat-only play is impossible and the scarcity may
+      be too aggressive. Check if non-combat solutions exist that preserve resources.
+
+  - id: consequence-visibility
+    name: "Consequence Visibility"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Player choices should have visible, readable consequences. If killing a character changes
+      the world, the player should see it: different NPC dialogue, changed environments, closed
+      quest paths, new opportunities. If consequences are invisible (a flag changes but nothing
+      observable differs), the game claims to have choices but does not demonstrate them. The
+      player must be able to say "that happened because of what I did" without consulting a wiki.
+    detection: |
+      Check for branching mechanics (choices, moral systems, faction alignment). For each
+      branch point, trace the observable consequences. If consequences are limited to a final
+      ending screen or a single changed line of dialogue, they are functionally invisible during
+      play. Check if consequences manifest in the world (environmental changes, NPC behavior,
+      access changes) vs only in narrative (different cutscene).
+
+  - id: save-system-impact-on-risk
+    name: "Save System Impact on Risk"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Quicksave/quickload fundamentally changes immersive sim play. With unrestricted saves,
+      players can save-scum every encounter, removing all risk and turning the game into a
+      puzzle with infinite retries. With restricted saves (checkpoints, limited save items),
+      risk is real but frustration increases. The save system is a stealth difficulty setting:
+      the same game is easy with quicksave and brutal with checkpoint-only. The design must
+      decide which experience it is balancing around.
+    detection: |
+      Check for save system mechanics. If quicksave is available with no restrictions, assume
+      players will save-scum and check if the game still provides tension under that assumption.
+      If saves are restricted, check if the distance between save points creates frustrating
+      repetition on failure. If the game offers both modes, check which one it balances around.
+
+  - id: inventory-management-as-puzzle
+    name: "Inventory Management as Puzzle"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Grid-based or weight-limited inventories force players to choose what to carry. This is
+      a puzzle: which tools will I need? Can I afford to carry this heavy weapon? Should I drop
+      health kits to carry more ammo? If inventory is unlimited, the puzzle disappears and
+      players carry everything. If inventory is too restrictive, players spend more time
+      managing items than playing the game. The Resident Evil 4 attache case is the gold
+      standard: tight enough to force decisions, spatial enough to reward optimization.
+    detection: |
+      Check for inventory limit mechanics (grid, weight, slot count). If limits exist, check
+      whether minimum viable equipment fills more than 70% of capacity (too tight) or less than
+      40% (too loose). If no inventory limit exists, check if carrying everything creates any
+      gameplay consequences (slower movement, less stealth). If carrying everything has no cost,
+      inventory is not a system.
+
+  # --- PACING ---
+
+  - id: narrative-mechanical-integration
+    name: "Narrative vs Mechanical Integration"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Immersive sims promise that story and systems coexist. When the narrative says "you must
+      hurry" but no timer exists, the integration fails. When the mechanics allow killing
+      everyone but the story assumes you are a hero, the integration fails. The best immersive
+      sims let mechanics tell the story: the world state IS the narrative. Environmental
+      storytelling (logs, environmental details, NPC routines) bridges the gap between authored
+      narrative and emergent play.
+    detection: |
+      Check for disconnects between narrative framing and mechanical reality. If the story
+      establishes urgency but no time mechanic exists, the narrative is decorative. If the
+      game tracks player behavior (kills, stealth, choices) and the narrative ignores it,
+      integration is one-directional. Check if environmental storytelling exists independently
+      of dialogue/cutscenes.
+
+  - id: level-design-interconnection
+    name: "Level Design Interconnection"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Immersive sim levels should be interconnected webs, not linear corridors. Shortcuts
+      that loop back, multiple floors connected by vents and stairwells, rooftop paths that
+      bypass ground-level guards -- these create a sense of place and reward spatial reasoning.
+      If levels are linear sequences of rooms with one path forward, the "immersive" part of
+      the sim is missing. Players should build a mental map and exploit it.
+    detection: |
+      Analyze level structure for connectivity. Count distinct paths between key points (entry,
+      objective, exit). If only 1 path exists between any two key points, the level is linear.
+      Check for vertical connectivity (can players move between floors via multiple routes?)
+      and for shortcuts that reward exploration (locked doors that open from one side, breakable
+      walls, vent networks).
+
+  - id: difficulty-adaptation
+    name: "Difficulty Adaptation"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Immersive sims serve a wide skill range: some players are stealth perfectionists, others
+      are improvisers who adapt when plans fail. Difficulty should accommodate both without
+      making the game trivial or impossible. Dynamic difficulty (adjusting enemy awareness,
+      resource availability, or damage based on player performance) can help, but visible
+      difficulty adjustment breaks immersion. The best approach: multiple viable strategies
+      at every difficulty level, so struggling players can switch approaches rather than lower
+      a slider.
+    detection: |
+      Check for difficulty settings and what they modify. If difficulty only changes enemy HP
+      and damage, it is a blunt instrument. If difficulty changes AI behavior, resource
+      availability, and detection sensitivity, it preserves the game's identity across settings.
+      Check if the easiest difficulty still requires engagement with game systems or if it
+      allows players to ignore mechanics entirely.
+
+  - id: speedrun-sequence-break-tolerance
+    name: "Speedrun and Sequence Break Tolerance"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      The immersive sim community values sequence breaking -- using systems in unintended ways
+      to bypass intended paths. Rocket jumping past a locked door, stacking objects to reach
+      a normally inaccessible area, using a physics glitch to skip a level. Games that patch
+      these out are fighting against their own design philosophy. If the systems allow it and
+      the player is clever enough to find it, it should be celebrated. Patching sequence breaks
+      signals that the game values authored paths over player ingenuity.
+    detection: |
+      Check for invisible walls, kill planes, and teleport-back mechanics that prevent
+      unintended movement. If the game aggressively prevents players from reaching areas
+      "early," it is intolerant of sequence breaking. Check if any developer communications
+      acknowledge or celebrate speedrun techniques. If known sequence breaks are patched in
+      updates, the design philosophy is anti-emergent.
+
+  # --- SOCIAL ---
+
+  - id: npc-ai-behavior-transparency
+    name: "NPC AI Behavior Transparency"
+    category: social
+    severity: high
+    tradition_specific: true
+    description: |
+      Players must be able to predict and manipulate NPC behavior. If guards have patrol routes,
+      those routes must be observable. If NPCs react to sound, the sound radius must be intuitable.
+      If an NPC has an alarm threshold, the player must be able to read how close they are to
+      triggering it. Opaque AI creates frustration: "I did the same thing and got a different
+      result" destroys the simulation contract. Transparent AI creates mastery: players learn
+      the rules and exploit them creatively.
+    detection: |
+      Check NPC AI systems for readability. If AI states are invisible (no awareness indicator,
+      no patrol route visualization, no sound radius feedback), the player cannot reason about
+      NPC behavior. Check for randomized AI behaviors -- some randomness creates realism, but
+      randomized detection thresholds create frustration. If identical player actions produce
+      inconsistent AI responses with no readable cause, transparency is insufficient.
+
+  - id: faction-reputation-readability
+    name: "Faction/Reputation System Readability"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      If factions exist (guards, criminals, scientists, cultists), the player's relationship
+      with each faction should be readable and manageable. Killing one guard should not
+      instantly turn an entire city hostile unless that is clearly telegraphed. Faction
+      reputation should be visible (at least qualitatively: friendly, neutral, hostile) and
+      the consequences of reputation changes should be predictable before the player acts.
+    detection: |
+      Check for faction or reputation mechanics. If reputation exists but is not surfaced to
+      the player (hidden numerical value with no UI), the player cannot make informed social
+      decisions. If reputation changes are disproportionate (killing one civilian sets the
+      entire faction permanently hostile), the system is punitive rather than expressive.
+      Check if reputation can be repaired or if all faction damage is permanent.
+
+  - id: nonlethal-option-depth
+    name: "Non-Lethal Option Depth"
+    category: social
+    severity: medium
+    tradition_specific: true
+    description: |
+      Non-lethal play must be a complete path, not a handicap. If the only non-lethal option
+      is a weak melee attack, the game does not truly support pacifism -- it punishes it.
+      Good non-lethal design provides: dedicated tools (tranquilizer darts, stun weapons,
+      sleep gas), meaningful benefits (NPC reactions, story consequences, achievement tracking),
+      and a challenge profile that is different from but not harder than lethal play.
+    detection: |
+      Count non-lethal tools and compare against lethal tools. If non-lethal options are fewer
+      than 30% of total combat options, non-lethal play is underserved. Check if non-lethal
+      play has unique rewards (better endings, NPC cooperation, exclusive content) or if it
+      is simply a challenge restriction with no design support. If non-lethal tools are gated
+      behind late-game progression, early-game pacifism is not viable.
+
+  # --- SCALING ---
+
+  - id: power-curve-vs-world-consistency
+    name: "Power Curve vs World Consistency"
+    category: scaling
+    severity: high
+    tradition_specific: true
+    description: |
+      As players grow more powerful (more abilities, better gear), the world must remain
+      consistent. If a locked door could be bypassed by hacking at level 1, a fully upgraded
+      hacker at level 10 should not find it harder. But if player power grows unchecked, late-
+      game challenges must escalate to match, which can break the simulation's internal logic
+      (why are these guards wearing power armor in a civilian area?). The best immersive sims
+      expand the player's option space without inflating their raw power.
+    detection: |
+      Check progression mechanics for power scaling. If player damage or survivability more
+      than doubles over the course of the game, check if enemy scaling keeps pace and whether
+      that scaling is narratively justified. If late-game enemies are mechanically identical
+      to early-game enemies but with 5x health, the scaling is lazy. Check if progression
+      adds new capabilities (more tools) rather than just better stats.
+
+  - id: upgrade-tree-trap-options
+    name: "Upgrade Tree Trap Options"
+    category: scaling
+    severity: medium
+    tradition_specific: true
+    description: |
+      Skill trees with options that sound good but are mechanically weak create traps. In a
+      game that respects player choice, every upgrade should be viable in at least one
+      playstyle. An upgrade that is never the right choice is not a choice -- it is a mistake
+      waiting to happen. If the community unanimously avoids certain upgrades, those upgrades
+      are traps that punish players who do not read guides.
+    detection: |
+      Catalog upgrade or skill tree options. Check for upgrades that are strictly dominated
+      (another option in the same tier is better in all scenarios). If any upgrade is the
+      optimal choice in zero playstyles, it is a trap. Check community guides: if more than
+      20% of options are labeled "never take this," the tree has significant trap content.
+
+  - id: simulation-fidelity-floor
+    name: "Simulation Fidelity Floor"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Immersive sims promise a consistent world simulation, but every simulation has limits.
+      Water conducts electricity but does not rust metal. Fire spreads to wood but not to
+      curtains. The simulation fidelity floor is where consistent rules stop and "the game
+      just does not model that" begins. The lower the floor, the more immersive the simulation.
+      But what matters most is that the floor is CONSISTENT -- if fire spreads to one wooden
+      object, it should spread to all wooden objects. Inconsistent fidelity is worse than
+      low fidelity.
+    detection: |
+      Test system rules for consistency. If a physical or elemental interaction works in one
+      context but not another (fire burns barrels but not bookshelves, both made of wood),
+      the simulation has inconsistent fidelity. Catalog interactions that work and interactions
+      that should work by the same logic but do not. If the inconsistency list exceeds the
+      consistency list, the simulation floor is too uneven.
+
+  - id: hub-world-evolution
+    name: "Hub World Evolution"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Hub areas (a home base, a central city, a recurring space) that evolve based on player
+      decisions create a powerful sense of consequence. If the hub looks the same regardless
+      of player actions, the world feels static. If the hub transforms dramatically based on
+      a single choice, it feels scripted. The ideal: gradual accumulation of small visible
+      changes that reflect the player's overall approach, creating a unique hub state for
+      each playthrough.
+    detection: |
+      Check for recurring hub areas. If hub areas exist, check how many observable states they
+      have. If the hub has only 2 states (before and after a story event), evolution is binary.
+      If the hub reflects 5+ independent player choices in visible ways (NPC presence, damage,
+      decoration, accessibility), evolution is rich. Check if hub changes are purely narrative
+      (different dialogue) or environmental (visible differences in the space).
+
+  - id: audio-as-information-system
+    name: "Audio as Information System"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Sound in immersive sims is not atmosphere -- it is information. Footstep surfaces tell
+      you floor material. Guard conversations reveal patrol timing. Machinery sounds indicate
+      active systems. If audio is purely aesthetic (ambient music, generic sound effects),
+      the game wastes an information channel. If audio is informational but unreliable (sounds
+      do not correspond to actual game states), it is worse than no information.
+    detection: |
+      Catalog audio cues and their gameplay implications. If footsteps vary by surface but
+      surface type has no mechanical effect, the audio is decorative. If enemy vocalizations
+      indicate AI state (alert, searching, returning to patrol) and those states are accurate,
+      audio is an information system. Check if the game can be played effectively with audio
+      cues alone -- if so, the audio design is excellent.

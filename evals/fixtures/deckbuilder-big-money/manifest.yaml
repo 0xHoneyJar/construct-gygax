@@ -1,0 +1,24 @@
+id: deckbuilder-big-money
+name: "Big Money Dominance (Dominion Base-Set Anti-pattern)"
+failure_archetype: degenerate-strategy
+tradition: deckbuilder
+description: |
+  Encodes a deckbuilder where the simplest possible strategy -- ignoring engine
+  cards entirely and buying only treasure and victory point cards (Big Money) --
+  outperforms all engine-building approaches. The engine cards are too slow to
+  come online: by the time an engine generates meaningful returns, the Big Money
+  player has already purchased enough VP cards to win. The core promise of the
+  genre (build a unique engine from a shared market) is undermined because the
+  null strategy dominates. Analogous to early Dominion metas where Big Money
+  with one or two action cards beat complex engines.
+source: "grimoires/gygax/references/design-failure-postmortem.md"
+tests_skills:
+  - augury (resource-economy)
+  - augury (pacing)
+  - cabal (Optimizer + Builder)
+  - lore
+design_parameters:
+  target_session_length: medium
+  target_audience: intermediate
+  target_interaction: indirect
+  target_randomness: medium

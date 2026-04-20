@@ -49,6 +49,7 @@ Also triggered by natural language:
    - `target_audience: newcomer` → lower Xandering complexity thresholds (non-linearity can overwhelm new players)
    - `target_lethality: brutal` → expect and accept steeper attrition curves (don't flag fast resource drain as a problem)
    - `target_lethality: gentle` → flag encounters without clear escape routes or recovery points
+   - `target_randomness: none` → flag procedural generation as a design mismatch (deterministic games shouldn't have random dungeons)
    - If no `design_parameters` set, use tradition defaults.
 3. Glob for dungeon entities:
    - `grimoires/gygax/game-state/entities/*.yaml` where `subtype: dungeon`

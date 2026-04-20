@@ -1,0 +1,61 @@
+id: buy-phase
+name: "Buy Phase"
+type: mechanics
+description: "After playing actions, the player spends coins to buy one card from the market. The one-buy-per-turn limit is the bottleneck that makes timing critical. Big Money always buys the best treasure or VP card available. Engine players must choose between buying engine pieces (investment) and VP cards (scoring) -- but the engine never generates enough surplus to compensate for delayed VP purchases."
+tradition: deckbuilder
+tags: [buying, market, one-per-turn]
+depends_on: [stats/buying-power.yaml, mechanics/draw-and-play.yaml]
+affects: [resources/deck-composition.yaml, resources/victory-point-cards.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "After action phase completes"
+cost:
+  - resource: stats/buying-power.yaml
+    amount: "card cost (varies)"
+
+resolution:
+  method: card-play
+  stat: null
+  dc: null
+  success: "Gain purchased card to discard pile"
+  failure: null
+
+buy_limit: 1
+buy_limit_exception: "Some action cards grant +1 Buy. These are engine cards, creating circular dependency."
+
+strategy_comparison:
+  big_money_buy_priority:
+    - "Province (8 coin) -- always buy if affordable"
+    - "Gold (6 coin) -- always buy if Province unaffordable"
+    - "Duchy (5 coin) -- buy in late game"
+    - "Silver (3 coin) -- buy otherwise"
+    decision_complexity: "trivial"
+    note: "Zero meaningful decisions. Always buy the most expensive treasure/VP card."
+  engine_buy_priority:
+    - "Which engine piece to buy? (depends on current deck state)"
+    - "When to transition from engine-building to VP-buying?"
+    - "Which combos are still achievable given remaining market?"
+    decision_complexity: "high"
+    note: "Many meaningful decisions. All of which lead to a worse outcome than Big Money's trivial decisions."
+
+roi_analysis:
+  silver_purchase:
+    cost: 3
+    avg_future_coins_per_shuffle: 1.5
+    payback_period: "2 shuffles (~4 turns)"
+    total_roi_over_game: "+6 coins"
+  engine_card_purchase:
+    cost: 4
+    avg_future_coins_per_shuffle: 2.5
+    payback_period: "3-4 shuffles (~8 turns)"
+    total_roi_over_game: "+5 coins (but only if combo pieces are also purchased)"
+    combo_dependency: "Requires 2-3 other specific cards to function"
+  comparison: "Silver pays back in 4 turns with no dependencies. Engine cards pay back in 8 turns with combo requirements. Silver wins."
+
+notes:
+  - "The one-buy limit means each purchase is a commitment. Big Money's purchases always pay dividends. Engine purchases are speculative."
+  - "Fix: give engine cards +1 Buy as a baseline, or reduce engine card costs to 2-3 so the investment is smaller."
+  - "Alternative fix: add a 'trash' mechanic to the base game so players can thin dead cards from their deck."

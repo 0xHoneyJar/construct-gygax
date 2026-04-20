@@ -1,0 +1,45 @@
+id: action-budget
+name: "Action Budget (Worker Turns)"
+type: resources
+description: "Each player has 20 worker-placement actions per game across 10 rounds (2 workers per round). This fixed budget is the primary constraint. Every path consumes actions at the same rate -- no path is more action-efficient than another, which is a key contributor to score convergence."
+tradition: eurogame
+tags: [action-economy, worker-placement, fixed-budget]
+depends_on: []
+affects: [mechanics/path-scoring.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  per_round: 2
+  total_rounds: 10
+  total_actions: 20
+  recovery:
+    trigger: round-start
+    amount: 2
+    note: "Fixed allocation. No way to gain extra actions."
+
+action_efficiency_by_path:
+  trade:
+    vp_per_action: 2.45
+    variance: 0.3
+  building:
+    vp_per_action: 2.50
+    variance: 0.2
+  agriculture:
+    vp_per_action: 2.55
+    variance: 0.25
+  culture:
+    vp_per_action: 2.50
+    variance: 0.3
+  military:
+    vp_per_action: 2.45
+    variance: 0.35
+
+convergence_note: "VP-per-action ranges from 2.45 to 2.55 across all paths. A 0.10 VP/action difference over 20 actions = 2 VP total spread. This is within noise."
+
+notes:
+  - "In a well-designed eurogame, different paths have different action-efficiency curves that shift based on game state."
+  - "Here, the curves are flat and nearly identical. Choosing 'trade' vs 'agriculture' changes your theme but not your expected score."
+  - "No mechanism exists to convert unused actions or gain bonus actions, so the budget is perfectly rigid."

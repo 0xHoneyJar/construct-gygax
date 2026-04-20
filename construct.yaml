@@ -1,15 +1,15 @@
 # construct.yaml — Gygax construct pack manifest
-# TTRPG systems analyst for the Loa ecosystem
+# Game systems analyst for the Loa ecosystem
 # Validate: yq eval '.' construct.yaml
 
 schema_version: 3
 
 name: "Gygax"
 slug: gygax
-version: 3.1.0
+version: 4.0.0
 
-description: "TTRPG systems analyst — design, balance, playtest, and experiment with persistent game-state, cross-system comparison, intent-aware analysis, and dungeon evaluation"
-short_description: "TTRPG systems analysis and design collaboration"
+description: "Game systems analyst — design, balance, playtest, and experiment across 20 traditions (TTRPGs, eurogames, autobattlers, roguelikes, CCGs, and more) with persistent game-state, intent-aware analysis, and 460+ curated design heuristics"
+short_description: "Game systems analysis and design collaboration"
 
 author: gumibera
 license: MIT

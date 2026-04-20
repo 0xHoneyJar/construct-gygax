@@ -1,0 +1,58 @@
+id: automated-combat
+name: "Automated Combat (Resolution Phase)"
+type: mechanics
+description: "Units fight automatically after positioning. Combat resolves through simultaneous DPS calculations until one side is eliminated. The system has no player input during combat -- all decisions happen in the draft and positioning phases. When one comp's DPS dominates, combat outcomes are predetermined before the fight begins."
+tradition: autobattler
+tags: [combat, automated, resolution]
+depends_on: [stats/unit-combat-stats.yaml, entities/unit-roster.yaml, entities/trait-synergies.yaml]
+affects: [resources/gold-economy.yaml, tensions/forced-meta.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Combat phase begins (automatic after planning phase timer expires)"
+cost: []
+
+resolution:
+  method: automated
+  stat: stats/unit-combat-stats.yaml
+  dc: null
+  success: "Winning team deals HP damage to losing player equal to surviving units"
+  failure: "Losing player takes damage"
+
+combat_simulation:
+  mech_assassin_vs_guardian_sorcerer:
+    rounds_to_resolve: 8
+    winner: "Mech-Assassin"
+    win_rate: 0.82
+    avg_units_surviving: 3.2
+    hp_damage_dealt: 14
+    note: "Mech-Assassin bursts down backline before Guardian frontline matters"
+  mech_assassin_vs_ranger_elementalist:
+    rounds_to_resolve: 6
+    winner: "Mech-Assassin"
+    win_rate: 0.78
+    avg_units_surviving: 2.8
+    hp_damage_dealt: 11
+  mech_assassin_mirror:
+    rounds_to_resolve: 12
+    winner: "Higher star units / better items"
+    win_rate: 0.50
+    avg_units_surviving: 1.5
+    hp_damage_dealt: 6
+    note: "Mirrors are coinflips decided by item RNG, not player skill"
+  guardian_sorcerer_vs_ranger_elementalist:
+    rounds_to_resolve: 14
+    winner: "Variable"
+    win_rate: 0.52
+    note: "Non-dominant comps play close games against each other. The balance problem is isolated to Mech-Assassin."
+
+positioning_impact:
+  normal_meta: "Positioning accounts for 10-15% of combat outcome variance"
+  forced_meta: "Positioning accounts for 3-5% when Mech-Assassin is involved (DPS gap overwhelms positioning)"
+
+notes:
+  - "The combat system itself is functional. Units target correctly, damage calculates properly, abilities trigger on schedule."
+  - "The failure is upstream: synergy bonuses create a DPS gap that combat cannot bridge through positioning or counterplay."
+  - "In a healthy meta, positioning and itemization can swing matchups 60/40 to 40/60. Here, Mech-Assassin's advantage is too large to swing."

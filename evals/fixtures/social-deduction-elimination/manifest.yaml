@@ -1,0 +1,24 @@
+id: social-deduction-elimination
+name: "First-Night Elimination Death Spiral (Mafia/Werewolf Anti-pattern)"
+failure_archetype: pacing-slog
+tradition: social-deduction
+description: |
+  Encodes a social deduction game where player elimination happens before
+  eliminated players have taken a meaningful action. The first-night kill removes
+  a player who has had zero opportunity to deduce, accuse, or defend. That player
+  then sits idle for 30-45 minutes watching others play. The elimination mechanic
+  is intended to raise stakes and narrow the information space, but the pacing
+  failure means 1-2 players per game have a fundamentally negative experience.
+  At 8 players, there's a 25% chance YOU are the one who sits out. Analogous to
+  classic Werewolf's known first-night problem.
+source: "grimoires/gygax/references/design-failure-postmortem.md"
+tests_skills:
+  - augury (pacing)
+  - augury (action-economy)
+  - cabal (Newcomer + Social Butterfly)
+  - lore
+design_parameters:
+  target_session_length: medium
+  target_audience: casual
+  target_interaction: direct
+  target_randomness: low

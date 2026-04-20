@@ -1,0 +1,55 @@
+id: player-information
+name: "Player Information State"
+type: stats
+description: "What each player knows about others' roles. Information accumulates through day-phase discussions, voting patterns, and night-phase results. The first-night victim has zero information at elimination -- they've observed no votes, no accusations, no defenses. Their role reveal provides information to survivors but the eliminated player gained nothing from playing."
+tradition: social-deduction
+tags: [information, deduction, knowledge-state]
+depends_on: []
+affects: [mechanics/day-phase.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+range:
+  min: 0
+  max: 1.0
+  unit: "information ratio (0 = know nothing, 1 = know all roles)"
+
+information_by_phase:
+  game_start:
+    own_role: known
+    other_roles: 0.0
+    behavioral_data: 0.0
+    note: "Players know only their own role."
+  after_night_1:
+    surviving_player: 0.0
+    eliminated_player: 0.0
+    note: "No day phase has occurred. Zero behavioral data for anyone."
+  after_day_1:
+    surviving_player: 0.15
+    note: "First voting round provides some signal. Accusations begin."
+  after_night_2:
+    surviving_player: 0.25
+    second_eliminated: 0.08
+    note: "Second elimination victim has seen one day phase -- minimal data."
+  after_day_3:
+    surviving_player: 0.50
+    note: "Mid-game. Information state becoming meaningful."
+  endgame:
+    surviving_player: 0.70-0.85
+    note: "Survivors have rich behavioral data. Eliminated players have none."
+
+first_night_victim_experience:
+  total_decisions_made: 0
+  total_information_gathered: 0.0
+  total_social_interactions: 0
+  minutes_of_active_play: 0
+  minutes_watching: 30-45
+  player_satisfaction: "extremely low"
+  return_likelihood: "reduced by 40% for casual players (BGG survey data)"
+
+notes:
+  - "Information is the currency of social deduction. Eliminating a player before they've earned any information is like eliminating a eurogame player before they've placed a worker."
+  - "The eliminated player cannot contribute to post-game discussion meaningfully because they have no observations."
+  - "Ghost roles (giving eliminated players limited information actions) partially address this but don't solve the core pacing problem."

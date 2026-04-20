@@ -1,0 +1,80 @@
+game: "Big Money Dominance Test Fixture"
+tradition: deckbuilder
+description: "A deckbuilder where buying only treasure and victory point cards (Big Money) outperforms all engine-building strategies. Engine cards take too long to generate returns, and the game ends before engines come online. The core genre promise -- build a unique engine -- is a trap."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: medium
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: none
+  target_prep: low
+  target_player_count: standard
+  target_interaction: indirect
+  target_randomness: medium
+
+entity_count:
+  stats: 1
+  resources: 2
+  mechanics: 2
+  progression: 1
+  entities: 1
+  tensions: 1
+
+files:
+  - path: stats/buying-power.yaml
+    id: buying-power
+    depends_on: []
+    affects: [mechanics/buy-phase.yaml]
+
+  - path: resources/deck-composition.yaml
+    id: deck-composition
+    depends_on: [mechanics/buy-phase.yaml]
+    affects: [mechanics/draw-and-play.yaml, stats/buying-power.yaml]
+
+  - path: resources/victory-point-cards.yaml
+    id: victory-point-cards
+    depends_on: [mechanics/buy-phase.yaml]
+    affects: [tensions/engine-vs-big-money.yaml]
+
+  - path: mechanics/draw-and-play.yaml
+    id: draw-and-play
+    depends_on: [resources/deck-composition.yaml]
+    affects: [mechanics/buy-phase.yaml, stats/buying-power.yaml]
+
+  - path: mechanics/buy-phase.yaml
+    id: buy-phase
+    depends_on: [stats/buying-power.yaml, mechanics/draw-and-play.yaml]
+    affects: [resources/deck-composition.yaml, resources/victory-point-cards.yaml]
+
+  - path: progression/engine-scaling.yaml
+    id: engine-scaling
+    depends_on: [mechanics/draw-and-play.yaml, resources/deck-composition.yaml]
+    affects: [stats/buying-power.yaml, tensions/engine-vs-big-money.yaml]
+
+  - path: entities/market-cards.yaml
+    id: market-cards
+    depends_on: []
+    affects: [mechanics/buy-phase.yaml, progression/engine-scaling.yaml]
+
+  - path: tensions/engine-vs-big-money.yaml
+    id: engine-vs-big-money
+    depends_on: [resources/victory-point-cards.yaml, progression/engine-scaling.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 18
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: mechanics/buy-phase.yaml
+      dependents: 4
+    - path: resources/deck-composition.yaml
+      dependents: 3
+    - path: stats/buying-power.yaml
+      dependents: 3
+    - path: mechanics/draw-and-play.yaml
+      dependents: 3

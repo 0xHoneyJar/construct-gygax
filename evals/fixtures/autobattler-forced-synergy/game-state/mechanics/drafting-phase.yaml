@@ -1,0 +1,61 @@
+id: drafting-phase
+name: "Drafting Phase (Shop and Roll)"
+type: mechanics
+description: "Players draft units from a shared pool via a randomized shop. Each round, 5 units appear; players buy, sell, or reroll. The shared pool is designed to create natural contestation -- if 4 players chase the same comp, unit scarcity should force pivots. But Mech-Assassin's dominance is so extreme that forcing it even when contested (hitting only 4 of 6 units) still outperforms a complete alternative comp."
+tradition: autobattler
+tags: [drafting, shared-pool, contestation]
+depends_on: [resources/gold-economy.yaml]
+affects: [entities/trait-synergies.yaml, entities/unit-roster.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Start of each round (planning phase)"
+cost:
+  - resource: resources/gold-economy.yaml
+    amount: "unit cost (1-5 gold)"
+
+resolution:
+  method: drafting
+  stat: null
+  dc: null
+  success: "Add unit to bench"
+  failure: null
+
+shared_pool:
+  tier_1_copies: 29
+  tier_2_copies: 22
+  tier_3_copies: 18
+  tier_4_copies: 12
+  tier_5_copies: 10
+  mech_units_total: 12
+  assassin_units_total: 14
+
+contestation_analysis:
+  uncontested_mech_assassin:
+    hit_rate: "95% complete by round 15"
+    win_rate: 0.89
+    avg_placement: 1.8
+  contested_2_players:
+    hit_rate: "75% complete by round 15"
+    win_rate: 0.72
+    avg_placement: 2.9
+  contested_4_players:
+    hit_rate: "50% complete by round 15"
+    win_rate: 0.55
+    avg_placement: 3.8
+  best_alternative_uncontested:
+    comp: "Guardian-Sorcerer"
+    win_rate: 0.45
+    avg_placement: 4.2
+  note: "Even 4-way contested Mech-Assassin (avg 3.8) outperforms the best uncontested alternative (avg 4.2). The shared pool cannot self-correct this imbalance."
+
+interactions:
+  - "Shared pool contestation is the intended balancing mechanism: popular comps should be harder to complete."
+  - "But the DPS gap between Mech-Assassin and alternatives is so large that an incomplete Mech-Assassin still wins."
+  - "The draft becomes a prisoner's dilemma: everyone knows they should force Mech-Assassin, and even mutual forcing is better than pivoting."
+
+notes:
+  - "In TFT, this pattern is called 'forcing.' Healthy metas make forcing risky. This meta makes NOT forcing risky."
+  - "Fix options: reduce unit pool for dominant traits, increase trait thresholds, or add counter-synergies."

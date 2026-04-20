@@ -1,0 +1,94 @@
+fixture: deckbuilder-big-money
+expected_findings:
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    category: degenerate-strategy
+    description_contains: "Big Money"
+    entity_refs:
+      - resources/deck-composition.yaml
+      - stats/buying-power.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Critical
+    category: timing-failure
+    description_contains: "engine"
+    entity_refs:
+      - progression/engine-scaling.yaml
+      - resources/victory-point-cards.yaml
+
+  - skill: augury
+    layer: pacing
+    severity: Critical
+    category: game-length-mismatch
+    description_contains: "turns"
+    entity_refs:
+      - progression/engine-scaling.yaml
+      - resources/victory-point-cards.yaml
+
+  - skill: augury
+    layer: action-economy
+    severity: Warning
+    category: dead-draws
+    description_contains: "consistency"
+    entity_refs:
+      - mechanics/draw-and-play.yaml
+      - resources/deck-composition.yaml
+
+  - skill: augury
+    layer: resource-economy
+    severity: Warning
+    category: roi-failure
+    description_contains: "Silver"
+    entity_refs:
+      - entities/market-cards.yaml
+      - mechanics/buy-phase.yaml
+
+  - skill: cabal
+    signal: dead-time
+    archetype: Optimizer
+    description_contains: "trivial"
+
+  - skill: cabal
+    signal: frustration
+    archetype: Explorer
+    description_contains: "engine"
+
+  - skill: cabal
+    divergence: true
+    description_contains: "genre promise"
+
+  - skill: lore
+    tradition: deckbuilder
+    heuristic: "engine-must-beat-null-strategy"
+    severity: Critical
+    description_contains: "Big Money"
+    entity_refs:
+      - tensions/engine-vs-big-money.yaml
+      - progression/engine-scaling.yaml
+
+  - skill: lore
+    tradition: deckbuilder
+    heuristic: "setup-time-must-fit-game-length"
+    severity: Critical
+    description_contains: "timing"
+    entity_refs:
+      - progression/engine-scaling.yaml
+      - resources/victory-point-cards.yaml
+
+expected_absent:
+  - skill: augury
+    layer: resolution
+    severity: Critical
+    reason: "Card resolution works correctly. Drawing, playing, and buying all function as designed. The problem is strategic -- which cards to buy -- not procedural."
+
+  - skill: augury
+    layer: cognitive-load
+    severity: Critical
+    reason: "Cognitive load is moderate for engine strategies and trivially low for Big Money. The problem is not complexity but that the complex path loses to the simple one."
+
+  - skill: augury
+    layer: progression
+    severity: Warning
+    reason: "Engine scaling works as designed -- engines DO eventually outperform. The failure is in timing (game too short), not in the scaling curve itself."

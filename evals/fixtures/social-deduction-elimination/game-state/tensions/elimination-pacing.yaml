@@ -1,0 +1,55 @@
+id: elimination-pacing
+name: "Information Narrowing vs Player Engagement"
+type: tensions
+description: "The tension between eliminating players to narrow the deduction space (fewer suspects, clearer signal) and keeping all players engaged throughout the game. Elimination serves a mechanical purpose -- it's how the wolves eventually win or lose. But the pacing of elimination, especially the first-night kill, prioritizes mechanical function over player experience."
+tradition: social-deduction
+tags: [pacing, elimination, engagement, dead-time]
+depends_on: [resources/alive-players.yaml, mechanics/night-phase.yaml, mechanics/day-phase.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Player elimination should create meaningful stakes without excluding participants from the experience"
+  rationale: "Social games live or die on participation. A player who sits out for 30+ minutes will not want to play again. Player retention is more important than mechanical elegance."
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: true
+
+poles:
+  a:
+    name: "Information Narrowing"
+    description: "Each elimination removes a suspect, reveals a role, and narrows the deduction space. The game needs eliminations to progress toward resolution. Without them, the game has no clock."
+    supported_by: [mechanics/night-phase.yaml, mechanics/day-phase.yaml]
+  b:
+    name: "Player Engagement"
+    description: "Every player should have a meaningful play experience. Sitting idle for 30+ minutes is a game design failure, not a feature. Social games require social participation."
+    supported_by: [resources/alive-players.yaml]
+
+health: a-dominant
+health_notes: "Elimination pacing serves the mechanical clock at the expense of 25-37% of players per game. The first-night kill is the worst case: pure mechanical function (wolf needs to kill each night) with zero regard for the victim's experience. The game treats eliminated players as information tokens (their role reveal helps survivors) rather than as participants who came to play."
+
+dead_time_analysis:
+  average_dead_time_first_victim: 35
+  average_dead_time_second_victim: 22
+  total_player_minutes_wasted_per_game: 57
+  total_player_minutes_available: 320
+  waste_ratio: 0.178
+  note: "17.8% of total available player-minutes are wasted on eliminated players sitting idle."
+
+social_cost:
+  first_time_players_who_died_night_1:
+    would_play_again: 0.45
+    would_not_play_again: 0.55
+    note: "Majority of first-time players eliminated night 1 do not want to play again."
+  experienced_players_who_died_night_1:
+    would_play_again: 0.75
+    frustration_reported: 0.82
+
+notes:
+  - "This is the most well-known design failure in social deduction games. Werewolf has been critiqued for it since the 1990s."
+  - "Modern designs (One Night, Blood on the Clocktower, Secret Hitler's semi-elimination) all address this directly."
+  - "The fix space is well-explored: no elimination (One Night), ghost roles (BotC), or minimum-play-time guarantees (no kills before round 2)."
+  - "The lesson: never remove a player from the game before they've had at least one meaningful decision."

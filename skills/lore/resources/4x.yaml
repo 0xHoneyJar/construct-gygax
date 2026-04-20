@@ -1,0 +1,364 @@
+tradition: 4x
+name: "4X Strategy Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for 4X strategy games (eXplore, eXpand, eXploit, eXterminate).
+  Covers both digital (Civilization, Stellaris, Endless Legend, Humankind, Old World) and
+  tabletop (Twilight Imperium, Eclipse, Through the Ages, Clash of Cultures). Distilled
+  from decades of competitive play, modding communities, patch note analysis, and the
+  collective wisdom of strategy game designers who have wrestled with snowball dynamics,
+  pacing collapse, and victory condition design.
+
+heuristics:
+  # --- ECONOMY ---
+
+  - id: snowball-rich-get-richer
+    name: "Snowball / Rich-Get-Richer Dynamics"
+    category: economy
+    severity: critical
+    tradition_specific: true
+    description: |
+      The defining 4X failure mode. When territory generates resources that buy military
+      that conquers territory that generates more resources, the leader compounds their
+      advantage exponentially. Once a player crosses the snowball threshold, the game is
+      decided but not over -- remaining playtime is a formality. Civilization V's early
+      expansion into gold into units into more expansion is the canonical example.
+    detection: |
+      Check for feedback loops where a resource output directly purchases the means to
+      acquire more of that resource. If territory generates income AND income purchases
+      expansion capacity with no diminishing returns, a snowball loop exists. Look for
+      maintenance costs, corruption mechanics, or overextension penalties that create
+      counter-pressure.
+
+  - id: expansion-vs-consolidation
+    name: "Expansion vs. Consolidation Tradeoff"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      Healthy 4X design creates tension between expanding (more territory, more resources)
+      and consolidating (developing existing territory, building infrastructure). If
+      expansion is always correct because new territory immediately pays for itself, the
+      game rewards mindless land-grab. If consolidation is always correct because expansion
+      costs too much, the map is static. The ideal: expansion has upfront cost that only
+      pays off with consolidation investment, creating natural expand-consolidate rhythms.
+    detection: |
+      Check if new territory has an immediate net positive yield or requires investment
+      before becoming productive. If settling a new city or claiming a new hex is
+      immediately profitable with no development cost, expansion always dominates. If
+      new territory requires 5+ turns of investment before breaking even, there is a
+      natural consolidation phase.
+
+  - id: military-vs-economic-balance
+    name: "Military vs. Economic Investment Balance"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      Players must choose between investing in military (protection and conquest) and
+      economy (production and growth). If military is too cheap, the optimal strategy is
+      rush. If military is too expensive, the optimal strategy is boom-then-rush. The
+      sweet spot: military diverts enough from economic growth that a pure military player
+      falls behind economically, but a pure economic player is vulnerable to attack. Neither
+      extreme should be dominant across all game states.
+    detection: |
+      Compare the cost of a basic military unit against the output of a basic economic
+      improvement. If a military unit costs less than one turn of economic output from a
+      developed territory, military is underpriced. If maintaining a defensive force
+      consumes more than 40% of total income, military is overpriced for peaceful defense.
+
+  - id: wonder-project-racing
+    name: "Wonder / Project Racing Dynamics"
+    category: economy
+    severity: medium
+    tradition_specific: true
+    description: |
+      Unique buildings or projects that only one player can complete create races. These
+      are exciting when competitive and devastating when one player is so far ahead that
+      others cannot contest them. If wonder-sniping (completing a wonder one turn before
+      a rival) produces massive swing with no consolation, it creates feel-bad moments.
+      If wonders are uncontestable because the leader always builds them, they amplify
+      snowball rather than creating interesting competition.
+    detection: |
+      Check for unique/limited constructions. If only one player can build each wonder,
+      check whether the investment is refunded or lost on failure. If the leader can
+      reliably claim all wonders due to production advantage, wonders compound the
+      snowball. Look for consolation mechanics (partial refund, alternative benefits)
+      for players who lose the race.
+
+  - id: trade-route-chokepoints
+    name: "Naval / Trade Route Chokepoint Control"
+    category: economy
+    severity: medium
+    tradition_specific: true
+    description: |
+      When maps have natural chokepoints (straits, mountain passes, trade nodes), control
+      of these points can generate disproportionate economic or strategic advantage. This
+      is interesting when chokepoints are contestable and create diplomatic flashpoints.
+      It is problematic when spawn location determines chokepoint access, making some
+      starting positions inherently superior.
+    detection: |
+      Check for trade, supply line, or movement chokepoint mechanics. If chokepoint
+      control generates passive income or blocks rival movement, check whether chokepoint
+      access correlates with spawn position. If certain map positions have guaranteed
+      access to key chokepoints, the map generator creates structural advantage.
+
+  # --- PACING ---
+
+  - id: mid-game-slog
+    name: "Mid-Game Slog (Expand Phase Drag)"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      The expand phase often becomes a slog: all players are building infrastructure,
+      no one is strong enough to attack, and the interesting exploration phase is over.
+      The mid-game needs tension -- border friction, resource competition, diplomatic
+      crises, barbarian invasions -- or players disengage during the 30-turn build-up
+      to the late game. Civilization's medieval era and Stellaris's mid-game are
+      notorious examples of this dead zone.
+    detection: |
+      Check for mechanics that create mid-game tension independent of player-vs-player
+      conflict. If the only source of mid-game pressure is other players choosing to
+      attack (which rational players avoid when they are still building), the mid-game
+      lacks structural tension. Look for event systems, NPC threats, resource scarcity
+      shifts, or diplomatic mechanics that activate during the expand phase.
+
+  - id: late-game-inevitability
+    name: "Late-Game Inevitability"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When the game's outcome is decided 30 minutes before it ends, the late game is
+      inevitable. Players can see who will win but must continue playing until the
+      formal victory condition triggers. This is the 4X genre's most persistent pacing
+      failure. Good designs either accelerate the endgame once a leader emerges or
+      provide comeback mechanics that keep the outcome uncertain until the final turns.
+    detection: |
+      Check if victory conditions have a visible countdown (score threshold, wonder
+      completion, territory percentage). If the leading player's trajectory toward
+      victory is predictable more than 10 turns in advance with no plausible disruption,
+      the late game is inevitable. Look for catch-up mechanics, alliance systems, or
+      sudden-death conditions that compress the endgame.
+
+  - id: early-elimination-spectator
+    name: "Early Elimination / Spectator Problem"
+    category: pacing
+    severity: critical
+    tradition_specific: true
+    description: |
+      When a player is eliminated in a 4-hour game at the 45-minute mark, they spend
+      3+ hours watching. This is the worst possible player experience in tabletop 4X.
+      Even in digital 4X, being reduced to irrelevance (alive but unable to compete)
+      creates the same feel-bad. Solutions include: elimination protection in early
+      eras, vassal mechanics, respawn systems, or victory conditions that do not require
+      eliminating other players.
+    detection: |
+      Check if player elimination is possible before the midpoint of expected game
+      duration. If a player can be conquered, bankrupted, or rendered non-competitive
+      in the first third of the game, early elimination is possible. Check for
+      protection mechanics (ceasefire periods, defensive bonuses for smaller players,
+      AI takeover of eliminated players).
+
+  - id: turn-length-scaling
+    name: "Turn Length Scaling in Late Game"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Early-game turns are fast: few units, few decisions, small territory. Late-game
+      turns are slow: dozens of units, multiple fronts, complex economic decisions. If
+      each player's turn takes 10 minutes in the late game and there are 6 players,
+      you wait an hour between turns. This scaling is the reason many tabletop 4X games
+      are abandoned before completion. Simultaneous action selection, automated
+      production queues, and streamlined combat help.
+    detection: |
+      Count the number of discrete decisions per turn at early, mid, and late game
+      stages. If decisions per turn more than triple from early to late game, and the
+      game uses sequential turns, late-game turn length will be problematic. Check for
+      simultaneous resolution mechanics or automation that reduces decision count.
+
+  # --- MECHANICS ---
+
+  - id: tech-tree-dead-ends
+    name: "Tech Tree Dead Ends"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Tech tree branches that lead to capabilities with no late-game relevance are traps.
+      A player who invests in a dead-end branch falls behind players who chose branches
+      with compounding returns. Dead ends are especially punishing when the tech tree is
+      opaque (first-time players cannot see where branches lead). Good design either makes
+      all branches viable through the endgame or clearly signals which branches are
+      situational.
+    detection: |
+      Map tech tree connectivity. Check if any branch terminates without connecting to
+      high-tier technologies or victory conditions. If a branch's final technology provides
+      no synergy with endgame mechanics, it is a dead end. Check if the tree's structure
+      communicates this risk to players making early choices.
+
+  - id: victory-condition-imbalance
+    name: "Victory Condition Imbalance"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      When one victory condition is consistently easier, faster, or more reliable than
+      alternatives, rational players converge on that path. If military conquest always wins
+      before cultural victory can trigger, cultural victory is decorative. If science victory
+      is achievable in isolation while domination requires risky conflict, science dominates
+      competitive play. Each victory path must be viable and must interact with the others
+      (military pressure should threaten science players; cultural influence should weaken
+      military loyalty).
+    detection: |
+      Compare average turn-to-victory across different victory conditions using optimized
+      strategies. If one condition is achievable 20%+ faster than alternatives, or if one
+      condition can be pursued without interacting with other players while others require
+      conflict, the conditions are imbalanced. Check if victory paths create cross-pressure
+      on each other.
+
+  - id: diplomatic-exploit-loops
+    name: "Diplomatic Exploit Loops"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Diplomacy systems create exploit loops when: declaring war has no lasting reputation
+      cost (attack, take city, make peace, repeat), trade agreements can be used to scout
+      then immediately broken, or alliances create no mutual obligation. If diplomacy is
+      purely transactional with no memory or consequence, players optimize it into a series
+      of exploitative micro-transactions rather than genuine strategic relationships.
+    detection: |
+      Check for diplomatic mechanics. If war declarations, treaty breaks, or betrayals
+      have no persistent reputation effect or escalating cost, diplomatic exploits are
+      possible. If AI opponents do not remember or respond to past betrayals, the
+      diplomatic system is exploitable without consequence.
+
+  - id: map-generation-fairness
+    name: "Map Generation Fairness"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      Starting position determines 30-50% of game outcome in most 4X games. If the map
+      generator can produce positions with dramatically different resource access, defensive
+      terrain, or expansion room, the game is partially decided before the first turn.
+      Perfectly symmetric maps are boring; perfectly random maps are unfair. The generator
+      must balance variety with structural fairness.
+    detection: |
+      Check for map generation rules or procedures. If starting positions are randomly
+      placed without resource balancing, check the variance in: tiles within N hexes of
+      start, resource node count, defensive terrain access, and expansion room (open
+      tiles before hitting another player's zone). If variance exceeds 30% across
+      positions, the generator is unfair.
+
+  - id: fog-of-war-information-asymmetry
+    name: "Fog of War Information Asymmetry"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Fog of war creates information asymmetry, which creates uncertainty, which creates
+      tension. But the balance matters: if scouting is too easy (cheap scouts, satellite
+      reveals), fog evaporates and the game becomes perfect-information chess. If scouting
+      is too hard, players make blind decisions that feel random. The ideal: scouting is
+      valuable, costly, and never complete. You can know where your rival's army is, but
+      not its exact composition.
+    detection: |
+      Check for fog of war and scouting mechanics. If any single unit or technology
+      reveals the entire map, fog is trivially removed. If no scouting mechanic exists
+      and fog is permanent until you physically visit a location, information is too
+      scarce. Check the cost-to-reveal ratio: scouting should be a meaningful investment,
+      not free.
+
+  - id: ai-cheating-perception
+    name: "AI Cheating Perception (Digital 4X)"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      When AI opponents receive hidden bonuses (production multipliers, free units, map
+      vision) to compensate for poor decision-making, players feel cheated even if the
+      resulting difficulty is appropriate. The problem is not difficulty but transparency:
+      players accept that a chess engine calculates deeper, but resent an AI that gets free
+      queens. If AI difficulty relies on hidden bonuses rather than better play, it
+      undermines the game's strategic credibility.
+    detection: |
+      Check for AI difficulty modifiers. If higher difficulty levels grant AI players
+      resource bonuses, production multipliers, or free units rather than improving AI
+      decision-making, the difficulty system relies on cheating. This is a digital-specific
+      heuristic but applies to tabletop games with automated opponents or solo modes.
+
+  - id: culture-religion-victory-gaminess
+    name: "Culture / Religion Victory Gaminess"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Non-military victory conditions (culture, religion, diplomacy) often feel gamy
+      because their mechanics are abstract: accumulate enough culture points, spread your
+      religion to enough cities, buy enough diplomatic votes. When the victory condition
+      does not create emergent narrative -- when it is just a resource threshold with no
+      spatial or interactive component -- it feels like an accounting exercise rather than
+      a strategic achievement. Civilization VI's tourism victory is a rare example that
+      generates genuine cross-player interaction.
+    detection: |
+      Check non-military victory conditions. If a victory condition is achieved solely
+      by accumulating a resource past a threshold with no required interaction with other
+      players, it is a solitaire victory. If the victory path creates observable effects
+      that other players can respond to (cultural influence reducing loyalty, religious
+      pressure converting cities), the victory has interactive depth.
+
+  # --- SCALING ---
+
+  - id: player-count-scaling
+    name: "Player Count Scaling Breakdown"
+    category: scaling
+    severity: high
+    tradition_specific: true
+    description: |
+      4X games designed for 4 players often break at 2 or 8. With too few players, the
+      map is empty and diplomacy is binary. With too many, turns take forever, map space
+      is cramped, and early elimination becomes more likely. The game must either scale
+      its map and mechanics to player count or clearly state its supported range.
+    detection: |
+      Check if map size, resource density, or victory thresholds scale with player count.
+      If these values are fixed regardless of player count, the game will play differently
+      (and likely worse) at counts outside its design target. Check if the rules state a
+      recommended player count range.
+
+  - id: unit-scaling-cognitive-load
+    name: "Unit / Army Scaling Cognitive Load"
+    category: scaling
+    severity: medium
+    tradition_specific: true
+    description: |
+      Managing 3 units is tactical. Managing 30 units is logistical. Managing 300 units
+      is tedious. As empires grow, the number of individual decisions (move this unit,
+      build in this city, manage this trade route) can overwhelm the player. Army grouping,
+      automated governors, production templates, and rally points are not luxuries -- they
+      are necessary abstractions that prevent the late game from becoming a chore.
+    detection: |
+      Count the number of individually-commanded entities a player controls at early, mid,
+      and late game. If individual entity count exceeds 20 and each requires per-turn
+      decisions, cognitive load is high. Check for grouping, automation, or delegation
+      mechanics that reduce the decision count without removing strategic agency.
+
+  - id: rubber-band-calibration
+    name: "Catch-Up / Rubber Band Mechanic Calibration"
+    category: scaling
+    severity: medium
+    tradition_specific: true
+    description: |
+      Rubber band mechanics (cheaper tech for trailing players, barbarian aggression toward
+      leaders, diplomatic coalitions against the frontrunner) prevent snowball but can feel
+      punitive to skilled players. If catch-up is too strong, leading is punished and the
+      optimal strategy is to stay in second place. If too weak, the snowball is unchecked.
+      The mechanic should slow the leader without making leadership feel bad.
+    detection: |
+      Check for mechanics that scale with relative player position (leader penalties,
+      underdog bonuses, coalition triggers). If the leader receives penalties exceeding
+      15% of their advantage, catch-up may be too aggressive. If no position-relative
+      mechanics exist and the snowball heuristic triggered, the game lacks catch-up.

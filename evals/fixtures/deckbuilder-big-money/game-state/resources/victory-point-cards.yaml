@@ -1,0 +1,58 @@
+id: victory-point-cards
+name: "Victory Point Cards"
+type: resources
+description: "Cards that score VP at game end but are dead draws during play (no game text, just points). Big Money can afford to buy VP cards early because its buying power doesn't depend on action combos. Engine strategies must delay VP purchases to avoid diluting their engine, but by the time the engine is online, Big Money has already bought the high-value VP cards."
+tradition: deckbuilder
+tags: [scoring, victory-points, dead-draw]
+depends_on: [mechanics/buy-phase.yaml]
+affects: [tensions/engine-vs-big-money.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+card_tiers:
+  estate:
+    cost: 2
+    vp: 1
+    copies: 24
+  duchy:
+    cost: 5
+    vp: 3
+    copies: 12
+  province:
+    cost: 8
+    vp: 6
+    copies: 8
+    note: "Game ends when provinces are depleted"
+
+game_end_trigger: "All 8 provinces purchased"
+
+vp_acquisition_timeline:
+  big_money:
+    first_province_turn: 8
+    provinces_by_turn_12: 4
+    provinces_by_turn_16: 7
+    total_vp_turn_16: 48
+  engine:
+    first_province_turn: 12
+    provinces_by_turn_12: 1
+    provinces_by_turn_16: 4
+    total_vp_turn_16: 32
+
+vp_race_analysis:
+  big_money_vp_lead_turn_8: 6
+  big_money_vp_lead_turn_12: 18
+  big_money_vp_lead_turn_16: 16
+  engine_never_catches_up: true
+  note: "Big Money buys its first Province 4 turns before the engine. By the time the engine buys provinces, Big Money has an insurmountable lead."
+
+province_depletion_pressure:
+  with_2_big_money_players: "Provinces deplete turn 14-15"
+  with_4_big_money_players: "Provinces deplete turn 12-13"
+  engine_reaction: "Engine hasn't come online yet. Game ends before ROI materializes."
+
+notes:
+  - "VP cards are the finish line. Big Money sprints directly to it. Engine strategies take a scenic route."
+  - "The scenic route is more interesting, more skillful, and loses."
+  - "Fix: add VP cards that also have action text (dual-use), or make pure VP cards more expensive."

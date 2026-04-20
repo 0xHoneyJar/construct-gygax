@@ -42,13 +42,13 @@ Present the game name, tradition, description, and last modified timestamp. This
 Read `design_parameters` from `index.yaml`. If present, display as a compact summary:
 
 ```
-Design: session=medium, audience=intermediate, variance=medium, lethality=moderate, prep=light, players=standard
+Design: session=medium, audience=intermediate, variance=medium, lethality=moderate, prep=light, players=standard, interaction=indirect-competition, randomness=low
 ```
 
 For fields not explicitly set, show the tradition default with a `(default)` marker:
 
 ```
-Design: session=medium, audience=intermediate, variance=high, lethality=brutal (default), prep=moderate (default), players=standard
+Design: session=medium, audience=intermediate, variance=high, lethality=brutal (default), prep=moderate (default), players=standard, interaction=cooperative, randomness=medium (default)
 ```
 
 If no `design_parameters` section exists: "Design parameters: not set (tradition defaults apply). Set via `/homebrew --set-intent design-parameters`."

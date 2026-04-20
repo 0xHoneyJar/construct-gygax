@@ -98,6 +98,9 @@ The panel selection and rationale are documented in every report header.
    - `target_audience: mastery` → always include Optimizer and Veteran. Weight Newcomer signals lower.
    - `target_session_length: short` → weight pacing-related signals (Dead time, Decision paralysis) higher.
    - `target_player_count: large` → always include GM. Weight Cognitive overload signals higher.
+   - `target_interaction: cooperative` → model archetypes as allies. Optimizer optimizes group outcome, not personal advantage. Chaos Agent tests what happens when someone breaks coordination.
+   - `target_interaction: solo` → single-archetype runs only. Test the game from one player's perspective at a time.
+   - `target_randomness: none` → weight Decision paralysis and Mastery reward signals higher (deterministic games live or die on decision quality).
 4. State the panel selection in the output: "Panel: Optimizer, Rules Lawyer, Newcomer (selected for new mechanic review; Newcomer/Anxious added per design_parameters.target_audience: newcomer)"
 
 ### Step 2.5: Read Intent
@@ -132,6 +135,13 @@ For each mechanic in the entity map that has a `resolution` field:
    - Exploding dice → `exploding-dice.ts`
 3. Store for each mechanic: P(success), P(failure), P(special outcomes), expected value, variance.
 4. For mechanics without explicit resolution (narrative triggers, GM fiat): note `[no-probability — prompt-driven analysis]`.
+5. **Non-dice resolution methods (v4):** For mechanics with resolution methods like `worker-placement`, `auction`, `drafting`, `simultaneous-choice`, `deterministic`, or `automated`, produce a **decision-space snapshot** instead of probability data:
+   - `worker-placement` / `drafting`: slot count, contention ratio, pick-order advantage
+   - `auction` / `negotiation`: estimated value range, information advantage assessment
+   - `simultaneous-choice`: option count, dominant strategy (if detectable)
+   - `deterministic` / `automated`: input dimensionality, optimization surface description
+   - `deduction`: information sufficiency, solvability assessment
+   - Other non-dice: decision space size, qualitative assessment, tagged `[structural — no probability data]`
 
 **2.7c: Resource Pressure Map**
 

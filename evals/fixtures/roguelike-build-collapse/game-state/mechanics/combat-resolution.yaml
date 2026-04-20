@@ -1,0 +1,78 @@
+id: combat-resolution
+name: "Combat Resolution"
+type: mechanics
+description: "Real-time combat where the player attacks enemies using their equipped build. Damage, lifesteal, and AoE interact per-hit. The combat system correctly implements all item effects -- the problem is not in how combat resolves but in what the Vampire build feeds into the resolution: uncapped lifesteal applied per-hit across AoE makes the player functionally immortal."
+tradition: roguelike
+tags: [combat, real-time, resolution]
+depends_on: [stats/player-combat-stats.yaml, resources/item-drops.yaml, entities/build-archetypes.yaml]
+affects: [resources/health-pool.yaml, progression/floor-scaling.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Player enters combat room"
+cost: []
+
+resolution:
+  method: deterministic
+  stat: stats/player-combat-stats.yaml
+  dc: null
+  success: "All enemies defeated. Loot drops. Proceed to next room."
+  failure: "Player HP reaches 0. Run ends."
+
+damage_calculation:
+  per_attack: "base_damage * (1 + item_bonuses) * critical_multiplier"
+  aoe: "per_attack applied to all enemies within aoe_radius"
+  lifesteal: "per_hit_damage * lifesteal_percentage (applied per enemy hit)"
+
+combat_scenarios:
+  floor_5_standard:
+    enemies: 4
+    enemy_hp: 60
+    enemy_dps_total: 25
+    vampire_player_dps: 55
+    vampire_healing_per_second: 55
+    vampire_net_hp_change: "+30/s"
+    time_to_clear: "4.4 seconds"
+    hp_at_end: "100 (full)"
+  floor_10_elite:
+    enemies: 8
+    enemy_hp: 120
+    enemy_dps_total: 60
+    vampire_player_dps: 75
+    vampire_healing_per_second: 150
+    vampire_net_hp_change: "+90/s"
+    time_to_clear: "12.8 seconds"
+    hp_at_end: "100 (full)"
+    note: "8 enemies = 8x lifesteal triggers. More enemies = more healing. Difficulty is inverted."
+  floor_10_elite_glass_cannon:
+    enemies: 8
+    enemy_hp: 120
+    enemy_dps_total: 60
+    glass_cannon_dps: 95
+    glass_cannon_healing: 0
+    glass_cannon_net_hp_change: "-60/s"
+    time_to_clear: "10.1 seconds"
+    hp_at_end: "-506 (dead at ~1.7 seconds)"
+    note: "Glass cannon dies in 1.7 seconds. Higher raw DPS but no sustain."
+  floor_15_boss:
+    enemies: 1
+    enemy_hp: 800
+    enemy_dps_total: 40
+    vampire_player_dps: 75
+    vampire_healing_per_second: 18.75
+    vampire_net_hp_change: "-21.25/s"
+    time_to_clear: "10.7 seconds"
+    hp_at_end: "~72"
+    note: "Single-target boss is Vampire build's ONE weakness. Still survivable because of health buffer from previous floors."
+
+interactions:
+  - "Lifesteal * AoE creates an unbreakable feedback loop: more enemies -> more healing -> infinite survival."
+  - "The only scenario where Vampire struggles is single-target bosses -- but health buffer from cleared floors compensates."
+  - "Every other build must choose between damage and survivability. Vampire gets both simultaneously."
+  - "The combat system cannot produce a losing outcome for Vampire unless the player literally AFKs."
+
+notes:
+  - "The combat system is mechanically sound. Every calculation is correct. The failure is in the item interaction design."
+  - "Fix: lifesteal heals per-attack (not per-hit), or cap total healing per combat encounter, or add heal-reduction debuffs to late-game enemies."

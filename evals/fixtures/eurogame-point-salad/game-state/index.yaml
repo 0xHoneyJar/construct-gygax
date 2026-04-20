@@ -1,0 +1,75 @@
+game: "Point Salad Equilibrium Test Fixture"
+tradition: eurogame
+description: "A eurogame with five distinct victory paths (trade, building, agriculture, culture, military) that all converge on ~50 victory points. Path selection is a false choice -- no strategy meaningfully outperforms any other. 40+ decisions per game with near-zero impact on final score variance."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: medium
+  target_audience: intermediate
+  target_variance: low
+  target_lethality: none
+  target_prep: low
+  target_player_count: standard
+  target_interaction: indirect
+  target_randomness: low
+
+entity_count:
+  stats: 1
+  resources: 2
+  mechanics: 2
+  progression: 0
+  entities: 1
+  tensions: 1
+
+files:
+  - path: stats/victory-points.yaml
+    id: victory-points
+    depends_on: []
+    affects: [tensions/path-equivalence.yaml]
+
+  - path: resources/action-budget.yaml
+    id: action-budget
+    depends_on: []
+    affects: [mechanics/path-scoring.yaml]
+
+  - path: resources/trade-goods.yaml
+    id: trade-goods
+    depends_on: [mechanics/worker-placement-actions.yaml]
+    affects: [mechanics/path-scoring.yaml]
+
+  - path: mechanics/worker-placement-actions.yaml
+    id: worker-placement-actions
+    depends_on: [resources/action-budget.yaml]
+    affects: [resources/trade-goods.yaml, mechanics/path-scoring.yaml]
+
+  - path: mechanics/path-scoring.yaml
+    id: path-scoring
+    depends_on: [resources/action-budget.yaml, resources/trade-goods.yaml, mechanics/worker-placement-actions.yaml]
+    affects: [stats/victory-points.yaml, tensions/path-equivalence.yaml]
+
+  - path: entities/victory-paths.yaml
+    id: victory-paths
+    depends_on: [mechanics/path-scoring.yaml]
+    affects: [stats/victory-points.yaml, tensions/path-equivalence.yaml]
+
+  - path: tensions/path-equivalence.yaml
+    id: path-equivalence
+    depends_on: [stats/victory-points.yaml, mechanics/path-scoring.yaml, entities/victory-paths.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 16
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: mechanics/path-scoring.yaml
+      dependents: 4
+    - path: stats/victory-points.yaml
+      dependents: 3
+    - path: resources/action-budget.yaml
+      dependents: 2
+    - path: mechanics/worker-placement-actions.yaml
+      dependents: 2

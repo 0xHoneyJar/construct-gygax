@@ -1,0 +1,50 @@
+id: draw-and-play
+name: "Draw and Play Phase"
+type: mechanics
+description: "Each turn: draw 5 cards, play actions, then buy. The 5-card hand is the constraint that makes deckbuilding matter -- but it also means engine combos require specific cards to appear together. Big Money doesn't care about card combinations; every treasure card is useful in every hand. Engines need the right pieces in the right order."
+tradition: deckbuilder
+tags: [draw, hand-size, consistency]
+depends_on: [resources/deck-composition.yaml]
+affects: [mechanics/buy-phase.yaml, stats/buying-power.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Start of turn"
+cost: []
+
+resolution:
+  method: card-play
+  stat: null
+  dc: null
+  success: "Draw 5 cards. Play action cards (1 action per turn unless card grants bonus actions). Then proceed to buy phase with remaining coins."
+  failure: null
+
+hand_analysis:
+  big_money_hand_types:
+    all_treasure: {probability: 0.45, buying_power: 7.5, note: "Best case. All coin, no waste."}
+    treasure_plus_vp: {probability: 0.40, buying_power: 5.5, note: "Some VP cards are dead but still functional."}
+    mostly_vp: {probability: 0.15, buying_power: 2.5, note: "Worst case. Still buys a Silver."}
+  engine_hand_types:
+    full_combo: {probability: 0.15, buying_power: 10.5, note: "Engine fires perfectly. Rare."}
+    partial_combo: {probability: 0.30, buying_power: 6.0, note: "Some engine pieces, some treasure."}
+    dead_hand: {probability: 0.25, buying_power: 2.0, note: "Action cards without their combo pieces. Wasted turn."}
+    treasure_only: {probability: 0.30, buying_power: 4.0, note: "No actions drawn. Engine does nothing."}
+
+consistency_comparison:
+  big_money_useful_hand_rate: 0.85
+  engine_useful_hand_rate: 0.45
+  gap: 0.40
+  note: "Big Money has a useful hand 85% of the time. Engines have a useful hand 45% of the time. The 40% gap means engines waste ~6 turns per game on dead hands."
+
+interactions:
+  - "5-card draw size limits combo potential. Most engine combos require 3+ specific cards in hand."
+  - "With a 22-card deck, the probability of drawing a specific 3-card combo in a 5-card hand is ~8%."
+  - "Big Money never needs a specific combination. Any hand with treasure is productive."
+  - "The draw mechanic inherently favors strategies that don't rely on card combinations."
+
+notes:
+  - "The 5-card hand is genre-standard and not the problem in isolation."
+  - "The problem is that engine cards don't include enough draw/filter to overcome the 5-card bottleneck."
+  - "Fix: make engine cards cantrip (draw a card when played) so they don't reduce hand quality."

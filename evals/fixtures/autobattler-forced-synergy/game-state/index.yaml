@@ -1,0 +1,75 @@
+game: "Forced Synergy Dominance Test Fixture"
+tradition: autobattler
+description: "An autobattler where the Mech-Assassin trait combination produces multiplicative stat bonuses that dominate all other compositions. Forcing this comp from any draft position yields 85%+ top-4 rate. The meta collapses into a single viable strategy."
+created_at: "2026-04-19T00:00:00Z"
+last_modified_at: "2026-04-19T00:00:00Z"
+
+design_parameters:
+  target_session_length: short
+  target_audience: intermediate
+  target_variance: medium
+  target_lethality: moderate
+  target_prep: none
+  target_player_count: standard
+  target_interaction: indirect
+  target_randomness: medium
+
+entity_count:
+  stats: 1
+  resources: 1
+  mechanics: 2
+  progression: 0
+  entities: 2
+  tensions: 1
+
+files:
+  - path: stats/unit-combat-stats.yaml
+    id: unit-combat-stats
+    depends_on: []
+    affects: [mechanics/automated-combat.yaml]
+
+  - path: resources/gold-economy.yaml
+    id: gold-economy
+    depends_on: []
+    affects: [mechanics/drafting-phase.yaml]
+
+  - path: mechanics/drafting-phase.yaml
+    id: drafting-phase
+    depends_on: [resources/gold-economy.yaml]
+    affects: [entities/trait-synergies.yaml, entities/unit-roster.yaml]
+
+  - path: mechanics/automated-combat.yaml
+    id: automated-combat
+    depends_on: [stats/unit-combat-stats.yaml, entities/unit-roster.yaml, entities/trait-synergies.yaml]
+    affects: [resources/gold-economy.yaml, tensions/forced-meta.yaml]
+
+  - path: entities/trait-synergies.yaml
+    id: trait-synergies
+    depends_on: [mechanics/drafting-phase.yaml]
+    affects: [mechanics/automated-combat.yaml, stats/unit-combat-stats.yaml, tensions/forced-meta.yaml]
+
+  - path: entities/unit-roster.yaml
+    id: unit-roster
+    depends_on: [mechanics/drafting-phase.yaml]
+    affects: [mechanics/automated-combat.yaml]
+
+  - path: tensions/forced-meta.yaml
+    id: forced-meta
+    depends_on: [entities/trait-synergies.yaml, mechanics/automated-combat.yaml]
+    affects: []
+
+graph_integrity:
+  resolved_references: 16
+  stub_count: 0
+  stubs: []
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: mechanics/automated-combat.yaml
+      dependents: 4
+    - path: entities/trait-synergies.yaml
+      dependents: 3
+    - path: mechanics/drafting-phase.yaml
+      dependents: 3
+    - path: stats/unit-combat-stats.yaml
+      dependents: 2

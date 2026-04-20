@@ -1,0 +1,58 @@
+id: unit-roster
+name: "Unit Roster (Draft Pool)"
+type: entities
+description: "The 24-unit roster across 4 tiers. Units carry 1-2 traits each. The roster has 4 Mech units and 5 Assassin units, with 2 units carrying both traits (Mech-Assassin dual-trait). These dual-trait units are the keystone of the dominant comp -- they activate both synergies simultaneously, reducing the number of roster slots needed to hit both thresholds."
+tradition: autobattler
+tags: [units, roster, draft-pool]
+depends_on: [mechanics/drafting-phase.yaml]
+affects: [mechanics/automated-combat.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+roster_summary:
+  total_units: 24
+  units_per_trait:
+    mech: 4
+    assassin: 5
+    guardian: 4
+    sorcerer: 4
+    ranger: 4
+    elementalist: 3
+  dual_trait_units:
+    mech_assassin: 2
+    guardian_sorcerer: 1
+    ranger_elementalist: 1
+
+key_units:
+  shadow_drone:
+    tier: 3
+    traits: [mech, assassin]
+    attack_damage: 75
+    attack_speed: 0.9
+    crit_chance: 0.20
+    hp: 700
+    note: "Dual-trait keystone. Activates both synergies. Core of the dominant comp."
+  phantom_blade:
+    tier: 4
+    traits: [mech, assassin]
+    attack_damage: 110
+    attack_speed: 1.0
+    crit_chance: 0.25
+    hp: 900
+    note: "Tier 4 dual-trait carry. With full synergies: 1.5 AS, 0.65 crit, 1.75x crit damage."
+
+comp_building:
+  mech_assassin_optimal:
+    units_needed: 6
+    dual_trait_slots: 2
+    remaining_slots: 4
+    note: "2 dual-trait units + 2 Mech + 2 Assassin = 4 Mech (full) + 4 Assassin (needs 2 more for 6). In practice, 4 Mech / 4 Assassin with flex slots."
+  comp_completion_difficulty: "Low -- 9 total Mech/Assassin units in pool, only need 6"
+  alternative_comp_difficulty: "Similar -- but alternatives are weaker when complete"
+
+notes:
+  - "The dual-trait units are the design mistake. They make the dominant comp too easy to assemble."
+  - "Removing one dual-trait unit would force a 7th roster slot for the comp, creating a real cost."
+  - "Better: make dual-trait units carry weaker base stats as a trade-off for trait flexibility."

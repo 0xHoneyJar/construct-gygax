@@ -1,0 +1,58 @@
+id: night-phase
+name: "Night Phase (Kill Selection)"
+type: mechanics
+description: "Wolves choose a player to eliminate. No dice, no defense, no counterplay for the victim. The selection is often random on night 1 because wolves have no behavioral data to target strategically. A random elimination before any gameplay has occurred is the purest form of 'unfun randomness' -- it has consequences without decisions."
+tradition: social-deduction
+tags: [night, elimination, wolves, no-counterplay]
+depends_on: []
+affects: [resources/alive-players.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Moderator calls night phase. All players close eyes. Wolves open eyes."
+cost: []
+
+resolution:
+  method: deduction
+  stat: null
+  dc: null
+  success: "Wolves choose one player to eliminate. That player is removed at dawn."
+  failure: null
+
+night_1_analysis:
+  wolf_information: "Wolves know each other's identity. No behavioral data on villagers."
+  selection_basis: "Effectively random. Some wolves target quiet players or experienced players by reputation."
+  victim_counterplay: "None. Victim is asleep (eyes closed). No defense, no protection role on night 1."
+  victim_actions_before_death: 0
+  victim_deductions_before_death: 0
+  note: "Night 1 kill is pure bad luck. The victim did nothing wrong and could do nothing right."
+
+subsequent_nights:
+  wolf_information: "Behavioral data from day phases. Target strong deducers or quiet confirmers."
+  selection_basis: "Strategic -- wolves target players who threaten them."
+  victim_counterplay: "Indirect -- play to appear non-threatening. Doctor/seer protection possible."
+  note: "Later kills are strategic and feel fair. Night 1 kill is random and feels punitive."
+
+protection_roles:
+  doctor:
+    can_protect_night_1: false
+    note: "Most rulesets prevent doctor self-protection or night-1 protection to avoid kingmaking."
+  seer:
+    can_prevent_night_1_kill: false
+    note: "Seer gains information but cannot prevent the kill."
+  bodyguard:
+    exists_in_this_ruleset: false
+    note: "No bodyguard role to absorb or redirect kills."
+
+interactions:
+  - "Night 1 kill happens BEFORE any day phase. The game starts with a loss of agency."
+  - "The eliminated player's role is revealed, providing information to survivors -- but the eliminated player gains nothing."
+  - "If the seer is killed night 1, the village loses its primary information-gathering tool before it's been used."
+  - "There is no mechanic to prevent or mitigate first-night elimination."
+
+notes:
+  - "First-night kills exist in the design because Werewolf was designed for 15+ players where one elimination is a small fraction."
+  - "At 8 players, first-night elimination removes 12.5% of the game's participants before the game begins."
+  - "Fix: night 1 kill targets a 'decoy' (placeholder elimination with no real death), or all players get one free 'save' on their first night."

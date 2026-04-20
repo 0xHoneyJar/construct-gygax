@@ -1,0 +1,60 @@
+id: day-phase
+name: "Day Phase (Discussion and Vote)"
+type: mechanics
+description: "Surviving players discuss, accuse, and vote to eliminate a suspected wolf. This is the core gameplay loop -- where deduction, persuasion, and social reading happen. The day phase is well-designed in isolation. The problem is that eliminated players cannot participate, and the first elimination happens before any day phase has occurred."
+tradition: social-deduction
+tags: [day, discussion, voting, deduction]
+depends_on: [stats/player-information.yaml, resources/alive-players.yaml]
+affects: [resources/alive-players.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+trigger: "Moderator calls day phase. Dead player revealed. Discussion timer begins."
+cost: []
+
+resolution:
+  method: deduction
+  stat: null
+  dc: null
+  success: "Majority vote eliminates one player (or no elimination if vote fails)"
+  failure: "No majority reached -- no elimination this day"
+
+phase_structure:
+  discussion_time: "5-8 minutes"
+  accusation: "Any player may accuse. Accused gives defense speech."
+  vote: "Majority of alive players required for elimination."
+  total_day_phase: "8-12 minutes"
+
+engagement_by_player_state:
+  alive_players:
+    can_speak: true
+    can_accuse: true
+    can_vote: true
+    can_defend: true
+    engagement: "high"
+  dead_players:
+    can_speak: false
+    can_accuse: false
+    can_vote: false
+    can_defend: false
+    engagement: "zero"
+    note: "Dead players are ghosts. They sit silently and watch."
+
+dead_player_experience:
+  permitted_actions: "None. May not speak, gesture, or react."
+  phone_checking_rate: "78% of eliminated players check phones within 5 minutes (observational study)"
+  leave_table_rate: "35% of first-night victims leave the table during the game"
+  note: "The game actively excludes eliminated players. There is no ghost role, no limited participation, no spectator game."
+
+interactions:
+  - "Day phase is the best part of the game. It's where social deduction actually happens."
+  - "Eliminating players FROM this phase is the design failure. Every eliminated player is one less participant in the best mechanic."
+  - "With 8 players, by round 2 only 4-5 are in the day phase. The game's best mechanic has lost 37-50% of its participants."
+  - "Wolves benefit from fewer day-phase participants (less behavioral data, easier to hide)."
+
+notes:
+  - "The day phase proves the game CAN be good. The night-phase elimination proves the game sabotages itself."
+  - "Fix: give dead players a single 'ghost vote' they can cast once. Or allow dead players to ask one yes/no question per day."
+  - "Better fix: remove elimination and use a different information-narrowing mechanic (e.g., role reveals, power loss)."

@@ -1,0 +1,257 @@
+tradition: roguelike
+name: "Roguelike Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for roguelike and roguelite games (Hades, Slay the Spire, Spelunky, Dead Cells,
+  Risk of Rain, Noita, etc.). Focused on run variance, build-path diversity, permadeath fairness,
+  difficulty curves, and the tension between mastery and randomness.
+
+heuristics:
+  # --- BUILD PATHS ---
+
+  - id: build-path-collapse
+    name: "Build-Path Collapse — One Build Always Wins"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      When experienced players converge on a single dominant build every run regardless of what's
+      offered, the roguelike's core promise — emergent builds from random offerings — is broken.
+      The game becomes "find the broken combo or lose," and all other items/upgrades are noise.
+      Healthy roguelikes have 5+ viable build archetypes that compete based on what appears.
+    detection: |
+      Analyze win-rate data by build archetype. If any single build accounts for more than 35%
+      of victories, or if the top 2 builds account for more than 60%, collapse has occurred.
+      Check if players are skipping offered items because they don't fit the dominant build
+      rather than adapting to what the run provides.
+
+  - id: difficulty-spike-wall
+    name: "Difficulty Spike Wall"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      A sudden, dramatic increase in difficulty at a specific point in the run — a boss, a floor,
+      a biome transition — that kills most runs regardless of build quality. Spikes should test
+      whether the player has built well, not whether they memorized one specific pattern. A wall
+      is a spike that can't be overcome by general skill; it requires specific knowledge or items.
+    detection: |
+      Map run death locations by frequency. If more than 40% of deaths cluster at a single
+      encounter or floor transition, a wall exists. Check if deaths at that point correlate with
+      build type (some builds pass easily, others can't) or if all builds struggle equally. A
+      universal wall is worse than a build-specific gate.
+
+  - id: synergy-discovery-rate
+    name: "Synergy Discovery Rate"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      The rate at which players find synergistic item/ability combinations determines the feel
+      of the game. Too rare: runs feel like disconnected random upgrades with no build identity.
+      Too common: builds come together so easily that every run feels the same and there's no
+      excitement in discovery. The sweet spot is builds coalescing around the midpoint of a run.
+    detection: |
+      Track when in a run players first achieve a "synergy threshold" (2+ items that meaningfully
+      interact). If this consistently happens before 25% of the run, synergies are too common.
+      If it consistently doesn't happen until 75%+, they're too rare. Also check the percentage
+      of runs where no synergy ever forms — this should be below 20%.
+
+  - id: permadeath-fairness
+    name: "Permadeath Fairness — Unavoidable Deaths"
+    category: mechanics
+    severity: critical
+    tradition_specific: true
+    description: |
+      Permadeath is the contract: you die, you restart. But that contract requires deaths to feel
+      earned — the player should be able to identify what they did wrong. Unavoidable deaths
+      (offscreen projectiles, damage with no telegraph, instant kills from new enemies with no
+      warning) break the contract. Every death must be a lesson, or permadeath is just cruelty.
+    detection: |
+      Catalog death causes and classify each as avoidable (player had information and time to
+      react) or unavoidable (no telegraph, no warning, first-encounter instant kill). If more
+      than 15% of deaths are classified as unavoidable, fairness is compromised. Check if new
+      enemies are introduced in low-stakes contexts before appearing as lethal threats.
+
+  - id: seed-variance-unwinnable
+    name: "Seed Variance — Unwinnable Seeds"
+    category: mechanics
+    severity: high
+    tradition_specific: true
+    description: |
+      If the random seed can generate a run where no viable build is possible — key items never
+      appear, essential upgrades are gated behind impossible fights, or the shop offers nothing
+      useful — the game has unwinnable seeds. Players should always be able to win with perfect
+      play, even if some seeds are harder. "Sometimes you just can't win" is bad roguelike design.
+    detection: |
+      Simulate or analyze large seed samples. If more than 5% of seeds have no path to victory
+      for a skilled player (no synergies offered, no adequate healing, or mandatory encounters
+      that require items that didn't appear), the variance is too high. Check if the minimum
+      viable build can be assembled from any seed's offerings.
+
+  - id: run-length-pacing
+    name: "Run Length Pacing"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Run length determines the restart-to-engagement ratio. Too long: failed runs feel like
+      massive time losses, discouraging experimentation. Too short: builds never develop identity
+      and the game feels shallow. The ideal run length lets players make 15-25 meaningful build
+      decisions and experience a clear power arc (weak → building → powerful → tested).
+    detection: |
+      Measure average run length in real time. If successful runs exceed 90 minutes, restart
+      pain is high. If they're under 10 minutes, build depth is likely shallow. Check the ratio
+      of "decision time" (making build choices) to "execution time" (playing through encounters).
+      If execution time exceeds 80% of total run time, the run is too padded.
+
+  - id: early-game-determinism
+    name: "Early-Game Determinism"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      When the first 2-3 offerings determine the entire run's trajectory — because early items
+      are so much more impactful than later ones, or because the early items lock you into a
+      build path with no ability to pivot — early randomness dominates late skill. The player
+      is along for the ride after floor 2. Good roguelikes let players course-correct.
+    detection: |
+      Correlate the first 3 item/upgrade choices with final build composition. If more than 70%
+      of the final build is determined by the first 20% of choices, early determinism is present.
+      Check if "pivoting" (changing build direction midway) is mechanically viable or if sunk
+      costs in early choices make it always suboptimal.
+
+  - id: backtracking-punishment
+    name: "Backtracking Punishment"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      In roguelikes with spatial exploration, the cost of backtracking (returning to cleared areas
+      for resources or missed paths) determines whether exploration is rewarding or punishing.
+      If enemies respawn, resources drain while backtracking, or time pressure forces forward,
+      players are punished for thoroughness. If backtracking is free, forward pressure evaporates.
+    detection: |
+      Check what changes when a player revisits a cleared area: enemy respawns, resource decay,
+      timer progression, or nothing. If backtracking has zero cost, there's no forward pressure.
+      If it has high cost (respawning enemies, lost resources), exploration becomes anxiety. The
+      mechanic should encourage forward momentum without punishing missed discoveries.
+
+  - id: meta-progression-trivialization
+    name: "Meta-Progression Trivialization"
+    category: progression
+    severity: high
+    tradition_specific: true
+    description: |
+      Permanent upgrades between runs (unlocked weapons, stat boosts, starting items) should
+      expand options, not trivialize challenges. When meta-progression makes the game measurably
+      easier rather than just different, early runs are a grind to unlock the "real game" and
+      late runs lose their tension. The 100th run should be as tense as the 10th, just with
+      more tools available.
+    detection: |
+      Compare win rates at 0%, 50%, and 100% meta-progression completion. If win rate increases
+      by more than 30 percentage points from base to max unlocks, meta-progression is trivializing
+      the game. Check if any individual unlock increases win rate by more than 10%. Also verify
+      that unlocks expand the option space (new builds) rather than just adding raw power.
+
+  - id: resource-hoarding-incentive
+    name: "Resource Hoarding Incentive"
+    category: economy
+    severity: medium
+    tradition_specific: true
+    description: |
+      When consumables, currencies, or limited-use items are so potentially valuable that the
+      optimal play is to never use them "in case you need them later," the game has a hoarding
+      problem. Players finish runs with full inventories of unused items. Consumables should be
+      designed so that using them is almost always correct and hoarding is suboptimal.
+    detection: |
+      Track consumable usage rates per run. If more than 40% of consumable items are unused at
+      run completion (or death), hoarding is dominant. Check if the game provides information
+      about upcoming challenges that would let players make informed use-now-vs-save decisions.
+      If future challenges are opaque, hoarding is rational and the design is at fault.
+
+  - id: boss-pattern-telegraphing
+    name: "Boss Pattern Telegraphing"
+    category: combat
+    severity: medium
+    tradition_specific: true
+    description: |
+      Bosses in roguelikes must balance being learnable (patterns have tells) with being
+      challenging (execution is still required). If tells are too subtle, deaths feel unfair.
+      If tells are too obvious, bosses become trivial after the first encounter. The telegraph
+      window should be long enough to react but short enough to require attention.
+    detection: |
+      For each boss attack, measure the telegraph duration (time from visual/audio cue to damage)
+      and the reaction window (time the player has to execute avoidance). If telegraph duration
+      is under 200ms for high-damage attacks, it's too fast. If the reaction window exceeds 1.5
+      seconds, it's too generous. Also check if any boss attack has zero telegraph on first
+      encounter.
+
+  - id: item-identification-friction
+    name: "Item Identification Friction"
+    category: mechanics
+    severity: low
+    tradition_specific: true
+    description: |
+      Unidentified items create a gambling moment — exciting on first encounter, tedious on
+      the 50th. If identification requires resources, time, or risk, it should be worth the
+      investment. If the identification system becomes rote (always ID everything, or never ID
+      and just use), it's adding friction without adding decisions. Modern roguelikes tend to
+      favor transparent item information.
+    detection: |
+      Check if an identification mechanic exists and whether it creates meaningful decisions.
+      If players always identify immediately (cost is trivial), the mechanic is vestigial. If
+      players never identify (cost is too high), the mechanic is punitive. Track how often the
+      identification decision changes player behavior.
+
+  - id: curse-negative-item-feel
+    name: "Curse/Negative Item Feel"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Cursed or negative items add risk to the loot system — sometimes the chest bites back.
+      But if negative items are too punishing (run-ending), too common (more than 20% of items),
+      or too opaque (player doesn't know the downside before committing), they create frustration
+      rather than tension. Good curses are costs the player can plan around, not surprises.
+    detection: |
+      Measure the ratio of negative to positive items and the severity of negative effects.
+      If any negative item can end a run by itself (regardless of current build strength), it's
+      too punishing. If negative items appear in more than 20% of loot pools with no opt-out,
+      they're too common. Check if the player has enough information to accept or reject cursed
+      items meaningfully.
+
+  - id: power-curve-shape
+    name: "Power Curve Shape"
+    category: scaling
+    severity: high
+    tradition_specific: true
+    description: |
+      The arc of how powerful the player feels over a run defines the emotional experience. Linear
+      growth feels flat. Exponential growth feels amazing but makes late-game encounters trivial.
+      The ideal curve is S-shaped: slow start, rapid growth in the middle where synergies click,
+      then a plateau where the game's final challenges test the ceiling. The player should feel
+      strongest at about 70% through the run, then face their hardest test.
+    detection: |
+      Plot the player's effective DPS, survivability, and clear speed at each stage of the run.
+      If the curve is monotonically increasing (never plateaus), late-game challenge is likely
+      insufficient. If there's no inflection point where the player feels a power spike, the
+      build never "comes online." Check if the final boss requires more power than the player's
+      peak, creating a meaningful final test.
+
+  - id: restart-fatigue
+    name: "Restart Fatigue"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      The first 5 minutes of every run — before any build identity forms — must be engaging
+      enough to not feel like a tax. If the early game is always the same (same starting room,
+      same weak enemies, same basic weapons), restarting after a failed run feels like homework.
+      Early-game variety and immediate meaningful choices combat restart fatigue.
+    detection: |
+      Measure variety in the first 10% of a run across 20 playthroughs. If the same encounters,
+      rooms, or choices appear in more than 70% of starts, early-game variety is insufficient.
+      Check if the first meaningful build decision happens within 2 minutes of starting. Also
+      track session length — if average session length decreases over time, restart fatigue is
+      setting in.

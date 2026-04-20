@@ -1,0 +1,50 @@
+id: trade-goods
+name: "Trade Goods (Generic Resource)"
+type: resources
+description: "Fungible resource tokens used across all paths. Each path consumes and produces trade goods at nearly identical rates. The resource exists to create the feeling of an economy without the substance of one -- goods flow through the system but never create pressure points or scarcity signals that would differentiate paths."
+tradition: eurogame
+tags: [resource, fungible, economy]
+depends_on: [mechanics/worker-placement-actions.yaml]
+affects: [mechanics/path-scoring.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  starting: 5
+  min: 0
+  max: 30
+  typical_at_game_end: 3-8
+
+flow_by_path:
+  trade:
+    generation_per_action: 3
+    consumption_per_scoring: 3
+    net_per_cycle: 0
+  building:
+    generation_per_action: 2
+    consumption_per_scoring: 2
+    net_per_cycle: 0
+  agriculture:
+    generation_per_action: 4
+    consumption_per_scoring: 4
+    net_per_cycle: 0
+  culture:
+    generation_per_action: 2
+    consumption_per_scoring: 2
+    net_per_cycle: 0
+  military:
+    generation_per_action: 3
+    consumption_per_scoring: 3
+    net_per_cycle: 0
+
+problem_analysis:
+  observation: "Every path is resource-neutral. No path accumulates surplus. No path creates scarcity."
+  consequence: "There is no resource-based reason to prefer one path over another or to switch paths mid-game."
+  contrast: "In Terraforming Mars, different engines have different resource profiles -- some generate excess energy, others consume it. This creates trade, timing decisions, and real path differentiation."
+
+notes:
+  - "The resource is mechanically functional but strategically inert."
+  - "Removing trade goods entirely would not change win rates or strategy."
+  - "A well-designed resource creates asymmetric pressure: one path should produce what another consumes."

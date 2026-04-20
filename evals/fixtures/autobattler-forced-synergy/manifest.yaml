@@ -1,0 +1,24 @@
+id: autobattler-forced-synergy
+name: "Forced Synergy Dominance (TFT Patch-Day Anti-pattern)"
+failure_archetype: degenerate-strategy
+tradition: autobattler
+description: |
+  Encodes an autobattler where one trait synergy (Mech-Assassin) dominates all
+  others regardless of draft position, lobby composition, or item distribution.
+  The synergy's stat bonuses compound multiplicatively -- 40% crit chance from
+  Assassin plus 50% attack speed from Mech plus bonus damage on crit creates a
+  damage curve that no other composition can match. Players who force this comp
+  from any draft position finish top 4 at 85%+ rate. The meta collapses into
+  "force or lose." Analogous to TFT's worst patch-day states where one comp
+  warped the entire lobby.
+source: "grimoires/gygax/references/design-failure-postmortem.md"
+tests_skills:
+  - augury (resolution)
+  - augury (resource-economy)
+  - cabal (Optimizer + Chaos Agent)
+  - lore
+design_parameters:
+  target_session_length: short
+  target_audience: intermediate
+  target_interaction: indirect
+  target_randomness: medium

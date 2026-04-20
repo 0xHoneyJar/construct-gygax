@@ -1,0 +1,354 @@
+tradition: extraction
+name: "Extraction Shooter Design Heuristics"
+version: 1.0.0
+description: |
+  Design heuristics for extraction shooters and extraction-loop games (Escape from Tarkov,
+  The Cycle: Frontier, Dark and Darker, Hunt: Showdown, DMZ, Marauders, etc.). Distilled
+  from player community analysis, developer talks, competitive meta discourse, and the
+  hard-won lessons of a genre defined by the tension between risk and reward.
+
+heuristics:
+  # --- RESOURCES ---
+
+  - id: risk-reward-calibration
+    name: "Risk/Reward Calibration"
+    category: resources
+    severity: critical
+    tradition_specific: true
+    description: |
+      The defining contract of extraction games: the risk of losing everything must be
+      proportional to the potential reward. If high-risk areas yield mediocre loot, players
+      avoid them. If low-risk areas yield great loot, players farm safely and the extraction
+      tension evaporates. Every zone, encounter, and objective must answer: "Is the juice
+      worth the squeeze?" When the answer is consistently "no," the game has calibration failure.
+    detection: |
+      Map loot value distributions against threat density for each zone or area tier. If
+      high-threat areas yield loot worth less than 2x the average replacement cost of gear
+      risked to enter them, the risk/reward is miscalibrated. Check if any low-risk path
+      yields comparable returns to high-risk paths -- if so, optimal play avoids risk entirely.
+
+  - id: loss-aversion-tuning
+    name: "Loss Aversion Tuning"
+    category: resources
+    severity: critical
+    tradition_specific: true
+    description: |
+      Players feel losses roughly 2x as strongly as equivalent gains (Kahneman & Tversky).
+      In extraction games, dying means losing everything brought in plus everything found.
+      If loss is too severe (full loadout worth hours of play), casual players quit after
+      a few bad raids. If loss is trivial (gear is cheap, easy to replace), there is no
+      tension and PvP encounters feel meaningless. The sweet spot: losing a loadout stings
+      but is recoverable within 2-3 successful runs.
+    detection: |
+      Calculate the average value of a "standard loadout" (not best, not worst) against the
+      average income from a successful extraction. If a standard loadout costs more than 3
+      successful runs to replace, loss is too punishing. If it costs less than 1 run to
+      replace, loss is trivial. Check if the game provides a "budget loadout" floor that
+      is always accessible regardless of wealth.
+
+  - id: gear-fear
+    name: "Gear Fear (Hoarding Best Equipment)"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Gear fear is the extraction genre's version of the "too good to use" problem. Players
+      hoard their best gear because using it risks losing it, so they run budget kits instead.
+      This means the best content in the game (high-tier weapons, rare armor) sits unused in
+      stashes. Solutions include: gear degradation over time (use it or lose it), insurance
+      systems, or making top-tier gear common enough that losing it is expected, not catastrophic.
+    detection: |
+      Check if the game tracks persistent inventories across raids. If high-tier gear exists
+      and players can stockpile it, gear fear is structurally present. Look for mechanics that
+      counteract hoarding: item degradation, stash limits, wipe cycles, or insurance. If none
+      exist, the best gear in the game is effectively removed from play by player psychology.
+
+  - id: secure-container-exploitation
+    name: "Secure Container Exploitation"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Secure containers (items that protect loot even on death) are a loss-mitigation mechanic
+      that can be exploited. If players can stuff the most valuable item found into a secure
+      container and then die without caring, the extraction loop inverts: death is acceptable
+      as long as the container is full. This creates "hatchet runners" -- players who enter
+      raids with no gear, rush high-value spawns, container the loot, and disconnect.
+    detection: |
+      Check for any mechanic that preserves items on death. If preserved items can include
+      high-value loot found during the raid (not just keys or quest items), the container is
+      exploitable. Look for restrictions: can found-in-raid items be containered? Is there a
+      size limit? If unrestricted, hatchet running is the optimal low-risk strategy.
+
+  - id: insurance-hideout-mechanics
+    name: "Insurance and Loss Mitigation Mechanics"
+    category: resources
+    severity: medium
+    tradition_specific: true
+    description: |
+      Insurance (get gear back after death, with a time delay) softens the loss curve without
+      eliminating it. Good insurance creates a time-cost tradeoff: you get the gear back, but
+      not immediately, so you still feel the loss in the short term. Bad insurance either
+      returns gear too quickly (death has no consequence) or is too expensive (players never
+      use it, defeating its purpose).
+    detection: |
+      Check for insurance or gear-recovery mechanics. If insurance returns full loadouts within
+      one play session, it trivializes death. If insurance costs more than 30% of the loadout
+      value, budget-conscious players will skip it. Check if insurance creates interesting
+      decisions (insure the expensive gun but not the cheap armor?) or is all-or-nothing.
+
+  - id: loot-table-fairness
+    name: "Loot Table Fairness and Transparency"
+    category: resources
+    severity: high
+    tradition_specific: true
+    description: |
+      Players who risk everything to reach a high-value loot spawn expect a fair chance at
+      good loot. If loot tables are weighted so heavily toward junk that reaching a "rare
+      spawn" typically yields garbage, the risk/reward contract is broken by deception. Players
+      do not need to know exact percentages, but the felt probability must match the perceived
+      risk. Opaque loot tables breed conspiracy theories and community toxicity.
+    detection: |
+      Examine loot distribution mechanics. If high-tier loot containers have less than a 15%
+      chance of containing items whose value exceeds the average cost of reaching them, the
+      tables are punishingly stingy. If the game provides no feedback on loot table quality
+      (no visual tiers, no sound cues for good rolls), perceived fairness will suffer.
+
+  # --- PACING ---
+
+  - id: time-to-extract-pacing
+    name: "Time-to-Extract Pacing"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Raid duration defines the game's rhythm. Too short (under 10 minutes): players cannot
+      explore, plan, or have meaningful encounters. Too long (over 45 minutes): the stakes
+      of dying become unbearable and casual players cannot complete a raid in a sitting. The
+      ideal raid creates a three-act structure: loot phase (explore, gather), conflict phase
+      (encounter other players or threats), extraction phase (navigate to exit under pressure).
+    detection: |
+      Check raid timer or average raid duration. If the average successful extraction takes
+      less than 10 minutes, raids feel like speedruns. If average raids exceed 40 minutes,
+      casual players cannot engage. Check if the game creates natural pacing pressure (shrinking
+      zones, escalating AI threats, extraction windows) to prevent raids from dragging.
+
+  - id: wipe-cycle-pacing
+    name: "Wipe Cycle Pacing"
+    category: pacing
+    severity: high
+    tradition_specific: true
+    description: |
+      Periodic wipes (full economy reset) are the extraction genre's seasonal mechanic. Early
+      wipe is the most engaging period: everyone is on equal footing, every item matters,
+      PvP is scrappy. Late wipe is the least engaging: geared players dominate, new/returning
+      players face impossible gear gaps, and the economy is saturated. If the late-wipe
+      malaise lasts too long, players leave. If wipes are too frequent, players feel their
+      progress is meaningless.
+    detection: |
+      Check for wipe or season reset mechanics. If wipe cycles exceed 6 months, late-wipe
+      stagnation is likely severe. If wipes occur more frequently than every 2 months, players
+      may feel progression is futile. Check if any mechanic addresses late-wipe problems
+      (catch-up mechanics, gear compression, economic sinks).
+
+  - id: quest-task-incentive-structure
+    name: "Quest/Task Incentive Structure"
+    category: pacing
+    severity: medium
+    tradition_specific: true
+    description: |
+      Quests and tasks give raids purpose beyond pure loot. But quest design in extraction
+      games faces a unique challenge: quests that require specific items, locations, or kills
+      force players into predictable behavior, making them vulnerable. "Kill 10 scavs in
+      the factory" makes every quest-holder go to factory, creating predictable traffic that
+      can be camped. Good quest design diversifies player behavior rather than funneling it.
+    detection: |
+      Examine quest or task mechanics. If quests funnel players to specific locations (more
+      than 30% of active quests point to the same area), traffic concentration creates
+      camping opportunities. Check if quests can be completed through multiple approaches
+      or if they require exact conditions that constrain player behavior.
+
+  # --- COMBAT ---
+
+  - id: pvp-pve-balance
+    name: "PvP vs PvE Balance in Shared Space"
+    category: combat
+    severity: critical
+    tradition_specific: true
+    description: |
+      Extraction games live in the tension between PvP and PvE. Too much PvP: the game
+      becomes a battle royale with extra steps, and PvE content is ignored. Too much PvE:
+      players avoid each other and the extraction tension disappears. The design must create
+      moments where PvP is incentivized (contested loot, extraction bottlenecks) without
+      making PvP the only viable strategy.
+    detection: |
+      Check what percentage of valuable loot comes from PvE sources vs PvP sources (killing
+      other players for their gear). If PvP is the most efficient loot path, the game becomes
+      a deathmatch. If PvE loot vastly outweighs PvP loot value, there is no incentive to
+      engage other players. Look for contested resources that create organic PvP friction.
+
+  - id: extraction-point-camping
+    name: "Extraction Point Camping"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      Fixed extraction points create a known destination that all players must eventually
+      visit. Camping extractions is high-reward (victims carry a full raid's loot) and
+      low-effort. This is the extraction genre's most persistent design problem. Solutions
+      include: multiple extraction points, dynamic extractions, extraction timers with
+      audio/visual cues, anti-camping AI, or making camping positions exposed and risky.
+    detection: |
+      Check extraction mechanics. If extraction points are fixed and fewer than 3 per map,
+      camping is structurally encouraged. If extraction requires a timer (standing in a zone),
+      check whether the zone is defensible or exposed. If the camper has a positioning
+      advantage over the extractor, the design rewards camping over playing the raid.
+
+  - id: spawn-loot-camping
+    name: "Spawn and Loot Camping"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      When high-value loot spawns at fixed, known locations, experienced players memorize
+      spawn points and rush them. This creates two problems: first, it rewards map knowledge
+      over gameplay skill. Second, it creates predictable traffic patterns that enable camping.
+      Players who know the spawns arrive first, loot, and then camp the spot knowing others
+      will come. Randomized spawns and dynamic loot distribution counter this.
+    detection: |
+      Check loot spawn mechanics. If high-value items spawn at fixed locations with no
+      randomization, spawn rushing is optimal. If the same locations are valuable every raid,
+      map knowledge creates an insurmountable advantage for experienced players. Check if
+      loot locations rotate, randomize, or have enough variety to prevent memorization.
+
+  - id: player-skill-vs-gear-advantage
+    name: "Player Skill vs Gear Advantage"
+    category: combat
+    severity: critical
+    tradition_specific: true
+    description: |
+      The gear advantage question: can a skilled player with budget gear beat a mediocre
+      player with top-tier gear? If gear advantage is absolute (top armor makes you
+      invulnerable to budget ammo), the game becomes pay-to-win or grind-to-win. If gear
+      is irrelevant (headshots always kill), there is no reason to pursue better gear and
+      the loot loop breaks. The sweet spot: gear provides a meaningful advantage (15-30%
+      more effective) but skill can overcome it through positioning, aim, and tactics.
+    detection: |
+      Compare TTK (time-to-kill) between best-in-slot gear vs budget gear matchups. If
+      top-tier armor increases TTK by more than 3x against budget ammo, gear dominance is
+      too high. If gear tier has less than 20% impact on TTK, gear progression is meaningless.
+      Check if skill-based mechanics (headshots, positioning, flanking) can bypass gear
+      advantages.
+
+  - id: information-asymmetry
+    name: "Information Asymmetry Between Players"
+    category: combat
+    severity: high
+    tradition_specific: true
+    description: |
+      In extraction games, information is power: knowing where enemies are, what they are
+      carrying, and where they are going. Mechanics that increase information (radar, heartbeat
+      sensors, teammate callouts) or decrease it (suppressed weapons, stealth movement, decoys)
+      create asymmetry. Too much information: no ambushes possible, game becomes a pure
+      aim-duel. Too little: every corner is terrifying and engagement is random.
+    detection: |
+      Catalog mechanics that reveal or conceal player information (sound, visuals, radar,
+      map markers, etc.). If any mechanic provides location data without counterplay
+      (undetectable radar, wallhacks-as-feature), information asymmetry is absolute. Check
+      if the game provides both information-gathering and information-denial tools, and
+      whether they are accessible at similar progression tiers.
+
+  - id: map-knowledge-advantage
+    name: "Map Knowledge Advantage"
+    category: combat
+    severity: medium
+    tradition_specific: true
+    description: |
+      Extraction maps are complex, with hidden stashes, vantage points, flanking routes,
+      and danger zones. Players with hundreds of hours of map knowledge have an enormous
+      advantage: they know the angles, the timings, the loot routes. This is acceptable
+      as a skill axis, but if the advantage is so steep that new players are unable to
+      survive their first 50 raids, the onboarding cliff is too harsh. Maps should reward
+      knowledge without making ignorance a death sentence.
+    detection: |
+      Assess map complexity (number of unique areas, hidden locations, elevation changes).
+      If survival rate for new players (first 20 raids) is below 15% while experienced
+      players survive 50%+, the map knowledge gap may be a retention problem. Check if the
+      game provides any map assistance (in-raid maps, compass, landmark navigation) for
+      new players.
+
+  # --- ECONOMY ---
+
+  - id: flea-market-economy
+    name: "Player Trading/Market Economy"
+    category: economy
+    severity: high
+    tradition_specific: true
+    description: |
+      Player-driven markets (flea markets, trading posts) create emergent economies but also
+      create exploitation vectors: real-money trading, market manipulation, and price inflation
+      that disadvantages new players. If the market has no controls (fee structure, level gates,
+      price floors/ceilings), experienced players will dominate it. If it is too restricted,
+      it fails to serve its purpose of allowing players to convert unwanted loot to needed gear.
+    detection: |
+      Check for player trading mechanics. If trading exists without transaction fees, the market
+      will be exploited for money laundering and RMT. If trading has no level gate, experienced
+      players can supply alts or new accounts. If no price controls exist, monopoly pricing on
+      essential items (keys, ammo types) will emerge. Check if the market has any self-correcting
+      mechanisms.
+
+  - id: gear-tier-compression
+    name: "Gear Tier Compression"
+    category: economy
+    severity: medium
+    tradition_specific: true
+    description: |
+      If the gap between the best and worst gear is too large, players exist in different
+      games depending on their wealth. A player in tier-1 gear fighting a player in tier-5
+      gear is not a fair fight by any skill measure. Compression (reducing the gap between
+      tiers) keeps the game competitive at all wealth levels. But too much compression removes
+      the incentive to pursue better gear. The ideal: each tier is noticeably better, but no
+      single tier jump is decisive.
+    detection: |
+      Calculate the performance ratio between the best and worst available gear in each
+      category (weapons, armor, ammo). If the ratio exceeds 3:1 (best is 3x as effective
+      as worst), compression is insufficient. If the ratio is less than 1.5:1, there is
+      no meaningful gear progression. Check if mid-tier gear is viable in endgame encounters.
+
+  # --- MECHANICS ---
+
+  - id: stealth-vs-combat-viability
+    name: "Stealth vs Combat Viability"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Extraction games should support multiple playstyles: aggressive PvP hunting, cautious
+      looting with combat avoidance, stealth-focused extraction, and everything between. If
+      the game's audio, movement, and detection systems make stealth impossible (every action
+      makes noise, everyone knows where everyone is), only the aggressive playstyle is viable.
+      If stealth is too powerful (extract without ever being detectable), PvP encounters never
+      happen and the game loses its tension.
+    detection: |
+      Check for stealth mechanics (sound propagation, movement speed options, concealment).
+      If no slow/quiet movement option exists, stealth is unsupported. If stealth builds can
+      extract without any risk of detection, aggression is never rewarded. Look for a sound
+      system that creates information -- footsteps, looting sounds, door opening -- that
+      rewards awareness and punishes carelessness.
+
+  - id: healing-pacing-in-raid
+    name: "In-Raid Healing Pacing"
+    category: mechanics
+    severity: medium
+    tradition_specific: true
+    description: |
+      Healing mechanics define combat pacing. Instant healing: fights are wars of attrition
+      where the player with more heals wins. Slow healing with animation locks: healing is a
+      tactical decision (do I heal now and risk being rushed?). No healing: every hit is
+      permanent and fights are decided by the first accurate shots. The healing model must
+      match the intended combat identity.
+    detection: |
+      Check healing mechanics for speed, availability, and opportunity cost. If healing is
+      instant with no animation or cooldown, fights extend into resource wars. If healing
+      requires a 5+ second animation with no cancellation, it creates meaningful tactical
+      windows. Count average healing items per loadout vs average damage per engagement.

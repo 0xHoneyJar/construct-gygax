@@ -1,0 +1,47 @@
+id: engine-vs-big-money
+name: "Engine Building vs Direct Acquisition"
+type: tensions
+description: "The tension between investing in engine cards (delayed gratification, higher eventual output) and buying treasures/VP directly (immediate returns, lower ceiling). In a well-designed deckbuilder, the engine path should reward skill and planning with a higher ceiling. Here, the ceiling is irrelevant because the game ends before engines reach it."
+tradition: deckbuilder
+tags: [balance, strategy, degenerate, timing]
+depends_on: [resources/victory-point-cards.yaml, progression/engine-scaling.yaml]
+affects: []
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+intent:
+  summary: "Engine-building should be the rewarding, skill-testing path that outperforms simple strategies"
+  rationale: "The genre's core appeal is the 'build a machine' fantasy. If the machine is worse than not building one, the genre promise is broken."
+  set_by: attune
+  set_at: "2026-04-19T00:00:00Z"
+  non_negotiable: true
+
+poles:
+  a:
+    name: "Engine Building"
+    description: "Buy action cards, assemble combos, draw your deck, generate massive turns. Higher skill ceiling, more interesting decisions, genre-defining experience."
+    supported_by: [entities/market-cards.yaml, progression/engine-scaling.yaml]
+  b:
+    name: "Big Money"
+    description: "Buy Silver, buy Gold, buy Provinces. No combos, no synergies, no interesting decisions. Lower ceiling but no setup cost and immediate returns."
+    supported_by: [resources/deck-composition.yaml, stats/buying-power.yaml]
+
+health: b-dominant
+health_notes: "Big Money dominates because the game's timing favors immediate returns over delayed payoffs. The engine DOES eventually produce more -- but 'eventually' arrives 1-3 turns before the game ends, which is not enough to close the VP gap. This is worse than imbalance: it's a genre failure. The game's marketing promises engine-building, but the winning strategy ignores engines entirely. Experienced players discover this within 10 games and either quit or house-rule."
+
+degenerate_indicators:
+  optimal_strategy: "Buy Silver/Gold turns 1-7, buy Provinces turns 8+"
+  decision_complexity: "near-zero (always buy the most expensive treasure or VP card)"
+  counterplay_available: false
+  engine_win_rate_vs_big_money: 0.35
+  skill_expression: "minimal (Big Money plays itself)"
+  discovery_time: "~10 games"
+
+notes:
+  - "Big Money is the 'null hypothesis' of deckbuilders: what happens if you ignore the genre mechanic entirely?"
+  - "If the null hypothesis wins, the genre mechanic is a trap."
+  - "Dominion's actual design solved this with expansions adding trashers, +Buy, and cards that make engines consistent."
+  - "Fix: engines need to come online by turn 6-7, not turn 11. Reduce card costs, add cantrips, include deck thinning."
+  - "Alternative: extend the game (16 provinces instead of 8) so engines have more turns to exploit their advantage."

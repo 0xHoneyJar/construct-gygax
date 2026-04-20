@@ -52,32 +52,32 @@ Augury's analysis is organized into 6 declared layers. Each layer has clear boun
 - **Scope:** Source/sink balance, recovery rates, depletion curves, cross-resource contention
 - **Required entities:** resources (with `pool` and `recovery`)
 - **Optional entities:** mechanics (that consume resources via `cost`)
-- **Detects:** economic collapse (source > sink), infinite accumulation (negative net pressure), resource irrelevance (never under pressure), hoarding incentives (recovery outpaces spending), recovery-depletion mismatch
+- **Detects:** economic collapse (source > sink), infinite accumulation (negative net pressure), resource irrelevance (never under pressure), hoarding incentives (recovery outpaces spending), recovery-depletion mismatch, **market/trade analysis (v4):** price stability, supply/demand feedback loops, trade fairness between informed/uninformed players
 - **Scripts:** dice-probability.ts (for probabilistic recovery)
-- **Design parameter sensitivity:** `target_lethality` — brutal games expect faster depletion curves
+- **Design parameter sensitivity:** `target_lethality` — brutal games expect faster depletion curves. `target_interaction` — cooperative games share economies (flag individual hoarding), direct-conflict games expect economic warfare
 
 ### Layer: progression
 - **Scope:** Scaling curves, power budgets, feature distribution across levels/advances
 - **Required entities:** progression (with `progression_table`)
 - **Optional entities:** mechanics, resources (with `max_by_level`), entities (for class/archetype comparison)
-- **Detects:** scaling failure (linear vs exponential divergence), dead levels (no meaningful improvement), power spikes (dramatic single-feature jumps), MAD dependency (stat budget insufficient for core function), design traps (options that appear viable but aren't)
+- **Detects:** scaling failure (linear vs exponential divergence), dead levels (no meaningful improvement), power spikes (dramatic single-feature jumps), MAD dependency (stat budget insufficient for core function), design traps (options that appear viable but aren't), **win condition analysis (v4):** victory path balance, path lockout detection, endgame trigger timing
 - **Scripts:** cdf-compare.ts (for cross-level comparison)
-- **Design parameter sensitivity:** `target_audience` — mastery audience tolerates more trap options; newcomer audience does not
+- **Design parameter sensitivity:** `target_audience` — mastery audience tolerates more trap options; newcomer audience does not. `target_interaction` — solo games skip victory path comparison
 
 ### Layer: pacing
 - **Scope:** Session arc, encounter density, downtime distribution, mechanic trigger frequency, tension engagement
 - **Required entities:** mechanics (with `trigger`), resources (with recovery timing)
 - **Optional entities:** tensions, progression (for session arc analysis)
-- **Detects:** pacing slogs (extended sequences with no meaningful change), spike-and-recover patterns (sharp intensity swings), trigger starvation (mechanics that never activate), session length mismatch (mechanics too slow/fast for target session)
+- **Detects:** pacing slogs (extended sequences with no meaningful change), spike-and-recover patterns (sharp intensity swings), trigger starvation (mechanics that never activate), session length mismatch (mechanics too slow/fast for target session), **replayability analysis (v4):** content exhaustion rate, decision-space novelty across replays, emergent variety from systemic interactions
 - **Scripts:** none (structural + resource depletion rate analysis)
-- **Design parameter sensitivity:** `target_session_length`, `target_prep`
+- **Design parameter sensitivity:** `target_session_length`, `target_prep`, `target_randomness` (none = replayability depends entirely on decision space, not procedural variation)
 
 ### Layer: cognitive-load
 - **Scope:** Entity count, rule interaction density, decision complexity, communication clarity
 - **Required entities:** any (counts and measures complexity across all entity types)
-- **Detects:** option paralysis (too many viable choices with unclear value), hidden complexity (interactions not surfaced in entity descriptions), communication failures (mechanics whose effects aren't obvious to players), entity density exceeding cognitive thresholds, simultaneous state tracking burden
+- **Detects:** option paralysis (too many viable choices with unclear value), hidden complexity (interactions not surfaced in entity descriptions), communication failures (mechanics whose effects aren't obvious to players), entity density exceeding cognitive thresholds, simultaneous state tracking burden, **information model problems (v4):** hidden state count, deducibility analysis, information advantage fairness
 - **Scripts:** none (counting and structural analysis)
-- **Design parameter sensitivity:** `target_audience` (newcomer = lower thresholds), `target_player_count` (larger groups amplify cognitive load)
+- **Design parameter sensitivity:** `target_audience` (newcomer = lower thresholds), `target_player_count` (larger groups amplify cognitive load), `target_randomness` (none = expect perfect information, flag hidden state as mismatch)
 
 ### Structural Analysis (tradition: freeform, custom)
 
@@ -311,6 +311,10 @@ Before finalizing findings, check `design_parameters` from `index.yaml` and adju
 - `target_session_length: short` → lower pacing-slog thresholds (less tolerance for slow mechanics)
 - `target_lethality: brutal` → raise acceptable depletion rates in resource-economy layer
 - `target_player_count: large` → lower cognitive-load thresholds (more simultaneous state tracking)
+- `target_interaction: cooperative` → suppress direct-conflict findings (e.g., "player A can block player B" is expected in direct-conflict, a problem in cooperative)
+- `target_interaction: solo` → skip player interaction analysis entirely
+- `target_randomness: none` → resolution layer skips probability analysis, focuses on decision-space analysis
+- `target_randomness: high` → suppress variance warnings (high variance is the design goal)
 
 Document all threshold adjustments in the report's Methodology Notes section: "Design parameter `target_audience: newcomer` lowered cognitive-load threshold from 5 simultaneous states to 3."
 
@@ -431,6 +435,32 @@ ELIF exploding/acing dice:
 
 ELIF cross-system comparison requested:
   → MUST invoke cdf-compare.ts on the two CDFs
+
+# Non-dice resolution methods (v4):
+
+ELIF method in [auction, negotiation]:
+  → Structural analysis: valuation range, information advantage, overbid penalty
+  → Tag findings: [qualitative — no probability data]
+
+ELIF method == "simultaneous-choice":
+  → Payoff matrix analysis if options are enumerable
+  → Dominant strategy detection (is one choice always best?)
+
+ELIF method in [worker-placement, drafting, area-majority, card-play, pattern-matching]:
+  → Structural analysis: slot/option viability, contention, scoring curves
+  → No scripts needed
+
+ELIF method in [deterministic, automated]:
+  → Input optimization analysis: decision space size, sensitivity to inputs
+  → For automated: focus on draft/positioning inputs, not combat output
+
+ELIF method == "real-time":
+  → Qualitative: skill ceiling, APM requirements, accessibility
+  → Tag: [qualitative]
+
+ELIF method == "deduction":
+  → Information sufficiency, solvability, red herring density
+  → Tag: [qualitative]
 ```
 
 **Invocation pattern:**

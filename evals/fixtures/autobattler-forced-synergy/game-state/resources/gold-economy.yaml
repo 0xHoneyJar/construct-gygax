@@ -1,0 +1,35 @@
+id: gold-economy
+name: "Gold Economy (Draft Currency)"
+type: resources
+description: "Gold is the drafting currency. Players earn gold from interest, win streaks, and loss streaks. The economy is designed to reward flexible drafting, but when one composition dominates, gold management reduces to 'buy Mech-Assassin units on sight, hold gold for interest otherwise.' Economic skill is irrelevant because the composition choice overshadows all resource decisions."
+tradition: autobattler
+tags: [economy, drafting, currency]
+depends_on: []
+affects: [mechanics/drafting-phase.yaml]
+created_by: attune
+created_at: "2026-04-19T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-04-19T00:00:00Z"
+
+pool:
+  starting: 0
+  per_round_base: 5
+  interest: "1 gold per 10 saved (max 5)"
+  win_streak_bonus: "1/1/2/3 for 2/3/4/5+ consecutive wins"
+  loss_streak_bonus: "1/1/2/3 for 2/3/4/5+ consecutive losses"
+
+spending:
+  reroll_shop: 2
+  buy_unit: "unit cost (1-5 gold based on tier)"
+  level_up: "4-60 gold (scales with player level)"
+
+economic_distortion:
+  normal_meta: "Players balance spending between leveling, rolling, and buying. Flexible players who read the lobby and pivot compositions are rewarded."
+  forced_meta: "All players attempt to force Mech-Assassin. Gold is spent exclusively on rolling for Mech/Assassin units. Interest management and leveling decisions become secondary to 'did I hit the right units?'"
+  skill_expression_lost: "Economy management, lobby reading, pivot timing"
+  skill_expression_remaining: "Positioning (minor), item assignment (minor)"
+
+notes:
+  - "In a healthy meta, gold management is the primary skill expression. Knowing when to save, when to roll, and when to level separates good players from great ones."
+  - "When one comp dominates, the only decision is 'roll for comp pieces or save for interest' -- a coin flip, not a skill test."
+  - "The gold system is well-designed in isolation. The synergy imbalance is what distorts it."
