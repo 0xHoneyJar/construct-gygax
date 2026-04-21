@@ -95,7 +95,7 @@ Set or update game-level design parameters on the current game-state. These live
 
 1. Load `grimoires/gygax/game-state/index.yaml`.
 2. Show current design parameters if present. For missing fields, show the tradition default that will be used.
-3. Ask the user to confirm or change each parameter (same questions as `/attune` Phase 3.6). All fields are skippable.
+3. Ask the user to confirm or change each parameter (same parameter table as `/attune` Phase 8b). All fields are skippable.
 4. Write updated `design_parameters` section to `index.yaml`. Remove fields the user explicitly clears. Leave absent fields absent (tradition defaults apply at analysis time).
 5. Write a changelog entry recording the parameter change.
 
