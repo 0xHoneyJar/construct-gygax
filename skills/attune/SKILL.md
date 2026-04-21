@@ -1,13 +1,13 @@
 ---
 name: attune
-description: Onboard and ingest a TTRPG system, rulebook, or game reference into Gygax
+description: Onboard and ingest a game system, rulebook, or game reference into Gygax
 user-invocable: true
 allowed-tools: Read, Write, Glob, Grep, Edit, Bash, WebFetch
 ---
 
 # Attune
 
-Onboard and ingest a TTRPG system, rulebook, or game reference into the Gygax construct. This skill reads source material -- markdown documents, plain text, URLs, repositories, or conversational input -- extracts core mechanics, and produces structured game-state YAML artifacts that all other Gygax skills depend on.
+Onboard and ingest a game system, rulebook, or game reference into the Gygax construct. This skill reads source material -- markdown documents, plain text, URLs, repositories, or conversational input -- extracts core mechanics, and produces structured game-state YAML artifacts that all other Gygax skills depend on.
 
 Attune is the gateway to everything Gygax does. Without game-state, no other skill can function. The user should NEVER need to manually author YAML. Attune does all the extraction, structuring, cross-referencing, and validation.
 
@@ -108,289 +108,65 @@ Read the source material thoroughly. Do NOT skim. Read every file, every section
    - Which are implied but not spelled out?
    - Which are completely absent from the source?
 
-### Phase 3: Guided Interview
+### Phase 3: Interview
 
-Whether you are filling gaps after ingestion or building from scratch, the interview follows this structure. Adapt depth based on what you already know.
+The interview has one job: get enough signal to generate a draft game-state. The user should not feel like they're filling out a form.
 
-**For document ingestion:** Present what you extracted, then ask targeted questions about gaps.
+**Principle: Draft first, correct later.** Ask the minimum needed to produce a reasonable draft. Generate it. Present it. Let the user correct what's wrong. This is always faster than exhaustive upfront questioning.
 
-**For guided interview (no source):** Walk through these areas in order, building understanding incrementally.
+**For document ingestion:** Present what you extracted in a summary, ask about anything genuinely ambiguous (not everything missing — infer what you can from tradition norms), then proceed directly to generation.
 
-#### 3a: Game Identity (All Traditions)
+**For guided interview (no source):** Walk through 3a and 3b below, then generate.
 
-Ask about (skip if already known from source):
-- What is the game called?
-- What tradition does it follow? (Offer the full list: d20, PbtA, FitD, OSR, Cepheus, freeform, custom, eurogame, autobattler, roguelike, deckbuilder, ccg, 4x, tactics, social-deduction, cooperative, idle, extraction, looter, immersive-sim)
-- One-sentence description of what makes this game different
-- What is the core loop? (What does a player DO on their turn / in a round / in a session?)
+#### 3a: Identity (All Traditions — one batch)
 
-**After tradition is identified, branch the interview:**
+Ask as a single message:
 
-#### TTRPG Branch (d20, pbta, fitd, osr, cepheus, freeform, custom)
+1. What is the game called?
+2. What tradition? (Offer: d20, PbtA, FitD, OSR, Cepheus, freeform, custom, eurogame, autobattler, roguelike, deckbuilder, ccg, 4x, tactics, social-deduction, cooperative, idle, extraction, looter, immersive-sim)
+3. One-sentence pitch — what makes this different from a standard [tradition] game?
+4. What is the core loop? (What does a player DO on their turn / in a round / in a session?)
 
-**3b: Stats and Attributes**
-- What stats/attributes do characters have?
-- What are their ranges? (e.g., 1-20 with modifiers, -1 to +3)
-- How are they generated? (Point buy, random roll, fixed array)
-- What does each stat affect mechanically?
+If the user's pitch already answers the core loop (e.g., "it's Blades but stress is shared across the crew"), don't re-ask it.
 
-**3c: Resources and Pools**
-- What do characters spend? (HP, spell slots, stamina, stress, ammo, luck, etc.)
-- How do they recover? (Rest, downtime, moves, abilities)
-- What happens when a resource hits zero or max?
+#### 3b: Core Differentiators (Tradition-Aware — one batch)
 
-**3d: Core Mechanics**
-- What are the basic actions a character can take?
-- How does the core resolution work step-by-step?
-- What are the possible outcomes?
-- Are there reactions, interrupts, or triggered abilities?
-- How does combat flow? (Initiative, turns, rounds, action economy)
+Based on the tradition, ask ONLY about what you can't infer from tradition norms. If the user said "standard 5e ability scores," you already know the stats. Don't ask.
 
-**3e: Progression**
-- How do characters advance? (XP, milestones, advances, fiction triggers)
-- What do they gain?
-- How does power scale from start to endgame?
+Ask the single most diagnostic question per tradition family:
 
-**3f: Entities**
-- What character types exist? (Classes, playbooks, archetypes)
-- Are there monsters/NPCs with stat blocks?
-- What items, equipment, or gear matters mechanically?
+- **d20**: "What's different about your resolution, combat, or progression compared to standard d20?"
+- **pbta**: "What are your unique moves and what stats do they roll?"
+- **fitd**: "How does your stress/harm economy differ from standard Blades?"
+- **osr**: "What procedures define the core gameplay loop?"
+- **cepheus**: "What careers exist and how does your skill list differ from standard Cepheus?"
+- **freeform/custom**: "Walk me through one complete scene or session cycle"
+- **eurogame/deckbuilder/cooperative**: "Walk me through one complete turn"
+- **autobattler/tactics**: "What are the unit types and how does a round play out?"
+- **ccg**: "What's the cost system, main card types, and win condition?"
+- **social-deduction**: "What roles exist and what's the phase structure?"
+- **roguelike/extraction/looter**: "What does one run look like, and what persists between runs?"
+- **4x**: "What victory conditions exist and what's the tech/expansion structure?"
+- **idle**: "What's the basic loop, and what does prestige look like?"
+- **immersive-sim**: "What player abilities exist and how do systems interact?"
 
-#### Board Game Branch (eurogame, deckbuilder, cooperative)
+Then one follow-up: "What else is importantly different from a standard [tradition] game?"
 
-**3b: Components and Properties**
-- What are the key game pieces? (Cards, tiles, tokens, boards, dice)
-- What measurable properties do they have? (Value, cost, power, victory points)
+That's it for the interview. Two batches of questions, then move to generation.
 
-**3c: Resources and Economy**
-- What resources do players collect and spend? (Money, wood, workers, cards, actions)
-- How do resources enter the game? (Starting supply, generation per turn, market)
-- What are the resource sinks? (Buying, building, trading, scoring)
+**For everything the user didn't specify, use tradition defaults.** Standard stats, standard resource pools, standard progression curves. Mark inferred content in descriptions with `[inferred from tradition defaults]` so the user can spot and correct them during review.
 
-**3d: Actions and Resolution**
-- What can a player do on their turn? (Place workers, play cards, buy, trade, build)
-- How are outcomes determined? (Deterministic, auction, majority, dice, card draw)
-- What is the turn structure?
+#### Interview guidelines
 
-**3e: Scoring and End Conditions**
-- How do players score? (Victory points, objectives, area control, set collection)
-- What triggers the end of the game?
-- Are there multiple victory paths?
-
-**3f: Player Interaction**
-- How do players affect each other? (Blocking, trading, attacking, competing for resources)
-
-#### Tactical / Combat Branch (autobattler, tactics)
-
-**3b: Units and Attributes**
-- What types of units/characters exist?
-- What stats define them? (HP, attack, speed, range, cost)
-- How are teams/squads composed?
-
-**3c: Resources**
-- What economy drives the game? (Gold, mana, action points, items)
-- How do resources flow between phases? (Income per round, interest, level-up bonuses)
-
-**3d: Combat and Resolution**
-- How is combat resolved? (Automated, turn-based grid, real-time)
-- What role does positioning play?
-- What synergies exist between unit types?
-
-**3e: Progression**
-- How do units/teams improve within a match? (Leveling, items, augments)
-- Is there progression between matches? (Ranked, unlocks, meta-progression)
-
-#### Card Game Branch (ccg)
-
-**3b: Card Types and Properties**
-- What card types exist? (Creatures, spells, lands, artifacts)
-- What is the cost system? (Mana, energy, resources per turn)
-- What keywords or abilities do cards have?
-
-**3c: Deck Construction**
-- How are decks built? (Minimum/maximum size, copy limits, format restrictions)
-- What archetypes exist? (Aggro, control, combo, midrange)
-
-**3d: Turn Structure and Resolution**
-- What is the turn structure? (Draw, play, attack, pass)
-- How do cards interact? (Stack/priority, combat, targeting)
-
-**3e: Win Conditions**
-- How does a player win? (Life total, deck out, alternate conditions)
-
-#### Social Game Branch (social-deduction)
-
-**3b: Roles and Information**
-- What roles exist? (Town, mafia, neutral, special)
-- What does each role know? (Own role, other roles, partial information)
-- What information is public vs hidden?
-
-**3c: Actions and Phases**
-- What is the phase structure? (Day/night, discussion/vote, action/resolution)
-- What can players do in each phase?
-
-**3d: Elimination and End Conditions**
-- How are players eliminated?
-- What triggers the end? (All evil eliminated, evil majority, special condition)
-
-#### Run-Based Branch (roguelike, extraction, looter)
-
-**3b: Run Structure**
-- What does one run/session look like? (Enter, explore, fight, loot, extract/die)
-- How long is a typical run?
-
-**3c: Build and Progression**
-- What choices define a build? (Items, abilities, upgrades, path selection)
-- What persists between runs? (Unlocks, currency, meta-progression)
-- What is lost on failure? (Everything, some items, progress)
-
-**3d: Loot and Rewards**
-- How is loot distributed? (Random drops, shop, crafting, guaranteed)
-- What rarity system exists?
-- What drives the desire to replay? (Better loot, harder difficulty, different builds)
-
-#### Strategy Branch (4x)
-
-**3b: Phases and Scope**
-- What are the major phases? (Early expansion, mid-game development, late-game conflict)
-- What is the map structure?
-
-**3c: Tech and Progression**
-- How does the tech tree work?
-- What unlocks are available and when?
-
-**3d: Victory Conditions**
-- What victory conditions exist? (Military, science, cultural, economic, score)
-- Are they balanced?
-
-**3e: Diplomacy and Interaction**
-- How do players/factions interact? (Trade, war, alliance, espionage)
-
-#### Incremental Branch (idle)
-
-**3b: Core Loop**
-- What is the basic click/action cycle?
-- What numbers grow and how?
-
-**3c: Prestige and Reset**
-- When and why does the player prestige/reset?
-- What carries over?
-- How does the game change after prestige?
-
-**3d: Automation**
-- What automates and when?
-- What meaningful decisions remain after automation?
-
-#### Systems Branch (immersive-sim)
-
-**3b: Player Abilities**
-- What can the player do? (Combat, stealth, hacking, magic, social)
-- How are abilities acquired and upgraded?
-
-**3c: Level Structure**
-- How are levels/areas structured? (Linear, hub, open world)
-- How do areas interconnect?
-
-**3d: Systemic Interactions**
-- What systems interact with each other? (Fire + oil, hacking + security, stealth + light)
-- Can problems be solved multiple ways?
-
-#### 3g: Tensions (All Traditions)
-
-After gathering the above, identify and confirm tensions:
-- "Based on what you've described, I see a tension between [X] and [Y]. Is that intentional?"
-- Surface tradition-specific tensions (e.g., for eurogame: "engine building vs point racing", for roguelike: "risk-taking vs safe play")
-
-**Interview guidelines:**
-- Ask 2-4 questions at a time, not a wall of 20
-- After each round, summarize what you now understand before asking more
-- Be specific — "How does the worker placement interact with the resource market?" not "Tell me about your mechanics"
-- If the user says "it's like Dominion" or "standard eurogame", use your knowledge of that tradition to fill in defaults and ask what differs
-- Stop interviewing when you have enough to generate at least the core loop, key resources, and primary mechanics. Entities and tensions can be sparse initially.
-
-### Phase 3.5: Intent Capture
-
-This phase runs AFTER the interview (Phase 3) and BEFORE writing game-state files (Phase 4). Its purpose is to capture designer intent for tensions and high-signal mechanics, so that downstream analysis skills can distinguish deliberate asymmetry from unintended imbalance.
-
-**Skip this phase entirely if:**
-- The user invokes `/attune` with "skip intent prompts" at any point during the session.
-- The source document contains explicit design rationale sections (headings such as "Design Notes," "Designer's Commentary," "Intent," or similar). In that case, extract intent from those sections programmatically and populate the intent fields without asking.
-
-**Otherwise, prompt as follows:**
-
-#### Required: Tensions
-
-For EVERY tension entity identified during Phase 3, you MUST ask the user for intent before proceeding to Phase 4. Do not skip any tension.
-
-Prompt template:
-> "I see a tension between **[Pole A name]** and **[Pole B name]**. What's the design intent — is the asymmetry deliberate, or is one pole intended to dominate?"
-
-Wait for a response. Use the answer to populate the `intent` field on the tension entity.
-
-#### Encouraged: High-Connectivity Mechanics
-
-From your dependency analysis, identify the top 3 mechanics by incoming dependency count (i.e., the mechanics that appear most frequently in other entities' `depends_on` lists). For each, ask:
-
-> "This mechanic has [N] other entities depending on it. What's the design goal — what problem is this solving?"
-
-You may combine these into a single message if asking about all three at once is more natural.
-
-#### Encouraged: Unusual Probability Distributions
-
-If any mechanic has a non-obvious probability shape — unusual stat modifier curves, outcome bands that are narrower or wider than tradition norms, exploding dice, threshold effects, unskilled penalties — surface the observation and ask:
-
-> "I notice [specific observation, e.g., 'the unskilled -3 penalty means untrained characters succeed roughly 17% of the time at target 8']. Is this intentional?"
-
-#### Captured Intent Schema
-
-Record all captured intent using this structure:
-
-```yaml
-intent:
-  summary: "one-line goal"
-  rationale: "why this design"
-  set_by: attune
-  set_at: "ISO-8601"
-  non_negotiable: false  # default; user can upgrade to true if they confirm the design is fixed
-```
-
-If the user explicitly says a design is final or locked, set `non_negotiable: true`. This suppresses Warning-level findings (but never Critical) in downstream augury analysis.
-
-#### Asking Guidelines
-
-- Batch questions where possible: ask about all 3 high-connectivity mechanics in one message.
-- Ask tension intent questions one at a time — tensions are nuanced enough to warrant focused responses.
-- If the user says "I don't know yet" or "TBD," leave the `intent` block absent from that entity. Do NOT write a placeholder intent.
-- Keep prompts short and specific. Reference the actual mechanic or tension name and the concrete numbers.
-
-### Phase 3.6: Design Parameters
-
-After intent capture and before game-state generation, ask the user about game-level design parameters. These shape how downstream analysis tools calibrate their thresholds.
-
-**All fields are optional.** If the user skips a question, that field is omitted from `index.yaml` and analysis tools use tradition-appropriate defaults (see the defaults table in Phase 5).
-
-Ask in a single batch:
-
-> "A few quick questions about the overall design targets. Skip any you're not sure about yet — I'll use sensible defaults for your tradition."
->
-> 1. **Session length** — Is this designed for short sessions (<2h), medium (2-4h), long (4h+), or multi-session campaigns?
-> 2. **Target audience** — Newcomers, intermediate players, enthusiasts, or system mastery crowd?
-> 3. **Variance** — Should outcomes feel predictable (low), balanced (medium), or dramatic/swingy (high)?
-> 4. **Lethality** — Gentle (consequences rarely permanent), moderate, or brutal (death is common)?
-> 5. **Prep** — Zero-prep, light, moderate, or heavy?
-> 6. **Player count** — Solo, small (2-3), standard (4-5), or large (6+)?
-> 7. **Player interaction** — Direct conflict, indirect competition, cooperative, or solo?
-> 8. **Randomness** — None (deterministic), low, medium, or high?
-
-Record answers in the `design_parameters` section of `index.yaml`. For any the user skips or says "I don't know," leave that field absent (do NOT write a default value — let analysis tools resolve defaults at read time).
-
-**Skip this phase entirely if:**
-- The user has already specified design parameters via `/homebrew --set-intent`
-- The source document contains explicit audience/scope sections that answer these questions (extract programmatically)
+- **Two rounds maximum** before generating. If you still have gaps after 3b, infer from tradition norms and flag during review.
+- If the user says "it's like X," use X as the baseline. Ask ONLY about differences.
+- If the user says "it's like X but with Y," you now know the baseline AND the key differentiator. You may not need 3b at all.
+- Never ask about tensions during the interview. You'll identify them from the generated game-state and surface them during review.
+- Never ask about design parameters during the interview. Default from tradition norms; the user can override during review.
 
 ### Phase 4: Game-State Generation
 
-Generate YAML files for every game element you have extracted or learned through interview. Follow the schema defined in `skills/attune/resources/game-state-schema.md` exactly.
+Generate YAML files for every game element you have extracted or learned through interview. Use tradition defaults to fill gaps — do not leave entities incomplete because the user didn't explicitly state something that is standard for their tradition. Follow the schema defined in `skills/attune/resources/game-state-schema.md` exactly.
 
 #### Schema Reference
 
@@ -409,7 +185,7 @@ status: active|stub|deprecated  # Optional. Default: active (omit for normal ent
 depends_on: []    # Paths relative to game-state/. Required (empty array for leaf nodes).
 affects: []       # Paths relative to game-state/. Required (empty array for leaf nodes).
 
-# Optional on most entity types; required on tensions (see Phase 3.5)
+# Optional on most entity types; required on tensions (see Phase 8c)
 intent:
   summary: "one-line goal"
   rationale: "why this design"
@@ -631,18 +407,61 @@ entities_created:
 source: "docs/rulebook.md"  # or "guided interview" or URL
 ```
 
-### Phase 8: Presentation and Confirmation
+### Phase 8: Review and Correction
 
-Present the results to the user. This is where the Gygax persona shines -- be a collaborator, not a robot.
+This is where the "draft first, correct later" loop pays off. Present the draft, surface what was inferred, and let the user drive corrections.
 
-1. **Summarize what you understood.** Give a 3-5 sentence overview of the game system as you understood it. This is your chance to show the user you actually get their game.
-2. **Show entity counts.** How many stats, resources, mechanics, progression items, entities, and tensions you created.
-3. **Highlight interesting findings.** Did you notice any tensions? Any mechanics that reference resources in interesting ways? Any gaps that might matter? State these as observations, not judgments.
-4. **Call out gaps explicitly.** "I didn't find information about [X] in the source. This might matter for [Y skill] later. Want to fill that in now, or come back to it?"
-5. **Offer next steps.** Based on what you found:
-   - If the game-state feels complete: "You're attuned. Try `/homebrew` to design a new mechanic, or `/augury` to check the math on what exists."
-   - If gaps remain: "Want to fill in [specific gaps] now, or proceed with what we have?"
-   - If you spotted potential issues: "I noticed [observation]. You might want to run `/lore` for a pattern check, or `/augury` on [specific mechanic]."
+#### 8a: Present the Draft
+
+1. **Summarize what you understood.** 3-5 sentences showing you get the game. This is your check — if the summary feels wrong to the user, the game-state is wrong too.
+2. **Show entity counts.** Stats, resources, mechanics, progression, entities, tensions.
+3. **Flag inferred content.** List everything you filled in from tradition defaults: "I used standard [tradition] defaults for: [list]. Correct anything that's off."
+4. **Surface tensions.** List the tensions you identified from the game-state. Don't ask about each one individually — present them as a batch: "I see these tensions: [list]. Sound right? Any missing, or any that aren't real?"
+
+#### 8b: Design Parameters (Auto-Defaulted)
+
+Present the design parameters you defaulted from tradition norms as a table:
+
+> "Design parameters (defaulted from [tradition] norms — override anything that doesn't fit):"
+>
+> | Parameter | Default | Your game |
+> |-----------|---------|-----------|
+> | Session length | [tradition default] | — |
+> | Audience | [tradition default] | — |
+> | Variance | [tradition default] | — |
+> | Lethality | [tradition default] | — |
+> | Prep | [tradition default] | — |
+> | Player count | [tradition default] | — |
+> | Interaction | [tradition default] | — |
+> | Randomness | [tradition default] | — |
+
+The user fills in only what differs. Anything left blank stays at the tradition default (omitted from `index.yaml` — analysis tools resolve defaults at read time).
+
+#### 8c: Intent (Optional)
+
+If tensions were identified, offer (don't require):
+
+> "Want to set design intent on any of these tensions? This helps downstream analysis distinguish deliberate asymmetry from bugs. You can also do this later via `/homebrew --set-intent`."
+
+If the user engages, capture intent using the standard schema:
+
+```yaml
+intent:
+  summary: "one-line goal"
+  rationale: "why this design"
+  set_by: attune
+  set_at: "ISO-8601"
+  non_negotiable: false
+```
+
+If not, move on. Intent can always be added later.
+
+#### 8d: Offer Next Steps
+
+Based on what was built:
+- If the game-state feels complete: "You're attuned. Try `/homebrew` to design a new mechanic, or `/augury` to check the math."
+- If the user corrected things: apply corrections (Phase 9), re-validate, then offer next steps.
+- If you spotted potential issues: "I noticed [observation]. You might want to run `/lore` for a pattern check, or `/augury` on [specific mechanic]."
 
 ### Phase 9: Iterative Refinement (if user continues)
 
@@ -657,7 +476,7 @@ Continue until the user is satisfied or moves on to another skill.
 
 ## Tradition-Specific Guidance
 
-Different TTRPG traditions emphasize different entity types. Adjust your extraction and interview focus accordingly.
+Different traditions emphasize different entity types. This determines what you prioritize during extraction, what you can safely infer, and what the user's draft will look like.
 
 | Tradition | Primary Entities | Secondary Entities | Often Sparse |
 |-----------|-----------------|-------------------|--------------|
@@ -667,9 +486,22 @@ Different TTRPG traditions emphasize different entity types. Adjust your extract
 | osr | mechanics (procedures), entities (monsters, treasure), resources (supply, torches) | stats (minimal) | progression, tensions |
 | cepheus | stats (6 characteristics), mechanics (skill checks, Effect), progression (lifepath/careers) | resources (Endurance as ablative pool), entities (career tables, equipment) | tensions |
 | freeform | mechanics (tokens, prompts), tensions (safety tools as mechanics) | entities (character concepts) | stats, resources, progression |
-| custom | **let the game decide** -- interview to discover which types matter | varies | varies |
+| eurogame | mechanics (actions), resources (economy), entities (components) | progression (engine building), tensions | stats |
+| deckbuilder | mechanics (buy/play/trash), entities (cards), resources (currency) | progression (deck thinning) | stats, tensions |
+| cooperative | mechanics (actions), resources (shared pools), tensions (difficulty curve) | entities (roles), progression (escalation) | stats |
+| autobattler | entities (units), mechanics (combat, synergies), resources (economy) | progression (leveling, items) | stats, tensions |
+| tactics | entities (units), mechanics (combat, positioning), stats (unit attributes) | progression (unlocks), resources (action points) | tensions |
+| ccg | entities (cards), mechanics (play/combat), resources (mana/cost) | progression (collection) | stats, tensions |
+| roguelike | mechanics (run structure), progression (meta-unlocks), entities (items, builds) | resources (health, currency) | stats, tensions |
+| extraction | mechanics (run/extract loop), resources (loot, risk), tensions (risk vs reward) | entities (gear), progression (hideout) | stats |
+| looter | entities (loot, builds), mechanics (combat), progression (power curve) | resources (currencies) | stats, tensions |
+| 4x | mechanics (expand/exploit/exterminate), progression (tech tree), tensions (victory paths) | resources (economy), entities (factions) | stats |
+| social-deduction | entities (roles), mechanics (phases, voting), tensions (information asymmetry) | resources (lives) | stats, progression |
+| idle | mechanics (click/automate loop), progression (prestige), resources (currencies) | tensions (active vs idle) | stats, entities |
+| immersive-sim | mechanics (systemic interactions), entities (abilities, tools), tensions (approach trade-offs) | resources (ammo, upgrades), progression (ability tree) | stats |
+| custom | **let the game decide** -- discover which types matter from the user's answers | varies | varies |
 
-**Custom tradition guidance**: For games that don't fit any tradition, do NOT default to d20 patterns. Ask the user what the core loop of their game is. A journaling RPG's core loop might be "draw prompt → write → reflect." A map-drawing game's core loop might be "place feature → name it → connect it." Build entity types around what the game actually does, not what a traditional TTRPG looks like. It is completely valid for a game to have only 1-2 entity types populated.
+**Custom tradition guidance**: For games that don't fit any tradition, do NOT default to d20 patterns. Build entity types around what the game actually does. A journaling RPG might only have `mechanics/` and `tensions/`. A map-drawing game might only have `mechanics/` and `entities/`. It is completely valid for a game to have only 1-2 entity types populated.
 
 ## Handling Edge Cases
 
