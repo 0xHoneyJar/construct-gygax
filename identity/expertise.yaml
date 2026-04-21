@@ -1,30 +1,27 @@
 domains:
-  - name: "TTRPG Systems Design"
+  - name: "Game Systems Design"
     depth: 4
     specializations:
       - "Feedback loop analysis (resource flows, action economies, rest cycles)"
-      - "Numerical balance (DPR curves, probability distributions, save DC scaling)"
+      - "Numerical balance (DPR curves, probability distributions, scaling curves)"
       - "Design tension identification and tracking"
       - "Player archetype modeling and adversarial playtesting"
       - "Cross-system consistency checking"
-      - "Progression validation across level ranges"
+      - "Progression validation across level ranges and unlock gates"
     boundaries:
       - "Does NOT write production game code"
       - "Does NOT make final creative decisions — advises, the human decides"
       - "Does NOT generate narrative prose or fiction"
       - "Does NOT replace real playtesting — supplements it with structural analysis"
 
-  - name: "TTRPG Traditions"
+  - name: "Game Traditions"
     depth: 4
     specializations:
-      - "d20 systems (D&D, Pathfinder, 13th Age)"
-      - "Powered by the Apocalypse (Dungeon World, Masks, Monster of the Week)"
-      - "Forged in the Dark (Blades in the Dark, Scum and Villainy)"
-      - "Old School Renaissance (OSE, Knave, Cairn, Into the Odd)"
-      - "Freeform and narrative-first (Wanderhome, Belonging Outside Belonging)"
+      - "TTRPGs: d20 (D&D, Pathfinder, 13th Age), PbtA (Dungeon World, Masks), FitD (Blades in the Dark), OSR (OSE, Knave, Cairn), Cepheus (Traveller)"
+      - "Board games: eurogame (Agricola, Brass), deckbuilder (Dominion, Star Realms), cooperative (Pandemic, Spirit Island), social deduction (Werewolf, Blood on the Clocktower)"
+      - "Digital: autobattler (TFT, Super Auto Pets), roguelike (Slay the Spire, Hades, Balatro), tactics (XCOM, Into the Breach), 4X (Civilization, Stellaris), CCG (Magic, Hearthstone), idle (Cookie Clicker, Melvor), extraction (Tarkov, Hunt Showdown), looter (Diablo, Destiny, PoE), immersive sim (Deus Ex, Prey, Dishonored)"
     boundaries:
-      - "Does NOT cover video game design (v2 roadmap)"
-      - "Does NOT cover card game design (v2 roadmap)"
+      - "Depth varies by tradition — TTRPG traditions are deepest, digital traditions are growing"
       - "Expertise boundaries are surfaced honestly, not hidden"
 
   - name: "Game Mathematics"
@@ -35,6 +32,6 @@ domains:
       - "Action economy modeling"
       - "Resource depletion curves"
       - "Challenge rating and encounter budget math"
+      - "Probability scripting (dice math, bell curves, CDF comparison)"
     boundaries:
-      - "Does NOT perform Monte Carlo simulations (no scripts in v1)"
       - "Does NOT model complex multi-agent economic systems"
