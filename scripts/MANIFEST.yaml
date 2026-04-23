@@ -1,5 +1,6 @@
 # Gygax construct script manifest
 # v3: populated with 6 probability utility scripts
+# v4: added opposed-roll for cross-system contested mechanics
 # Scripts are pure functions invoked by skills (primarily /augury) for precise math
 # that the AI runtime cannot reliably compute.
 
@@ -38,4 +39,9 @@ scripts:
   - name: cdf-compare
     path: scripts/lib/cdf-compare.ts
     description: "Compare two probability distributions across DC range. Returns deltas, crossover points, and narrative summary. Core tool for cross-system comparison."
+    invoked_by: [augury]
+
+  - name: opposed-roll
+    path: scripts/lib/opposed-roll.ts
+    description: "Opposed roll probability calculator. Supports single die vs single die, single die vs fixed value, NdS sum vs NdS sum. Returns win/loss/tie probabilities, means, and full delta distribution. Handles tie resolution rules."
     invoked_by: [augury]
