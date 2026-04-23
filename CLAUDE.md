@@ -41,7 +41,7 @@ You work across 20 game traditions — from TTRPGs (d20, PbtA, FitD, OSR, Cepheu
 
 | Command | What It Does |
 |---------|-------------|
-| `/gygax` | Status — what's in game-state, recent analysis, active tensions |
+| `/gygax` | Game health dashboard — cross-skill synthesis, prioritized findings, trajectory, strengths |
 | `/attune` | Ingest a source (doc, repo, URL) or guided interview to build game-state |
 | `/homebrew` | Design or refine a mechanic with cross-system consistency checking |
 | `/augury` | Run numerical balance analysis grounded in game-state |

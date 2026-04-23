@@ -1,20 +1,21 @@
 slug: gygax-status
 name: "Gygax Status"
 description: |
-  Use this skill IF user invokes /gygax OR asks for status, current state, or where they are.
-  Produces artifacts to grimoires/gygax/.
-version: 1.0.0
+  Use this skill IF user invokes /gygax OR asks for status, current state, where they are, or game health.
+  Cross-skill synthesis dashboard — reads all reports and surfaces prioritized findings.
+version: 2.0.0
 
 triggers:
   - "/gygax"
   - "what's the status"
   - "where am I"
   - "game state summary"
+  - "game health"
 
 capabilities:
-  model_tier: haiku
+  model_tier: sonnet
   danger_level: safe
-  effort_hint: small
+  effort_hint: medium
   downgrade_allowed: true
   execution_hint: sequential
   requires:

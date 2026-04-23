@@ -1,21 +1,21 @@
 ---
 name: gygax-status
-description: Display current Gygax construct status and game state overview
-model_tier: haiku
-effort: small
+description: Game health dashboard — cross-skill synthesis, prioritized findings, trajectory tracking
+model_tier: sonnet
+effort: medium
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # Gygax Status
 
-Lightweight status dashboard for the Gygax construct. Shows the current state of the attuned game system at a glance: what exists, what's healthy, and what's been analyzed recently. This is the "where am I?" command -- fast orientation, no analysis, no modifications.
+Health dashboard for the Gygax construct. Shows the current state of the attuned game, synthesizes findings across all analysis skills, surfaces what's working well, and recommends what to do next. This is the "where am I and what matters most?" command.
 
 ## Trigger
 
 `/gygax`
 
-No arguments. Always produces the same dashboard for the current project state.
+No arguments. Always produces the dashboard for the current project state.
 
 ## Workflow
 
@@ -24,160 +24,15 @@ No arguments. Always produces the same dashboard for the current project state.
 1. Check if `grimoires/gygax/game-state/index.yaml` exists.
 2. If it does NOT exist, display a short message and stop:
    ```
-   No game attuned. Run /attune to onboard a TTRPG system.
+   No game attuned. Run /attune to onboard a game system.
    ```
-   Do not proceed further. There is nothing to report.
+   Do not proceed further.
 
-### Step 2: Load Index
+### Step 2: Load Index and Display Identity
 
 1. Read `grimoires/gygax/game-state/index.yaml`.
-2. Extract: `game`, `tradition`, `description`, `last_modified_at`, and `entity_count` (stats, resources, mechanics, progression, entities, tensions).
-
-### Step 3: Display Game Identity
-
-Present the game name, tradition, description, and last modified timestamp. This is the header of the dashboard.
-
-### Step 3.5: Display Design Parameters (v3.1)
-
-Read `design_parameters` from `index.yaml`. If present, display as a compact summary:
-
-```
-Design: session=medium, audience=intermediate, variance=medium, lethality=moderate, prep=light, players=standard, interaction=indirect-competition, randomness=low
-```
-
-For fields not explicitly set, show the tradition default with a `(default)` marker:
-
-```
-Design: session=medium, audience=intermediate, variance=high, lethality=brutal (default), prep=moderate (default), players=standard, interaction=cooperative, randomness=medium (default)
-```
-
-If no `design_parameters` section exists: "Design parameters: not set (tradition defaults apply). Set via `/homebrew --set-intent design-parameters`."
-
-### Step 3.6: Display Graph Health (v3.1)
-
-Read `graph_integrity` from `index.yaml`. Display:
-
-```
-Graph: 24 resolved refs, 2 stubs, 0 orphaned, 0 circular
-```
-
-If stubs exist, list them:
-```
-Stubs: stats/strength.yaml, resources/spell-slots.yaml (enrich via /attune)
-```
-
-If using old `dependency_graph_summary` format, display what's available and note: "Run /attune to upgrade graph tracking."
-
-### Step 4: Display Entity Counts
-
-Show entity counts from the index as a compact summary. Include the total across all types. Example format:
-
-```
-Entities: 24 total (stats: 6, resources: 4, mechanics: 8, progression: 2, entities: 3, tensions: 1)
-```
-
-Omit any entity type with a count of zero to keep it concise. If stub entities exist, note the count separately: `(includes 2 stubs)`.
-
-### Step 5: Display Active Tensions
-
-1. Glob for `grimoires/gygax/game-state/tensions/*.yaml`.
-2. If tension files exist, read each one and extract: `name`, `health`, and `health_notes`.
-3. Display each tension with its health status. Use plain text indicators:
-   - `balanced` -- healthy, working as designed
-   - `a-dominant` or `b-dominant` -- one pole is winning, may need attention
-   - `collapsed` -- tension has broken down, needs intervention
-4. If no tensions exist, display: "No tensions defined."
-
-### Step 6: Display Intent Coverage
-
-1. Load index.yaml, count entities by type.
-2. For each entity file, check for intent field presence.
-3. Calculate coverage:
-   - Tensions should be 100% (required)
-   - Mechanics coverage reflects design investment
-4. Display:
-   ```
-   -- Intent Coverage --
-   N of M entities have intent set (X% coverage)
-     Tensions: 3/3 (100% ✓)
-     Mechanics: 5/12 (42%)
-     Progression: 0/2
-   ```
-5. If coverage is 0% for tensions: warn "Tensions without intent are incomplete — run /homebrew --set-intent to capture"
-6. If no entities exist, skip section silently.
-
-### Step 7: Display Active Scry Branches
-
-1. Glob for `grimoires/gygax/forks/*/delta.md` (exclude `.archived/`).
-2. If fork directories exist, read each `delta.md` first line for the branch summary.
-3. Display each active branch with its summary.
-4. If no active forks, skip this section silently.
-
-### Step 7.5: Display Installed References
-
-1. Glob `grimoires/gygax/references/*/metadata.yaml`.
-2. If references exist, read each metadata.yaml for name, tradition, version.
-3. Display:
-   ```
-   -- References --
-   5e-srd: D&D 5e SRD Core (d20, v5.1)
-   pbta-baseline: Apocalypse World Core (pbta, v2)
-   ```
-4. If no references, skip section silently (don't show "none").
-
-### Step 8: Display Latest Balance Report
-
-1. Glob for `grimoires/gygax/balance-reports/*.md`.
-2. If reports exist, identify the most recent by filename (filenames are date-prefixed: `YYYY-MM-DD-*`).
-3. Read the first 30 lines of the most recent report to extract the title (first `#` heading), date, scope, and the Executive Summary section.
-4. Display: report title, date, and a 1-2 sentence summary drawn from the Executive Summary.
-5. If no balance reports exist, display: "No balance reports yet. Run /augury to analyze."
-
-### Step 9: Display Latest Playtest Report
-
-1. Glob for `grimoires/gygax/playtest-reports/*.md`.
-2. If reports exist, identify the most recent by filename (date-prefixed).
-3. Read the first 30 lines of the most recent report to extract the title, date, and key findings or summary.
-4. Display: report title, date, and a 1-2 sentence summary.
-5. If no playtest reports exist, display: "No playtest reports yet. Run /cabal to simulate play."
-
-### Step 10: Display Latest Lore Report
-
-1. Glob for `grimoires/gygax/lore-reports/*.md`.
-2. If reports exist, identify the most recent by filename (date-prefixed).
-3. Read the first 30 lines for title, date, and summary.
-4. Display: report title, date, and 1-2 sentence summary.
-5. If no lore reports exist, display: "No lore reports yet. Run /lore for heuristic scan."
-
-### Step 11: Display Learned Lore Count
-
-1. Glob `grimoires/gygax/learned-lore/*.yaml` (exclude `.promoted/`).
-2. Count entries; group by category.
-3. Display:
-   ```
-   -- Learned Heuristics --
-   12 patterns captured (mechanics: 5, pacing: 3, resources: 4)
-   Run /lore promote to graduate mature patterns to curated library.
-   ```
-4. If no learned lore, skip section silently.
-
-### Step 12: Display Latest Delve Report
-
-1. Glob `grimoires/gygax/delve-reports/*.md`.
-2. If reports exist, identify the most recent (date-prefixed filename).
-3. Read first 30 lines for title, date, dungeon, summary.
-4. Display: report title, date, 1-2 sentence summary.
-5. If no delve reports, display: "No delve reports yet. Run /delve to analyze dungeons."
-
-### Step 13: Display Loa Context (if available)
-
-1. Check if an active sprint context exists by looking for sprint plan files in `grimoires/loa/` or `.run/sprint-plan-state.json`.
-2. If Loa sprint context is found, display: the active sprint name and any tasks related to the Gygax construct.
-3. If no Loa context is found, skip this section silently. Do not display a "no Loa context" message -- this section only appears when relevant.
-
-## Output Format
-
-The dashboard is displayed directly to the user as a concise, scannable summary. No files are written. The format should resemble:
+2. Extract: `game`, `tradition`, `description`, `last_modified_at`, `entity_count`, `design_parameters`, `graph_integrity`.
+3. Display game identity as the dashboard header:
 
 ```
 == Gygax Status ==
@@ -185,63 +40,296 @@ The dashboard is displayed directly to the user as a concise, scannable summary.
 Game:      [name] ([tradition])
            [description]
 Modified:  [last_modified_at]
-
 Entities:  [total] total ([type]: [count], ...)
-
--- Tensions --
-[name]: [health] -- [brief health_notes excerpt]
-
--- Intent Coverage --
-N of M entities have intent set ([X]% coverage)
-
--- Active Branches --
-[branch-name]: [summary from delta.md]
-
--- References --
-[slug]: [name] ([tradition])
-
--- Learned Heuristics --
-[count] patterns captured
-
--- Latest Balance Report --
-[title] ([date])
-[summary]
-
--- Latest Playtest Report --
-[title] ([date])
-[summary]
-
--- Latest Lore Report --
-[title] ([date])
-[summary]
-
--- Latest Delve Report --
-[title] ([date])
-[summary]
-
--- Active Sprint --
-[sprint name]: [relevant task summary]
+Graph:     [resolved] resolved refs, [stubs] stubs, [orphaned] orphaned, [circular] circular
+Design:    session=[val], audience=[val], variance=[val], ...
 ```
 
-Sections with no data are either omitted entirely (Loa context) or show a one-line suggestion of which skill to run (balance/playtest reports, tensions).
+- Omit entity types with zero count.
+- If stubs exist, note count: `(includes N stubs)`.
+- For design parameters, show `(default)` for fields not explicitly set.
+- If no `design_parameters` section: "Design parameters: not set (tradition defaults apply)."
+
+### Step 3: Collect All Report Findings
+
+This is the core synthesis step. Read findings from all report types.
+
+#### 3a: Augury Reports (Balance)
+
+1. Glob `grimoires/gygax/balance-reports/*.md`.
+2. For each report (up to last 3, most recent first):
+   - Read the report. Extract the **Executive Summary** and **findings table**.
+   - For each finding, capture: `finding_id`, `severity` (Critical/Warning/Info/Healthy), `layer` (resolution/action-economy/resource-economy/progression/pacing/cognitive-load), `description`, `affected_entities` (file paths), and any intent tags (`[INTENT-ALIGNED]`, `[INTENT-CONFLICT]`).
+   - Note `[Healthy]` findings separately — these are strengths.
+
+#### 3b: Cabal Reports (Playtest)
+
+1. Glob `grimoires/gygax/playtest-reports/*.md`.
+2. For each report (up to last 3):
+   - Read the report. Extract the **Experience Divergence Matrix** and **Rules Clarity Issues**.
+   - For each divergence, capture: `beat`, `divergence_severity` (HIGH/MEDIUM/LOW), `archetypes_involved`, `affected_entities`, `description`.
+   - For rules clarity issues, capture: `severity`, `description`, `affected_entities`.
+   - Note archetype-specific **Cool moment** and **Mastery reward** signals — these are strengths.
+
+#### 3c: Lore Reports (Heuristics)
+
+1. Glob `grimoires/gygax/lore-reports/*.md`.
+2. For each report (up to last 3):
+   - Read the report. Extract findings by severity.
+   - For each finding, capture: `heuristic_name`, `severity` (Critical/Warning/Info), `affected_entities`, `tradition_context`, intent tags.
+   - Note clean scans — "No issues detected" is a strength.
+
+#### 3d: Delve Reports (Dungeons)
+
+1. Glob `grimoires/gygax/delve-reports/*.md`.
+2. For each report (up to last 3):
+   - Read the report. Extract the **G.U.A.R.D. scorecard** and any flagged issues.
+   - Capture findings with severity and affected entities.
+
+### Step 4: Synthesize Findings
+
+Cross-reference findings from all skills into a unified priority list.
+
+#### 4a: Group by Entity
+
+Build a map of `entity_path → [findings from all skills]`. An entity flagged by multiple skills is a stronger signal than one flagged by a single skill.
+
+#### 4b: Identify Corroborations
+
+When two or more skills flag the same entity or pattern:
+- Lore says "hoarding incentive" + Augury says "resource never depletes" → corroborated finding about resource economy.
+- Augury says "low variance resolution" + Cabal says "Optimizer: Dead time" → corroborated finding about mechanical flatness.
+- Tag these: `[corroborated: augury + lore]`.
+
+#### 4c: Identify Contradictions
+
+When skills disagree about the same entity:
+- Augury says "balanced" + Cabal says "Optimizer exploits this" → structural balance doesn't match play experience.
+- Augury says "Warning: resource drains fast" + Cabal says "players don't feel pressure" → the math doesn't match the table experience.
+- Tag these: `[contradiction: augury vs cabal]`. These are the most interesting findings — they reveal where theory diverges from practice.
+
+#### 4d: Rank Findings
+
+Score each finding for the priority list:
+
+1. **Severity weight**: Critical = 4, Warning = 3, HIGH divergence = 3, Info = 1
+2. **Cross-skill multiplier**: finding appears in 2+ skills × 1.5, 3+ skills × 2.0
+3. **Contradiction bonus**: +2 (contradictions need designer attention regardless of severity)
+4. **Intent modifier**: `[INTENT-ALIGNED]` findings get severity halved (acknowledged by design), `[INTENT-CONFLICT]` findings get +1 (working against stated goals)
+
+Sort by final score descending. Keep the top 5-7 findings for the dashboard.
+
+### Step 5: Display Game Health
+
+This is the headline section of the dashboard. It goes right after the identity block.
+
+#### 5a: Health Summary (one line)
+
+Based on the finding distribution across all reports:
+
+- **All clear**: No Critical or Warning findings across any skill. "Game health: strong. No critical or warning findings across [N] reports."
+- **Watch items**: No Critical, some Warnings. "Game health: stable. [N] watch items across [skills]."
+- **Needs attention**: At least one Critical. "Game health: [N] critical issues need attention."
+- **No reports yet**: "No analysis reports yet. Run /augury, /cabal, or /lore to start."
+
+#### 5b: Top Findings (prioritized, cross-skill)
+
+Display the top 5-7 findings from Step 4d ranking:
+
+```
+-- Top Findings --
+
+1. [CRITICAL] Resource economy: stamina depletes in 2.5 rounds vs 3-4 round combat
+   augury RE-1 + lore hoarding-incentive [corroborated]
+   → /homebrew game-state/resources/stamina.yaml
+
+2. [WARNING] Experience split: Optimizer excited, Newcomer confused at dose resolution
+   cabal divergence (HIGH) + augury cognitive-load CL-2 [corroborated]
+   → /homebrew game-state/mechanics/dose-resolution.yaml
+
+3. [CONTRADICTION] Healing throughput: augury says balanced, cabal says trivializes combat
+   augury RE-3 (Healthy) vs cabal Optimizer signal (Mastery reward)
+   → /cabal --optimizer --veteran to investigate
+
+4. [WARNING] Linear fighter / quadratic wizard scaling
+   lore d20-scaling-002 [INTENT-CONFLICT]
+   → /augury progression to quantify
+```
+
+Each finding shows: severity, description, source skills, synthesis tag, and a recommended next action.
+
+If no reports exist yet, skip this section.
+
+#### 5c: What's Working (strengths)
+
+Surface positive signals — designers need to know what to protect:
+
+```
+-- Working Well --
+
+- Core resolution: clean probability curve, no dead zones (augury: Healthy)
+- First encounter beat: all archetypes engaged (cabal: no divergence)
+- No catalogued anti-patterns in combat mechanics (lore: clean scan)
+```
+
+Draw from: Augury `[Healthy]` findings, Cabal `Cool moment` and `Mastery reward` signals with no divergence, Lore clean scans. Cap at 3-5 items.
+
+If no positive signals exist in reports, skip this section. If no reports exist, skip.
+
+#### 5d: Trajectory (if multiple reports exist)
+
+If 2+ reports exist for any skill, show the trend:
+
+```
+-- Trajectory --
+
+augury: 3 Critical → 1 Critical (across 2 reports, improved)
+cabal:  2 HIGH divergences → 2 HIGH divergences (persisting)
+lore:   4 findings → 2 findings (improving)
+```
+
+Compare finding counts by severity between earliest and most recent report per skill. Classify as `improving`, `stable`, `worsening`, or `persisting` (specific findings unchanged).
+
+If only one report per skill exists, skip this section.
+
+### Step 6: Display Tensions
+
+1. Glob `grimoires/gygax/game-state/tensions/*.yaml`.
+2. Read each tension: `name`, `health`, `health_notes`.
+3. Display:
+
+```
+-- Tensions --
+[name]: [health] — [brief health_notes]
+```
+
+Health indicators: `balanced`, `a-dominant`, `b-dominant`, `collapsed`.
+
+If no tensions exist: "No tensions defined."
+
+### Step 7: Display Intent Coverage
+
+1. Count entities with `intent` field set vs total.
+2. Display:
+
+```
+-- Intent Coverage --
+N of M entities have intent set (X% coverage)
+  Tensions: 3/3 (100%)
+  Mechanics: 5/12 (42%)
+```
+
+If tensions lack intent: warn "Tensions without intent — run /homebrew --set-intent".
+
+### Step 8: Active Branches and References
+
+#### Scry Branches
+
+1. Glob `grimoires/gygax/forks/*/delta.md` (exclude `.archived/`).
+2. Display each active branch with summary from delta.md first line.
+3. If none, skip silently.
+
+#### Installed References
+
+1. Glob `grimoires/gygax/references/*/metadata.yaml`.
+2. Display name, tradition, version for each.
+3. If none, skip silently.
+
+#### Learned Heuristics
+
+1. Glob `grimoires/gygax/learned-lore/*.yaml` (exclude `.promoted/`).
+2. Display count grouped by category.
+3. If none, skip silently.
+
+### Step 9: Recommended Next Action
+
+Based on the synthesis, suggest the single most impactful thing to do next:
+
+- If Critical findings exist: "/homebrew [most-critical-entity] — this is the highest-priority fix."
+- If contradictions exist: "/cabal [contradiction-entity] — theory and play disagree, need more data."
+- If Warning findings exist but no Critical: "/augury [warning-entity] or /homebrew [warning-entity] — address watch items."
+- If no findings but skills haven't been run: "Run /augury for balance analysis, /lore for pattern check, or /cabal for playtest."
+- If all clear: "Design is in good shape. /scry to experiment with new ideas, or /homebrew to add mechanics."
+
+```
+-- Next Action --
+/homebrew game-state/resources/stamina.yaml — stamina economy is the highest-priority fix (Critical, corroborated by augury + lore)
+```
+
+### Step 10: Display Loa Context (if available)
+
+1. Check for active sprint context in `grimoires/loa/` or `.run/sprint-plan-state.json`.
+2. If found, display active sprint name and Gygax-related tasks.
+3. If not found, skip silently.
+
+## Output Format
+
+The full dashboard, top to bottom:
+
+```
+== Gygax Status ==
+
+Game:      [name] ([tradition])
+           [description]
+Modified:  [last_modified_at]
+Entities:  [total] total ([type]: [count], ...)
+Graph:     [resolved] refs, [stubs] stubs, [orphaned] orphaned, [circular] circular
+Design:    [compact parameter summary]
+
+Game health: [one-line assessment]
+
+-- Top Findings --
+[prioritized, cross-skill, 5-7 items max]
+
+-- Working Well --
+[strengths from reports, 3-5 items max]
+
+-- Trajectory --
+[trend per skill, if multiple reports exist]
+
+-- Tensions --
+[name]: [health]
+
+-- Intent Coverage --
+[coverage summary]
+
+-- Active Branches --
+[branch summaries]
+
+-- References --
+[installed references]
+
+-- Learned Heuristics --
+[count by category]
+
+-- Next Action --
+[single most impactful recommendation]
+
+-- Active Sprint --
+[if Loa context exists]
+```
+
+Sections with no data are omitted silently (except Game health, which always shows even if "no reports yet").
 
 ## Boundaries
 
-- Does NOT modify any game content or artifacts -- strictly read-only
-- Does NOT perform analysis, design work, or balance calculations
+- Does NOT modify any game content or artifacts — strictly read-only
+- Does NOT perform original analysis — synthesizes existing report findings
 - Does NOT ingest new material
-- Does NOT read full report contents -- only extracts summaries from headers and first sections
-- Does NOT edit files in `.claude/` (System Zone)
-- Does NOT write any persistent artifacts -- output is ephemeral, displayed to the user only
-- Keeps execution fast: minimal file reads, no computation, no iteration over large file sets
-- DOES show references, learned lore counts, delve reports, and intent coverage
+- Does NOT write any persistent artifacts — output is ephemeral
+- Does NOT read full report contents beyond what's needed for finding extraction
+- DOES read up to 3 most recent reports per skill for trajectory
+- DOES cross-reference findings across skills
+- DOES surface strengths alongside problems
+- DOES recommend a specific next action
 
 ## Error Handling
 
 | Error | Response |
 |-------|----------|
-| No game-state directory or index.yaml | "No game attuned. Run `/attune` to onboard a TTRPG system." |
+| No game-state directory or index.yaml | "No game attuned. Run `/attune` to onboard a game system." |
 | index.yaml exists but is malformed | Display what can be parsed; note "index.yaml may need regeneration via `/attune`" |
-| Tension files reference missing dependencies | Ignore dependency issues; display tension name and health only |
-| Balance/playtest report file exists but is empty | Skip that section; do not display an empty report summary |
-| Loa state files missing or unreadable | Skip the Loa context section silently |
+| Report files exist but are empty or malformed | Skip that report; do not include in synthesis |
+| No reports exist for any skill | Show identity/entities/tensions; skip synthesis sections; show "No reports yet" health |
+| Tension files reference missing dependencies | Ignore; display tension name and health only |
+| Loa state files missing or unreadable | Skip Loa context silently |

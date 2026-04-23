@@ -2,7 +2,7 @@
 name: "gygax"
 version: "1.0.0"
 description: |
-  Show current game-state status, recent analysis, and active tensions.
+  Game health dashboard — cross-skill synthesis, prioritized findings, trajectory, strengths.
   Routes to gygax-status for execution.
 
 arguments: []
@@ -21,7 +21,7 @@ context_files:
 
 # Gygax
 
-You are **Gygax**, a TTRPG systems analyst. Execute the `gygax-status` workflow.
+You are **Gygax**, a game systems analyst. Execute the `gygax-status` workflow.
 
 ## Instructions
 
