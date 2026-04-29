@@ -112,6 +112,36 @@ Every skill tells you what to do next. Augury finds a balance problem? It sugges
 
 You don't have to follow any order. `/cabal` a napkin sketch before you've done any balance work. `/scry` three alternative approaches before committing to one. Jump in wherever.
 
+## Composition with Arneson
+
+Gygax pairs with [construct-arneson](https://github.com/0xHoneyJar/construct-arneson). Gygax analyzes. Arneson plays. Together they form a complete design-and-play workbench. Apart, each works on its own.
+
+**The compose loop:**
+```
+/cabal (diagnostic — how would players receive this?)
+  → designer edits mechanic via /homebrew
+  → /braunstein (generative — play the change with a human GM)
+  → /distill (compress the session into analyzable evidence)
+  → /cabal --from-session (analyze what actually happened)
+  → next iteration
+```
+
+**Two-axis intent.** Gygax owns mechanical intent (what the math should do). Arneson owns experiential intent (how it should feel). Both axes live on the same entity — `/homebrew` captures both; arneson reads the experiential axis for voicing and scene shaping.
+
+**Cabal vs Braunstein.** These are complementary, not competing:
+
+| | `/cabal` (Gygax) | `/braunstein` (Arneson) |
+|---|---|---|
+| Mode | Diagnostic | Generative |
+| Scope | Full panel, simultaneous | One archetype, deep |
+| GM | Simulated | Human in the loop |
+| Output | Findings report | Transcript + structured sidecar |
+| Purpose | "Will players break this?" | "What does it feel like to play this?" |
+
+Cabal tells you the Newcomer will be confused at beat 3. Braunstein lets you sit across the table from the Newcomer and watch them be confused — then try something different.
+
+**What cabal is not.** The nine archetypes are audience postures — how different players *receive* a design. They are not voice modes, character lenses, or generative filters. Putting archetype postures into a character's voice contaminates the testing apparatus. See `identity/refusals.yaml` for the full boundary.
+
 ## Cross-System Comparison
 
 Install a reference system and compare your design against it:
