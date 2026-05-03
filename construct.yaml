@@ -67,7 +67,19 @@ composition_paths:
     - grimoires/gygax/delve-reports/
     - grimoires/gygax/forks/
     - grimoires/gygax/changelog/
-  reads: []
+  reads:
+    - grimoires/gygax/game-state/    # /augury, /cabal, /scry all ground in current game-state
+    - grimoires/gygax/forks/         # /scry compare reads existing fork branches
+
+# Stream signature (cycle 003 distill 2026-05-03)
+streams:
+  reads:
+    - Intent          # user invocation routes scope (/augury combat, /scry "what if X")
+    - Operator-Model  # game-state index.yaml + entity manifest = the operator's map of the system under analysis
+    - Artifact        # game-state YAML files, rulebooks, repos, source docs ingested via /attune
+  writes:
+    - Verdict         # balance reports (augury), playtest verdicts (cabal), lore-reports, design judgments
+    - Artifact        # game-state files, designs, forks, changelog entries, status dashboards
 
 identity:
   persona: identity/persona.yaml
