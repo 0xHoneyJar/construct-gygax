@@ -23,6 +23,33 @@ Also triggered by natural language:
 
 ## Subcommands
 
+### `/homebrew --apply <repoPath>` (F4 — patch artifact)
+
+Emit proposed changes to a real engine as a **reviewable unified diff**, never applied by Gygax.
+This is the code-grounded F4 capability. It honors the authorship-vs-application line precisely:
+Gygax produces a `git apply`-able diff as a *suggestion*; **you** (or Arneson) apply it.
+
+**Gygax NEVER writes to source and NEVER runs `git apply` itself** (identity/refusals.yaml
+`production_code` clarification). Output is text for review only.
+
+1. Work out the concrete change with the user (which file, old → new content) as usual.
+2. Emit + validate the diff(s). Pipe a JSON spec to the driver:
+   ```bash
+   echo '{"repoPath":"<repoPath>","targets":[
+     {"file":"src/combat/clash.ts","kind":"logic","oldText":"...","newText":"..."}
+   ]}' | npx tsx scripts/lib/codegrounding/homebrew-apply.ts
+   ```
+   - `kind:"data"` (JSON/data tables) → **unrestricted**.
+   - `kind:"logic"` (TS engine code) → **certainty-gated**: the driver computes `traced` from F1's
+     real trace of the repo and **refuses** a logic diff on wiring F1 stayed silent on
+     (prd.md:L203-204). Data patches are never refused on these grounds.
+   - Every emitted diff is validated with `git apply --check` before it is shown (R-8).
+3. Present each diff to the user verbatim and tell them to apply it themselves (`git apply`).
+   Do NOT apply it, do NOT write to the file, do NOT stage it. Application is the human's step.
+
+> Why this isn't a refusal violation: a diff Gygax cannot self-apply is *advice*, not authorship
+> (identity/GYGAX.md). The refusal is about writing to source, which Gygax never does.
+
 ### `/homebrew --set-intent {entity-path}`
 
 Retroactive intent capture for an existing game-state entity. Use this when a mechanic or tension was created before intent capture was in place, or when you want to articulate intent separately from a design session.

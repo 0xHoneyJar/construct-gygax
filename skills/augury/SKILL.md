@@ -27,6 +27,37 @@ Examples:
 - `/augury scaling` -- level/tier progression scaling curves
 - `/augury mechanics/dodge-reaction.yaml` -- targeted analysis of a specific entity
 - `/augury entities/fighter-class.yaml vs entities/wizard-class.yaml` -- comparative analysis
+- `/augury --simulate <repoPath>` -- **F2 code-grounded simulation**: Monte-Carlo the *real* engine through its `gygaxDriver`, in the sandbox (see below)
+
+## F2: Code-Grounded Simulation (`--simulate`)
+
+When invoked with `--simulate <repoPath>`, `/augury` does NOT compute from game-state numbers —
+it **executes the real engine** under Monte Carlo and reports a distribution from the actual code.
+This requires a `gygaxDriver` adapter in the target repo. The flow has a **non-negotiable approval
+gate**: Gygax proposes a scenario, you approve it, and *only then* does anything run.
+
+1. **Propose.** Build a scenario from the engine's real structure (does not execute code):
+   ```bash
+   npx tsx scripts/lib/codegrounding/augury-simulate.ts propose <repoPath>
+   ```
+   - If no `gygaxDriver` is found, this **refuses and prints the exact 4-function contract** to
+     implement. Do NOT fall back to guessing — relay the spec to the user (prd.md:L230-231).
+   - On success it prints a `ScenarioSpec` JSON with `approvedBy` **unset**.
+2. **Approve (the gate).** Show the user the proposed scenario (entry fn, input space, runs, label)
+   and ask: **"Approve / edit?"** Apply any edits to the JSON. Set `approvedBy` to the user's
+   handle **only after they explicitly approve**. NEVER fabricate approval — it guards against
+   silently measuring the wrong thing (prd.md:L187-189).
+3. **Run.** Pipe the approved spec to the runner; it executes in the Sprint-1 sandbox
+   (network-denied, wall-clock + memory capped) and refuses if `approvedBy` is unset:
+   ```bash
+   echo '<approved-spec-json>' | npx tsx scripts/lib/codegrounding/augury-simulate.ts run <repoPath>
+   ```
+   It writes a labeled `SimDistribution` report to `grimoires/gygax/balance-reports/` and prints
+   the stats. The distribution is **labeled with the approved scenario** — what you approved is
+   exactly what was measured.
+
+> Inputs are constructed **through the driver contract**, never by guessing function signatures
+> (prd.md:L190). No LLM is in the per-step resolution loop — it is mechanical in the sandbox.
 
 ## Analytical Layers (v3.1)
 
