@@ -55,6 +55,7 @@ Examine the user's invocation to determine the input mode.
 | `--reference {name}` flag | **Reference Installation** | Install a pre-attuned bundled reference system — skip to Phase 1.5, then stop |
 | File path to markdown/text | **Document Ingestion** | Read the file, extract game content, then interview to fill gaps |
 | Directory path | **Repo Ingestion** | Glob for relevant files (.md, .txt, .yaml), read them, extract, interview to fill gaps |
+| Directory path containing a TS/JS game engine (`.ts`/`.tsx` source, or a `gygax.driver.ts`) | **Code-Level Drift (F1)** | Static-analyze the engine + reconcile against existing game-state; report cited drift. See Phase 1.6 |
 | URL | **URL Ingestion** | Fetch the URL content with WebFetch, extract, interview to fill gaps |
 | No argument provided | **Guided Interview** | Build game-state entirely through conversation |
 | Existing game-state + new source | **Additive Ingestion** | Merge new content into existing game-state without destroying what exists |
@@ -79,6 +80,40 @@ This is a SHORT workflow. When the user invokes `/attune --reference {name}`, do
 7. **Write changelog entry** to `grimoires/gygax/changelog/` using the standard Phase 7 format, with `action: created` and `source: reference-bundle`.
 
 **Do not proceed to Phase 2 or beyond.** Reference installation is complete after step 7.
+
+### Phase 1.6: Code-Level Drift Mode (F1 — code-grounded /attune)
+
+Engage this mode when the target directory is a **code engine** (TypeScript/JavaScript source,
+or a `gygax.driver.ts`), not just prose/data. This is the code-grounded F1 capability: ground
+analysis in the *real* engine, reconciling it against the hand-authored game-state model.
+
+**This mode is additive and certainty-gated. It NEVER overwrites game-state silently, and it
+NEVER asserts a structural relationship it cannot cite.** The human decides which side leads.
+
+1. **Confirm a repo is present.** If there is no code engine (tabletop / prose / no-repo), do
+   NOT use this mode — fall back to the standard ingestion/interview modes above. The presence
+   of a code engine is what distinguishes this path (graceful fallback, prd.md:L101).
+2. **Run the F1 pipeline** (does not execute engine code — pure static read):
+   ```bash
+   npx tsx scripts/lib/codegrounding/attune-codelevel.ts <repoPath> grimoires/gygax/game-state
+   ```
+   This static-analyzes the engine (literals + certain-only call edges), reconciles against
+   game-state, and writes a cited Markdown **Drift Report** to
+   `grimoires/gygax/balance-reports/drift-<repo>-<commit>.md`.
+3. **Read the report back and present it.** Walk the three sections with the user:
+   - **Numeric Drift** — each row shows code value vs game-state value with a `file:line` source.
+   - **Structural Drift** — each traced loop the game-state model omits, with its citation.
+   - **Silent On** — wiring the analyzer could see but would NOT assert (reactive stores,
+     dynamic dispatch). Surface this honestly: it is what Gygax does *not* know, by design.
+4. **Adjudicate, do not auto-apply.** For each delta, ask which side leads (code or intent).
+   Only update `game-state/` for deltas where the human chooses **code-leads**. Design intent
+   may legitimately lead the code — never overwrite it without the human's call (prd.md:L176).
+5. **Stance:** quiet on uncertain structure, **loud on clear defects.** If a high-confidence
+   imbalance is evident in the numbers, say so plainly — certainty gating applies to
+   loop-*existence* claims, not to flagging an obvious problem (prd.md:L180-181).
+
+> If the engine needs execution-based analysis instead (distributions, not just structure),
+> that is `/augury --simulate` (F2), which requires a `gygaxDriver` adapter.
 
 ### Phase 2: Source Ingestion (if source provided)
 

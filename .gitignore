@@ -14,3 +14,6 @@ grimoires/loa/
 
 # Obsidian workspace (developer-local)
 .obsidian/
+
+# Node dependencies (typescript + tsx for code-grounding libs, cycle-001)
+node_modules/

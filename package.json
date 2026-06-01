@@ -1,0 +1,15 @@
+{
+  "name": "construct-gygax",
+  "version": "4.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Gygax construct — game systems analyst skill-pack; code-grounded analysis libs under scripts/lib/codegrounding/",
+  "scripts": {
+    "test:codegrounding": "for f in scripts/lib/codegrounding/*.test.ts; do tsx \"$f\" || exit 1; done",
+    "test:evals": "bash evals/harness.sh --structural"
+  },
+  "devDependencies": {
+    "tsx": "4.19.2",
+    "typescript": "5.4.5"
+  }
+}
