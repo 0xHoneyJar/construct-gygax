@@ -1,0 +1,135 @@
+---
+title: Designer Intent
+description: How Gygax distinguishes deliberate asymmetry from a bug.
+---
+
+# Designer Intent
+
+Some asymmetries are bugs. Others are the whole point.
+
+Gygax can't tell the difference without you. **Designer intent** is the first-class field on entities that lets analysis distinguish "this is unusual" from "this is deliberate."
+
+## The Problem
+
+Augury runs the math on a tension and finds a 66.7% asymmetry between the two poles. Is that:
+
+- A balance bug?
+- The whole point of the design?
+
+Without intent, augury must call it a Warning. With intent, it can call it an Observation ("working as designed per intent") and stop the false alarm.
+
+## The Two Axes
+
+Since v3, intent is **two-axis**: mechanical and experiential.
+
+| Axis | Owner | Purpose |
+|------|-------|---------|
+| `mechanical_intent` | Gygax | What the math should do |
+| `experiential_intent` | Companion constructs (Arneson) | How it should feel |
+
+Both live on the same entity. Gygax captures both. Companion constructs read the experiential axis for voicing and scene shaping.
+
+```yaml
+mechanical_intent:
+  summary: "one-line goal — what the math should do"
+  rationale: "why this design"
+  severity: moderate          # minor / moderate / major / lethal
+  failure_mode: complication_not_lethality
+  set_by: homebrew
+  set_at: "ISO-8601"
+  non_negotiable: false
+
+experiential_intent:          # optional
+  tone: uncanny               # desperate / heroic / tragic / absurd / mundane / uncanny / tender / cruel / comic
+  pacing: languid             # rushed / steady / languid / punctuated
+  stakes: communal            # personal / communal / cosmic / professional / trivial
+  register: intimate          # formal / colloquial / archaic / technical / mythic / intimate
+  notes: "free-text shaping context for companion constructs"
+```
+
+## Setting Intent
+
+### During Design
+
+`/homebrew` prompts for intent on:
+
+- **Tensions being created** — required. A tension without intent is incomplete.
+- **High-impact mechanics** — encouraged. Anything that changes resource flow, scales across levels, or affects 3+ entities.
+- **Modifications to entities with existing intent** — asks "preserve or shift?"
+
+### Retroactively
+
+```
+/homebrew --set-intent {entity-path}
+```
+
+Pure intent capture — no implementation fields are touched. Use when an entity was created before intent capture was in place.
+
+### Game-Level Parameters
+
+Design parameters in `index.yaml` shape every analysis. Set them via:
+
+```
+/homebrew --set-intent design-parameters
+```
+
+See [Game-State](/concepts/game-state) for the parameter list.
+
+## How Intent Affects Findings
+
+Every analysis skill reads intent before classifying findings. The rules are uniform across `/augury`, `/cabal`, `/lore`, `/scry`, and `/delve`:
+
+| Finding Severity | Intent Aligned | Intent Conflict |
+|------------------|----------------|-----------------|
+| **Critical** | Stays Critical | Stays Critical |
+| **Warning** | Downgrades to Observation | Stays Warning, tagged `[INTENT-CONFLICT]` |
+| **Info** | Stays Info, tagged `[INTENT-ALIGNED]` | Stays Info, tagged `[INTENT-CONFLICT]` |
+
+**Math cannot be intentionally broken.** A mechanic that produces DPR of 0, infinite TTK, or a resource that depletes before first use is broken regardless of intent. Critical findings never suppress.
+
+## Non-Negotiable Intent
+
+```yaml
+mechanical_intent:
+  non_negotiable: true
+```
+
+When `non_negotiable: true`, Warning findings that conflict with the intent are **suppressed from main findings** and moved to a "Suppressed by Non-Negotiable Intent" appendix in the report. They remain visible for transparency, but they don't clutter the actionable findings list.
+
+Critical findings still never suppress. Non-negotiable doesn't override math.
+
+Default is `false`. Only set `true` on explicit designer confirmation.
+
+## Experience Signals Don't Suppress
+
+Cabal's experience signals (Confusion, Excitement, Dead time, Cognitive overload, …) are **never** suppressed by intent. If the Newcomer is confused, that's a real UX problem regardless of whether the confusion-causing mechanic is intentional. Intent changes finding severity, not experience signal presence.
+
+Experience divergence findings (where archetypes have radically different experiences of the same beat) are also never suppressed. A design that serves the Optimizer while drowning the Newcomer is a real fracture in the design, whether intentional or not.
+
+## Worked Example
+
+Take a journaling RPG with a tension between "instinct" and "craft." The designer's intent:
+
+```yaml
+intent:
+  summary: "The inversion IS the game."
+  rationale: "Freetekno succeeding through craft is the core dramatic tension — friction between identity and success method generates character moments on every roll."
+  non_negotiable: true
+```
+
+When augury sees the 66.7% mechanical asymmetry between the poles, it now reports:
+
+> **R-3** Observation `[INTENT-ALIGNED]`: 66.7% asymmetry between Instinct and Craft poles is working as designed per `tensions/instinct-vs-craft.yaml`. (Originally Warning, downgraded per intent.)
+
+Without intent, this would have been a Warning that the designer would have to dismiss every time it ran.
+
+## Backwards Compatibility
+
+Entities with the legacy single-axis `intent:` block (summary + rationale + non_negotiable) are treated as `mechanical_intent` with no `experiential_intent`. The old shape continues to work; the new shape adds the experiential axis alongside it. No migration required.
+
+## See Also
+
+- [/homebrew](/commands/homebrew) — set, modify, and retroactively capture intent
+- [/augury](/commands/augury) — how intent affects balance findings
+- [/cabal](/commands/cabal) — how intent affects playtest findings (and what it doesn't affect)
+- [Refusals](/identity/refusals) — why Gygax refuses to make creative decisions itself

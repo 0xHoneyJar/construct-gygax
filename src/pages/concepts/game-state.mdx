@@ -1,0 +1,155 @@
+---
+title: Game-State
+description: The structured YAML representation of your game. Every other skill reads from it.
+---
+
+# Game-State
+
+The structured YAML representation of your game. Every Gygax skill except `/attune` reads from it; none can function without it.
+
+Game-state lives at `grimoires/gygax/game-state/` and is organized into six entity types, plus an index that ties them together.
+
+```
+grimoires/gygax/game-state/
+  stats/            # Attributes, ability scores, derived values
+  resources/        # Depletable pools (HP, stamina, supply, stress)
+  mechanics/        # Actions, reactions, conditions, triggers
+  progression/      # Levels, advances, gates, feature unlocks
+  entities/         # Classes, monsters, items, spells, dungeons
+  tensions/         # Named design-tension pairs
+  index.yaml        # Entity manifest, graph integrity, design parameters
+```
+
+## The Six Entity Types
+
+| Type | Purpose | Type-Specific Fields |
+|------|---------|---------------------|
+| `stats` | Attributes that define entities numerically | `range` (min/max/typical), `modifier_formula`, `used_by` |
+| `resources` | Pools that deplete and recover | `pool`, `recovery`, `depletion_consequence`, `pressure_rating` |
+| `mechanics` | How outcomes are resolved | `trigger`, `cost`, `resolution`, `interactions` |
+| `progression` | Scaling and feature distribution | `progression_table` (keyed by level), `scaling_notes` |
+| `entities` | The things in the game | `subtype` (monster/class/item/spell/dungeon/…), type-specific data |
+| `tensions` | Push-pull design dynamics | `poles` (a + b), `health`, `health_notes` |
+
+## Common Fields (All Entities)
+
+```yaml
+id: unique-kebab-case-id
+name: "Human Readable Name"
+type: stats|resources|mechanics|progression|entities|tensions
+description: "What this is and what it does in the game"
+tradition: d20|pbta|fitd|osr|cepheus|freeform|custom|...
+tags: []
+
+depends_on: []    # Paths relative to game-state/. Empty array for leaf nodes.
+affects: []       # Paths relative to game-state/. Empty array for leaf nodes.
+
+intent:           # Optional on most types; required on tensions
+  summary: "one-line goal"
+  rationale: "why this design"
+  set_by: attune|homebrew|designer
+  set_at: "ISO-8601"
+  non_negotiable: false
+
+status: active|stub|deprecated  # Optional. Default: active.
+created_by: attune|homebrew
+created_at: "ISO-8601"
+last_modified_by: attune|homebrew
+last_modified_at: "ISO-8601"
+```
+
+See [Designer Intent](/concepts/designer-intent) for the two-axis intent shape used since v3.
+
+## The Index
+
+`game-state/index.yaml` is the manifest. Every skill reads it first.
+
+```yaml
+game: "Game Name"
+tradition: d20
+description: "Brief description"
+created_at: "ISO-8601"
+last_modified_at: "ISO-8601"
+
+design_parameters:
+  target_session_length: short|medium|long|campaign
+  target_audience: newcomer|intermediate|enthusiast|mastery
+  target_variance: low|medium|high
+  target_lethality: gentle|moderate|brutal
+  target_prep: zero-prep|light|moderate|heavy
+  target_player_count: solo|small|standard|large
+  target_interaction: direct-conflict|indirect-competition|cooperative|solo
+  target_randomness: none|low|medium|high
+
+entity_count:
+  stats: 6
+  resources: 3
+  mechanics: 12
+  # …
+
+files:
+  - path: stats/strength.yaml
+    id: strength
+    depends_on: []
+    affects: [mechanics/melee-attack.yaml]
+  # … every file listed
+
+graph_integrity:
+  resolved_references: 47
+  stub_count: 2
+  stubs: [mechanics/grapple.yaml, entities/wraith.yaml]
+  orphaned: []
+  circular: []
+  most_depended_on:
+    - path: stats/strength.yaml
+      dependents: 4
+```
+
+## The Dependency Graph
+
+Every entity declares two arrays:
+
+- `depends_on` — what this entity needs to exist
+- `affects` — what this entity changes
+
+The relationship is bidirectional: if stat **A** is used by mechanic **B**, then **A.affects** lists **B** and **B.depends_on** lists **A**. Asymmetric edges are a warning, not an error — but `/attune` and `/homebrew` validate and repair them.
+
+The graph is what lets [`/homebrew`](/commands/homebrew) traverse 2 hops from a proposed change to find every entity that could be affected. It's what lets [`/augury`](/commands/augury) scope analysis without loading the entire game-state. It's what lets [`/scry`](/commands/scry) know which entities to recompute when a fork mutates one value.
+
+## Design Parameters
+
+Design parameters in `index.yaml` shape how every analysis calibrates its thresholds.
+
+A `target_audience: newcomer` game lowers the cognitive-load threshold (fewer entities and simpler interactions before flagging). A `target_lethality: brutal` game raises acceptable resource depletion rates. A `target_randomness: none` game flags hidden state as a mismatch (deterministic games expect perfect information).
+
+When a parameter is omitted, the tradition default applies at analysis time. See [`/attune`](/commands/attune) for the full defaults table across all 20 traditions.
+
+## Stubs
+
+When `/attune` or `/homebrew` encounters a dependency that doesn't resolve to a real entity, it creates a **stub** rather than breaking the graph:
+
+```yaml
+id: grapple
+name: "Grapple"
+type: mechanics
+status: stub
+description: "[STUB] Inferred from athletics-check dependency. Awaiting enrichment."
+depends_on: []
+affects: []
+created_by: attune-inferred
+```
+
+Stubs satisfy graph references so analysis can proceed. They're listed in `graph_integrity.stubs` and surfaced in `/gygax` status. Run `/attune` again with more source material to enrich them.
+
+## What Game-State Is Not
+
+- **Not a rulebook.** Game-state is the analytical model, not the document a player reads. Rules text lives in the user's source files.
+- **Not a database.** YAML is the format because human-authored, human-reviewable diffs matter more than query speed.
+- **Not exhaustive.** A typical TTRPG has fewer than 30 entity files. `/attune` combines minor elements into broader entities rather than creating one file per spell or monster.
+
+## See Also
+
+- [The Grimoire](/concepts/grimoire) — what each directory under `grimoires/gygax/` is for
+- [Designer Intent](/concepts/designer-intent) — the two-axis intent schema
+- [/attune](/commands/attune) — how game-state gets built
+- [/homebrew](/commands/homebrew) — how game-state gets modified

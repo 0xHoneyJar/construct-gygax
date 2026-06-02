@@ -1,0 +1,219 @@
+---
+title: /lore
+description: Surface curated and learned design heuristics, patterns, and anti-patterns.
+---
+
+# /lore
+
+Pattern-match the game-state against curated tradition-specific heuristic libraries plus learned heuristics from your own game. Tell you what is wrong AND why it matters historically.
+
+> These are not suggestions. They are distilled failures and successes from decades of published tabletop and digital game design. When Lore flags something, the pattern has a track record. You may override the wisdom, but you should know the history first.
+
+**Skill:** `lore` · **Read-only against game-state · Writes to:** `lore-reports/`, `learned-lore/`
+
+## Trigger
+
+```
+/lore                                  # full scan
+/lore combat                           # combat heuristics only
+/lore resources                        # resource economy
+/lore progression                      # advancement and scaling
+/lore pacing                           # pacing and tempo
+/lore social                           # social mechanics
+/lore mechanics/dodge-reaction.yaml    # entity-scoped
+```
+
+## Subcommand
+
+```
+/lore promote {pattern-id} --target {tradition}
+```
+
+Promotes a learned heuristic to the curated library. Manual — Gygax never auto-promotes.
+
+## Curated Heuristic Libraries
+
+| Tradition | Library File | Examples |
+|-----------|-------------|----------|
+| d20 | `skills/lore/resources/d20.yaml` | Linear fighter / quadratic wizard, MAD dependency, bounded accuracy violations |
+| PbtA | `skills/lore/resources/pbta.yaml` | Move trigger overlap, missing miss consequences, playbook overshadowing |
+| FitD | `skills/lore/resources/fitd.yaml` | Stress economy mismatch, position/effect inflation, downtime starvation |
+| OSR | `skills/lore/resources/osr.yaml` | Combat-as-war vs sport, information-as-treasure, weight-of-choice |
+| Cepheus | `skills/lore/resources/cepheus.yaml` | Lifepath survival curves, skill list redundancy, career path balance |
+| Eurogame | `skills/lore/resources/eurogame.yaml` | Engine inflation, win-condition imbalance, leader sniping |
+| Deckbuilder | `skills/lore/resources/deckbuilder.yaml` | Dead draws, deck thinning friction, kingmaker effects |
+| (and 13 more) | | |
+
+460+ heuristics across 20 traditions. Each heuristic has:
+
+```yaml
+id: pattern-id
+name: "Pattern Name"
+category: math|progression|resources|mechanics|pacing|social
+description: "What the anti-pattern is"
+detection: "How to find it in game-state"
+severity: critical|warning|info
+tradition_specific: true|false
+```
+
+**Tradition-specific** heuristics fire only when the matching tradition is set. **Cross-tradition** heuristics (`tradition_specific: false`) fire everywhere — good design knowledge is not tradition-locked.
+
+## Workflow
+
+### 1. Load Game-State and Tradition
+
+Reads `index.yaml`. Identifies primary tradition. For `custom`, reads the full game-state to identify which established traditions it borrows from most heavily — loads heuristics for all applicable.
+
+### 2. Load Heuristic Resource Files
+
+Based on tradition(s) identified, loads the YAML libraries. For `freeform`, loads PbtA (closest applicable) and notes the adaptation. For `custom`, loads all libraries whose heuristics are relevant.
+
+### 3. Load Relevant Game-State Entities
+
+For a full scan: all entities. For a scoped scan: only entities matching the scope. For an entity-targeted scan: the named entity plus its `depends_on` / `affects` graph.
+
+### 4. Pattern-Match
+
+For each heuristic:
+
+| Match Class | Behavior |
+|-------------|----------|
+| **Match** | Game-state clearly exhibits this pattern. Provide specific entity references. |
+| **Partial** | Some indicators but not all. Note what's present and what's ambiguous. |
+| **No match** | Skip silently — do not report clean results for every heuristic. |
+| **Insufficient data** | Game-state lacks entities needed to evaluate. Note only if significant. |
+
+After matching, check each matched entity for intent:
+
+- Match + `mechanical_intent` acknowledges the pattern → `[INTENT-ALIGNED]`
+- Match + intent conflicts → `[INTENT-CONFLICT]`
+
+### 4.5 — Load Learned Heuristics
+
+In addition to curated, loads `grimoires/gygax/learned-lore/*.yaml`. Filter by `applicable_traditions` match or `tradition_specific: false`.
+
+| Confidence | Presentation |
+|------------|--------------|
+| `low` | Appendix only, not main findings |
+| `medium` | Standard finding with "Learned pattern — may not apply universally" caveat |
+| `high` | Standard finding |
+
+Learned matches tagged `[LEARNED]` in the report.
+
+### 5. Present Findings Organized by Severity
+
+```
+## Lore Scan: [Game Name] ([Tradition])
+Scope: [full | category | entity path]
+Heuristics evaluated: [N] from [tradition file(s)]
+Matches found: [N]
+
+### Critical
+
+**[Heuristic Name]** (category: [category])
+Pattern: [from heuristic description]
+Found in: [specific entity paths]
+Analysis: [why this matters for THIS game — concrete, references entity values]
+Consider: [a prompt for reflection — not a prescription]
+
+### Warning
+### Info
+### No Issues Detected (if scan is clean — say so explicitly, don't fabricate)
+```
+
+**Presentation rules:**
+
+1. Critical first, always
+2. Be specific — *"Healing surge recovers 1d10+5 on a short rest but expected incoming DPR is 15/round for 4 rounds — heal does not create meaningful recovery tension"* > *"Healing might be too low"*
+3. Cite the game-state — every finding references entity file paths
+4. Explain the history — *"This is the linear fighter / quadratic wizard problem identified in 3e-era d20 design"*
+5. **Do not prescribe fixes.** Lore identifies patterns. For fixes, direct to `/homebrew`.
+6. Partial matches get honesty
+7. Cross-tradition findings are welcome
+8. Do not pad — a clean scan is valid
+
+### Candidate Capture
+
+If lore notices a structural pattern that doesn't match curated heuristics but might generalize:
+
+> **[CANDIDATE: pattern-title]**
+> I noticed [pattern] that doesn't match my curated heuristics but might generalize to other [tradition] games. Capture as learned heuristic?
+
+Capturing writes to `grimoires/gygax/learned-lore/{date}-{pattern-id}.yaml` with full provenance.
+
+### 6. Cross-Skill Chaining
+
+Every report ends with next steps tied to findings:
+
+- Critical findings: `/homebrew {entity}` + `/augury {entity}`
+- Warnings: `/cabal {entity}` to validate
+- Info: monitor during next `/cabal` run
+- Clean scan: `/augury` and `/cabal` are next best steps
+
+## Tradition Scan Priority
+
+Different traditions emphasize different categories:
+
+| Tradition | High-Priority Categories | Lower-Priority |
+|-----------|------------------------|---------------|
+| d20 | math, progression, resources, mechanics | social, pacing |
+| PbtA | mechanics, pacing, social | math, progression |
+| FitD | resources, pacing, mechanics | math, progression |
+| OSR | resources, pacing, mechanics | progression, social |
+
+Low-priority categories are still scanned — just with less analytical depth on findings.
+
+## Custom / Novel Games
+
+For `custom` and `freeform`, lore loads all applicable libraries and falls back to structural analysis when nothing matches. For truly novel games (journaling, map-drawing, lyric), most heuristics won't apply — that's expected.
+
+> "This game is novel enough that most tradition-specific heuristics don't apply. Here's what I can offer from structural analysis instead."
+
+Universal patterns considered: decision space quality, loop completeness, tension health, pacing.
+
+## Design Parameter Sensitivity
+
+| Parameter | Effect |
+|-----------|--------|
+| `target_audience: newcomer` | Lower threshold for complexity-related anti-patterns |
+| `target_audience: mastery` | Raise threshold (expert audience rewards depth) |
+| `target_session_length: short` | Flag setup-heavy patterns more aggressively |
+| `target_interaction: cooperative` | Load cooperative-specific heuristics (alpha player, quarterbacking) regardless of tradition |
+| `target_randomness: none` | Suppress randomness heuristics, emphasize decision-quality patterns |
+
+## Promotion
+
+```
+/lore promote {pattern-id} --target {tradition}
+```
+
+1. Reads `grimoires/gygax/learned-lore/{date}-{pattern-id}.yaml`
+2. Appends to `skills/lore/resources/{tradition}.yaml` with full provenance (`source: promoted-from-learned`, `source_game`, `promoted_at`)
+3. Archives the source to `grimoires/gygax/learned-lore/.promoted/`
+4. Writes changelog entry
+
+Promotion is manual. The user decides when a learned pattern is proven enough to become curated wisdom.
+
+## Boundaries
+
+- **Does not** modify game-state — read-only
+- **Does not** perform quantitative balance analysis — use [`/augury`](/commands/augury)
+- **Does not** simulate play — use [`/cabal`](/commands/cabal)
+- **Does not** ingest source material — use [`/attune`](/commands/attune)
+- **Does not** prescribe fixes — identifies patterns and explains why they matter
+- **Does** load and apply curated heuristic libraries
+- **Does** cross-reference heuristics across traditions
+- **Does** adapt scan depth based on tradition
+- **Does** report clean scans honestly (no finding fabrication)
+- **Does** read per-game learned heuristics alongside curated ones
+- **Does** flag non-matching structural patterns as learned-lore candidates
+- **Does not** auto-promote (requires explicit `/lore promote`)
+
+## Output
+
+| Artifact | Path |
+|----------|------|
+| Lore report | `grimoires/gygax/lore-reports/YYYY-MM-DD-scope-description.md` |
+| Inline display | Same content, presented in conversation |
+| Learned heuristic | `grimoires/gygax/learned-lore/{date}-{pattern-id}.yaml` (on capture) |
+| Promoted heuristic | `skills/lore/resources/{tradition}.yaml` (on promote) |

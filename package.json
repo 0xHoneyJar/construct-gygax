@@ -5,11 +5,19 @@
   "type": "module",
   "description": "Gygax construct — game systems analyst skill-pack; code-grounded analysis libs under scripts/lib/codegrounding/",
   "scripts": {
+    "dev": "vocs dev",
+    "build": "vocs build",
+    "preview": "vocs preview",
     "test:codegrounding": "for f in scripts/lib/codegrounding/*.test.ts; do tsx \"$f\" || exit 1; done",
     "test:evals": "bash evals/harness.sh --structural"
   },
   "devDependencies": {
     "tsx": "4.19.2",
     "typescript": "5.4.5"
+  },
+  "dependencies": {
+    "vite": "^8.0.16",
+    "vocs": "^2.0.10",
+    "waku": "^1.0.0-beta.1"
   }
 }

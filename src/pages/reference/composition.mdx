@@ -1,0 +1,158 @@
+---
+title: Composition
+description: How Gygax composes with Arneson and the Loa ecosystem.
+---
+
+# Composition
+
+Gygax doesn't work alone. It pairs with [Arneson](https://github.com/0xHoneyJar/construct-arneson) for fiction generation and live playtesting, and sits in the broader [Loa](https://github.com/0xHoneyJar/loa) ecosystem alongside `/plan`, `/build`, `/review`, and `/ship`.
+
+The composition principle is structural:
+
+> The grimoire path **is** the interface. Constructs writing to the same path compose automatically.
+
+No API. No glue code. Just shared paths and typed streams.
+
+## With Arneson
+
+Gygax analyzes. Arneson plays. Together they form a complete design-and-play workbench. Apart, each works on its own.
+
+### The Symmetry
+
+| Gygax | Arneson |
+|-------|---------|
+| Refuses to generate fiction | Refuses to analyze |
+| Mechanical intent | Experiential intent |
+| `/cabal` — diagnostic, full panel, simulated GM | `/braunstein` — generative, one archetype, human GM |
+| Findings report | Transcript + structured sidecar |
+| *"Will players break this?"* | *"What does it feel like to play this?"* |
+
+> Gygax refuses to generate so it can be trusted to analyze.
+> Arneson refuses to analyze so it can be trusted to embody.
+> The symmetry is the architecture.
+
+### Two-Axis Intent
+
+Both axes of [designer intent](/concepts/designer-intent) live on the same entity:
+
+- **`mechanical_intent`** — what the math should do. Owned by Gygax. Read by `/augury`, `/cabal`, `/lore`, `/scry`, `/delve` for finding classification.
+- **`experiential_intent`** — how the mechanic should feel (tone, pacing, stakes, register). Owned by Arneson. Read for voicing and scene shaping.
+
+`/homebrew` captures both. Each construct reads only its own axis for analysis or generation, but neither construct claims authority over the other's domain.
+
+### The Compose Loop
+
+```
+/cabal (diagnostic — how would players receive this?)
+  → designer edits mechanic via /homebrew
+  → /braunstein (generative — play the change with a human GM)
+  → /distill (compress the session into analyzable evidence)
+  → /cabal --from-session (analyze what actually happened)
+  → next iteration
+```
+
+### Cabal vs Braunstein
+
+| | `/cabal` (Gygax) | `/braunstein` (Arneson) |
+|---|---|---|
+| Mode | Diagnostic | Generative |
+| Scope | Full panel, simultaneous | One archetype, deep |
+| GM | Simulated | Human in the loop |
+| Output | Findings report | Transcript + structured sidecar |
+| Purpose | "Will players break this?" | "What does it feel like to play this?" |
+
+Cabal tells you the Newcomer will be confused at beat 3. Braunstein lets you sit across the table from the Newcomer and watch them be confused — then try something different.
+
+### What Cabal Is Not
+
+The nine [archetypes](/reference/archetypes) are audience postures — how different players *receive* a design. They are **not** voice modes, character lenses, or generative filters.
+
+Putting archetype postures into a character's voice contaminates the testing apparatus. If the archetypes ARE the character's voice, they can't independently test the character's reception. See [the `diagnostic_as_generative` refusal](/identity/refusals#6-diagnostic-as-generative).
+
+For generative work — playing the game, voicing the scene — use Arneson.
+
+## With Loa
+
+Gygax declares itself as a Loa construct in `construct.yaml`:
+
+```yaml
+schema_version: 3
+
+name: "Gygax"
+slug: gygax
+version: 4.0.0
+type: skill-pack
+visibility: public
+
+domain:
+  - design
+```
+
+### Read/Write Composition Paths
+
+```yaml
+composition_paths:
+  writes:
+    - grimoires/gygax/game-state/
+    - grimoires/gygax/references/
+    - grimoires/gygax/learned-lore/
+    - grimoires/gygax/designs/
+    - grimoires/gygax/balance-reports/
+    - grimoires/gygax/playtest-reports/
+    - grimoires/gygax/lore-reports/
+    - grimoires/gygax/delve-reports/
+    - grimoires/gygax/forks/
+    - grimoires/gygax/changelog/
+  reads:
+    - grimoires/gygax/game-state/
+    - grimoires/gygax/forks/
+```
+
+Any construct that reads or writes these paths composes automatically. No imports, no shared types, no protocol negotiation.
+
+### Stream Signature
+
+Per Loa conventions, Gygax's typed streams:
+
+| Stream | R/W | Examples |
+|--------|-----|----------|
+| **Intent** | reads | User invocation routes scope (`/augury combat`, `/scry "what if X"`) |
+| **Operator-Model** | reads | `index.yaml` + entity manifest = the operator's map of the system under analysis |
+| **Artifact** | reads + writes | Game-state YAML, rulebooks, repos, source docs; design docs and reports |
+| **Verdict** | writes | Balance reports, playtest verdicts, lore-reports, design judgments |
+
+### Standard Loa Commands
+
+Gygax composes with the Loa framework commands without dependency:
+
+- `/plan` — read Gygax balance reports to inform sprint scope
+- `/build` — implement mechanics whose design docs `/homebrew` produced
+- `/review` — cite Gygax findings when reviewing code changes
+- `/ship` — release notes can reference resolved findings from `grimoires/gygax/`
+
+### Quick Start (with Loa)
+
+```
+constructs install gygax
+```
+
+### Quick Start (standalone)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/0xHoneyJar/construct-gygax/main/install.sh | bash
+```
+
+## The Composition Principle
+
+A construct doesn't need to know about Gygax to compose with it. It needs to know about *paths*. If something writes to `grimoires/gygax/game-state/`, Gygax reads it. If something reads `grimoires/gygax/balance-reports/`, it receives the artifacts.
+
+This makes composition **opt-in by convention, not by registration**. Two constructs developed independently can compose by sharing path conventions.
+
+The grimoire structure becomes the API.
+
+## See Also
+
+- [The Grimoire](/concepts/grimoire) — directory structure as interface
+- [Designer Intent](/concepts/designer-intent) — two-axis intent shared between Gygax and Arneson
+- [Refusals](/identity/refusals) — what makes the symmetry trustworthy
+- [Cabal Archetypes](/reference/archetypes) — diagnostic postures, not generative voices

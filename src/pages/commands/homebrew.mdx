@@ -1,0 +1,188 @@
+---
+title: /homebrew
+description: Design or refine a mechanic with cross-system consistency checking.
+---
+
+# /homebrew
+
+The core design skill. Reads the full game-state before doing anything, checks proposed mechanics against every system that could interact with them, flags contradictions automatically, tracks design tensions, and writes confirmed designs with full changelog traceability.
+
+> Three things Gygax sees that you can't hold in your head: which resources the new mechanic competes with, which existing options it overlaps with, and which tension it shifts.
+
+**Skill:** `homebrew` · **Writes to:** `game-state/`, `designs/`, `changelog/`
+
+## Trigger
+
+```
+/homebrew
+```
+
+Or natural language: *"design a mechanic"*, *"what if I added"*, *"how would this work"*, *"refine this system"*.
+
+## Subcommands
+
+| Subcommand | Purpose |
+|------------|---------|
+| `/homebrew --apply <repoPath>` | [F4](/concepts/code-grounding#f4-patch-artifact) — emit changes as a reviewable unified diff |
+| `/homebrew --set-intent {entity-path}` | Retroactive intent capture on an existing entity |
+| `/homebrew --set-intent design-parameters` | Set or update game-level design parameters in `index.yaml` |
+
+## Workflow
+
+### 1. Load Game-State
+
+Reads `index.yaml`. Identifies which entities the proposed mechanic might interact with. Walks `depends_on` / `affects` 1–2 hops. Loads 5–15 relevant entity files, plus all tensions.
+
+### 2. Analyze Proposed Mechanic
+
+Parses the user's request into structured components, whether the description is detailed or vague:
+
+- **Intent** — what the mechanic accomplishes in play
+- **Trigger** — when it activates (action, reaction, passive, downtime, narrative)
+- **Cost** — what resources it consumes
+- **Resolution** — how the outcome is determined
+- **Effect** — what happens on each outcome tier
+- **Interactions** — what systems it touches
+- **Tradition fit** — whether the resolution method matches the game's tradition
+
+Incomplete descriptions trigger targeted questions. Gygax never invents details — it asks.
+
+### 3. Cross-System Consistency Check
+
+The differentiator. Every loaded entity is checked against the proposal for:
+
+**Resource checks**
+- Does the cost resource exist?
+- Does it regenerate in the mechanic's usage context? (Classic trap: *"costs stamina, stamina only recovers on rest"*.)
+- Pool size vs. expected usage frequency
+- Cross-resource contention
+
+**Action economy checks**
+- Action type exists?
+- Strictly better or worse than existing options in the same slot?
+- PbtA/FitD: move trigger overlap with existing moves?
+
+**Stat and modifier checks**
+- Stat exists?
+- Scaling holds at multiple progression points?
+- Modifier stacking issues?
+
+**Dependency integrity**
+- Referenced entities exist?
+- Would adding this break any `affects` chains?
+- Circular dependencies?
+
+**Narrative coherence**
+- Fiction-sense within setting assumptions?
+- Mechanically optimal but narratively absurd?
+- Supports or undermines tradition flow?
+
+### 4. Design Tension Analysis
+
+Every mechanic participates in at least one tension. Homebrew identifies which.
+
+Common patterns checked:
+
+| Tension | Question |
+|---------|----------|
+| Risk / Reward | Proportional reward for risk? |
+| Power / Cost | Effect worth resource expenditure? |
+| Agency / Randomness | Meaningful choices, or pure randomness? |
+| Simplicity / Depth | Decision depth without excessive complexity? |
+| Specialization / Versatility | Better at one thing at cost of breadth? |
+| Offense / Defense | Shifting toward dealing or preventing damage? |
+| Short-term / Long-term | Spending now vs. saving for later? |
+
+Tension health: `balanced`, `tilted-a`, `tilted-b`, `collapsed`. A collapsed tension means one pole has been eliminated.
+
+### 5. Present Findings as Questions
+
+Opinionated but Socratic. Findings are framed as questions, organized by severity:
+
+| Severity | Format |
+|----------|--------|
+| **Contradiction** | "This costs stamina, but your stamina has no in-combat recovery. After round 2, this becomes dead weight. Should stamina recover partially each round, or should the cost be a different resource?" |
+| **Tension shift** | "Adding this gives fighters a reliable defensive option, which shifts survivability-vs-resource-pressure toward survivability. Is that the direction you want?" |
+| **Missing dependency** | "This triggers on a 'reaction' — but your game-state doesn't define a reaction economy yet. Design that first?" |
+| **Overlap** | "Shield already occupies the 'spend resource to avoid damage' slot for casters. How does this dodge differ in the decision space?" |
+| **Observation** | "This scales linearly. Most mechanics in your system use proficiency bonus. Different scaling intentional?" |
+
+Always: contradictions first, then tension shifts, then missing dependencies, overlaps, observations.
+
+### 6. Iterate
+
+The design loop. User accepts, rejects, or modifies. Each change re-runs the consistency check. New changes can introduce new contradictions.
+
+### 6.5 Intent Capture
+
+Before writing, homebrew captures [designer intent](/concepts/designer-intent):
+
+- **Tensions being created** — required. A tension without intent is incomplete.
+- **High-impact mechanics** — encouraged. Changes resource flow, scales across levels, or affects 3+ entities.
+- **Modifications to entities with existing intent** — asks "preserve or shift?"
+
+Both axes of intent (mechanical + experiential) are captured. Experiential is optional.
+
+### 7. Write
+
+**7a — Game-state files:** new YAML in the appropriate type directory. Updates existing entities' `depends_on` / `affects`. Creates stubs for any unresolved references. Reports impact analysis: *"N entities depend on \[entity\]. Changes may affect: \[list of dependent entity paths\]."*
+
+**7b — Index:** entity counts, file list, `graph_integrity`.
+
+**7c — Design document:** human-readable `.md` to `grimoires/gygax/designs/YYYY-MM-DD-description.md`. Includes design intent section, specification, consistency check results, tensions affected, alternatives considered, rationale.
+
+**7d — Changelog:** `grimoires/gygax/changelog/YYYY-MM-DD-HHMMSS-homebrew-description.yaml` with before/after, affected tensions, intent change.
+
+## Consistency Check Rule Severity
+
+| Rule | Severity |
+|------|----------|
+| Resource referenced but doesn't exist | Contradiction |
+| Resource doesn't regenerate in usage context | Contradiction |
+| Stat referenced but doesn't exist | Contradiction |
+| Circular dependency introduced | Contradiction |
+| Action type doesn't exist in game's economy | Missing dependency |
+| Mechanic strictly better than existing in same slot | Overlap |
+| Mechanic strictly worse than existing in same slot | Overlap |
+| Modifier exceeds system's expected ceiling | Tension shift |
+| Resource pool too small for expected usage | Observation |
+| Scaling curve differs from system norm | Observation |
+| Narratively incoherent with setting | Observation |
+| Move trigger overlaps with existing (PbtA/FitD) | Overlap |
+| Proposed mechanic conflicts with existing tension's intent | Tension shift |
+
+## Cross-Skill Chaining
+
+After confirmation:
+
+```
+Design confirmed. To validate:
+
+1. /augury {entity path} — numerical balance
+2. /cabal --optimizer --rules-lawyer {entity path} — exploits + ambiguities
+3. /lore {scope} — tradition anti-patterns
+4. /scry "{alternative}" — explore a branch
+```
+
+## Boundaries
+
+- **Does not** ingest existing rulebooks — use [`/attune`](/commands/attune)
+- **Does not** perform quantitative balance with specific numbers — use [`/augury`](/commands/augury)
+- **Does not** simulate adversarial stress-testing — use [`/cabal`](/commands/cabal)
+- **Does not** apply tradition heuristic libraries — use [`/lore`](/commands/lore)
+- **Does not** write production game code or final prose
+- **Does not** make final creative decisions
+- **Does** handle structural consistency, dependency, tension, narrative coherence
+- **Does** support non-combat mechanics — social, exploration, downtime, crafting, faction play
+- **Does** support mid-design pivots
+- **Does** capture two-axis intent on creation and modification
+
+## Output
+
+| Artifact | Path |
+|----------|------|
+| Entity files | `grimoires/gygax/game-state/{type}/{id}.yaml` |
+| Index update | `grimoires/gygax/game-state/index.yaml` |
+| Design document | `grimoires/gygax/designs/YYYY-MM-DD-description.md` |
+| Changelog | `grimoires/gygax/changelog/YYYY-MM-DD-HHMMSS-homebrew-description.yaml` |
+| F4 diff (stdout) | reviewable unified diff, not auto-applied |

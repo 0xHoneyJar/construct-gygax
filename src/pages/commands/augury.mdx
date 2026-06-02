@@ -1,0 +1,193 @@
+---
+title: /augury
+description: Numerical balance analysis grounded in game-state. Real math, cited results.
+---
+
+# /augury
+
+Quantitative balance analysis. Reads game-state and produces concrete numbers — DPR curves, hit probabilities, time-to-kill, action economy budgets, healing throughput, save DC scaling, resource depletion rates, pacing metrics — then reports findings with specific values, tables, and identified pressure points.
+
+> "Seems balanced" is not analysis. Every finding must be backed by a calculation.
+
+**Skill:** `augury` · **Read-only against game-state · Writes to:** `balance-reports/`
+
+## Trigger
+
+```
+/augury                                         # full-spectrum analysis
+/augury combat                                  # combat-focused (DPR, TTK, action economy)
+/augury resources                               # resource economy
+/augury pacing                                  # narrative pacing + arc coverage
+/augury scaling                                 # progression scaling curves
+/augury mechanics/dodge-reaction.yaml           # targeted analysis
+/augury entities/fighter vs entities/wizard     # comparative analysis
+/augury compare --against 5e-srd                # cross-system comparison
+/augury --simulate <repoPath>                   # F2 code-grounded simulation
+/augury --layer resolution,resource-economy     # specific layers
+```
+
+## The Six Analytical Layers
+
+Every analysis is organized into 6 declared layers. Each has clear boundaries: what entities it needs, what it detects, what scripts it uses.
+
+| Layer | Required Entities | Detects |
+|-------|------------------|---------|
+| **resolution** | mechanics with `resolution` | false choices, dead zones, threshold clustering, variance mismatch |
+| **action-economy** | mechanics with `trigger` + `cost` | proactive/reactive asymmetry, action inflation, dead turns, action-cost imbalance |
+| **resource-economy** | resources with `pool` + `recovery` | economic collapse, infinite accumulation, resource irrelevance, hoarding incentives, market/trade fairness |
+| **progression** | progression with `progression_table` | scaling failure, dead levels, power spikes, MAD dependency, design traps, win condition balance |
+| **pacing** | mechanics + resources | pacing slogs, spike-and-recover, trigger starvation, session length mismatch, replayability |
+| **cognitive-load** | any entities | option paralysis, hidden complexity, communication failures, entity density, hidden state |
+
+Layers run only when their required entities exist. A layer with no applicable data is reported as skipped:
+
+```
+Layers run: resolution, resource-economy, pacing, cognitive-load
+Layers skipped: action-economy (no mechanics with cost fields), progression (no progression entities)
+```
+
+See [Augury Layers](/reference/augury-layers) for the detailed reference.
+
+## Design Parameter Sensitivity
+
+Each layer adjusts thresholds based on `design_parameters` from `index.yaml`:
+
+| Parameter | Effect |
+|-----------|--------|
+| `target_variance: high` | Suppresses dead-zone and threshold-clustering warnings |
+| `target_audience: newcomer` | Lowers cognitive-load thresholds |
+| `target_audience: mastery` | Raises trap-option threshold in progression |
+| `target_session_length: short` | Lowers pacing-slog thresholds |
+| `target_lethality: brutal` | Raises acceptable resource depletion |
+| `target_player_count: large` | Lowers cognitive-load thresholds |
+| `target_interaction: cooperative` | Suppresses direct-conflict findings |
+| `target_randomness: none` | Resolution skips probability, focuses on decision space |
+
+All adjustments are documented in the report's Methodology Notes.
+
+## Finding Severity
+
+| Severity | Meaning |
+|----------|---------|
+| **Critical** | Mathematically non-functional or degenerate — DPR of 0, infinite TTK, resource depletes before first use, save DC always fails |
+| **Warning** | Significantly out of band — DPR 2x+ above/below peers, TTK < 1 round, resource has no pressure, healing negates all damage |
+| **Info** | Notable observation that may be intentional — unusual scaling, slight outlier, low trigger frequency |
+| **Healthy** | Within expected bounds — included so the user knows what's working |
+
+### Intent-Aware Classification
+
+Before finalizing severity, augury reads `intent` on each affected entity:
+
+- **Warning → Observation** if intent confirms the design is deliberate (`[INTENT-ALIGNED]` tag)
+- **Critical stays Critical** — math cannot be intentionally broken
+- **`[INTENT-CONFLICT]`** tag when findings contradict stated intent
+
+See [Designer Intent](/concepts/designer-intent).
+
+## Probability Scripts
+
+Augury invokes [probability scripts](/concepts/probability-scripts) for math the LLM can't reliably compute. Every script output is cited in the report.
+
+| Mechanic | Required Script |
+|----------|----------------|
+| Multi-die summation (2d6, 3d6) | `bell-curve.ts` |
+| Dice pool (Nd6 successes) | `dice-pool.ts` |
+| Advantage/disadvantage | `advantage.ts` |
+| Exploding dice | `exploding-dice.ts` |
+| Cross-system CDF comparison | `cdf-compare.ts` |
+| Opposed roll | `opposed-roll.ts` |
+
+For non-dice resolution (auction, worker-placement, deterministic, deduction): structural analysis instead, tagged `[qualitative]` or `[structural]`.
+
+## Cross-System Comparison
+
+```
+/augury compare --against 5e-srd                   # full-spectrum
+/augury compare dodge-reaction vs 5e-srd:shield    # entity-level
+```
+
+Loads source from `grimoires/gygax/game-state/` and target from `grimoires/gygax/references/{name}/game-state/`. Matches entities by ID, name, or similarity. Invokes `cdf-compare.ts` for probability deltas. Produces a delta table + narrative.
+
+## Code-Grounded Simulation (F2)
+
+```
+/augury --simulate <repoPath>
+```
+
+Monte-Carlo the real engine through a `gygaxDriver` adapter, in the sandbox. **Non-negotiable approval gate** — Gygax proposes a scenario, you approve, only then does it run.
+
+See [Code-Grounding](/concepts/code-grounding) for the full F2 protocol.
+
+## Cross-Layer Deduplication
+
+After all layers produce findings, augury runs a deduplication pass. If two layers flag the same entity for the same root cause, the finding stays in the **more specific** layer. The other layer adds a cross-reference.
+
+Specificity order: `progression > resolution > action-economy > resource-economy > pacing > cognitive-load`.
+
+## Report Format
+
+Output: `grimoires/gygax/balance-reports/YYYY-MM-DD-scope-description.md`
+
+```
+# Balance Report: [Scope]
+
+**Date:** YYYY-MM-DD
+**Game:** [name] · **Tradition:** [tradition]
+**Scope:** [full-spectrum | layer: X | targeted | comparative]
+**Layers Run:** [list]
+**Layers Skipped:** [list with reasons]
+**Design Parameters:** [active, noting explicit vs default]
+**Entities Analyzed:** [count]
+
+## Executive Summary
+[3-5 sentences: what, finding counts, top takeaway]
+
+## Resolution Analysis
+[Hit probability, DPR, TTK matrix, action economy tables]
+
+## Resource Economy Analysis
+[Depletion rates, recovery rates, pressure points]
+
+## Progression Analysis
+[Scaling curves, dead levels, power spikes, crossover points]
+
+## Pacing Analysis
+[Trigger frequency, narrative arc coverage]
+
+## Cognitive Load Analysis
+[Entity counts, decision complexity, hidden state]
+
+## Findings
+[Table by layer + severity, with finding IDs (R-1, RE-1, etc.)]
+
+## Recommendations
+[Numbered, citing finding numbers, with specific numerical changes]
+
+## Methodology Notes
+[Assumptions, gaps, threshold adjustments documented]
+
+## Recommended Next Steps
+[Cross-skill chaining tied to findings]
+```
+
+## Boundaries
+
+- **Does not** modify game-state — read-only
+- **Does not** design mechanics — use [`/homebrew`](/commands/homebrew)
+- **Does not** ingest source material — use [`/attune`](/commands/attune)
+- **Does not** simulate full play sessions — use [`/cabal`](/commands/cabal)
+- **Does not** apply qualitative heuristic pattern-matching — use [`/lore`](/commands/lore)
+- **Does not** produce vibes-based assessments — every claim requires a number
+- **Does** adapt methodology to tradition
+- **Does** report `Healthy` findings, not only what's broken
+- **Does** handle non-combat games (pacing + cognitive-load only)
+- **Does** invoke probability scripts when the LLM can't be trusted
+- **Does** cross-reference against installed reference systems
+
+## Output
+
+| Artifact | Path |
+|----------|------|
+| Balance report | `grimoires/gygax/balance-reports/YYYY-MM-DD-scope-description.md` |
+| Comparison report | `grimoires/gygax/balance-reports/comparison-YYYY-MM-DD-description.md` |
+| Sim distribution (F2) | `grimoires/gygax/balance-reports/sim-<label>-<commit>.md` |

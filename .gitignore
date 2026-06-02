@@ -17,3 +17,8 @@ grimoires/loa/
 
 # Node dependencies (typescript + tsx for code-grounding libs, cycle-001)
 node_modules/
+
+# Vocs build output
+.vocs/
+dist/
+src/pages.gen.ts

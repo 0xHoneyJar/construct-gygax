@@ -1,0 +1,248 @@
+---
+title: /scry
+description: Design experimentation through persistent forked game-state with inline analysis.
+---
+
+# /scry
+
+Explore design changes without risk. Fork the game-state, apply a proposed change, run inline balance and playtest analysis against the fork, produce a delta report comparing fork to main. Multiple forks can exist simultaneously. When a direction proves out, commit; when it doesn't, discard.
+
+> Design iteration is expensive when every change goes straight into game-state. Scry lets you ask "what if?" safely — see the numbers, feel the play impact, compare alternatives — before committing.
+
+**Skill:** `scry` · **Writes to:** `forks/`, `changelog/` (on commit) · **Read-only against main game-state until explicit commit**
+
+## Trigger
+
+```
+/scry "what if DOSE threshold was 4?"     # create a fork
+/scry "add stamina recovery in combat"    # another fork
+/scry compare                             # side-by-side of all active forks vs main
+/scry commit threshold-4                  # merge fork to main
+/scry discard combat-recovery             # archive fork
+/scry list                                # show active and archived branches
+```
+
+Or natural language: *"what if"*, *"try changing"*, *"fork the game state"*, *"explore a design branch"*.
+
+## Subcommands
+
+| Pattern | Subcommand |
+|---------|-----------|
+| `/scry "quoted change"` | **fork** — create a new design branch |
+| `/scry compare` | **compare** — side-by-side analysis of all active forks vs. main |
+| `/scry commit {branch-name}` | **commit** — merge fork game-state to main |
+| `/scry commit {branch-name} --no-analysis` | **force commit** — merge without requiring analysis |
+| `/scry discard {branch-name}` | **discard** — archive the fork |
+| `/scry list` | **list** — show all active and archived branches |
+
+## Fork Structure
+
+Every fork is a **full copy** of game-state — not an incremental delta. Forks are self-contained, browsable documents. Someone can open a fork directory and understand the entire exploration without reconstructing a chain of patches.
+
+```
+grimoires/gygax/forks/{branch-name}/
+  game-state/        # Full copy of main with the proposed change
+  analysis/
+    augury-report.md
+    cabal-report.md
+  delta.md           # Summary delta vs. main
+```
+
+## Fork Workflow
+
+### F1 — Load Main Game-State
+
+Reads `index.yaml`. Identifies which entities the proposed change affects. Walks the dependency graph 1–2 hops to find every entity that could be impacted.
+
+### F2 — Generate Branch Name
+
+Kebab-case derived from the description:
+
+- *"what if DOSE threshold was 4?"* → `threshold-4`
+- *"add stamina recovery in combat"* → `combat-stamina-recovery`
+- *"remove dodge reaction"* → `no-dodge-reaction`
+
+Conflicts with existing branches block; the user renames or discards first.
+
+### F3 — Create Fork and Copy Game-State
+
+Creates the directory structure, full `cp -r` of `game-state/` into the fork. Verifies the copy.
+
+### F4 — Apply Change to Fork
+
+Modifies forked YAML files. Updates `depends_on` / `affects` arrays in related entities. Creates stubs for new unresolved references. Updates the fork's `index.yaml` (counts, files, `last_modified_at`, `last_modified_by: scry`, regenerated `graph_integrity`).
+
+**Intent preservation:** If the change affects entities with stated intent, scry asks: *"Does this change preserve the original intent, or shift it?"* Shifting prompts for new intent summary and rationale.
+
+**Main game-state is never touched** until explicit commit.
+
+### F5 — Inline Augury Analysis (Scoped)
+
+Runs augury-style numerical analysis scoped to the changed entities + their dependents. Same formulas as `/augury`, but:
+
+- **Scope:** Only changed entities and immediate dependents
+- **Output:** Comparative tables (main vs. fork) rather than standalone balance reports
+- **Severity:** Assessed relative to the delta — a "Warning" that stays "Warning" is "Unchanged," not a new finding
+
+Output: `forks/{branch}/analysis/augury-report.md`
+
+### F6 — Inline Cabal Analysis (Context-Aware)
+
+Context-aware panel based on what changed:
+
+| What Changed | Priority Archetypes |
+|-------------|---------------------|
+| Combat mechanic | Optimizer, Rules Lawyer |
+| Resource economy | Optimizer, Explorer |
+| Narrative/social mechanic | Storyteller, Explorer |
+| Progression/scaling | Optimizer, Explorer |
+| Core resolution | All four |
+
+Each archetype interacts with the CHANGED mechanics specifically. At least one **non-obvious finding** required per fork run.
+
+Output: `forks/{branch}/analysis/cabal-report.md`
+
+### F7 — Generate Delta Report
+
+Output: `forks/{branch-name}/delta.md`
+
+```
+# Delta Report: {branch-name}
+
+**Proposed Change:** [one-line]
+**Status:** Active
+
+## Summary
+[2-4 sentences: what changed, biggest numerical impact, biggest experiential impact]
+
+## Graph Integrity Delta
+| Metric | Main | Fork | Delta |
+
+## Numerical Deltas
+| Metric | Main | Fork | Delta | Severity |
+
+## Experience Deltas
+| Archetype | Impact | Summary |
+
+## Tension Impacts
+| Tension | Main State | Fork State | Shift |
+
+## Intent Deltas (if intent changed)
+| Entity | Original Intent | Fork Intent | Shift Magnitude |
+
+## Key Findings (top 3-5 across augury + cabal)
+
+## Recommended Next Steps
+```
+
+## Compare
+
+```
+/scry compare
+```
+
+Reads `delta.md` from every active fork. Builds a unified comparison table with main as baseline.
+
+```
+# Branch Comparison
+
+## Metric Comparison
+| Metric | Main | {branch-1} | {branch-2} | ... |
+
+## Experience Comparison
+| Archetype | Main | {branch-1} | {branch-2} | ... |
+
+## Tension Comparison
+| Tension | Main | {branch-1} | {branch-2} | ... |
+
+## Assessment
+[Per fork: 1-2 sentences on whether it improves the design + primary tradeoff]
+
+## Recommendation
+[Which to commit, or what to explore next]
+```
+
+## Commit
+
+```
+/scry commit {branch-name}
+```
+
+### M1 — Validate the Fork
+
+- Branch exists at `forks/{branch-name}/`
+- Analysis has been run (`augury-report.md` + `cabal-report.md`) — otherwise: *"No analysis yet. Run `/scry` against it first, or force commit with `--no-analysis`."*
+- **Staleness check** — has main been modified since the fork was created? If yes, identify conflicting files and require either re-fork or explicit force commit
+
+### M2 — Copy Fork to Main
+
+`cp` all files from `forks/{branch-name}/game-state/` to `game-state/`. Verifies the resulting state.
+
+**Intent fields from the fork are preserved** — including any shifts. The changelog entry explicitly records intent deltas for full traceability.
+
+### M3 — Write Changelog Entry
+
+```yaml
+timestamp: "ISO-8601"
+skill: scry
+action: merged
+summary: "Merged branch '{branch-name}' to main game-state"
+rationale: "[Summary of augury and cabal findings that justified the commit]"
+branch: "{branch-name}"
+files_changed: [list]
+affected_tensions: [list]
+```
+
+### M4 — Clean Up
+
+Removes the fork directory. The fork's analysis and delta are preserved in the changelog rationale.
+
+## Discard
+
+```
+/scry discard {branch-name}
+```
+
+Moves the fork to `grimoires/gygax/forks/.archived/{branch-name}/`. Browsable but inactive. No changelog entry (nothing changed in main).
+
+## List
+
+```
+/scry list
+```
+
+```
+# Scry Branches
+
+## Active
+| Branch | Proposed Change | Date | Has Analysis |
+
+## Archived
+| Branch | Proposed Change | Date | Reason |
+```
+
+## Boundaries
+
+- **Does not** modify main game-state until explicit `/scry commit`
+- **Does not** invoke other skills — contains inline analysis derived from `/augury` and `/cabal` methodology
+- **Does not** write production game code or final prose
+- **Does not** make final creative decisions
+- **Does not** perform full-spectrum analysis — scopes to changed entities for speed
+- **Does not** auto-commit or auto-discard
+- **Does** create persistent, browsable fork directories
+- **Does** write presentable markdown throughout
+- **Does** support multiple simultaneous forks
+- **Does** handle any tradition — adapts to game's tradition
+- **Does** prompt about intent preservation when forks touch intent-annotated entities
+- **Does** include intent deltas in comparison reports
+- **Does** preserve intent fields on commit
+
+## Output
+
+| Artifact | Path |
+|----------|------|
+| Forked game-state | `grimoires/gygax/forks/{branch}/game-state/` |
+| Augury analysis | `grimoires/gygax/forks/{branch}/analysis/augury-report.md` |
+| Cabal analysis | `grimoires/gygax/forks/{branch}/analysis/cabal-report.md` |
+| Delta report | `grimoires/gygax/forks/{branch}/delta.md` |
+| Changelog (on commit) | `grimoires/gygax/changelog/YYYY-MM-DD-HHMMSS-scry-commit-{branch}.yaml` |
