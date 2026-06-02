@@ -1,0 +1,126 @@
+---
+title: Getting Started
+description: Install Gygax, attune your first game, run your first analysis.
+---
+
+# Getting Started
+
+## Install
+
+**Claude Code (one-liner):**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/0xHoneyJar/construct-gygax/main/install.sh | bash
+```
+
+Run from your project root. Installs skills into `.claude/skills/`, creates the grimoire structure under `grimoires/gygax/`, and wires up identity.
+
+**With [Loa](https://github.com/0xHoneyJar/loa):**
+
+```
+constructs install gygax
+```
+
+## Attune Your Game
+
+The first command you run is always [`/attune`](/commands/attune). Without game-state, no other skill can function.
+
+```
+/attune docs/rulebook.md          # ingest a markdown rulebook
+/attune src/rules/                # ingest a directory of files
+/attune https://example.com/srd   # ingest from a URL
+/attune                           # no source → guided interview
+/attune --reference 5e-srd        # install a bundled reference system
+```
+
+Attune classifies the source into one of 20 traditions, extracts entities, runs a two-batch interview to fill gaps, generates the full game-state YAML, validates it, and writes a changelog entry.
+
+### Available Reference Systems
+
+| Slug | Tradition | Use For |
+|------|-----------|---------|
+| `5e-srd` | d20 | Combat math baseline, comparison anchor |
+| `pbta-baseline` | PbtA | Apocalypse World core moves |
+| `cepheus-core` | Cepheus | 2d6 + Effect, lifepath career structure |
+
+Install one, then `/augury compare --against 5e-srd` to cross-reference your design.
+
+## A First Analysis Loop
+
+After attunement, the canonical loop is:
+
+```
+/attune  →  /homebrew  →  /augury  →  /cabal  →  iterate
+```
+
+1. **Attune** — your game is in `grimoires/gygax/game-state/` as structured YAML.
+2. **Homebrew** — design or refine a mechanic. Gygax checks it against everything that already exists.
+3. **Augury** — run the math. Bell curves, dice pools, advantage distributions — real probability scripts, not LLM approximation.
+4. **Cabal** — stress-test with simulated players. The Optimizer finds the exploit. The Newcomer can't read your rules. The GM is drowning in cognitive load.
+
+Then iterate.
+
+## Other Patterns
+
+**Explore-then-commit:**
+
+```
+/scry "what if threshold was 4?"
+/scry "what if threshold was 5?"
+/scry compare
+/scry commit threshold-4
+```
+
+**Cross-system comparison:**
+
+```
+/attune --reference 5e-srd
+/augury compare DOSE vs 5e-srd:ability-score-cap
+```
+
+**Dungeon design review:**
+
+```
+/delve the-signal-mine
+# → ecology + Xandering + attrition + loot + G.U.A.R.D. scorecard
+```
+
+**Where am I?**
+
+```
+/gygax
+# → game-state overview, cross-skill synthesis, prioritized findings, next action
+```
+
+## Project Layout
+
+After installation:
+
+```
+grimoires/gygax/
+  game-state/              # YAML entities — the source of truth
+    stats/
+    resources/
+    mechanics/
+    progression/
+    entities/
+    tensions/
+    index.yaml             # entity manifest + design parameters
+  designs/                 # design documents from /homebrew
+  balance-reports/         # /augury output
+  playtest-reports/        # /cabal output
+  lore-reports/            # /lore output
+  delve-reports/           # /delve output
+  forks/                   # active /scry branches
+  references/              # installed reference systems
+  learned-lore/            # heuristics captured per-game
+  changelog/               # every change with rationale
+```
+
+See [The Grimoire](/concepts/grimoire) for what each directory does.
+
+## Next
+
+- [Philosophy](/philosophy) — why structure-first analysis matters
+- [Game-State](/concepts/game-state) — the YAML schema everything depends on
+- [/attune](/commands/attune) — full reference for ingestion

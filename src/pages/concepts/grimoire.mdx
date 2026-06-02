@@ -1,0 +1,162 @@
+---
+title: The Grimoire
+description: The persistent directory structure where Gygax writes everything.
+---
+
+# The Grimoire
+
+Everything Gygax produces is written to `grimoires/gygax/`. Hand someone the directory and they have the complete design journal — no conversation context needed.
+
+> The work is the artifact, not the chat.
+
+## Directory Layout
+
+```
+grimoires/gygax/
+  game-state/              # YAML entities — the source of truth
+  designs/                 # Design documents from /homebrew
+  balance-reports/         # /augury output
+  playtest-reports/        # /cabal output
+  lore-reports/            # /lore output
+  delve-reports/           # /delve output
+  forks/                   # Active /scry branches
+    .archived/             # Discarded forks (browsable)
+  references/              # Installed reference systems
+  learned-lore/            # Heuristics captured per-game
+    .promoted/             # Learned heuristics promoted to curated
+  changelog/               # Every change with rationale
+```
+
+## What Each Directory Holds
+
+### `game-state/`
+
+The structured YAML model of your game. See [Game-State](/concepts/game-state) for the full schema.
+
+Read by every skill. Written by `/attune`, `/homebrew`, and `/scry commit`.
+
+### `designs/`
+
+Human-readable design documents. One per `/homebrew` session. Includes design intent, final specification, consistency check results, design tensions affected, alternatives considered, and rationale.
+
+**Filename:** `YYYY-MM-DD-description.md`
+
+### `balance-reports/`
+
+Output of `/augury`. Each report includes layers run, layers skipped (with reasons), entity-level math, findings table (Critical / Warning / Info / Healthy), recommendations citing finding numbers, and methodology notes.
+
+**Filename:** `YYYY-MM-DD-scope-description.md`
+
+### `playtest-reports/`
+
+Output of `/cabal`. Each report walks each archetype beat-by-beat through a scenario, tracks experience signals, detects divergence, checks regression against prior reports, and ends with cross-skill next-step recommendations.
+
+**Filename:** `YYYY-MM-DD-scope-description.md`
+
+### `lore-reports/`
+
+Output of `/lore`. Pattern-matches game-state against curated tradition heuristics plus learned heuristics. Findings cite specific entities and explain *why* a pattern matters historically.
+
+**Filename:** `YYYY-MM-DD-scope-description.md`
+
+### `delve-reports/`
+
+Output of `/delve`. Dungeon analysis across five frameworks: ecology, Xandering (non-linearity), attrition, loot economy, G.U.A.R.D. scorecard.
+
+**Filename:** `YYYY-MM-DD-{dungeon-id}.md`
+
+### `forks/`
+
+Active `/scry` branches. Each branch is a full self-contained copy of game-state with its own analysis subdirectory.
+
+```
+forks/{branch-name}/
+  game-state/        # Full copy of main with the proposed change applied
+  analysis/
+    augury-report.md
+    cabal-report.md
+  delta.md           # Summary delta vs. main
+```
+
+Discarded forks move to `forks/.archived/` (still browsable). Committed forks are merged to `game-state/`, their changelog rationale preserved.
+
+### `references/`
+
+Bundled reference systems installed via `/attune --reference {slug}`. Available slugs: `5e-srd`, `pbta-baseline`, `cepheus-core`.
+
+```
+references/{name}/
+  game-state/        # Full reference system as YAML
+  metadata.yaml      # Name, tradition, version, source attribution
+```
+
+Read by `/augury compare --against {name}` for cross-system comparison.
+
+### `learned-lore/`
+
+Heuristics captured from analysis of *your specific game* that may generalize. Created by `/lore` when it surfaces a candidate pattern.
+
+```yaml
+id: pattern-id
+name: "Pattern Name"
+category: resources|mechanics|progression|…
+discovered_at: "ISO-8601"
+source:
+  skill: lore|augury|cabal
+  report: path/to/report.md
+  severity: critical|warning|info
+description: "What the pattern is"
+detection: "How to find it in other game-states"
+confidence: low|medium|high
+applicable_traditions: [d20, pbta, …]
+confirmed_in_games: ["game-name"]
+```
+
+Promoted to the curated library via `/lore promote {pattern-id} --target {tradition}`. Promotion is manual — Gygax never auto-promotes.
+
+### `changelog/`
+
+Every change, with rationale. One file per operation.
+
+**Filename:** `YYYY-MM-DD-HHMMSS-{skill}-{description}.yaml`
+
+```yaml
+timestamp: "ISO-8601"
+skill: attune|homebrew|scry
+action: created|modified|deprecated|merged
+entity: type/entity-id.yaml
+summary: "One-line description"
+rationale: "Why"
+source: "User request context"
+before: { … }
+after: { … }
+affected_tensions: [tensions/foo.yaml]
+intent_change:
+  before: null
+  after: { summary: "…", rationale: "…", … }
+```
+
+The changelog is what makes the grimoire a real journal: every entity's history is recoverable from it.
+
+## Read/Write Boundaries
+
+| Path | Read By | Written By |
+|------|---------|-----------|
+| `game-state/` | all skills | `/attune`, `/homebrew`, `/scry commit` |
+| `designs/` | `/gygax` | `/homebrew` |
+| `balance-reports/` | `/gygax`, `/augury` (drift) | `/augury` |
+| `playtest-reports/` | `/gygax`, `/cabal` (regression) | `/cabal` |
+| `lore-reports/` | `/gygax` | `/lore` |
+| `delve-reports/` | `/gygax`, `/delve` (regression) | `/delve` |
+| `forks/` | `/scry` | `/scry` |
+| `references/` | `/attune`, `/augury` (compare) | `/attune --reference` |
+| `learned-lore/` | `/lore` | `/lore` (capture/promote) |
+| `changelog/` | `/gygax` | all writing skills |
+
+## The Composition Principle
+
+> The grimoire path **is** the interface.
+
+Other constructs writing to the same path compose automatically. [Arneson](/reference/composition) reads `grimoires/gygax/game-state/` to ground its scene generation in the same entities. Loa-framework commands (`/plan`, `/build`, `/review`, `/ship`) can read Gygax's reports as inputs.
+
+No API. No glue code. Just shared paths.

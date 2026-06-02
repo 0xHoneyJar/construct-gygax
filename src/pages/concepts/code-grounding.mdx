@@ -1,0 +1,153 @@
+---
+title: Code-Grounding
+description: Ground analysis in the real engine code, not just the hand-authored game-state model.
+---
+
+# Code-Grounding
+
+When your game has a real code engine — a TypeScript implementation of combat, an autobattler simulator, an extraction loop — Gygax can ground its analysis in **the actual code**, not just the hand-authored game-state YAML.
+
+Code-grounding answers a recurring question: *does the game-state model match what the engine actually does?* It catches drift between intent and implementation that no amount of YAML review will find.
+
+There are three capabilities, named **F1**, **F2**, and **F4**.
+
+> Code-grounding is additive and **certainty-gated**. It never overwrites game-state silently and never asserts a structural relationship it cannot cite.
+
+## F1 — Code-Level Drift (in `/attune`)
+
+Static-analyze the engine source, reconcile it against existing game-state, and produce a cited drift report.
+
+**Trigger:** `/attune` on a directory containing TypeScript/JavaScript source or a `gygax.driver.ts`.
+
+**Pipeline:**
+
+```bash
+npx tsx scripts/lib/codegrounding/attune-codelevel.ts <repoPath> grimoires/gygax/game-state
+```
+
+This:
+
+1. Statically reads the engine — literals and certain-only call edges. **No code executes.**
+2. Reconciles against the current game-state YAML.
+3. Writes a Markdown drift report to `grimoires/gygax/balance-reports/drift-<repo>-<commit>.md`.
+
+**The report has three sections:**
+
+| Section | Contents |
+|---------|----------|
+| **Numeric Drift** | Code value vs game-state value, with a `file:line` source citation for the code side |
+| **Structural Drift** | Each loop the analyzer traced that the game-state model omits, with citations |
+| **Silent On** | Wiring the analyzer could see but would NOT assert (reactive stores, dynamic dispatch) — what Gygax does *not* know, by design |
+
+**Human-adjudicated, not auto-applied.** For each delta, the human decides whether code leads or intent leads. Design intent may legitimately lead the code — Gygax never overwrites it without explicit confirmation.
+
+**Stance:** quiet on uncertain structure, **loud on clear defects.** If a high-confidence imbalance is evident in the numbers, Gygax says so plainly — certainty gating applies to loop-*existence* claims, not to flagging an obvious problem.
+
+## F2 — Code-Grounded Simulation (in `/augury`)
+
+Monte-Carlo the *real* engine under control, in a sandbox, and report a distribution from the actual code.
+
+**Trigger:** `/augury --simulate <repoPath>`.
+
+**Requires** a `gygaxDriver` adapter in the target repo. If it's missing, Gygax **refuses** and prints the exact 4-function contract to implement — no fallback to guessing.
+
+**The non-negotiable approval gate.** F2 has three steps, and step 2 is hard-gated:
+
+### Step 1 — Propose
+
+```bash
+npx tsx scripts/lib/codegrounding/augury-simulate.ts propose <repoPath>
+```
+
+Reads the engine's real structure (no code execution) and emits a `ScenarioSpec` JSON with `approvedBy` **unset**.
+
+### Step 2 — Approve
+
+Gygax shows the proposed scenario (entry function, input space, run count, label) and asks: **"Approve / edit?"** The user reviews and may edit. Only after explicit approval does Gygax set `approvedBy` to the user's handle.
+
+**Gygax never fabricates approval.** This guards against silently measuring the wrong thing.
+
+### Step 3 — Run
+
+```bash
+echo '<approved-spec-json>' | npx tsx scripts/lib/codegrounding/augury-simulate.ts run <repoPath>
+```
+
+Executes in the sandbox (network-denied, wall-clock + memory capped). Refuses if `approvedBy` is unset. Writes a labeled `SimDistribution` report to `grimoires/gygax/balance-reports/`.
+
+**The distribution is labeled with the approved scenario** — what you approved is exactly what was measured. No LLM is in the per-step resolution loop; it is mechanical in the sandbox. Inputs are constructed through the driver contract, never by guessing function signatures.
+
+## F4 — Patch Artifact (in `/homebrew`)
+
+Emit proposed changes to the engine as a **reviewable unified diff** — never applied by Gygax.
+
+**Trigger:** `/homebrew --apply <repoPath>` after working out the concrete change.
+
+```bash
+echo '{"repoPath":"<repoPath>","targets":[
+  {"file":"src/combat/clash.ts","kind":"logic","oldText":"...","newText":"..."}
+]}' | npx tsx scripts/lib/codegrounding/homebrew-apply.ts
+```
+
+**Diff kinds:**
+
+| Kind | Files | Certainty Gate |
+|------|-------|----------------|
+| `data` | JSON, data tables | Unrestricted |
+| `logic` | TypeScript engine code | **Certainty-gated** — refuses on wiring F1 stayed silent on |
+
+Every emitted diff is validated with `git apply --check` before it's shown.
+
+**Gygax presents diffs and tells you to apply them yourself.** It never runs `git apply`. It never writes to source files. Application is the human's step.
+
+This isn't a refusal violation. A diff Gygax cannot self-apply is *advice*, not authorship — the refusal is about writing to source, which Gygax never does. See [the `production_code` refusal](/identity/refusals).
+
+## The `gygaxDriver` Contract
+
+F2 simulation needs a small adapter in the target repo at `gygax.driver.ts`. The four-function contract:
+
+```typescript
+export const gygaxDriver = {
+  // Describe the engine's entry surface — for F1 + F2 introspection
+  describe(): EngineDescription,
+
+  // Build a starting state from a scenario input
+  createState(input: ScenarioInput): EngineState,
+
+  // Apply one mechanical step; returns the new state
+  step(state: EngineState): EngineState,
+
+  // Return true when the scenario has terminated
+  isTerminal(state: EngineState): boolean,
+}
+```
+
+The driver is the only LLM-free contract. F1 reads it statically to know what to look for. F2 invokes it mechanically in the sandbox.
+
+When the driver is missing, F2 prints the exact spec to implement. Relay the spec to the user; don't fall back to guessing.
+
+## The Sandbox
+
+F2 simulations execute in a sandbox with hard limits:
+
+- **Network-denied** — no outbound requests possible
+- **Wall-clock cap** — runs that hang are killed
+- **Memory cap** — runs that leak are killed
+
+The sandbox is what makes "execute the real engine" safe. Without it, F2 would be opening the door for arbitrary code execution.
+
+## The Code Layer Boundary
+
+Code-grounding is opt-in and additive. It engages only when:
+
+- A code engine is present (TypeScript/JavaScript source, or a `gygax.driver.ts`)
+- The user explicitly invokes the code-grounded path (`/attune` on a code dir, `/augury --simulate`, `/homebrew --apply`)
+
+For tabletop games, prose rulebooks, or anything without a code engine, code-grounding is silently skipped. Gygax falls back to the standard YAML-only path.
+
+## See Also
+
+- [/attune](/commands/attune#code-level-drift) — F1 drift detection
+- [/augury](/commands/augury#code-grounded-simulation) — F2 sandboxed simulation
+- [/homebrew](/commands/homebrew#patch-artifact) — F4 reviewable diff
+- [Refusals](/identity/refusals) — why Gygax produces diffs but never applies them

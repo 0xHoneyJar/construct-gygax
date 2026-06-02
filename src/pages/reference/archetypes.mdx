@@ -1,0 +1,195 @@
+---
+title: Cabal Archetypes
+description: The nine player archetypes Gygax simulates, what each tests for, and how they adapt to tradition.
+---
+
+# Cabal Archetypes
+
+The nine archetypes that `/cabal` uses to stress-test designs. Each represents a distinct player orientation. Users compose their own panel for each run.
+
+> Cabal archetypes are **audience postures** — how different players *receive* a design. They are not voice modes, character lenses, or generative filters. Putting archetype postures into a character's voice contaminates the testing apparatus. See [the `diagnostic_as_generative` refusal](/identity/refusals#6-diagnostic-as-generative).
+
+Behavioral profiles with per-tradition weightings live in `skills/cabal/resources/archetypes.yaml`.
+
+## The Nine
+
+### The Optimizer
+
+**Flag:** `--optimizer`
+
+**Motivation:** Win within the rules. Maximize output.
+
+**Tests for:** Dominant strategies, exploits, trap options, scaling breaks.
+
+**Behavior:** Picks the mathematically best option. Computes the most abusive build. Asks whether the designer intended the dominant strategy.
+
+**In a TTRPG:** Min-maxes a build, finds the spell that strictly dominates all alternatives at the same slot level.
+
+**In an autobattler:** Identifies the 2x DPS synergy line.
+
+**In a journaling RPG:** Finds prompt sequences that produce the most dramatic entries.
+
+**Cites:** Success rates from probability snapshot, resource net pressure, dominant-option detection from decision point map.
+
+### The Explorer
+
+**Flag:** `--explorer`
+
+**Motivation:** See everything. Test the edges.
+
+**Tests for:** Dead design space, edge cases, breadth, accessibility of optional systems.
+
+**Behavior:** Wanders off the critical path. Tries every optional system. Finds the design space nobody is using.
+
+**In a tactical game:** Tries every unit composition, including the bad ones, to map viability.
+
+**In a roguelike:** Picks the trap items intentionally to see what happens.
+
+### The Storyteller
+
+**Flag:** `--storyteller`
+
+**Motivation:** Create compelling narrative.
+
+**Tests for:** Fiction-mechanics alignment, dramatic inertia, feel-bad moments, where the drama dies.
+
+**Behavior:** Asks whether mechanics serve the fiction. Notes when optimal play produces flat scenes.
+
+**In a PbtA game:** Triggers moves that produce dramatic outcomes even when other choices are mechanically safer.
+
+**In a board game:** Asks whether the engine-building feels like a story or a spreadsheet.
+
+### The Rules Lawyer
+
+**Flag:** `--rules-lawyer`
+
+**Motivation:** Expose every ambiguity.
+
+**Tests for:** RAW (rules-as-written) vs RAI (rules-as-intended), contradictions, undefined states, scope creep.
+
+**Behavior:** Reads your text literally. Finds every ambiguity. Asks what happens in undefined states.
+
+**In a d20 game:** Asks whether a forced movement effect provokes opportunity attacks, citing exactly where the rules don't say.
+
+**In a GMless game:** Probes authority distribution. Who breaks the tie when the procedure doesn't cover the situation?
+
+**Cites:** Dominant options or false choices from decision point map. Edge cases from `interactions` fields.
+
+### The Newcomer
+
+**Flag:** `--newcomer`
+
+**Motivation:** First TTRPG ever. No conventions.
+
+**Tests for:** Accessibility, onboarding friction, jargon, self-teaching capacity.
+
+**Behavior:** Doesn't know what "action economy" means. Reads the mechanic description and tries to apply it. Fails when the text references undefined concepts.
+
+**Cites:** Graph depth and entity count. *"This decision requires understanding 3 connected entities (dose → resolution → crossroads). No fallback in dependency chain."*
+
+### The Chaos Agent
+
+**Flag:** `--chaos-agent`
+
+**Motivation:** Go off-script. *"I befriend the monster."*
+
+**Tests for:** Graceful degradation, GM improvisation load, uncovered actions, what happens when no mechanic applies.
+
+**Behavior:** Tries actions the rules don't cover. Asks the GM to adjudicate. Surfaces where the system has no answer.
+
+**In a structured game (4X, autobattler):** Tests what happens when someone breaks coordination in a `target_interaction: cooperative` setting.
+
+### The GM
+
+**Flag:** `--gm`
+
+**Motivation:** Run the game behind the screen.
+
+**Tests for:** Cognitive load, prep needs, improvisation space, spotlight distribution.
+
+**Behavior:** Tracks every simultaneous state. Computes prep time. Notes where the rules require GM rulings to fill gaps.
+
+**Cites:** Simultaneous state tracking from entity map. *"At this beat, GM tracks: DOSE threshold per PC, CROSSROADS counter, scene timer, word pool — 4 concurrent states."*
+
+### The Anxious Player
+
+**Flag:** `--anxious`
+
+**Motivation:** Overwhelmed by choices, afraid of mistakes.
+
+**Tests for:** Decision paralysis, failure harshness, recovery, option overload.
+
+**Behavior:** Hesitates when there are too many viable options. Avoids options with severe and unclear consequences. Reports paralysis when the system gives no guidance on what a "good" choice looks like.
+
+### The Veteran
+
+**Flag:** `--veteran`
+
+**Motivation:** 50+ sessions deep. Seeks sustained depth.
+
+**Tests for:** Long-term engagement, mastery plateau, emergent complexity, where the game stops being interesting.
+
+**Behavior:** Knows every interaction. Notes when the mastery curve flattens. Asks whether there's depth beyond the initial learning.
+
+## Panel Selection
+
+### Context-Aware Defaults
+
+| Scenario Type | Default Panel | Rationale |
+|---------------|--------------|-----------|
+| New mechanic | Optimizer, Rules Lawyer, Newcomer | Exploitable? Clear? Accessible? |
+| Combat encounter | Optimizer, Storyteller, GM | Efficient? Dramatic? Runnable? |
+| Session arc | Optimizer, Storyteller, Newcomer, GM, Veteran | Broad coverage |
+| Character creation | Explorer, Anxious Player, Newcomer | Breadth? Overwhelming? Accessible? |
+| Specific entity | Optimizer, Explorer, Veteran | Build depth, options, sustained engagement |
+| Full game review | All 9 | Comprehensive |
+
+### Design Parameter Weighting
+
+| Parameter | Effect |
+|-----------|--------|
+| `target_audience: newcomer` | Always includes Newcomer + Anxious. Weights their signals higher. |
+| `target_audience: mastery` | Always includes Optimizer + Veteran. Lowers Newcomer weight. |
+| `target_session_length: short` | Weights pacing signals (Dead time, Decision paralysis) higher. |
+| `target_player_count: large` | Always includes GM. Weights Cognitive overload higher. |
+| `target_interaction: cooperative` | Archetypes modeled as allies. Optimizer optimizes group outcome. |
+| `target_interaction: solo` | Single-archetype runs only. |
+| `target_randomness: none` | Weights Decision paralysis + Mastery reward higher. |
+
+## Experience Signal Sensitivity
+
+| Signal | Most Sensitive Archetypes |
+|--------|--------------------------|
+| Confusion | Newcomer, Anxious Player |
+| Excitement | Storyteller, Veteran |
+| Dead time | Explorer, Veteran |
+| Decision paralysis | Anxious Player, Newcomer |
+| Frustration | Optimizer, Rules Lawyer |
+| Cool moment | Storyteller, Explorer, Veteran |
+| Cognitive overload | GM, Newcomer |
+| Mastery reward | Optimizer, Veteran |
+
+## Tradition Adaptation
+
+Archetype behavior shifts by tradition. Same orientations, different focal points. Per-tradition behavioral weightings are defined in `skills/cabal/resources/archetypes.yaml`.
+
+For a custom game, archetypes adapt based on what the game actually does, not what any standard tradition assumes. If a journaling RPG's core loop is "draw prompt, write, reflect," the GM archetype may have nothing to test — and that itself is a finding about the game's design scope.
+
+## What Cabal Is Not
+
+The nine archetypes are audience postures. They are **not**:
+
+- Voice modes
+- Character lenses
+- Generative filters
+- A content pipeline
+
+Putting archetype postures into a character's voice contaminates the testing apparatus. If the archetypes ARE the character's voice, they can't independently test the character's reception.
+
+For generative work — playing the game, voicing the scene — see [Arneson](/reference/composition).
+
+## See Also
+
+- [/cabal](/commands/cabal) — the command that drives archetype simulation
+- [Refusals](/identity/refusals) — the `diagnostic_as_generative` refusal that protects archetype integrity
+- [Composition](/reference/composition) — how cabal and Arneson's braunstein complement each other

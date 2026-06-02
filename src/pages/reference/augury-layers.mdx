@@ -1,0 +1,181 @@
+---
+title: Augury Layers
+description: The six analytical layers of /augury, what each detects, and how design parameters shape thresholds.
+---
+
+# Augury Layers
+
+`/augury` is organized into six declared analytical layers. Each has clear boundaries: what entities it requires, what it can detect, what scripts it uses, and which design parameters affect its thresholds.
+
+A layer runs only if its required entity types exist in the game-state. Layers with no applicable data are reported as skipped — never silently ignored.
+
+## Layer 1 — Resolution
+
+**Scope:** Core dice mechanics, probability distributions, outcome spreads.
+
+**Required entities:** mechanics with `resolution` field
+**Optional entities:** stats (for modifier analysis)
+
+**Detects:**
+
+- **False choices** — two+ options resolve identically
+- **Dead zones** — probability ranges with no meaningful outcome
+- **Threshold clustering** — multiple DCs within 1-2 points
+- **Variance mismatch** — outcome spread inconsistent with `target_variance`
+
+**Scripts:** `dice-probability.ts`, `bell-curve.ts`, `dice-pool.ts`, `advantage.ts`, `exploding-dice.ts`
+
+**Design parameter sensitivity:**
+- `target_variance: high` → suppresses dead-zone and threshold-clustering warnings
+
+## Layer 2 — Action Economy
+
+**Scope:** Turn structure, action costs, opportunity costs, timing, combat/encounter dynamics.
+
+**Required entities:** mechanics with `trigger` + `cost`
+**Optional entities:** entities with stat blocks (for encounter analysis)
+
+**Detects:**
+
+- **Proactive/reactive asymmetry** — too much reactivity, or none
+- **Action inflation** — too many options per slot
+- **Dead turns** — slots with no meaningful option
+- **Action-cost imbalance** — one option strictly better than alternatives in the same slot
+
+**Scripts:** none (structural analysis)
+
+**Design parameter sensitivity:**
+- `target_session_length` — shorter sessions tolerate less dead time
+
+## Layer 3 — Resource Economy
+
+**Scope:** Source/sink balance, recovery rates, depletion curves, cross-resource contention.
+
+**Required entities:** resources with `pool` + `recovery`
+**Optional entities:** mechanics that consume resources via `cost`
+
+**Detects:**
+
+- **Economic collapse** — source > sink
+- **Infinite accumulation** — negative net pressure
+- **Resource irrelevance** — never under pressure
+- **Hoarding incentives** — recovery outpaces spending
+- **Recovery-depletion mismatch**
+- **Market/trade analysis (v4)** — price stability, supply/demand feedback loops, trade fairness between informed/uninformed players
+
+**Scripts:** `dice-probability.ts` (for probabilistic recovery)
+
+**Design parameter sensitivity:**
+- `target_lethality` — brutal games expect faster depletion curves
+- `target_interaction` — cooperative games share economies (flag individual hoarding), direct-conflict games expect economic warfare
+
+## Layer 4 — Progression
+
+**Scope:** Scaling curves, power budgets, feature distribution across levels/advances.
+
+**Required entities:** progression with `progression_table`
+**Optional entities:** mechanics, resources with `max_by_level`, entities (for class/archetype comparison)
+
+**Detects:**
+
+- **Scaling failure** — linear vs. exponential divergence
+- **Dead levels** — no meaningful improvement
+- **Power spikes** — dramatic single-feature jumps
+- **MAD dependency** — stat budget insufficient for core function
+- **Design traps** — options that appear viable but aren't
+- **Win condition analysis (v4)** — victory path balance, path lockout detection, endgame trigger timing
+
+**Scripts:** `cdf-compare.ts` (for cross-level comparison)
+
+**Design parameter sensitivity:**
+- `target_audience: mastery` → tolerates more trap options
+- `target_audience: newcomer` → does not
+- `target_interaction: solo` → skips victory path comparison
+
+## Layer 5 — Pacing
+
+**Scope:** Session arc, encounter density, downtime distribution, mechanic trigger frequency, tension engagement.
+
+**Required entities:** mechanics with `trigger`, resources with recovery timing
+**Optional entities:** tensions, progression (for session arc analysis)
+
+**Detects:**
+
+- **Pacing slogs** — extended sequences with no meaningful change
+- **Spike-and-recover** — sharp intensity swings
+- **Trigger starvation** — mechanics that never activate
+- **Session length mismatch** — mechanics too slow/fast for target session
+- **Replayability analysis (v4)** — content exhaustion rate, decision-space novelty across replays, emergent variety from systemic interactions
+
+**Scripts:** none (structural + resource depletion rate analysis)
+
+**Design parameter sensitivity:**
+- `target_session_length`
+- `target_prep`
+- `target_randomness: none` → replayability depends entirely on decision space
+
+## Layer 6 — Cognitive Load
+
+**Scope:** Entity count, rule interaction density, decision complexity, communication clarity.
+
+**Required entities:** any (counts and measures complexity across all entity types)
+
+**Detects:**
+
+- **Option paralysis** — too many viable choices with unclear value
+- **Hidden complexity** — interactions not surfaced in entity descriptions
+- **Communication failures** — mechanics whose effects aren't obvious to players
+- **Entity density exceeding cognitive thresholds**
+- **Simultaneous state tracking burden**
+- **Information model problems (v4)** — hidden state count, deducibility analysis, information advantage fairness
+
+**Scripts:** none (counting and structural)
+
+**Design parameter sensitivity:**
+- `target_audience: newcomer` → lower thresholds
+- `target_player_count` larger → amplifies cognitive load
+- `target_randomness: none` → expects perfect information, flags hidden state as mismatch
+
+## Structural Fallback (freeform, custom)
+
+For games where combat math and resource economy don't apply — journaling RPGs, map-drawing games, lyric games, GMless games — the resolution, action-economy, resource-economy, and progression layers may have no applicable entities.
+
+Augury then runs the **pacing + cognitive-load layers plus structural analysis**:
+
+- **Decision space** — meaningful choices, false-choice detection
+- **Information flow** — public vs private vs hidden state, asymmetries
+- **Player agency** — where players decide vs where system determines
+- **Loop completeness** — does each step have a clear exit?
+- **Emotional arc** — do mechanics support or undermine the intended trajectory?
+
+## Cross-Layer Deduplication
+
+After all layers produce findings, augury runs a deduplication pass. If two layers flag the same entity for the same root cause, the finding stays in the **more specific** layer.
+
+Specificity order (most → least):
+
+```
+progression > resolution > action-economy > resource-economy > pacing > cognitive-load
+```
+
+The layer where the finding was removed adds a cross-reference: *"See RE-3 for the underlying cause."*
+
+## Finding ID Prefixes
+
+| Layer | Prefix |
+|-------|--------|
+| Resolution | `R-` |
+| Action Economy | `AE-` |
+| Resource Economy | `RE-` |
+| Progression | `PR-` |
+| Pacing | `PA-` |
+| Cognitive Load | `CL-` |
+
+Used throughout balance reports and `/gygax` synthesis for cross-referencing.
+
+## See Also
+
+- [/augury](/commands/augury) — the command that drives layered analysis
+- [Probability Scripts](/concepts/probability-scripts) — what each layer's scripts compute
+- [Game-State](/concepts/game-state) — `design_parameters` that shape thresholds
+- [Designer Intent](/concepts/designer-intent) — how intent reclassifies findings before layers finalize

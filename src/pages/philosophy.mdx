@@ -1,0 +1,64 @@
+---
+title: Philosophy
+description: Why structure-first analysis catches the bugs vibes-checking misses.
+---
+
+# Philosophy
+
+> Gary Gygax didn't just invent Dungeons & Dragons — he codified the idea that a game's rules are a kind of contract between the designer and the table, and that contract had better be internally consistent or the table would notice.
+
+## Games Are Loops
+
+Every mechanic is a loop with inputs, outputs, and feedback. Every economy has sources and sinks. Every player-facing choice either creates a meaningful decision or it doesn't — and a false choice is worse than no choice, because it generates cognitive overhead without payoff.
+
+Gygax sees feedback loops everywhere. Not as an affectation, but because that's what games are.
+
+A stamina system that regenerates out of combat interacts with a dodge reaction that costs stamina in a way that can make the reaction a trap option after round two. A progression curve that's tight at level one can balloon at level ten — not because anyone made a mistake, but because compounding is quiet.
+
+**Cross-system interactions are where the real design bugs hide.** They hide well because you're usually only thinking about one system at a time. Gygax holds more of the system in view simultaneously than any single designer can comfortably hold in their head.
+
+## Math, Not Vibes
+
+"Seems overpowered" is not analysis.
+
+Every Gygax finding traces back to a specific entity, number, or cross-reference in the grimoire. If the data isn't there, Gygax says so — it doesn't fill the gap with confident-sounding approximation.
+
+For probability work where LLM reasoning is unreliable — bell curves, dice pools, advantage distributions, exploding dice — Gygax invokes [probability scripts](/concepts/probability-scripts) that produce deterministic, citable results.
+
+## Socratic, Not Authoritarian
+
+Gygax has strong opinions. It will tell you when an economy is broken, when a choice is false, when a scaling curve is going to collapse. But it frames pushback as questions, because the question format forces both of you to examine the assumption.
+
+> "This gives the player three options, but two of them resolve identically — is that intentional?"
+
+is more useful than "this is wrong," because maybe it *is* intentional. Maybe the redundancy is how you build player confidence. Gygax doesn't know your design intent better than you do. It knows your numbers and your structures.
+
+## Intent Is Load-Bearing
+
+Some asymmetries are bugs. Others are the whole point.
+
+Gygax can't tell the difference without you. That's why [designer intent](/concepts/designer-intent) is a first-class field on entities. When intent is set, augury sees a 66.7% asymmetry and reports it as an Observation ("working as designed per intent"), not a Warning.
+
+Critical findings never suppress — math can't be intentionally broken. But "this is unusual" vs. "this is deliberate" is a distinction that requires you.
+
+## What Gygax Refuses
+
+Three refusals are load-bearing. They define the tool by defining what it is not.
+
+1. **No production game code.** A diff Gygax can't apply itself is *advice*, not authorship. Gygax never writes to source.
+2. **No narrative prose or fiction.** That work is yours. Gygax won't colonize it.
+3. **No final creative decisions.** Ever. Gygax advises, stress-tests, surfaces consequences — and then waits.
+
+See [Refusals](/identity/refusals) for the full contract.
+
+## Not A Replacement For Playtesting
+
+Real players will always surprise you in ways a simulation can't. Table culture, social dynamics, emergent creativity — these don't live in YAML.
+
+What Gygax does is shorten the feedback loop between "I think this works" and "oh, it definitely doesn't" from weeks to minutes. It catches the structural problems before anyone sits down at a table.
+
+## The Grimoire Is The Artifact
+
+Every analysis Gygax runs is saved as clean, presentable markdown in `grimoires/gygax/`. Hand someone the directory and they have the complete design journal — game-state, design documents, balance reports, playtest walkthroughs, lore scans, design branches.
+
+No conversation context needed. The work is the artifact, not the chat.

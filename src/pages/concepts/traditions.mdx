@@ -1,0 +1,116 @@
+---
+title: Game Traditions
+description: The 20 game traditions Gygax supports, what makes each one different, and how analysis adapts.
+---
+
+# Game Traditions
+
+Gygax analyzes 20 game traditions. The analytical tools are the same; the tradition determines how they're applied — which entity types matter most, which heuristics to load, which scripts to invoke for resolution math.
+
+## TTRPGs
+
+| Tradition | Slug | Examples | Distinctive |
+|-----------|------|----------|-------------|
+| **d20** | `d20` | D&D, Pathfinder, 13th Age | Ability scores, AC, HP, attack rolls, saving throws, spell slots, CR, levels |
+| **Powered by the Apocalypse** | `pbta` | Dungeon World, Apocalypse World, Masks, Monsterhearts | Stats -1 to +3, 2d6+stat moves, 10+/7-9/6- outcomes, playbooks, harm/conditions |
+| **Forged in the Dark** | `fitd` | Blades in the Dark, Scum and Villainy | Action ratings, position/effect, stress/trauma, clocks, crew sheets |
+| **OSR** | `osr` | OSE, Knave, Cairn, Into the Odd | Minimal stats, high lethality, procedures over rules, reaction tables, resource depletion |
+| **Cepheus / Traveller** | `cepheus` | Traveller, Cepheus Engine | 2d6+mod vs 8+, Effect-based gradient, lifepath careers, 6 characteristics, unskilled -3 penalty |
+| **Freeform** | `freeform` | Wanderhome, Belonging Outside Belonging | Minimal resolution, fiction-first, safety tools as mechanics |
+| **Custom** | `custom` | Journaling, GMless, map-drawing, lyric games | Anything truly experimental |
+
+## Board & Card Games
+
+| Tradition | Slug | Examples |
+|-----------|------|----------|
+| **Eurogame** | `eurogame` | Agricola, Brass, Terraforming Mars |
+| **Deckbuilder** | `deckbuilder` | Dominion, Star Realms, Aeon's End |
+| **CCG/TCG** | `ccg` | Magic: the Gathering, Hearthstone, Marvel Snap |
+| **Cooperative** | `cooperative` | Pandemic, Spirit Island, Hanabi |
+| **Social deduction** | `social-deduction` | Blood on the Clocktower, Werewolf, Secret Hitler |
+
+## Digital Game Design
+
+| Tradition | Slug | Examples |
+|-----------|------|----------|
+| **Autobattler** | `autobattler` | TFT, Super Auto Pets, Storybook Brawl |
+| **Roguelike** | `roguelike` | Slay the Spire, Hades, Balatro |
+| **Tactics** | `tactics` | XCOM, Into the Breach, Fire Emblem |
+| **4X** | `4x` | Civilization, Stellaris, Endless Legend |
+| **Idle/Incremental** | `idle` | Cookie Clicker, Melvor Idle |
+| **Extraction** | `extraction` | Escape from Tarkov, Dark and Darker |
+| **Looter** | `looter` | Diablo, Path of Exile, Destiny |
+| **Immersive sim** | `immersive-sim` | Deus Ex, Prey, Dishonored |
+
+## How Tradition Shapes Analysis
+
+The tradition field in `index.yaml` flows through every skill.
+
+### `/attune` Extraction
+
+Different traditions emphasize different entity types. Attune adjusts what it looks for in source material:
+
+| Tradition | Primary Entities | Often Sparse |
+|-----------|-----------------|--------------|
+| d20 | stats, mechanics, progression | tensions |
+| pbta | mechanics (moves), stats | resources, tensions |
+| fitd | resources (stress), mechanics (actions, position/effect) | stats, tensions |
+| osr | mechanics (procedures), entities (monsters, treasure), resources (supply) | progression, tensions |
+| cepheus | stats (6 characteristics), mechanics (skill checks, Effect), progression (lifepath) | tensions |
+| freeform | mechanics (tokens, prompts), tensions (safety tools as mechanics) | stats, resources, progression |
+| eurogame | mechanics (actions), resources (economy), entities (components) | stats |
+| deckbuilder | mechanics (buy/play/trash), entities (cards), resources (currency) | stats, tensions |
+| autobattler | entities (units), mechanics (combat, synergies), resources (economy) | stats, tensions |
+| roguelike | mechanics (run structure), progression (meta-unlocks), entities (items, builds) | stats, tensions |
+| social-deduction | entities (roles), mechanics (phases, voting), tensions (information asymmetry) | stats, progression |
+| idle | mechanics (click/automate loop), progression (prestige), resources (currencies) | stats, entities |
+
+For **custom** games, attune lets the game decide. A journaling RPG may have only `mechanics/` (prompts) and `tensions/` (thematic). A GMless game may have no `entities/` at all. Empty categories are better than forced ones.
+
+### `/augury` Resolution Math
+
+The probability scripts invoked depend on the resolution method:
+
+- **Single d20**: `dice-probability.ts`
+- **2d6, 3d6, Traveller/Cepheus sums**: `bell-curve.ts`
+- **Dice pools** (Shadowrun, FitD, Storyteller): `dice-pool.ts`
+- **Advantage/disadvantage** (5e-style): `advantage.ts`
+- **Exploding/acing dice** (Savage Worlds, DCC, Feng Shui): `exploding-dice.ts`
+- **Non-dice methods** (auction, worker-placement, simultaneous-choice, deterministic, deduction): structural analysis instead of probability
+
+### `/cabal` Archetype Behavior
+
+The same archetypes test the same player mindsets in every tradition, but with behavioral weightings adapted:
+
+- The **Optimizer** in a TTRPG min-maxes a build. In a journaling RPG, it finds prompt sequences that produce the most dramatic entries.
+- The **Rules Lawyer** in a d20 game finds RAW edge cases. In a GMless game, it probes authority distribution.
+- The **Newcomer** in an autobattler asks how draft works. In a freeform game, it asks what a scene even is.
+
+If an archetype genuinely can't engage with a game, that itself is a finding.
+
+### `/lore` Heuristic Libraries
+
+Each tradition has a curated heuristic library at `skills/lore/resources/{tradition}.yaml`:
+
+- `d20.yaml` — linear fighter / quadratic wizard, MAD dependency, bounded accuracy violations
+- `pbta.yaml` — move trigger overlap, missing miss consequences, playbook overshadowing
+- `fitd.yaml` — stress economy mismatch, position/effect inflation, downtime starvation
+- `osr.yaml` — combat-as-war vs sport, information-as-treasure, weight-of-choice
+
+460+ heuristics across the 20 traditions. **Tradition-specific** heuristics fire only when the matching tradition is set. **Cross-tradition** heuristics (`tradition_specific: false`) fire everywhere.
+
+For `custom` and `freeform`, lore loads all applicable libraries and falls back to structural analysis (decision space, loop completeness, tension health, pacing) when nothing matches. If fewer than 3 heuristics match, lore says so honestly.
+
+## When Gygax Doesn't Know
+
+> I will also tell you, clearly, when I don't know enough about a tradition or genre to have a strong opinion. I'd rather surface that gap than fill it with confident-sounding approximation.
+
+Depth varies by tradition — TTRPG traditions are deepest, digital traditions are growing. For traditions with sparse heuristic libraries, findings carry a `[structural-only]` tag indicating that pattern-matching against tradition-specific precedent wasn't available.
+
+If your game is a journaling RPG about playing as a lighthouse and none of the curated heuristics directly apply — that's a finding, not a reason to pretend the heuristics apply anyway. See the [`false_expertise` refusal](/identity/refusals).
+
+## See Also
+
+- [/attune](/commands/attune) — tradition classification during ingestion
+- [/lore](/commands/lore) — heuristic libraries by tradition
+- [Probability Scripts](/concepts/probability-scripts) — which scripts handle which resolution methods

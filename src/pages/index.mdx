@@ -1,0 +1,49 @@
+---
+title: Gygax
+description: Game systems analyst for the Loa ecosystem. Designs, balances, and stress-tests mechanics across 20 game traditions with persistent game-state, intent-aware analysis, and scenario-based playtesting.
+---
+
+# Gygax
+
+A **game systems analyst** for the [Loa](https://github.com/0xHoneyJar/loa) ecosystem.
+
+You design a mechanic. Gygax tells you your stamina system doesn't regenerate in combat, so that dodge reaction you're excited about becomes a trap option after round two. You design a eurogame engine. Gygax tells you the big-money strategy dominates all engine-building. You draft an autobattler comp. Gygax tells you one synergy line has a 2x DPS multiplier over everything else.
+
+Before your players find out.
+
+## What Makes It Different From Asking an LLM
+
+- **It remembers.** Gygax maintains structured game-state across sessions. When you're designing your spell system, it still knows about your stamina system. Cross-system interactions are where the real bugs hide.
+- **It does math, not vibes.** "Seems overpowered" isn't actionable. "47 DPR against a 180 HP pool gives a TTK of 3.8 seconds" is. For non-dice games, it does structural analysis — slot contention ratios, conversion efficiency, decision-space mapping.
+- **It argues with you.** Nine simulated player archetypes stress-test your design from every angle — the Optimizer finds the exploit, the Newcomer can't figure out the rules, the GM is drowning in cognitive load.
+- **It lets you explore.** Fork your game-state, try a change, see the consequences, compare alternatives. Commit the good branch, discard the rest.
+- **It knows its own limits.** Gygax reads designer *intent* before classifying findings, runs real math via probability scripts where LLMs would hallucinate, and tells you when it doesn't know enough about a tradition to have a strong opinion.
+
+## The Commands
+
+| Command | What It Does |
+|---------|-------------|
+| [`/gygax`](/commands/gygax) | Game health dashboard — cross-skill synthesis, prioritized findings, trajectory |
+| [`/attune`](/commands/attune) | Ingest a source (doc, repo, URL) or guided interview to build game-state |
+| [`/homebrew`](/commands/homebrew) | Design or refine a mechanic with cross-system consistency checking |
+| [`/augury`](/commands/augury) | Numerical balance analysis grounded in game-state |
+| [`/cabal`](/commands/cabal) | Scenario-based playtest simulation with 9 player archetypes |
+| [`/lore`](/commands/lore) | Curated + learned design heuristics across 20 traditions |
+| [`/scry`](/commands/scry) | Fork game-state, test changes, compare branches, commit the best |
+| [`/delve`](/commands/delve) | Analyze dungeons — ecology, Xandering, attrition, loot, G.U.A.R.D. |
+
+## A Typical Loop
+
+```
+/attune  →  /homebrew  →  /augury  →  /cabal  →  iterate
+```
+
+Every skill tells you what to do next. Augury finds a balance problem? It suggests the exact `/homebrew` invocation. Cabal finds an accessibility issue? It points you to the specific mechanic.
+
+You don't have to follow any order. `/cabal` a napkin sketch before you've done any balance work. `/scry` three alternatives before committing.
+
+## Start Here
+
+- [Getting Started](/getting-started) — install, attune your first game, run an analysis
+- [Philosophy](/philosophy) — why structure-first analysis beats vibes
+- [Game-State](/concepts/game-state) — the data model everything else depends on

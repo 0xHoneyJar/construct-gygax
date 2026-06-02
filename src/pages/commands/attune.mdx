@@ -1,0 +1,193 @@
+---
+title: /attune
+description: Ingest a source and build structured game-state. The gateway to everything else.
+---
+
+# /attune
+
+Onboard and ingest a game system, rulebook, or repo into Gygax. Reads source material — markdown, plain text, URLs, repositories, or conversational input — extracts core mechanics, and produces structured [game-state](/concepts/game-state) YAML.
+
+> Attune is the gateway. Without game-state, no other skill can function.
+
+**Skill:** `attune` · **Writes to:** `grimoires/gygax/game-state/`, `grimoires/gygax/references/`, `grimoires/gygax/changelog/`
+
+## Trigger
+
+```
+/attune docs/rulebook.md          # ingest a markdown document
+/attune src/rules/                # ingest a directory of files
+/attune https://example.com/srd   # ingest from a URL
+/attune                           # no source → guided interview
+/attune --reference 5e-srd        # install a bundled reference system
+/attune <code-repo-path>          # F1 code-level drift detection
+```
+
+## Input Modes
+
+| Input | Mode | Strategy |
+|-------|------|----------|
+| `--reference {name}` | **Reference Installation** | Install a pre-attuned bundled reference, skip interview |
+| File path (markdown/text) | **Document Ingestion** | Read, extract, interview for gaps |
+| Directory path | **Repo Ingestion** | Glob `.md`/`.txt`/`.yaml`, read, extract |
+| Directory with TS engine or `gygax.driver.ts` | **Code-Level Drift (F1)** | Static analysis + reconciliation |
+| URL | **URL Ingestion** | WebFetch the URL content |
+| No argument | **Guided Interview** | Build game-state entirely through conversation |
+| Existing state + new source | **Additive Ingestion** | Merge into existing game-state without overwriting |
+
+## Reference Installation
+
+```
+/attune --reference 5e-srd
+```
+
+Installs a pre-bundled reference system to `grimoires/gygax/references/{name}/`. Used for cross-system comparison via `/augury compare --against {name}`.
+
+| Slug | Tradition | What |
+|------|-----------|------|
+| `5e-srd` | d20 | Standard 5e combat math, ability score cap, baseline mechanics |
+| `pbta-baseline` | PbtA | Apocalypse World core moves |
+| `cepheus-core` | Cepheus | 2d6 + Effect, lifepath career structure |
+
+Reference installation is a short workflow — no interview, no ingestion. Writes the bundle and stops.
+
+## Tradition Classification
+
+Attune classifies the source into one of 20 traditions. The tradition determines schema fields, default values, and what to interview about.
+
+See [Game Traditions](/concepts/traditions) for the full list. The seven TTRPG traditions and their classification cues:
+
+| Tradition | Cues |
+|-----------|------|
+| **d20** | Ability scores, AC, HP, attack rolls, saving throws, spell slots, CR, levels |
+| **pbta** | Stats -1 to +3, 2d6+stat, 10+/7-9/6-, playbooks, harm/conditions |
+| **fitd** | Action ratings, position/effect, stress/trauma, clocks, crew sheets |
+| **osr** | Minimal stats, high lethality, procedures over rules, reaction tables |
+| **cepheus** | 2d6+mod vs 8+, Effect, lifepath, 6 characteristics, unskilled -3 penalty |
+| **freeform** | No dice or minimal resolution, fiction-first, safety tools as mechanics |
+| **custom** | Hybrid, novel, or experimental — let the game decide |
+
+## The Interview
+
+Attune's interview is **two batches** maximum. The principle: *draft first, correct later.*
+
+### 3a — Identity (all traditions)
+
+Asked as one message:
+
+1. What is the game called?
+2. What tradition?
+3. One-sentence pitch — what makes this different from a standard [tradition] game?
+4. What is the core loop?
+
+### 3b — Core Differentiators (tradition-aware)
+
+One diagnostic question per tradition family. Examples:
+
+- **d20**: "What's different about your resolution, combat, or progression compared to standard d20?"
+- **pbta**: "What are your unique moves and what stats do they roll?"
+- **fitd**: "How does your stress/harm economy differ from standard Blades?"
+- **autobattler/tactics**: "What are the unit types and how does a round play out?"
+- **freeform/custom**: "Walk me through one complete scene or session cycle"
+
+Then one follow-up. That's it. Anything not specified uses tradition defaults, marked `[inferred from tradition defaults]` so the user can correct during review.
+
+## Game-State Generation
+
+Attune writes YAML files to `grimoires/gygax/game-state/` organized by entity type:
+
+```
+grimoires/gygax/game-state/
+  stats/      resources/  mechanics/
+  progression/  entities/  tensions/
+  index.yaml
+```
+
+**Generation rules:**
+
+- One file per entity, kebab-case IDs unique within type
+- Cross-references use relative paths within `game-state/`
+- `depends_on` / `affects` arrays trace the dependency graph
+- Target fewer than 30 files for a typical TTRPG (combine spells/items)
+- Auto-create stub entities for unresolved references rather than breaking the graph
+- Set `created_by: attune`, `created_at: <ISO-8601>`
+
+See [Game-State](/concepts/game-state) for the full schema.
+
+## Validation
+
+Before presenting results, attune validates:
+
+- **Schema:** required fields present, IDs unique, types match directories, tradition valid
+- **Cross-references:** every path resolves to a real file (or a stub)
+- **Bidirectionality:** if A `affects` B, then B `depends_on` A (asymmetric is a warning, not an error)
+- **No circular dependencies:** detected via topological sort
+- **Index consistency:** `entity_count` matches actual files, `files` lists every entity, `graph_integrity` is accurate
+
+Validation failures are repaired silently. Only issues requiring user input are surfaced.
+
+## Code-Level Drift (F1)
+
+When the target directory is a code engine, attune engages [F1 code-grounding](/concepts/code-grounding) instead of prose ingestion. Static-analyzes the engine, reconciles against game-state, writes a cited drift report to `grimoires/gygax/balance-reports/drift-<repo>-<commit>.md`.
+
+```bash
+npx tsx scripts/lib/codegrounding/attune-codelevel.ts <repoPath> grimoires/gygax/game-state
+```
+
+The report has three sections — **Numeric Drift**, **Structural Drift**, **Silent On**. Adjudication is human-led; attune never auto-applies code-leads decisions.
+
+## Review and Correction
+
+Phase 8 presents the draft for review:
+
+1. **Summary** — 3–5 sentences showing Gygax understood the game. If the summary feels wrong, the game-state is wrong.
+2. **Entity counts** — stats, resources, mechanics, progression, entities, tensions.
+3. **Inferred content flagged** — "I used standard [tradition] defaults for: [list]. Correct anything off."
+4. **Tensions surfaced** — "I see these tensions: [list]. Sound right? Any missing?"
+5. **Design parameters table** — defaulted from tradition, user fills only what differs
+6. **Intent prompt** (optional) — capture intent on identified tensions
+
+Corrections trigger iterative refinement: update affected YAML, update cross-references, update index, append changelog entry, re-validate.
+
+## Next Steps (Cross-Skill Chaining)
+
+After attunement:
+
+```
+Game attuned. Suggested next steps:
+
+1. /lore — check against tradition anti-patterns
+2. /augury — validate numerical balance
+3. /homebrew — start designing new mechanics
+4. /cabal --newcomer --optimizer — quick accessibility + exploitability stress test
+5. /attune --reference 5e-srd — install a baseline for comparison
+```
+
+Tailored to what was built — narrative-first games emphasize `/lore` and `/cabal --storyteller`; combat-heavy games emphasize `/augury`.
+
+## Boundaries
+
+- **Does not** design new mechanics — use [`/homebrew`](/commands/homebrew)
+- **Does not** evaluate balance — use [`/augury`](/commands/augury)
+- **Does not** simulate play — use [`/cabal`](/commands/cabal)
+- **Does not** apply heuristic pattern-matching — use [`/lore`](/commands/lore)
+- **Does not** make creative decisions — asks rather than guessing on ambiguity
+- **Does not** generate more than 30 game-state files per attunement without explicit user request
+- **Does not** edit files in `.claude/`
+
+## Edge Cases
+
+- **Mid-project install:** If `grimoires/gygax/` already exists, treats as additive — preserves existing timestamps, only updates `last_modified_*` fields
+- **Very large source:** Captures core systems, recommends incremental attunement for individual monsters/spells/items
+- **Minimal source:** Extracts what exists, shifts to interview mode for the rest
+- **"It's like 5e":** Uses the named system as baseline, asks only about differences
+- **Unknown system:** Extracts structurally, shifts to interview-heavy mode
+
+## Output
+
+| Artifact | Path |
+|----------|------|
+| Entity files | `grimoires/gygax/game-state/{type}/{id}.yaml` |
+| Index | `grimoires/gygax/game-state/index.yaml` |
+| Reference bundle | `grimoires/gygax/references/{name}/` (reference mode) |
+| Drift report | `grimoires/gygax/balance-reports/drift-<repo>-<commit>.md` (F1 mode) |
+| Changelog | `grimoires/gygax/changelog/YYYY-MM-DD-HHMMSS-attune-*.yaml` |

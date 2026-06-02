@@ -1,0 +1,176 @@
+---
+title: Delve Frameworks
+description: The five analytical frameworks /delve applies to dungeons.
+---
+
+# Delve Frameworks
+
+`/delve` applies five frameworks derived from decades of dungeon design theory. Each can run independently or as part of the full scan.
+
+## 1. Ecology
+
+Classifies the dungeon's inhabitant logic into one of four categories.
+
+| Category | Logic | Immersion |
+|----------|-------|-----------|
+| **Monster Zoo** | Creatures mixed by CR / visual appeal. No relationship logic. | Low — breaks immersion unless justified by narrative anomaly |
+| **Thracia-style (Coherent History)** | Factions with hierarchies and active conflicts. Players can manipulate faction dynamics. | High — provides agency beyond combat |
+| **Realistic Simulation** | Resource flow logic — food sources, water, waste, breeding habits. | High — naturalistic foreshadowing ("no prey = apex predator nearby") |
+| **Theme-Based** | Commits to narrative theme over architectural realism. Non-Euclidean spaces, dream logic. | High for specific emotional register |
+
+### Advanced Check: History Dictates Choice
+
+- **Architectural layers** — original builders vs current occupiers
+- **Marriage of Tolerance** — logical symbiotic relationships between creatures
+
+*Example from Caverns of Thracia: giant spider guards river pass; reptiles feed it captured humans; it serves as natural guardian.*
+
+### Detection
+
+Reads the dungeon's `ecology` field:
+
+- `classification`
+- `original_inhabitants` / `current_inhabitants`
+- `layered_narrative`
+- `symbiotic_relationships`
+
+### Flags
+
+| Pattern | Severity |
+|---------|----------|
+| Pure Monster Zoo with no justification | Warning |
+| Classified category contradicts stated atmosphere | Contradiction |
+| Missing inhabitant ecology fields entirely | Info (recommend adding) |
+
+## 2. Xandering (Non-Linearity)
+
+Named for Justin Alexander's terminology. Quantifies non-linearity via the dungeon's `architecture` fields.
+
+### Metrics
+
+| Metric | Source | Good Baseline |
+|--------|--------|---------------|
+| Multiple entrances | `architecture.entrances` | ≥ 2 |
+| Loops | `architecture.loops` | ≥ 1 for dungeons of 5+ rooms |
+| Secret paths | `architecture.secrets` | ≥ 1 per 5 rooms |
+| Sub-levels (verticality) | `architecture.sub_levels` | ≥ 1 for dungeons of 10+ rooms |
+
+### Diagnostic Barometers
+
+| Barometer | Evaluation |
+|-----------|------------|
+| Difficult vs Easy | Are some areas trivially connected while others require effort? |
+| Far vs Near | Do some areas feel close to entrance while others feel genuinely distant? |
+
+### Landmarks
+
+Without landmarks, non-linearity becomes "featureless sprawl" — navigation by memorization instead of recognition. Reads the `landmark` field in each room.
+
+### Flags
+
+| Pattern | Severity |
+|---------|----------|
+| Single entrance, no loops, no secrets | Major — "This is a railroad, not a dungeon" |
+| Loops without landmarks | Warning — "Navigation will feel like corridors without character" |
+| High verticality without pathing clarity | Warning — "Players may get lost without landmarks" |
+
+## 3. Attrition
+
+Models resource depletion across the expected room sequence.
+
+### Inputs
+
+- `attrition.expected_rooms_before_rest`
+- `attrition.resource_pressure_curve` (e.g., `[light, light, medium, heavy, critical]`)
+- Resources defined in `resources/*.yaml` — HP, stamina, spell slots, torches, rations
+- Per-room encounters and resource costs
+
+### Analysis
+
+1. **Starting resources** — what does a typical party bring in?
+2. **Expected depletion per room** — average cost of encounters, traps, environmental effects
+3. **Recovery opportunities** — safe rooms, rest points, recovery mechanics within the dungeon
+4. **Net resource pressure** at each milestone (room 1, 3, 5)
+5. **Dead zones** (no pressure, boring) and **critical points** (near-depletion, high tension)
+
+### Scripts
+
+- `bell-curve.ts` for dice-based damage (e.g., 1d6 per trap, 2d4 per encounter)
+- `dice-pool.ts` for pool-based resource costs
+
+### Flags
+
+| Pattern | Severity |
+|---------|----------|
+| Pressure curve with no critical point | Warning — "No resource tension" |
+| Pressure reaches critical before room 3 | Major — "Death spiral — too hard too fast" |
+| No rest opportunity across 6+ rooms | Observation — "Tests resource management heavily; intentional?" |
+
+**Intent-aware:** Reads the dungeon's `intent` field before classifying. *"Classic extraction run with escalating stakes"* makes a severe pressure curve the design, not a bug.
+
+## 4. Loot Economy
+
+Models loot distribution using `dice-probability.ts`.
+
+### Analysis
+
+1. **Total loot pool** — sum all treasure/items across rooms
+2. **Rarity distribution** — common vs rare vs legendary
+3. **Item weight balance** — if weighted buckets, do probabilities produce the intended feel?
+4. **RNG frustration** — how many encounters/rooms before the expected "good drop"?
+5. **Pity timer sanity** — if configured, does the timer fire before player frustration kicks in?
+
+### Schema
+
+```yaml
+loot:
+  distribution_method: weighted-buckets|pity-timer|both|none
+  weighted_buckets:
+    legendary: {weight: 1, items: [frequency-crystal]}
+    rare: {weight: 10, items: [old-chip, mining-laser]}
+    common: {weight: 40, items: [scrap-metal, rad-suit]}
+    currency: {weight: 50, items: [imperial-credit]}
+  pity_timer:
+    after_n_attempts: 20
+    guaranteed_tier: rare
+```
+
+### Flags
+
+| Pattern | Severity |
+|---------|----------|
+| Legendary probability < 0.5% with no pity timer | Warning — "Players may never see legendary content" |
+| All loot is the same tier | Observation — "No rarity variation — intentional?" |
+| Loot value vs risk mismatch (high-risk room has low-value loot) | Minor — "Risk/reward inverted" |
+
+## 5. G.U.A.R.D. Checklist
+
+Final pass across five dimensions. Each: PASS / PARTIAL / FAIL with specific evidence.
+
+| Dimension | Question | Pass Evidence |
+|-----------|----------|---------------|
+| **G**oals | Is the dungeon's purpose clear from the structure? | Quest objective visible in entry, treasure rooms point toward reward, endpoint is recognizable |
+| **U**nderlining themes | Is the ecology coherent? | Thracia-style or better, layered history, no Monster Zoo violations |
+| **A**tmosphere | Are landmarks evocative? | Memorable visual references, distinct room descriptions, sensory variety |
+| **R**isks | Is attrition balanced with reward? | Resource pressure exists but isn't punishing; high-risk rooms have commensurate rewards |
+| **D**iversions | Are there traps, puzzles, secret paths? | Non-combat challenges exist, break linearity, reward exploration |
+
+Overall grade: N/5 passing.
+
+## Tradition Adaptation
+
+| Tradition | Emphasis |
+|-----------|----------|
+| **d20** | CR-based attrition math; loot economy as progression gate |
+| **PbtA** | Ecology as fiction source; front/threat structure; moves triggered by dungeon features |
+| **FitD** | Score structure (setup/engagement/aftermath); clocks as dungeon timers |
+| **OSR** | **Deep alignment** — applies `osr.yaml` heuristics aggressively. Combat-as-war vs sport, information-as-treasure, weight-of-choice. |
+| **Custom** | Adapts — some games have no combat, no traps, no loot. Classifies what exists, flags absence only if dungeon purpose implies it. |
+
+OSR integration is special: when the game's tradition is `osr`, delve also reads `skills/lore/resources/osr.yaml` and applies the philosophical heuristics. OSR dungeons should pass the Combat-as-War vs Sport test, the Information-as-Treasure test, and the Weight-of-Choice test.
+
+## See Also
+
+- [/delve](/commands/delve) — the command driving framework execution
+- [/lore](/commands/lore) — OSR heuristic library for tradition-specific philosophical checks
+- [Probability Scripts](/concepts/probability-scripts) — math behind attrition and loot

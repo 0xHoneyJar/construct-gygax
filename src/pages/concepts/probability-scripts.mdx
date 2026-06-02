@@ -1,0 +1,126 @@
+---
+title: Probability Scripts
+description: Deterministic math for the calculations LLMs get wrong.
+---
+
+# Probability Scripts
+
+Certain probability calculations are unreliable when performed by AI reasoning alone. Bell curves, dice pools, advantage/disadvantage distributions, and exploding dice involve combinatorics and recursive math where LLMs consistently produce incorrect CDFs, wrong expected values, and flawed tail probabilities.
+
+Probability scripts exist to handle these cases with deterministic precision. Every script output is cited in the report it appears in.
+
+> Math, not vibes.
+
+## The Decision Matrix
+
+```
+IF single die (d20, d100) with static target:
+  → AI reasoning sufficient
+  → Invoke dice-probability.ts only for large-scale tables
+
+ELIF multi-die summation (2d6, 3d6, 4d6 drop lowest):
+  → MUST invoke bell-curve.ts
+  → AI reasoning produces wrong CDFs
+
+ELIF dice pool (Nd6 count successes):
+  → MUST invoke dice-pool.ts
+  → Binomial math is LLM-unreliable
+
+ELIF advantage/disadvantage mechanic:
+  → MUST invoke advantage.ts
+  → Bell-shaped utility curve is counterintuitive
+
+ELIF exploding/acing dice:
+  → MUST invoke exploding-dice.ts
+  → Target Number Paradox breaks intuition
+
+ELIF cross-system comparison:
+  → MUST invoke cdf-compare.ts on the two CDFs
+
+ELIF opposed roll (PC vs NPC dice):
+  → MUST invoke opposed-roll.ts
+```
+
+## Available Scripts
+
+All scripts live in `scripts/lib/` and follow the same invocation protocol.
+
+| Script | Input Domain | When Required |
+|--------|-------------|---------------|
+| `dice-probability.ts` | Single-die distributions (d4–d100) | Large-scale probability tables |
+| `bell-curve.ts` | Multi-die summation (2d6, 3d6, Traveller/Cepheus) | Any multi-die sum |
+| `dice-pool.ts` | Success-counting pools (Shadowrun, FitD, Storyteller) | Any dice pool probability |
+| `advantage.ts` | Advantage/disadvantage (5e-style) | Any advantage/disadvantage analysis |
+| `exploding-dice.ts` | Recursive aces (Savage Worlds, DCC, Feng Shui) | Any exploding die calculation |
+| `cdf-compare.ts` | Two CDF distributions across DC range | Any cross-system comparison |
+| `opposed-roll.ts` | PC vs NPC opposed dice | Any opposed-resolution mechanic |
+
+See `scripts/MANIFEST.yaml` for full input/output specs.
+
+## Invocation
+
+All scripts follow the same protocol: pipe a JSON input on stdin, receive a JSON result on stdout.
+
+```bash
+echo '<json-input>' | npx tsx scripts/lib/{script-name}.ts
+```
+
+### Example: Bell Curve
+
+```bash
+echo '{"dice": 3, "sides": 6, "target": 12}' | npx tsx scripts/lib/bell-curve.ts
+```
+
+Output:
+
+```json
+{
+  "probability_at_least": 0.7407,
+  "cdf": [...],
+  "expected_value": 10.5,
+  "stdev": 2.958
+}
+```
+
+### Example: Advantage
+
+```bash
+echo '{"target": 15, "modifier": 5, "type": "advantage"}' | npx tsx scripts/lib/advantage.ts
+```
+
+## Citation Requirement
+
+Every script output that appears in a Gygax report must be cited with its input parameters:
+
+> Source: `bell-curve.ts`, input: `{dice:3, sides:6, target:12}`, output: `probability_at_least=0.7407`
+
+This makes findings reproducible. A designer can re-run the same input and verify the number.
+
+## When LLMs Get It Wrong
+
+Three places LLM reasoning consistently fails:
+
+1. **CDFs of multi-die sums.** Even 3d6 vs DC 12 trips up LLMs. The discrete sum CDF requires enumerating dice configurations; estimation produces values often 5–10 percentage points off.
+2. **Advantage utility.** The benefit of advantage is bell-shaped — biggest at the median, near zero at the extremes. LLMs tend to apply a flat "+5 to roll" intuition that's wrong everywhere except the middle.
+3. **Exploding dice and Target Number Paradox.** With exploding dice, raising the target number can *increase* the success probability under certain conditions because the explosion threshold shifts. This breaks human (and LLM) intuition entirely.
+
+In all three cases, the script's output is the ground truth. The LLM's job is to interpret it, not produce it.
+
+## Non-Dice Resolution
+
+For games where the resolution method isn't probabilistic — auction, worker-placement, drafting, simultaneous-choice, deterministic, automated, deduction — no probability script applies. `/augury` falls back to structural analysis:
+
+- **Auction / negotiation**: valuation range, information advantage, overbid penalty
+- **Worker-placement / drafting**: slot count, contention ratio, pick-order advantage
+- **Simultaneous-choice**: payoff matrix analysis, dominant strategy detection
+- **Deterministic / automated**: decision space size, input optimization surface
+- **Real-time**: skill ceiling, APM requirements (qualitative)
+- **Deduction**: information sufficiency, solvability, red herring density
+
+These findings are tagged `[qualitative — no probability data]` or `[structural — no probability data]`.
+
+## See Also
+
+- [/augury](/commands/augury) — the primary consumer of probability scripts
+- [/delve](/commands/delve) — uses bell-curve and dice-probability for attrition and loot math
+- [Game Traditions](/concepts/traditions) — which traditions use which resolution methods

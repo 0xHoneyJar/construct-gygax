@@ -1,0 +1,166 @@
+---
+title: /gygax
+description: Game health dashboard — cross-skill synthesis, prioritized findings, trajectory tracking.
+---
+
+# /gygax
+
+Game health dashboard. Cross-skill synthesis, prioritized findings, trajectory tracking, and a single recommended next action.
+
+> Where am I, and what matters most?
+
+**Skill:** `gygax-status` · **Read-only:** writes nothing
+
+## Trigger
+
+```
+/gygax
+```
+
+No arguments. Always produces the dashboard for the current project state.
+
+## What It Does
+
+1. Checks for `grimoires/gygax/game-state/index.yaml`. If missing: "No game attuned. Run `/attune` to onboard a game system."
+2. Loads identity, entity counts, design parameters, graph integrity from `index.yaml`.
+3. Reads the last 3 reports from each report directory (`balance-reports/`, `playtest-reports/`, `lore-reports/`, `delve-reports/`).
+4. Synthesizes findings across skills, identifying corroborations and contradictions.
+5. Ranks findings by severity × cross-skill multiplier × contradiction bonus, with intent modifier.
+6. Displays the top 5–7 findings, what's working well, trajectory, tensions, intent coverage, active branches, references, learned heuristics, and the single most impactful next action.
+
+## Cross-Skill Synthesis
+
+This is the core value of `/gygax`. Findings from different skills are reconciled:
+
+**Corroboration** — multiple skills flag the same entity for the same root cause:
+
+```
+[CRITICAL] Resource economy: stamina depletes in 2.5 rounds vs 3-4 round combat
+  augury RE-1 + lore hoarding-incentive [corroborated]
+  → /homebrew game-state/resources/stamina.yaml
+```
+
+**Contradiction** — skills disagree about the same entity. These are the most interesting findings:
+
+```
+[CONTRADICTION] Healing throughput: augury says balanced, cabal says trivializes combat
+  augury RE-3 (Healthy) vs cabal Optimizer signal (Mastery reward)
+  → /cabal --optimizer --veteran to investigate
+```
+
+Contradictions reveal where theory diverges from practice. They get a +2 ranking bonus regardless of severity.
+
+## Ranking Algorithm
+
+For each finding:
+
+| Factor | Weight |
+|--------|--------|
+| Severity | Critical = 4, Warning = 3, HIGH divergence = 3, Info = 1 |
+| Cross-skill multiplier | 2+ skills × 1.5, 3+ skills × 2.0 |
+| Contradiction bonus | +2 |
+| Intent modifier | `[INTENT-ALIGNED]` → halved, `[INTENT-CONFLICT]` → +1 |
+
+Top 5–7 findings make the dashboard.
+
+## What's Working
+
+Strengths get a section. Designers need to know what to protect:
+
+```
+-- Working Well --
+
+- Core resolution: clean probability curve, no dead zones (augury: Healthy)
+- First encounter beat: all archetypes engaged (cabal: no divergence)
+- No catalogued anti-patterns in combat mechanics (lore: clean scan)
+```
+
+Drawn from: Augury `[Healthy]` findings, Cabal `Cool moment` and `Mastery reward` signals with no divergence, Lore clean scans.
+
+## Trajectory
+
+If 2+ reports exist for any skill, the dashboard shows the trend:
+
+```
+-- Trajectory --
+
+augury: 3 Critical → 1 Critical (across 2 reports, improved)
+cabal:  2 HIGH divergences → 2 HIGH divergences (persisting)
+lore:   4 findings → 2 findings (improving)
+```
+
+Status options: `improving`, `stable`, `worsening`, `persisting`.
+
+## Dashboard Sections
+
+The full output, top to bottom:
+
+```
+== Gygax Status ==
+
+Game:      [name] ([tradition])
+           [description]
+Modified:  [last_modified_at]
+Entities:  [total] total ([type]: [count], ...)
+Graph:     [resolved] refs, [stubs] stubs, [orphaned] orphaned, [circular] circular
+Design:    [parameter summary, with (default) for unset fields]
+
+Game health: [one-line assessment]
+
+-- Top Findings --
+[5-7 prioritized cross-skill items]
+
+-- Working Well --
+[3-5 strengths]
+
+-- Trajectory --
+[trend per skill]
+
+-- Tensions --
+[name]: [health] — [notes]
+
+-- Intent Coverage --
+N of M entities have intent set (X%)
+
+-- Active Branches --
+[/scry branches with summaries]
+
+-- References --
+[installed reference systems]
+
+-- Learned Heuristics --
+[count by category]
+
+-- Next Action --
+[single most impactful recommendation]
+
+-- Active Sprint --
+[Loa context, if available]
+```
+
+Sections with no data are omitted silently — except **Game health**, which always shows.
+
+## Health Verdicts
+
+| State | Trigger |
+|-------|---------|
+| **strong** | No Critical or Warning findings across any report |
+| **stable** | No Critical, some Warnings |
+| **needs attention** | At least one Critical |
+| **no reports yet** | No analysis has been run since attunement |
+
+## Boundaries
+
+- **Does not** modify any game content — strictly read-only
+- **Does not** perform original analysis — synthesizes existing reports
+- **Does not** ingest new material
+- **Does not** write persistent artifacts — output is ephemeral
+- **Does** read up to 3 most recent reports per skill
+- **Does** cross-reference findings across skills
+- **Does** surface strengths alongside problems
+- **Does** recommend a specific next action
+
+## See Also
+
+- [/attune](/commands/attune) — when there's no game-state yet
+- [/augury](/commands/augury), [/cabal](/commands/cabal), [/lore](/commands/lore), [/delve](/commands/delve) — the skills `/gygax` synthesizes from

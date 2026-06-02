@@ -53,6 +53,25 @@ Run from your project root. Installs skills into `.claude/skills/`, creates grim
 constructs install gygax
 ```
 
+## Documentation
+
+Full reference documentation lives under `src/pages/`, built with [Vocs](https://vocs.dev). Preview locally:
+
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # production output in dist/
+npm run preview  # serve the built output
+```
+
+What's covered:
+
+- **Welcome** — introduction, getting started, philosophy
+- **Core Concepts** — game-state, the grimoire, designer intent, traditions, probability scripts, code-grounding (F1/F2/F4)
+- **Commands** — full reference for every slash command (`/gygax`, `/attune`, `/homebrew`, `/augury`, `/cabal`, `/lore`, `/scry`, `/delve`)
+- **Identity** — persona and voice, the seven refusals, expertise and boundaries
+- **Reference** — the 9 Cabal archetypes, the 6 Augury layers, the 5 Delve frameworks, composition with Arneson and Loa
+
 ## The Cabal
 
 `/cabal` is scenario-based playtest simulation. Nine archetypes walk through your design beat by beat — not just analyzing it from a distance, but experiencing it the way a player would. You compose the panel for each run.

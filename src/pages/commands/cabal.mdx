@@ -1,0 +1,250 @@
+---
+title: /cabal
+description: Scenario-based playtest simulation with 9 player archetypes and experience tracking.
+---
+
+# /cabal
+
+Simulate playtesting sessions with a roster of 9 synthetic player archetypes. Each represents a distinct player orientation. Users compose their own panel for each run. The simulation walks each archetype through a concrete scenario beat by beat, tracking experience signals and surfacing moments where different player types have radically different experiences of the same design.
+
+> Real playtesting is expensive. Cabal is fast, repeatable, archetype-driven analysis that catches what real players find — exploits, dead options, ambiguous rules, broken combos, accessibility barriers, cognitive overload, narrative-mechanical dissonance.
+
+**Skill:** `cabal` · **Read-only against game-state · Writes to:** `playtest-reports/`
+
+## Trigger
+
+```
+/cabal                                                    # context-aware default panel
+/cabal dodge-reaction                                     # focused test of one mechanic
+/cabal --optimizer --newcomer --gm session-arc            # explicit panel + scenario
+/cabal --all "first session character creation"           # all 9 archetypes
+/cabal --anxious --newcomer                               # accessibility focus
+```
+
+Or natural language: *"playtest this"*, *"stress test"*, *"will players break this"*, *"is this accessible"*.
+
+## The Nine Archetypes
+
+| Archetype | Flag | Tests For |
+|-----------|------|-----------|
+| **Optimizer** | `--optimizer` | Dominant strategies, exploits, trap options, scaling breaks |
+| **Explorer** | `--explorer` | Dead design space, edge cases, breadth |
+| **Storyteller** | `--storyteller` | Fiction-mechanics alignment, dramatic inertia, feel-bad moments |
+| **Rules Lawyer** | `--rules-lawyer` | RAW vs RAI, contradictions, undefined states, scope creep |
+| **Newcomer** | `--newcomer` | Accessibility, onboarding friction, jargon, self-teaching |
+| **Chaos Agent** | `--chaos-agent` | Graceful degradation, GM improvisation load, uncovered actions |
+| **GM** | `--gm` | Cognitive load, prep needs, improvisation space, spotlight |
+| **Anxious Player** | `--anxious` | Decision paralysis, failure harshness, recovery, option overload |
+| **Veteran** | `--veteran` | Long-term engagement, mastery plateau, emergent complexity |
+
+See [Cabal Archetypes](/reference/archetypes) for the full behavioral profiles.
+
+For non-traditional games, archetypes adapt. In a journaling RPG, the Optimizer finds prompt sequences that produce the most dramatic entries. If an archetype genuinely cannot engage, that itself is a finding.
+
+## Panel Selection
+
+### User-Composed
+
+```
+/cabal --optimizer --newcomer --gm     # these 3 only
+/cabal --all                           # all 9
+/cabal --all --no-veteran              # all except Veteran
+```
+
+### Context-Aware Defaults
+
+| Scenario Type | Default Panel | Rationale |
+|---------------|--------------|-----------|
+| New mechanic | Optimizer, Rules Lawyer, Newcomer | Exploitable? Clear? Accessible? |
+| Combat encounter | Optimizer, Storyteller, GM | Efficient? Dramatic? Runnable? |
+| Session arc | Optimizer, Storyteller, Newcomer, GM, Veteran | Broad coverage |
+| Character creation | Explorer, Anxious Player, Newcomer | Breadth? Overwhelming? Accessible? |
+| Specific entity | Optimizer, Explorer, Veteran | Build depth, options, sustained engagement |
+| Full game review | All 9 | Comprehensive |
+
+### Design Parameter Weighting
+
+- `target_audience: newcomer` → always includes Newcomer and Anxious Player; weights their signals higher
+- `target_audience: mastery` → always includes Optimizer and Veteran; lowers Newcomer weight
+- `target_session_length: short` → weights Dead time, Decision paralysis higher
+- `target_player_count: large` → always includes GM; weights Cognitive overload higher
+- `target_interaction: cooperative` → archetypes modeled as allies (Optimizer optimizes group outcome)
+- `target_interaction: solo` → single-archetype runs only
+- `target_randomness: none` → weights Decision paralysis, Mastery reward higher
+
+## The Eight Experience Signals
+
+Every beat gets exactly one signal per archetype.
+
+| Signal | Triggers When | Sensitive Archetypes |
+|--------|--------------|---------------------|
+| **Confusion** | Undefined concepts, unexplained jargon, ambiguous triggers | Newcomer, Anxious |
+| **Excitement** | Dramatic outcomes, combos working, peak moments | Storyteller, Veteran |
+| **Dead time** | No meaningful action, waiting, mechanic irrelevant | Explorer, Veteran |
+| **Decision paralysis** | 5+ viable options with unclear value, severe unclear consequences | Anxious, Newcomer |
+| **Frustration** | Optimal play is boring, thematic action mechanically punished | Optimizer, Rules Lawyer |
+| **Cool moment** | Emergent interaction, system + fiction align, mastery surprise | Storyteller, Explorer, Veteran |
+| **Cognitive overload** | 3+ simultaneous states, multi-subsystem resolution | GM, Newcomer |
+| **Mastery reward** | Non-obvious choice produces meaningfully better outcome | Optimizer, Veteran |
+
+Signals must be grounded: *"Confusion because DOSE threshold is referenced but never explained in the mechanic description"* — not *"this seems confusing."*
+
+Experience signals are **never** suppressed by intent. If the Newcomer is confused, that's a real UX problem regardless of designer intent.
+
+## Workflow
+
+### Step 1 — Load State and Previous Reports
+
+Reads `index.yaml`, design parameters, all prior playtest reports for regression baseline.
+
+### Step 2 — Assemble Panel
+
+Explicit flags or context-aware default, weighted by design parameters.
+
+### Step 2.5 — Read Intent
+
+Reads `intent` from all in-scope entities. Archetypes can reference intent during the walkthrough ("the asymmetry is flagged as deliberate per intent").
+
+### Step 2.7 — Structural Pre-Pass
+
+Before constructing scenarios, performs structural analysis to ground archetype reasoning in data:
+
+- **Graph traversal** — 2 hops from target entities, depth-annotated
+- **Probability snapshot** — `dice-probability`, `bell-curve`, `dice-pool`, `advantage`, `exploding-dice` invoked per resolution method
+- **Resource pressure map** — net pressure per resource (draining/surplus/balanced)
+- **Decision point map** — options per choice, dominant detection, false-choice detection
+
+Archetypes cite this data in their reasoning. Target: ≥50% of signals tagged `[structurally-grounded]`.
+
+### Step 3 — Construct Scenario
+
+User-provided or auto-generated from `most_depended_on` mechanics. Decomposed into discrete beats.
+
+Temporal scales:
+
+| Scale | Span |
+|-------|------|
+| **Moment** | A single mechanic activation or decision point |
+| **Encounter** | A complete combat, social encounter, or exploration scene |
+| **Session** | A full session arc |
+| **Campaign arc** | Character progression across multiple sessions |
+
+### Step 4 — Walkthrough
+
+Each archetype, each beat:
+
+```
+Beat N: [situation]
+  {Archetype} sees: [perception given orientation + experience]
+  {Archetype} chooses: [action + reasoning]
+  Resolution: [mechanical outcome]
+  Experience signal: [one of 8]
+  Signal rationale: [grounded in specific game-state entities]
+```
+
+### Step 5 — Track Signals
+
+One signal per archetype per beat. Tagged `[structurally-grounded]` if backed by pre-pass data, `[prompt-grounded]` if narrative judgment.
+
+### Step 6 — Detect Divergence
+
+Cross-compare signals at each beat. Flag where archetypes have radically different experiences:
+
+| Severity | Trigger |
+|----------|---------|
+| **HIGH** | Opposite signals (Excitement vs. Confusion, Mastery reward vs. Decision paralysis) |
+| **MEDIUM** | One archetype disengaged while others engaged (Dead time vs. anything active) |
+| **LOW** | Same valence, different intensity |
+
+Divergence findings are first-class — they reveal invisible fractures only visible by comparing across player types. Never suppressed by intent.
+
+### Step 7 — Regression Check
+
+Each previous finding classified as: Resolved, Persists, Worsened, Evolved.
+
+### Step 7.5 — Intent-Aware Classification
+
+For each finding involving an entity with intent:
+
+- `[INTENT-ALIGNED]` if matches intent (Warning → Observation, Critical stays Critical)
+- `[INTENT-CONFLICT]` if contradicts intent (severity unchanged)
+- `non_negotiable: true` → Warnings move to suppression appendix
+
+### Step 8 — Generate Report
+
+Standard cabal report format with: Scenario, Walkthrough per archetype, Promise Delivery, Rules Clarity, Session Energy, Experience Divergence, Intent Alignment, Findings Summary, Regression Check, Recommended Next Steps.
+
+## Report Format
+
+Output: `grimoires/gygax/playtest-reports/YYYY-MM-DD-scope-description.md`
+
+```
+# Playtest Report: [Scope]
+
+**Date:** YYYY-MM-DD · **Game:** [name] ([tradition])
+**Panel:** [archetype list] — [selection rationale]
+**Scenario:** [description] ([moment|encounter|session|campaign-arc])
+
+## Executive Summary
+
+## Scenario Analysis (pre-pass)
+[Entity Graph, Probability Snapshot, Resource Pressure, Decision Points]
+
+## Scenario
+[Beat-by-beat with fiction + mechanical context]
+
+## Walkthrough: [Archetype Name]
+### Approach
+### Beat-by-Beat (table)
+### Findings (in-character voice, evidence, recommendation)
+[Repeated per archetype]
+
+## Promise Delivery
+[Does the game deliver on its own pitch?]
+
+## Rules Clarity
+[Standalone consolidation of every ambiguity hit by any archetype]
+
+## Session Energy
+[Beat × archetype matrix showing peaks and troughs]
+
+## Experience Divergence
+[Cross-archetype signal table with HIGH/MEDIUM/LOW severity]
+
+## Intent Alignment
+[Findings vs intent breakdown]
+
+## Findings Summary (count by severity)
+## Regression Check
+## Recommended Next Steps
+```
+
+## Tradition Adaptation
+
+Archetype behavior shifts by tradition. The Optimizer in a TTRPG min-maxes a build; in a journaling RPG it finds prompt sequences that produce the most dramatic entries. Per-tradition behavioral weightings live in `skills/cabal/resources/archetypes.yaml`.
+
+## Boundaries
+
+- **Does not** modify game-state — read-only
+- **Does not** design mechanics — use [`/homebrew`](/commands/homebrew)
+- **Does not** perform isolated numerical analysis — use [`/augury`](/commands/augury)
+- **Does not** ingest source material — use [`/attune`](/commands/attune)
+- **Does not** apply tradition heuristic libraries — use [`/lore`](/commands/lore)
+- **Does not** replace real playtesting — catches structural issues, can't simulate social dynamics
+- **Does not** produce definitive verdicts — findings are hypotheses
+- **Does** simulate 9 distinct orientations with scenario walkthroughs
+- **Does** track experience signals per archetype per beat
+- **Does** detect experience divergence
+- **Does** check regression against previous runs
+- **Does** adapt archetype behavior to tradition
+- **Does** guarantee at least one non-obvious finding per run
+- **Does** read intent and adjust classification
+- **Does not** suppress experience signals or divergence by intent
+
+## Output
+
+| Artifact | Path |
+|----------|------|
+| Playtest report | `grimoires/gygax/playtest-reports/YYYY-MM-DD-scope-description.md` |
+
+Reports accumulate. Previous reports are never overwritten — they form the regression baseline.
