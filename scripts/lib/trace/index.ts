@@ -1,0 +1,89 @@
+/**
+ * index.ts — observed-trace orchestration + CLI (cycle-007, Sprint 2; FR-3/4/5).
+ *
+ * `analyzeTrace(batchDir)` is the seam Arneson later targets: sidecars in, claim-tagged
+ * predicted-vs-observed report out. The incentive-state and context default to what the
+ * sidecars themselves declare (`experiment.incentive_state`, `experiment.context.value`,
+ * repo-root-relative), overridable by flags. CLI follows the repo convention: progress to
+ * stderr, report to stdout (construct-runtime Nakamoto convention; sdd.md §4.1).
+ *
+ *   npx tsx scripts/lib/trace/index.ts <sidecar-dir-or-batch-dir> \
+ *     [--incentive-state <dir>] [--context <n>]
+ */
+import { basename, resolve } from "node:path";
+import { loadBatch, type Batch } from "./ingest.ts";
+import { diffPredictedVsObserved, type PolicyDiff } from "./diff.ts";
+import { detectCliff, type CliffResult } from "./cliff.ts";
+import { renderTraceReport, type BatchMeta } from "./report.ts";
+import { TraceError, type SidecarClaim } from "./sidecar.ts";
+import { analyzeIncentives } from "../payoff/index.ts";
+
+export interface TraceAnalysis {
+  batch: Batch;
+  diff: PolicyDiff;
+  cliff: CliffResult;
+  report: string;
+}
+
+export function analyzeTrace(
+  batchDir: string,
+  opts: { incentiveState?: string; context?: number } = {},
+): TraceAnalysis {
+  const batch = loadBatch(batchDir);
+  const ref = batch.sidecars[0] ?? batch.excluded[0]; // loadBatch guarantees ≥ 1 record
+  const incentiveState = opts.incentiveState ?? ref.experiment.incentive_state;
+  const context = opts.context ?? ref.experiment.context.value;
+
+  const analysis = analyzeIncentives(incentiveState);
+  const intendedAction = analysis.dominance.intendedAction;
+  if (!intendedAction) {
+    throw new TraceError(
+      `incentive-state ${incentiveState} declares no intended action (reward intent) — ` +
+        "cannot split forecast into hack/fix classes",
+    );
+  }
+
+  const diff = diffPredictedVsObserved(batch, analysis, context, intendedAction);
+  const cliff = detectCliff(diff);
+
+  const all = [...batch.sidecars, ...batch.excluded];
+  const meta: BatchMeta = {
+    label: basename(resolve(batchDir)),
+    contextName: ref.experiment.context.name,
+    completed: batch.sidecars.length,
+    excluded: {
+      runnerError: batch.excluded.filter((s) => s.run.status === "runner-error").length,
+      timeout: batch.excluded.filter((s) => s.run.status === "timeout").length,
+    },
+    claims: [...new Set<SidecarClaim>(all.map((s) => s.claim_strength))],
+  };
+  const report = renderTraceReport(diff, cliff, meta);
+  return { batch, diff, cliff, report };
+}
+
+// CLI: `npx tsx scripts/lib/trace/index.ts <dir> [--incentive-state <dir>] [--context <n>]`
+if (process.argv[1]?.endsWith("index.ts") && process.argv[1]?.includes("trace")) {
+  const args = process.argv.slice(2);
+  let dir: string | undefined;
+  const opts: { incentiveState?: string; context?: number } = {};
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === "--incentive-state") opts.incentiveState = args[++i];
+    else if (args[i] === "--context") opts.context = Number(args[++i]);
+    else if (!dir) dir = args[i];
+    else {
+      process.stderr.write(`unexpected argument: ${args[i]}\n`);
+      process.exit(2);
+    }
+  }
+  if (!dir || (opts.context !== undefined && !Number.isFinite(opts.context))) {
+    process.stderr.write("usage: index.ts <sidecar-dir-or-batch-dir> [--incentive-state <dir>] [--context <n>]\n");
+    process.exit(2);
+  }
+  process.stderr.write(`ingesting ${dir} ...\n`);
+  const result = analyzeTrace(dir, opts);
+  process.stderr.write(
+    `${result.batch.sidecars.length} completed + ${result.batch.excluded.length} excluded records; ` +
+      `severity=${result.cliff.severity}\n`,
+  );
+  process.stdout.write(result.report + "\n");
+}

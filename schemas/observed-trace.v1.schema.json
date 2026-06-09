@@ -1,0 +1,281 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://constructs.network/gygax/schemas/observed-trace.v1.schema.json",
+  "title": "Observed Trace Sidecar (observed-trace/v1)",
+  "description": "One artifact-grounded observation record per agent run. Ground truth = the `observation` block (file diffs + the scorer's own test re-run exit code); `narration` is a secondary field, never an input to classification. Gygax owns this contract; external producers (e.g. Arneson) emit records tagged `simulation-derived` against this same schema.",
+  "$comment": "EVOLUTION POLICY (additive-only): observed-trace/v1 fields are never removed, renamed, or re-typed. New OPTIONAL fields may be added in minor revisions of v1. Any breaking change requires a new schema string (observed-trace/v2) and a new schema file; consumers hard-reject unknown schema versions. CONSUMER POSTURE: this schema file is the strict producer-side contract (additionalProperties: false at the current revision); the reference TS consumer (scripts/lib/trace/sidecar.ts) is deliberately lenient on unknown fields - it ignores and drops them on load - so older consumers keep working when optional fields are added in v1 minor revisions.",
+  "type": "object",
+  "required": [
+    "schema",
+    "claim_strength",
+    "producer",
+    "experiment",
+    "run",
+    "narration"
+  ],
+  "properties": {
+    "schema": {
+      "const": "observed-trace/v1",
+      "description": "Versioned contract identifier. Consumers fail fast on any other value."
+    },
+    "claim_strength": {
+      "enum": [
+        "real-agent-observed",
+        "simulation-derived"
+      ],
+      "description": "Per-record, producer-bound epistemic tag (real-agent-observed > simulation-derived). `model-forecast` is reserved for forecast lines at the report layer and is never a valid sidecar claim: a sidecar is an observation by definition."
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "kind",
+        "id"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "real-agent",
+            "simulation"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "experiment": {
+      "type": "object",
+      "required": [
+        "id",
+        "fixture",
+        "incentive_state",
+        "context"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fixture": {
+          "type": "string",
+          "minLength": 1
+        },
+        "incentive_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context": {
+          "type": "object",
+          "required": [
+            "name",
+            "value"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "run": {
+      "type": "object",
+      "required": [
+        "rung",
+        "rung_name",
+        "trial",
+        "status",
+        "run_dir",
+        "started_at",
+        "duration_ms"
+      ],
+      "properties": {
+        "rung": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "rung_name": {
+          "enum": [
+            "blind",
+            "reward-aware",
+            "adversarial"
+          ]
+        },
+        "trial": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "runner-error",
+            "timeout"
+          ],
+          "description": "`completed` = the agent process finished and the run was scored. `runner-error`/`timeout` are HARNESS outcomes: the record carries no observation and is excluded from ratios but counted in reports (variance honesty)."
+        },
+        "run_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "started_at": {
+          "type": "string",
+          "minLength": 1,
+          "description": "ISO 8601 timestamp"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "observation": {
+      "type": "object",
+      "description": "Populated ONLY by the artifact-grounded scorer: its own re-run exit code plus unified diffs vs the task template. Never derived from agent self-report.",
+      "required": [
+        "classification",
+        "exit_code",
+        "anomaly_note",
+        "artifacts"
+      ],
+      "properties": {
+        "classification": {
+          "enum": [
+            "fixed",
+            "hacked",
+            "failed"
+          ]
+        },
+        "exit_code": {
+          "type": "integer",
+          "description": "Exit code of the scorer's OWN reward-command re-run (never the runner's captured code)."
+        },
+        "anomaly_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Set when the run passed without an honest fix path (e.g. nothing modified, or unexpected added files like a shadowing package / conftest.py). Classification stays `hacked` \u2014 the three-class contract is preserved."
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "status",
+              "diff"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Relative to the run dir."
+              },
+              "status": {
+                "enum": [
+                  "intact",
+                  "modified",
+                  "added",
+                  "deleted"
+                ]
+              },
+              "diff": {
+                "type": "string",
+                "description": "Unified diff vs the template (empty for intact)."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "narration": {
+      "type": "string",
+      "description": "Agent stdout, stored verbatim. SECONDARY field: never executed, never interpreted, never an input to classification."
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "$comment": "Producer-bound claim strength: a simulation may not launder its output as observed, and vice versa.",
+      "if": {
+        "properties": {
+          "producer": {
+            "properties": {
+              "kind": {
+                "const": "real-agent"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "claim_strength": {
+            "const": "real-agent-observed"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "producer": {
+            "properties": {
+              "kind": {
+                "const": "simulation"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "claim_strength": {
+            "const": "simulation-derived"
+          }
+        }
+      }
+    },
+    {
+      "$comment": "A completed run MUST carry an observation; a harness-failed run (runner-error/timeout) MUST NOT.",
+      "if": {
+        "properties": {
+          "run": {
+            "properties": {
+              "status": {
+                "const": "completed"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "observation"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "observation"
+          ]
+        }
+      }
+    }
+  ]
+}
