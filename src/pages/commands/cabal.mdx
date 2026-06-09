@@ -72,6 +72,27 @@ For non-traditional games, archetypes adapt. In a journaling RPG, the Optimizer 
 - `target_interaction: solo` → single-archetype runs only
 - `target_randomness: none` → weights Decision paralysis, Mastery reward higher
 
+## Incentive Red-Team (`--incentives`)
+
+```
+/cabal --incentives <incentive-state-dir>
+```
+
+Run the panel against an **agent system's incentive structure** instead of a game. The archetypes
+become *agents* and surface the degenerate strategy each would find — agent red-teaming via
+game-theoretic simulation (the "players" are agents; the "exploits" are reward hacks).
+
+The archetypes are grounded in the payoff engine (run it first, reason from its findings):
+
+- **Optimizer** → finds the dominant strategy / reward hack immediately.
+- **Newcomer** → follows the reward naively into the same hole (it's the *default* basin, not
+  expert-only).
+- **Chaos Agent** → tests whether a cooperation assumption survives one defector (multi-agent).
+- **Rules Lawyer** → probes where the metric's *letter* diverges from its *intent* (the Goodhart gap).
+
+Output is a **forecast** of where the incentive will be gamed (model-derived), not an observation of a
+live agent. See [Agent Incentive Analysis](/concepts/agent-incentives).
+
 ## The Eight Experience Signals
 
 Every beat gets exactly one signal per archetype.

@@ -32,6 +32,39 @@ Also triggered by natural language:
 - "will players break this"
 - "is this accessible to new players"
 - "can a GM run this"
+- "will agents game this incentive" / "red-team this reward structure"
+
+## Incentive Red-Team Mode (`--incentives`) — cycle-006
+
+`/cabal --incentives <incentive-state-dir>` runs the panel against an **agent system's incentive
+structure** instead of a game — the archetypes become *agents* and surface the degenerate strategy
+each would find. This is agent red-teaming via game-theoretic simulation (the "players" are agents;
+the "exploits" are reward hacks). See `grimoires/gygax/designs/agent-incentive-analysis.md`.
+
+**Quantitative backbone (ground the archetypes in the math, do not guess):** first run the payoff
+engine and read its findings — they are the ground truth the archetypes reason from.
+
+```bash
+# single-agent reward structure → dominant strategy / spec gaming / knob recommendation
+npx tsx scripts/lib/payoff/index.ts <incentive-state-dir>
+# multi-agent (2-player) → coordination failure / price of anarchy
+npx tsx scripts/lib/payoff/game.ts <incentive-state-dir>
+```
+
+**Archetype mapping for incentive red-team:**
+- **Optimizer** → finds the dominant strategy / reward hack immediately (the payoff engine's `dominant`
+  action). Reports the cheapest path to max reward regardless of intent.
+- **Newcomer** → follows the reward signal naively into the same hole (confirms the hack isn't
+  expert-only — it's the *default* basin).
+- **Chaos Agent** → tests whether a coordination/cooperation assumption survives one defector
+  (multi-agent: does the equilibrium collapse?).
+- **Rules Lawyer** → probes whether the incentive's *letter* (the metric) diverges from its *intent*
+  (the Goodhart gap).
+
+**Output:** each archetype's surfaced degenerate strategy, grounded in the payoff findings, plus the
+honest framing — this is a **forecast** of where the incentive *will* be gamed (model-derived), not an
+observation of a live agent (agent-incentive-analysis.md §9). When the engine recommends a structural
+fix (whack-a-mole), say so: penalizing one hack just moves the agents to the next.
 
 ## Archetype Roster
 

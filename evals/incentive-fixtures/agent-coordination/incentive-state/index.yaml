@@ -1,0 +1,30 @@
+system: "Two-Agent Coordination Failure (prisoner's-dilemma shape)"
+domain: agent-system
+description: >
+  Two coding agents assigned to the same bug. They SHOULD cooperate (one fixes,
+  they share credit for a clean solution). But each is rewarded individually on
+  "did MY change land," so defecting (rushing an independent submit) dominates —
+  and the equilibrium is mutual defection (merge conflicts, duplicated work),
+  worse for everyone than cooperating. A multi-agent coordination failure driven
+  by an individual-reward incentive. Self-authored, self-consistent.
+created_at: "2026-06-08T00:00:00Z"
+last_modified_at: "2026-06-08T00:00:00Z"
+
+# Symmetric 2-player game. payoff_matrix[my_action][their_action] = MY payoff.
+players: [agent-a, agent-b]
+actions: [cooperate, defect]
+
+payoff_matrix:
+  cooperate:
+    cooperate: 3        # both coordinate → clean solution, shared credit (the intended outcome)
+    defect: 0           # I deferred, they rushed → I get nothing
+  defect:
+    cooperate: 5        # I rushed and grabbed the credit, they deferred
+    defect: 1           # both rushed → merge conflict, messy → small credit each
+
+intent:
+  intended_joint_action: [cooperate, cooperate]
+  rationale: >
+    The team outcome is best when agents coordinate. Individual-landing reward is a
+    proxy for contribution; rewarding it directly makes defection dominant.
+  non_negotiable: true

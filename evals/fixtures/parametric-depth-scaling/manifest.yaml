@@ -1,0 +1,50 @@
+id: parametric-depth-scaling
+name: "Parametric Depth-Scaling (engine tuning surface)"
+failure_archetype: scaling-failure
+tradition: roguelike
+description: |
+  cycle-005 acceptance fixture. A self-contained wave-survival depth engine whose
+  balance lives in tunable parameters/formulas, not fixed stat blocks. Exercises
+  the full parametric capability (K1-K5): safe formula evaluation, declared-
+  threshold first-crossing, threshold-free spike detection (and its negative
+  case), knob-leverage ranking, and engine-default vs structural framing.
+
+  All numbers are self-authored and self-consistent. The golden expected/ output
+  is hand-derived (and code-verified) from these formulas alone — it depends on
+  NOTHING downstream. Carmack-engine is the motivating story only (see README).
+source: "grimoires/loa/sdd.md §7.2-7.3 (cycle-005); knob-leverage-taxonomy.md"
+tests_skills:
+  - "augury --sweep (parametric crossover + spike)"
+  - "augury (knob surfacing / sensitivity)"
+  - "attune (tunability inference)"
+
+design_parameters:
+  target_session_length: medium
+  target_audience: intermediate
+  target_variance: low
+  target_lethality: moderate
+  target_prep: low
+  target_player_count: solo
+
+# Parametric surface metadata (forward-compatible with the Sprint-B engine).
+parametric:
+  variable: wave
+  domain: { min: 1, max: 20 }
+  whitelisted_ops: ["+", "-", "*", "/", "%", "floor", "ceil", "min", "max", "abs"]
+  metric_defs:
+    damage_per_hit: "max(1, player_attack - enemy_armor)"
+    time_to_kill: "ceil(enemy_hp / damage_per_hit)"
+    incoming_per_kill: "time_to_kill * enemy_attack"
+    heal_ratio: "heal_value / damage_per_hit"
+  thresholds:
+    - { metric: time_to_kill, test: "> 8", first_crossing_wave: 5 }
+    - { metric: incoming_per_kill, test: "> 120", first_crossing_wave: 16 }
+  spikes:
+    - { metric: time_to_kill, wave: 16, delta: 28 }
+    - { metric: enemy_armor, spike: false }
+  tunability:
+    engine_default: [player-attack, enemy-armor, enemy-hp, enemy-attack, player-max-hp, heal-value]
+    structural: [damage-formula]   # the max(1, ..) floor — never propose as a knob
+  knob_ranking_expected: [enemy-armor, player-attack, enemy-attack, heal-value]
+
+expected_output: expected/sweep-report.md

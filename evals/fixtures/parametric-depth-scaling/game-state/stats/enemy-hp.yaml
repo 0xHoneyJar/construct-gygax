@@ -1,0 +1,27 @@
+id: enemy-hp
+name: "Enemy HP"
+type: stats
+description: >
+  Enemy hit points. A smooth linear base PLUS a large mid-run surge term (a
+  "miniboss" tier that kicks in at wave 16). The surge produces the fixture's
+  one ENVELOPE SPIKE in time-to-kill — the K3 positive case that spike
+  detection MUST flag, distinct from the regular armor stair-steps.
+tradition: roguelike
+tags: [combat, engine, parametric, tuning-surface]
+depends_on: []
+affects: [progression/encounter-scaling.yaml]
+created_by: attune
+created_at: "2026-06-08T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-06-08T00:00:00Z"
+
+tunability: engine-default
+
+model:
+  variable: wave
+  domain: { min: 1, max: 20 }
+  formula: "60 + 6*wave + 200*floor(wave / 16)"
+  notes: >
+    Linear base (60 + 6*wave) with a +200 surge at wave 16 (floor(wave/16)
+    flips 0 -> 1). Drives TTK from 17 (wave 15) to 45 (wave 16): a +28 jump,
+    14x the largest non-surge kink (+2). This is the envelope spike.

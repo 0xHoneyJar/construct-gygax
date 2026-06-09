@@ -1,0 +1,23 @@
+id: player-max-hp
+name: "Player Max HP"
+type: stats
+description: >
+  Player's maximum hit points. Flat. Serves as the declared threshold for the
+  incoming-damage-per-kill metric (incoming > maxHP = a fight the player cannot
+  survive in one engagement).
+tradition: roguelike
+tags: [survival, engine, parametric, tuning-surface]
+depends_on: []
+affects: [progression/encounter-scaling.yaml]
+created_by: attune
+created_at: "2026-06-08T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-06-08T00:00:00Z"
+
+tunability: engine-default
+
+model:
+  variable: wave
+  domain: { min: 1, max: 20 }
+  formula: "120"                  # flat
+  notes: "Threshold reference: incoming_per_kill > 120 first occurs at wave 16."

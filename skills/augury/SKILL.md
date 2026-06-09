@@ -28,6 +28,25 @@ Examples:
 - `/augury mechanics/dodge-reaction.yaml` -- targeted analysis of a specific entity
 - `/augury entities/fighter-class.yaml vs entities/wizard-class.yaml` -- comparative analysis
 - `/augury --simulate <repoPath>` -- **F2 code-grounded simulation**: Monte-Carlo the *real* engine through its `gygaxDriver`, in the sandbox (see below)
+- `/augury --sweep <gameStateDir>` -- **parametric tuning-surface analysis**: sweep `model:` formulas across their domain; report threshold first-crossings + spikes + tunability framing (see below)
+
+## Parametric Sweep (`--sweep`)
+
+When invoked with `--sweep`, `/augury` analyzes the **tuning surface** of an engine rather than fixed breakpoints. It consumes the entities that carry a `model:` block (a value as a function of a progression variable — see the game-state schema), sweeps every formula densely across its `domain`, composes the declared derived `metrics`, and reports:
+
+- **Threshold first-crossings (K2):** for each declared `threshold`, the first axis point where the metric crosses it (e.g. `time_to_kill > 8` at `wave = 5`) — or an honest "no crossing in domain."
+- **Spikes (K3):** threshold-free *drastic jumps* in any metric (Hopson's "flag drastic jumps") — the envelope spike, distinct from regular `floor` stair-steps which are **not** flagged.
+- **Tunability framing (K5):** `engine-default` findings read "yours to tune — here's the lever"; `structural` values read as genuine engine constraints (never proposed as knobs).
+
+Run it:
+
+```bash
+npx tsx scripts/lib/parametric/index.ts <gameStateDir> [outDir]
+```
+
+Mechanics: the formulas are evaluated by a **restricted arithmetic interpreter** (whitelisted `+ - * / %`, `floor/ceil/min/max/abs`, declared names only) — **never `eval`** (SDD §1.9). Open/unbounded/degenerate domains are rejected with a `DomainError` before any sweep. The engine is **metric-agnostic**: it drives off the game-state's declared `metrics`, hard-coding no metric names — the same sweep serves progression curves or variance series. `--sweep` is additive: game-state without `model:` blocks is unaffected and `/augury`'s normal breakpoint analysis runs as before.
+
+> **R1 methodology gate:** difficulty-sweep findings (a curve "breaking") are conditional until the progression/economy side is modeled. When a finding depends on un-modeled income (e.g. a relic/boost economy), tag it and emit the caveat: *attune the economy and re-run before declaring the curve broken.*
 
 ## F2: Code-Grounded Simulation (`--simulate`)
 
@@ -323,6 +342,17 @@ Before finalizing severity classifications, check whether the game-state declare
 3. **Cite intent in recommendations.** When recommending changes to an entity with declared intent, note it: "Note: this asymmetry is intentional per tensions/instinct-vs-craft.yaml" or similar reference to the specific intent source.
 
 If no intent field exists on an entity, classify findings normally without adjustment.
+
+### Step 4b-tun: Tunability-Aware Framing (cycle-005)
+
+After severity is set, check each finding entity for a `tunability` field (see the game-state schema). It does **not** change severity — it changes the *narrative framing* of the finding and recommendation, so an engine adopter knows what they can actually change.
+
+1. **Read the `tunability` field** from each entity involved in a finding.
+2. **If `tunability: engine-default`:** frame the finding as a tuning lever, not a defect — "this is yours to tune — here's the lever." Recommendations name the knob and its direction (e.g. "scale `player-attack` with depth"). This is replaceable sample content, not the engine's design.
+3. **If `tunability: structural`:** frame the finding as a genuine engine constraint — a property of how the engine works, not a knob. **Never** recommend changing a `structural` value as a tuning fix (e.g. do not propose altering a `max(1, …)` min-damage floor); if it is the root cause, say so as a constraint the adopter must design *around*.
+4. **If no `tunability` field exists:** frame normally (existing behavior — no change).
+
+This framing is what makes engine analysis honest: a problem in replaceable content reads "tune this," while a problem in the engine's invariants reads "this is a constraint." Pairs with the knob-surfacing pass, which ranks tunable knobs by leverage and excludes structural invariants entirely.
 
 ### Step 4c: Cross-Layer Deduplication (v3.1)
 

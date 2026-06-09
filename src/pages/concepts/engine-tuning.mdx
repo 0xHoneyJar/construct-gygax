@@ -1,0 +1,79 @@
+---
+title: Engine Tuning
+description: Analyze a tuning surface — parameters and formulas — not just fixed stat blocks. Find where the curves break across a whole range.
+---
+
+# Engine Tuning
+
+A *game* has fixed numbers: a stat block, a discrete progression table. An **engine** — a
+content-agnostic substrate other games are built on — has no fixed numbers. Its balance lives in
+**parameters and formulas a developer tunes for their game**. The thing to analyze is the *tuning
+knobs*, not a stat block.
+
+Engine tuning is the same core skill Gygax always applies — *find where the curves break* — pointed at
+a parametric surface instead of fixed content. The leverage: one good tuning pass on an engine helps
+*every* game built on it.
+
+> Origin: real dogfooding on a grid-raycaster engine where a static player attack vs a scaling enemy
+> defense made a single enemy cost more HP to kill than the player had — but only past a depth nobody
+> had checked, because the value lived in a formula, not a table.
+
+## The `model:` block
+
+Express a stat or curve as a **function of a progression variable** (depth / level / wave), alongside
+the existing discrete table — additive, no migration:
+
+```yaml
+# stats/enemy-armor.yaml
+id: enemy-armor
+tunability: engine-default          # a sample value an adopter tunes (vs `structural`)
+model:
+  variable: wave
+  domain: { min: 1, max: 20 }
+  formula: "min(4, floor(wave / 4))"
+```
+
+Composed metrics and the thresholds whose crossing you care about are declared generically (the engine
+hard-codes no metric names):
+
+```yaml
+metrics:
+  - { id: time_to_kill, formula: "ceil(enemy_hp / max(1, player_attack - enemy_armor))", role: primary }
+thresholds:
+  - { metric: time_to_kill, test: "> 8" }
+```
+
+Formulas are evaluated by a **restricted interpreter** — whitelisted arithmetic + `floor/ceil/min/max/abs`,
+declared names only, **never `eval`**.
+
+## `/augury --sweep`
+
+```
+/augury --sweep <game-state-dir>
+```
+
+Sweeps every `model:` formula densely across its domain and reports:
+
+- **Threshold crossings** — the first axis point where a metric crosses a declared threshold (e.g.
+  `time_to_kill > 8` at `wave = 5`), or an honest *"no crossing in domain."*
+- **Spikes** — threshold-*free* drastic jumps (the envelope spike), distinct from regular `floor`
+  stair-steps, which are not flagged.
+- **Tuning knobs** — each tunable parameter ranked by leverage, with a **crossover-mover** column
+  (does perturbing it move *where* the curve breaks?), and **dead/false-lever** escalations. A
+  `structural` invariant (like a `max(1, …)` damage floor) is **never** proposed as a knob.
+- **Framing** — `engine-default` findings read *"yours to tune — here's the lever"*; `structural`
+  findings read as genuine engine constraints.
+
+## Tunability
+
+The `tunability` field distinguishes a **replaceable sample value** (`engine-default` — a demo
+parameter an adopter is expected to change) from a **structural invariant** (`structural` — a property
+of how the engine works). Code-grounded `/attune` can infer it: a value read from a `DEFAULT_*` const →
+`engine-default`; a number hardcoded in the core sim loop → `structural`. It makes every finding honest
+about what the developer can actually change.
+
+## Where it fits
+
+Engine tuning is the **parametric** (transitive) case of Gygax's broader analysis. The same sweep
+engine is the substrate for progression-curve, variance, and payoff analysis — see
+[Agent Incentives](/concepts/agent-incentives) for the payoff-matrix sibling.

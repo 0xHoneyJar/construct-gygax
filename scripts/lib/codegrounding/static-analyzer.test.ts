@@ -12,8 +12,9 @@
 import assert from "node:assert";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { analyze } from "./static-analyzer.ts";
-import { reconcile, reconcileModel, type GameStateModel } from "./drift-reconciler.ts";
+import { analyze, type StructuralMap } from "./static-analyzer.ts";
+import { renderDriftReportMarkdown } from "./attune-codelevel.ts";
+import { reconcile, reconcileModel, type GameStateModel, type DriftReport } from "./drift-reconciler.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ENGINE = join(HERE, "__fixtures__", "drift-engine");
@@ -138,6 +139,50 @@ test("agreement produces no structural delta", () => {
     false,
     "agreement wrongly reported as drift",
   );
+});
+
+// ---- FR-3 (cycle-005): tunability inference + non-regression ----
+
+test("infers engine-default for a DEFAULT_ const", () => {
+  const f = map.numbers.find((n) => n.name === "DEFAULT_STARTING_GOLD");
+  assert.ok(f, "DEFAULT_STARTING_GOLD not found");
+  assert.strictEqual(f.tunability, "engine-default");
+});
+
+test("infers structural for a number hardcoded in a sim-loop fn", () => {
+  const f = map.numbers.find((n) => n.name === "armorCap");
+  assert.ok(f, "armorCap not found");
+  assert.strictEqual(f.tunability, "structural");
+});
+
+test("leaves plain consts untagged (conservative)", () => {
+  const panel = map.numbers.find((n) => n.name === "panelWidth");
+  assert.strictEqual(panel?.tunability, undefined, "UI const wrongly tagged");
+  const fire = map.numbers.find((n) => n.name === "FIRE_BASE_DAMAGE");
+  assert.strictEqual(fire?.tunability, undefined, "top-level non-default const wrongly tagged");
+});
+
+test("drift report is byte-identical (no Tunability section) when nothing is tagged", () => {
+  const cleanMap: StructuralMap = {
+    repo: "r", commit: "c",
+    numbers: [{ name: "panelWidth", value: 80, source: "src/ui.ts:1", kind: "literal" }],
+    loops: [], untraceable: [],
+  };
+  const emptyReport: DriftReport = { numericDeltas: [], structuralDeltas: [], silentOn: [] };
+  const md = renderDriftReportMarkdown(cleanMap, emptyReport);
+  assert.ok(!md.includes("Tunability"), "Tunability section leaked into an untagged report");
+});
+
+test("drift report shows the Tunability section only when a value is tagged", () => {
+  const tagMap: StructuralMap = {
+    repo: "r", commit: "c",
+    numbers: [{ name: "DEFAULT_GOLD", value: 50, source: "src/cfg.ts:1", kind: "literal", tunability: "engine-default" }],
+    loops: [], untraceable: [],
+  };
+  const emptyReport: DriftReport = { numericDeltas: [], structuralDeltas: [], silentOn: [] };
+  const md = renderDriftReportMarkdown(tagMap, emptyReport);
+  assert.ok(md.includes("## Tunability (inferred, 1)"), "Tunability section missing when tagged");
+  assert.ok(md.includes("engine-default"), "tunability value not surfaced");
 });
 
 console.log("\nAll F1 analyzer + reconciler tests passed.\n");

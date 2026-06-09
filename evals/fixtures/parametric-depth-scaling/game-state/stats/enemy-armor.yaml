@@ -1,0 +1,26 @@
+id: enemy-armor
+name: "Enemy Armor"
+type: stats
+description: >
+  Enemy damage reduction, rising in discrete steps with wave. Doubles as the
+  fixture's PURE STAIR-STEP metric (regular unit increments, then a cap) — the
+  K3 negative case: spike detection must NOT flag these stair-steps. Also the
+  single dominant tuning knob (largest leverage on time-to-kill).
+tradition: roguelike
+tags: [combat, engine, parametric, tuning-surface]
+depends_on: []
+affects: [mechanics/damage-formula.yaml]
+created_by: attune
+created_at: "2026-06-08T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-06-08T00:00:00Z"
+
+tunability: engine-default        # dominant tunable knob
+
+model:
+  variable: wave
+  domain: { min: 1, max: 20 }
+  formula: "min(4, floor(wave / 4))"   # 0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,4
+  notes: >
+    Pure unit-step stair capped at 4 (K3-negative series — no spike).
+    Dominant knob: +1 armor raises ΣTTK by ~51 and moves the crossover 5 -> 4.

@@ -9,7 +9,10 @@
     "build": "vocs build",
     "preview": "vocs preview",
     "test:codegrounding": "for f in scripts/lib/codegrounding/*.test.ts; do tsx \"$f\" || exit 1; done",
-    "test:evals": "bash evals/harness.sh --structural"
+    "test:parametric": "for f in scripts/lib/parametric/*.test.ts; do tsx \"$f\" || exit 1; done",
+    "test:payoff": "for f in scripts/lib/payoff/*.test.ts; do tsx \"$f\" || exit 1; done",
+    "test:evals": "bash evals/harness.sh --structural",
+    "test": "npm run test:codegrounding && npm run test:parametric && npm run test:payoff && npm run test:evals"
   },
   "devDependencies": {
     "tsx": "4.19.2",

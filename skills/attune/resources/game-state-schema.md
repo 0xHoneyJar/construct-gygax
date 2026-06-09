@@ -75,6 +75,71 @@ intent:
 
 With this intent set, augury will classify the freetekno 66.7% craft-success rate as an Observation ("working as designed per intent: non-negotiable"), not a Warning.
 
+## Tunability Field (cycle-005)
+
+`tunability` marks whether a value is a **replaceable sample** an engine adopter is expected to tune, or a **structural invariant** of the engine itself. It exists so Gygax can analyze *engines* (content-agnostic substrates), not just tuned games: a problem in `engine-default` content reads "yours to tune — here's the lever," while a problem in `structural` math reads as a genuine engine constraint.
+
+**Schema (optional, additive, entity-level — MVP):**
+
+```yaml
+tunability: engine-default | structural
+```
+
+| Value | Meaning | Example |
+|-------|---------|---------|
+| `engine-default` | A sample/example value an adopter is expected to replace (a `DEFAULT_*`/config const). | A demo level's `enemy_armor` curve; starting gold. |
+| `structural` | An invariant property of the engine itself — never a tuning knob. | The `dmg = max(1, atk - def)` min-damage floor; grid-locked movement. |
+
+**How it is set:**
+
+- **Explicitly** by the designer or `/homebrew` on an entity.
+- **Inferred by code-grounded `/attune` (F1)** when a repo is present: a value read from a `DEFAULT_*`/config const → `engine-default`; a number hardcoded in the core sim loop → `structural` (conservative — left untagged when no clear signal).
+
+**How tunability affects analysis:**
+
+- **Augury:** frames findings by it — an `engine-default` problem is reported as a tuning lever ("yours to tune"); a `structural` problem is a genuine engine constraint. The knob-surfacing pass perturbs **only** tunable params and **never** proposes changing a `structural` invariant.
+
+**Pairs with the `model:` block (parametric, Sprint B).** A `tunability`-tagged stat/progression entity may also carry an optional `model:` block expressing the value as a function of a progression variable (e.g. `formula: "floor((depth-9)/4)"`) — the parametric tuning surface the `--sweep` analysis reads. `model:` is additive alongside the discrete `progression_table`/`range`; no migration.
+
+**Backwards compatibility:** Entity files without `tunability` remain valid. Absence ⇒ untagged ⇒ treated exactly as today (no framing change, no perturbation assumptions).
+
+## Parametric `model:` Block (cycle-005)
+
+A `model:` block expresses a stat/progression value as a **function of a progression variable** (depth/level/wave) — the parametric tuning surface `/augury --sweep` analyzes. It is **additive and optional**, sitting alongside the discrete `progression_table`/`range` (which keep working untouched — no migration).
+
+**Schema (on a `stats/` or `progression/` entity):**
+
+```yaml
+model:
+  variable: wave                  # the single progression axis (MVP: single-variable)
+  domain: { min: 1, max: 20 }     # finite, bounded sweep range (max > min)
+  formula: "min(4, floor(wave / 4))"   # restricted arithmetic over `variable`
+  notes: "optional human note"
+```
+
+**Formula grammar (whitelisted — evaluated by a restricted interpreter, never `eval`):**
+
+- operators `+ - * / %`, parentheses, numeric literals;
+- the single declared `variable` (and, for composed metrics, other entity/metric names);
+- functions `floor`, `ceil`, `abs` (unary), `min`, `max` (variadic).
+- Anything else (member access, unknown identifiers, extra functions) is rejected at load time with a `FormulaError`.
+
+**Composed metrics & thresholds (on a `progression/` entity):** derived metrics and the thresholds whose first-crossing the sweep reports are declared generically (metric-agnostic — the engine hard-codes no metric names):
+
+```yaml
+metrics:
+  - { id: damage_per_hit, formula: "max(1, player_attack - enemy_armor)", role: intermediate }
+  - { id: time_to_kill,   formula: "ceil(enemy_hp / damage_per_hit)",     role: primary }
+thresholds:
+  - { metric: time_to_kill, test: "> 8" }      # reported as a first-crossing on the axis
+```
+
+Entity ids are hyphenated (`player-attack`); formulas reference them underscored (`player_attack`).
+
+**Domain rules:** `domain` must be finite and bounded with `max > min` (open/`Infinity`/degenerate domains are rejected with a `DomainError` before any sweep). MVP is single-axis; 2-D sweeps are deferred.
+
+**Backwards compatibility:** Entities without a `model:` block are unaffected — `/augury`'s existing breakpoint analysis runs exactly as before. `--sweep` is a separate mode that consumes only `model:` entities.
+
 ## Entity Type: stats/
 
 Attributes, ability scores, derived values — the numbers on a character sheet.

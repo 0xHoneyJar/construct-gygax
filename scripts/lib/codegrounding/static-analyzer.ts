@@ -25,6 +25,26 @@ export interface NumberFact {
   value: number;
   source: string; // "relpath:line"
   kind: "literal" | "json";
+  /**
+   * FR-3 (cycle-005): inferred engine-tunability of this value, when a code signal is present.
+   * `engine-default` = a sample/config value an adopter replaces (DEFAULT_*-style const).
+   * `structural` = a number hardcoded inside the core sim loop (an engine invariant).
+   * ADDITIVE and conservative: left `undefined` (untagged) when no clear signal — never
+   *   changes the set of facts, so downstream drift output is unaffected for untagged repos.
+   */
+  tunability?: "engine-default" | "structural";
+}
+
+/** FR-3: const names that read as replaceable sample/config values → engine-default. */
+const ENGINE_DEFAULT_NAME = /^(DEFAULT|SAMPLE|EXAMPLE|DEMO|STARTER|PLACEHOLDER)_|_DEFAULTS?$/i;
+/** FR-3: function names that read as the core simulation loop → numbers inside them are structural. */
+const SIM_LOOP_FN = /(simulate|^sim$|sim[A-Z_]|update|tick|step|resolve|combat|loop|attack|damage|apply|advance)/i;
+
+/** FR-3 inference: engine-default by name, else structural if hardcoded in a sim-loop fn, else untagged. */
+function inferTunability(name: string, enclosingFn: string | null): NumberFact["tunability"] {
+  if (ENGINE_DEFAULT_NAME.test(name)) return "engine-default";
+  if (enclosingFn && SIM_LOOP_FN.test(enclosingFn)) return "structural";
+  return undefined;
 }
 export interface LoopEdge {
   from: string;
@@ -183,12 +203,31 @@ export function analyze(repoPath: string): StructuralMap {
     const sf = program.getSourceFile(fileName);
     if (!sf) continue;
 
-    const visitForNumbers = (node: ts.Node): void => {
+    // `enclosingFn` carries the nearest sim-loop-candidate function name down the walk (FR-3).
+    const visitForNumbers = (node: ts.Node, enclosingFn: string | null): void => {
+      // Update the enclosing-function context when entering a named function/arrow/method.
+      let fnHere = enclosingFn;
+      if (ts.isFunctionDeclaration(node) && node.name) {
+        fnHere = node.name.text;
+      } else if (ts.isMethodDeclaration(node) && ts.isIdentifier(node.name)) {
+        fnHere = node.name.text;
+      } else if (
+        ts.isVariableDeclaration(node) &&
+        ts.isIdentifier(node.name) &&
+        node.initializer &&
+        (ts.isArrowFunction(node.initializer) || ts.isFunctionExpression(node.initializer))
+      ) {
+        fnHere = node.name.text;
+      }
+
       // const NAME = <number>
       if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
         const v = numericValue(node.initializer);
         if (v !== null) {
-          numbers.push({ name: node.name.text, value: v, source: loc(sf, node.name, repoPath), kind: "literal" });
+          const fact: NumberFact = { name: node.name.text, value: v, source: loc(sf, node.name, repoPath), kind: "literal" };
+          const t = inferTunability(node.name.text, enclosingFn);
+          if (t) fact.tunability = t;
+          numbers.push(fact);
         }
       }
       // { name: <number> }
@@ -199,12 +238,15 @@ export function analyze(repoPath: string): StructuralMap {
         const v = numericValue(node.initializer);
         if (v !== null) {
           const key = ts.isIdentifier(node.name) ? node.name.text : node.name.text;
-          numbers.push({ name: key, value: v, source: loc(sf, node.name, repoPath), kind: "literal" });
+          const fact: NumberFact = { name: key, value: v, source: loc(sf, node.name, repoPath), kind: "literal" };
+          const t = inferTunability(key, enclosingFn);
+          if (t) fact.tunability = t;
+          numbers.push(fact);
         }
       }
-      ts.forEachChild(node, visitForNumbers);
+      ts.forEachChild(node, (c) => visitForNumbers(c, fnHere));
     };
-    visitForNumbers(sf);
+    visitForNumbers(sf, null);
 
     // Edges: walk each tracked function body, classify calls.
     const classifyCalls = (fromName: string, body: ts.Node): void => {

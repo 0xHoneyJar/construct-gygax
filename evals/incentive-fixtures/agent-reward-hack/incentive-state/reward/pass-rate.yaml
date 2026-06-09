@@ -1,0 +1,19 @@
+id: pass-rate
+name: "Test Pass Rate"
+type: reward
+description: >
+  The signal the agent maximizes: fraction of tests passing. It is a PROXY for
+  correctness, not correctness itself — it cannot distinguish "the code is right"
+  from "the failing test is gone." That gap is the whole problem.
+tags: [agent, reward, proxy-metric]
+formula: "passing / total"          # informational — the underlying signal
+tunability: engine-default          # the reward is the designer's to redesign
+
+# First-class INTENT (cycle-006): the behavior the designer actually wants.
+intent:
+  intended_action: fix-code
+  rationale: >
+    Pass-rate is a stand-in for "the code is correct." The intended path to a high
+    pass-rate is fixing the code. Any path that raises pass-rate WITHOUT making the
+    code correct (deleting/weakening/skipping tests) is specification gaming.
+  non_negotiable: true

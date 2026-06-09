@@ -1,0 +1,15 @@
+id: fix-code
+name: "Fix Code"
+type: actions
+description: >
+  Repair the implementation so the failing test passes legitimately. The INTENDED
+  action — and the only one that actually makes the code correct. Its cost scales
+  with how hard the bug is.
+tags: [agent, action, intended]
+tunability: engine-default          # the designer can re-weight/forbid this action
+payoff:
+  context: difficulty
+  domain: { min: 1, max: 10 }
+  reward: "1"                       # +1 test passes (pass-rate gain, ×10 scale)
+  cost: "difficulty + 1"            # effort scales with bug difficulty
+  notes: "net = 1 - (difficulty + 1) = -difficulty. Gets steadily worse as difficulty rises."

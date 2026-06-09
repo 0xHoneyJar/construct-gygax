@@ -1,0 +1,30 @@
+id: agent-reward-hack
+name: "Reward-Hacking Coding Agent (incentive analysis)"
+domain: agent-system
+description: |
+  cycle-006 acceptance fixture. A single-agent incentive structure whose dominant
+  strategy is a reward hack: rewarded on test pass-rate, the agent's optimal action
+  is to delete the failing test, never to fix the code (the intended action). Grounds
+  the payoff engine (Sprint 1) and the Goodhart/intent-divergence detector (Sprint 2).
+source: "grimoires/gygax/designs/agent-incentive-analysis.md §3 (worked example)"
+tests_capability:
+  - "payoff matrix from declared incentives (K1)"
+  - "dominant-strategy / reward-hack detection (K2)"
+  - "intent-vs-optimal divergence = specification gaming (K3)"
+  - "incentive-knob recommendation incl. whack-a-mole / structural-fix distinction (K4)"
+  - "tunability framing + claim-strength (forecast) tagging (K5)"
+
+incentive:
+  context: difficulty
+  domain: { min: 1, max: 10 }
+  net_payoff: "reward - cost"        # the agent maximizes this per action
+  intended_action: fix-code
+  expected:
+    dominant_action: delete-test
+    dominated_actions: [fix-code, weaken-assertion, skip-test]
+    intent_diverges: true            # fix-code is never optimal -> spec gaming
+    spec_gaming_gap_by_difficulty: [1,2,3,4,5,6,7,8,9,10]   # delete − fix
+    naive_knob_whack_a_mole: skip-test   # penalizing delete shifts optimal to skip-test
+    structural_fix: "reward held-out coverage the hacks cannot game (correctness signal)"
+
+expected_output: expected/incentive-report.md
