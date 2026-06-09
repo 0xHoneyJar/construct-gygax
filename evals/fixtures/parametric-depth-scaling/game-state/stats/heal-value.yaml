@@ -1,0 +1,24 @@
+id: heal-value
+name: "Heal Value"
+type: stats
+description: >
+  HP restored by the player's heal action. Flat. The fixture's WEAK knob — it
+  affects only the secondary heal_ratio metric and has ZERO leverage on the
+  gating time-to-kill metric or its crossover (K4: the clearly weak end of the
+  knob ordering; L4: a non-crossover-mover).
+tradition: roguelike
+tags: [survival, engine, parametric, tuning-surface]
+depends_on: []
+affects: [progression/encounter-scaling.yaml]
+created_by: attune
+created_at: "2026-06-08T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-06-08T00:00:00Z"
+
+tunability: engine-default
+
+model:
+  variable: wave
+  domain: { min: 1, max: 20 }
+  formula: "20"                   # flat
+  notes: "Weak knob: +1 heal -> Δ(time_to_kill) = 0; does not move the crossover."

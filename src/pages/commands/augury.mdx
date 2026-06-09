@@ -118,6 +118,33 @@ Monte-Carlo the real engine through a `gygaxDriver` adapter, in the sandbox. **N
 
 See [Code-Grounding](/concepts/code-grounding) for the full F2 protocol.
 
+## Parametric Sweep (`--sweep`)
+
+```
+/augury --sweep <game-state-dir>
+```
+
+Analyze a **tuning surface** instead of fixed breakpoints. Consumes entities with a `model:` block (a
+value as a function of a progression variable), sweeps every formula across its domain, and reports
+threshold **crossings**, threshold-free **spikes**, and a **tuning-knob** ranking (with a
+crossover-mover column; `structural` invariants are never proposed as knobs). Formulas run in a
+restricted interpreter — never `eval`.
+
+See [Engine Tuning](/concepts/engine-tuning) for the full capability.
+
+## Incentive Analysis (agent systems)
+
+Pointed at an [incentive-state](/concepts/agent-incentives) instead of a game, the same payoff math
+detects a **dominant strategy** (reward hack), **dead tools**, **specification gaming** (the intended
+action is never optimal), and recommends the incentive fix:
+
+```bash
+npx tsx scripts/lib/payoff/index.ts <incentive-state-dir>   # single-agent
+npx tsx scripts/lib/payoff/game.ts  <incentive-state-dir>   # multi-agent coordination
+```
+
+See [Agent Incentive Analysis](/concepts/agent-incentives).
+
 ## Cross-Layer Deduplication
 
 After all layers produce findings, augury runs a deduplication pass. If two layers flag the same entity for the same root cause, the finding stays in the **more specific** layer. The other layer adds a cross-reference.

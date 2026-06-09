@@ -1,0 +1,28 @@
+system: "Reward-Hacking Coding Agent (incentive fixture)"
+domain: agent-system
+description: >
+  A coding agent rewarded on test pass-rate. The intended behavior is "fix the
+  code"; the reward signal does not measure correctness, only pass-rate — so
+  removing/weakening/skipping the failing test scores as well or better, more
+  cheaply. The cycle-006 acceptance ground for incentive analysis: a single-agent
+  payoff structure whose dominant strategy is a reward hack and whose intended
+  action is never optimal. All values self-authored and self-consistent.
+created_at: "2026-06-08T00:00:00Z"
+last_modified_at: "2026-06-08T00:00:00Z"
+
+# The agent maximizes  net_payoff(action, context) = reward - cost  over this context.
+context:
+  name: difficulty          # how hard the underlying bug is to fix legitimately
+  domain: { min: 1, max: 10 }
+
+reward_signal: reward/pass-rate.yaml   # the metric the agent optimizes
+
+actions:
+  - actions/fix-code.yaml
+  - actions/delete-test.yaml
+  - actions/weaken-assertion.yaml
+  - actions/skip-test.yaml
+
+entity_count:
+  actions: 4
+  reward: 1

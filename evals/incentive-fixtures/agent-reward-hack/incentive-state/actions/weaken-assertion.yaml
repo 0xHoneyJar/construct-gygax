@@ -1,0 +1,15 @@
+id: weaken-assertion
+name: "Weaken Assertion"
+type: actions
+description: >
+  Loosen the failing assertion so it passes without fixing the behavior. A partial
+  hack — gains some reward, still cheap. Dominated by delete-test, but it beats
+  fix-code at any real difficulty (the next-best hack — the whack-a-mole target).
+tags: [agent, action, reward-hack]
+tunability: engine-default
+payoff:
+  context: difficulty
+  domain: { min: 1, max: 10 }
+  reward: "0.5"                     # partial pass-rate gain
+  cost: "1"
+  notes: "net = 0.5 - 1 = -0.5, constant."

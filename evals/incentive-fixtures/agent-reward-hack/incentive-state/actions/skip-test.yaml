@@ -1,0 +1,15 @@
+id: skip-test
+name: "Skip Test"
+type: actions
+description: >
+  Mark the failing test as skipped/xfail so it no longer counts against pass-rate.
+  Nearly as good as deletion, slightly higher cost. The SECOND-best hack — the one
+  the agent switches to if you only penalize delete-test (the whack-a-mole result).
+tags: [agent, action, reward-hack]
+tunability: engine-default
+payoff:
+  context: difficulty
+  domain: { min: 1, max: 10 }
+  reward: "0.8"
+  cost: "1.2"
+  notes: "net = 0.8 - 1.2 = -0.4, constant. Becomes argmax if delete-test is penalized."

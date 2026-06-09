@@ -1,0 +1,106 @@
+---
+title: Agent Incentive Analysis
+description: Find where an agent system's incentives will be gamed — reward hacking, dead tools, coordination failure — before they ship. Game balance and agent infrastructure are the same problem.
+---
+
+# Agent Incentive Analysis
+
+Gygax analyzes the gap between the behavior you **intended** and the behavior your design will
+**actually** produce. For a game that gap is "is this balanced." For an **agent system** it has a name —
+**specification gaming / reward hacking** — and it is the *same problem*, in a new domain.
+
+The realization: **reward hacking is a dominant strategy.** Given a reward structure, the agent picks
+the action that scores best — and if a degenerate action scores best, that's the strategy it collapses
+onto. So the agent-infra failures map one-to-one onto game-balance concepts:
+
+| Agent-system failure | Balance concept |
+|----------------------|-----------------|
+| Reward hacking | a **dominant strategy** |
+| Dead / never-used tool | a **dominated action** |
+| Mode collapse | a **degenerate metagame** |
+| Specification gaming / Goodhart | equilibrium **diverging from declared intent** |
+| Multi-agent coordination failure | a bad **Nash equilibrium** |
+
+## The incentive-state
+
+Express an agent system's incentive structure as game-state — actions with payoff formulas, a reward
+signal, and a **first-class `intent`**:
+
+```yaml
+# actions/delete-test.yaml — an action the agent can take
+id: delete-test
+tunability: engine-default
+payoff:
+  context: difficulty
+  domain: { min: 1, max: 10 }
+  reward: "1"          # effect on the reward signal (formula over context)
+  cost: "1"            # effort/token cost
+```
+
+```yaml
+# reward/pass-rate.yaml — the signal the agent maximizes, + what you actually want
+id: pass-rate
+intent:
+  intended_action: fix-code
+  rationale: "Pass-rate is a proxy for correctness; the intended path is fixing the code."
+  non_negotiable: true
+```
+
+`intent` is the declared terminal of the intent–reality spine. Without it, *"the agent gamed the
+metric"* is unprovable.
+
+## The worked example
+
+A coding agent rewarded on **test pass-rate**. Intent: fix the code. Run the analysis and Gygax reports:
+
+> **Reward hack:** `delete-test` dominates `fix-code` — same pass-rate, far lower cost.
+> **Specification gaming:** the intended action `fix-code` is **never optimal**; severity *rises with
+> difficulty* (the harder the bug, the stronger the pull to delete the test).
+> **The fix is structural, not a knob tweak:** penalizing `delete-test` just shifts the agent to
+> `skip-test` (whack-a-mole). The reward doesn't measure correctness, so *any* hack beats fixing —
+> reward **held-out coverage** the agent can't game.
+
+That last finding is the point: the obvious reward hack a human sees; the **whack-a-mole → structural**
+insight is what the payoff analysis surfaces that eyeballing the reward doesn't.
+
+## How you use it
+
+Same verbs as game analysis, pointed at an incentive structure:
+
+1. **`/attune`** — build the incentive-state (author it, or point Gygax at your eval/reward config).
+2. **`/augury`** — the payoff analysis: dominant strategy (reward hack), dead tools, intent-vs-optimal
+   divergence, and the incentive-knob recommendation.
+3. **`/cabal --incentives`** — red-team it: archetypes-as-agents surface the degenerate strategy each
+   would find, grounded in the payoff engine.
+4. **`/homebrew` → re-`/augury`** — apply the fix, check it didn't introduce a *new* dominant strategy.
+
+Run the engine directly:
+
+```bash
+npx tsx scripts/lib/payoff/index.ts <incentive-state-dir>   # single-agent: reward hack / Goodhart / fix
+npx tsx scripts/lib/payoff/game.ts  <incentive-state-dir>   # multi-agent: coordination failure
+```
+
+## Multi-agent coordination
+
+When agents interact, the failure is a bad equilibrium. Two agents that *should* cooperate, rewarded
+individually, will **defect** — a prisoner's-dilemma shape:
+
+> **Dominant strategy: `defect`.** Equilibrium `(defect, defect)` pays 1 each; the intended
+> `(cooperate, cooperate)` pays 3. **Coordination failure — price of anarchy 3×**, 2 units left on the
+> table per agent. Fix: reward the **team outcome**, not the individual one, so cooperation isn't
+> dominated.
+
+## When you'd reach for it
+
+**Design time** — when you're writing a reward or eval, or when an agent is behaving strangely and you
+suspect the incentive. It's the complement to runtime eval: **runtime eval observes what the agent
+actually did; Gygax forecasts what your incentive structure will make it do.**
+
+## The honesty boundary
+
+Gygax analyzes the **declared incentive structure**, not the live agent. Its output is a **forecast** of
+where the incentive *will* be gamed — tagged as such, never presented as an observation. The payoff
+model is an abstraction of real, stochastic agent behavior; the analysis is only as good as the model
+you give it. And some divergences are *desired* emergent behavior — only a declared `intent` lets Gygax
+tell a **bug** from a **choice**.

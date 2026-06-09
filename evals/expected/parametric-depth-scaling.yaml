@@ -1,0 +1,72 @@
+fixture: parametric-depth-scaling
+# Expected analytical findings for the cycle-005 parametric capability (K1-K5 + L4).
+# Golden numeric output: ../fixtures/parametric-depth-scaling/expected/sweep-report.md
+expected_findings:
+  # K2 — declared-threshold first-crossing
+  - skill: augury
+    layer: progression
+    severity: Warning
+    category: parametric-crossover
+    description_contains: "wave 5"
+    entity_refs:
+      - progression/encounter-scaling.yaml
+      - stats/enemy-armor.yaml
+
+  # K2 — second threshold: incoming damage exceeds player max HP (catastrophe)
+  - skill: augury
+    layer: progression
+    severity: Critical
+    category: parametric-crossover
+    description_contains: "wave 16"
+    entity_refs:
+      - stats/enemy-hp.yaml
+      - stats/player-max-hp.yaml
+
+  # K3 — threshold-free envelope spike (must be flagged)
+  - skill: augury
+    layer: progression
+    severity: Critical
+    category: envelope-spike
+    description_contains: "spike"
+    entity_refs:
+      - stats/enemy-hp.yaml
+
+  # K4 — dominant tunable knob, framed engine-default ("yours to tune")
+  - skill: augury
+    layer: resource-economy
+    severity: Observation
+    category: knob-leverage
+    description_contains: "armor"
+    entity_refs:
+      - stats/enemy-armor.yaml
+
+  # K4 — weak knob (clearly low leverage end of the ordering)
+  - skill: augury
+    layer: resource-economy
+    severity: Observation
+    category: knob-leverage
+    description_contains: "heal"
+    entity_refs:
+      - stats/heal-value.yaml
+
+  # K5 — structural framing: the min-damage floor is an engine constraint
+  - skill: augury
+    layer: resource-economy
+    severity: Observation
+    category: structural-framing
+    description_contains: "structural"
+    entity_refs:
+      - mechanics/damage-formula.yaml
+
+expected_absent:
+  # K3 negative — the enemy_armor stair-steps must NOT be reported as spikes
+  - skill: augury
+    layer: progression
+    category: envelope-spike
+    reason: "enemy_armor is a pure unit-step stair (then a flat cap). Its regular increments are not drastic jumps; spike detection must not false-fire on floor stair-steps."
+
+  # L7 / L6 — the structural min-damage floor must NEVER be proposed as a tunable knob
+  - skill: augury
+    layer: resource-economy
+    category: knob-leverage
+    reason: "damage-formula's max(1, atk-def) floor is tunability: structural. The knob report ranks tunable params only and must never propose perturbing a structural invariant."

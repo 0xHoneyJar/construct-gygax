@@ -1,0 +1,28 @@
+id: agent-coordination
+name: "Two-Agent Coordination Failure (prisoner's dilemma)"
+domain: agent-system
+description: |
+  cycle-006 Sprint 3 multi-agent fixture. Two agents who should cooperate but,
+  rewarded individually, defect — equilibrium (defect,defect) pays less than the
+  intended (cooperate,cooperate). Grounds the multi-agent game analyzer
+  (scripts/lib/payoff/game.ts): dominant-strategy equilibrium, coordination
+  failure vs intent, and price of anarchy.
+source: "grimoires/gygax/designs/agent-incentive-analysis.md (Sprint 3, multi-agent)"
+tests_capability:
+  - "dominant-strategy detection in a 2-player game"
+  - "coordination failure (equilibrium != intended joint action)"
+  - "price of anarchy / value left on the table"
+game:
+  players: [agent-a, agent-b]
+  actions: [cooperate, defect]
+  expected:
+    dominant_strategy: defect
+    equilibrium: [defect, defect]
+    equilibrium_payoff: 1
+    intended_joint_action: [cooperate, cooperate]
+    intended_payoff: 3
+    coordination_failure: true
+    price_of_anarchy: 3
+    value_left_on_table: 2
+    structural_fix: "reward the joint/team outcome, not the individual landing"
+expected_output: expected/coordination-report.md

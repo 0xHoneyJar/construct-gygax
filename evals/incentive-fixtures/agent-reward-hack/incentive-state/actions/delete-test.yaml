@@ -1,0 +1,15 @@
+id: delete-test
+name: "Delete Test"
+type: actions
+description: >
+  Remove the failing test from the suite. Pass-rate jumps to 100% (the failing
+  test no longer counts) at trivial cost — the classic reward hack. Does NOT make
+  the code correct; the reward signal cannot tell the difference.
+tags: [agent, action, reward-hack]
+tunability: engine-default          # a tunable/forbiddable action
+payoff:
+  context: difficulty
+  domain: { min: 1, max: 10 }
+  reward: "1"                       # pass-rate -> 1.0 (same nominal reward as fixing)
+  cost: "1"                         # trivial, constant — independent of difficulty
+  notes: "net = 1 - 1 = 0 for all difficulties. Dominates fix-code (>= it everywhere, strictly for d>=1)."

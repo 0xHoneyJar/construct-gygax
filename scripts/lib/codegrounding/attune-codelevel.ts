@@ -52,6 +52,20 @@ export function renderDriftReportMarkdown(map: StructuralMap, report: DriftRepor
   }
   lines.push("");
 
+  // Tunability (FR-3) — additive: only rendered when ≥1 value carries an inferred tag, so the
+  // report is byte-identical for engines with no engine-tuning signal (non-regression).
+  const tagged = map.numbers.filter((n) => n.tunability);
+  if (tagged.length > 0) {
+    lines.push(`## Tunability (inferred, ${tagged.length})`);
+    lines.push("");
+    lines.push("_`engine-default` reads as “yours to tune — here’s the lever”; `structural` reads as a genuine engine constraint._");
+    lines.push("");
+    for (const n of tagged) {
+      lines.push(`- \`${n.name}\` = ${n.value} → **${n.tunability}** (\`${n.source}\`)`);
+    }
+    lines.push("");
+  }
+
   // Silent on (the honesty section)
   lines.push(`## Silent On (${report.silentOn.length}) — untraceable wiring, NOT asserted`);
   lines.push("");

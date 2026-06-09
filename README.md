@@ -26,12 +26,30 @@ Gygax shortens that loop to minutes. Not by replacing playtesting — by catchin
 |---------|-------------|
 | `/attune` | Point at a source — rulebook, repo, URL, or just describe your game — and Gygax builds structured game-state. Captures designer intent on tensions and key mechanics. |
 | `/homebrew` | Design or refine a mechanic. Gygax checks it against everything that already exists, prompts for intent, logs rationale. |
-| `/augury` | Run the numbers. Probability scripts handle dice pools, bell curves, advantage math, exploding dice. Cross-system comparison via `/augury compare --against 5e-srd`. |
-| `/cabal` | Summon up to nine phantom players to stress-test your design with scenario walkthroughs. Intent-aware — deliberate asymmetries aren't flagged as bugs. |
+| `/augury` | Run the numbers. Probability scripts handle dice pools, bell curves, advantage math, exploding dice. Cross-system comparison via `/augury compare --against 5e-srd`. **`--sweep`** analyzes a parametric tuning surface (engines), not just fixed stat blocks. |
+| `/cabal` | Summon up to nine phantom players to stress-test your design with scenario walkthroughs. Intent-aware — deliberate asymmetries aren't flagged as bugs. **`--incentives`** red-teams an agent system's reward structure for reward hacks. |
 | `/lore` | 460+ curated design heuristics across 20 traditions — TTRPGs, eurogames, autobattlers, roguelikes, deckbuilders, CCGs, tactics, 4X, and more. Learns per-game — patterns discovered in analysis can be captured and eventually promoted to curated. |
 | `/scry` | Fork your game-state, explore a change, see the impact. Compare branches, commit the best one. Preserves intent across forks. |
 | `/delve` | Analyze dungeons — ecology coherence, Xandering (non-linearity), attrition curves, loot economies, the G.U.A.R.D. framework. |
 | `/gygax` | Where am I? What's in game-state? References installed, learned heuristics captured, recent reports. |
+
+## Beyond games — engines and agent systems
+
+The analytical core ("find where the curves break, where intent and reality diverge") isn't specific to
+games. Gygax extends to two adjacent domains:
+
+- **Engine tuning.** A game has fixed numbers; an *engine* has parameters and formulas a developer
+  tunes. `/augury --sweep` analyzes the *tuning surface* — sweeps `model:` formulas across their
+  domain, finds threshold crossings and spikes, and ranks the tuning knobs by leverage. One good
+  tuning pass on an engine helps every game built on it. → [docs](src/pages/concepts/engine-tuning.mdx)
+- **Agent incentive analysis.** Reward hacking *is* a dominant strategy. Point Gygax at an agent
+  system's incentive structure and it forecasts where it'll be gamed — the reward hack, dead tools,
+  specification gaming (the intended action is never optimal), and multi-agent coordination failure —
+  then recommends the fix. The same payoff math that finds a degenerate game strategy finds a
+  degenerate agent policy. → [docs](src/pages/concepts/agent-incentives.mdx)
+
+> These are forecasts grounded in the declared model — Gygax predicts where a design *will* break, it
+> doesn't replace running the real thing.
 
 ## Quick Start
 
@@ -67,7 +85,7 @@ npm run preview  # serve the built output
 What's covered:
 
 - **Welcome** — introduction, getting started, philosophy
-- **Core Concepts** — game-state, the grimoire, designer intent, traditions, probability scripts, code-grounding (F1/F2/F4)
+- **Core Concepts** — game-state, the grimoire, designer intent, traditions, probability scripts, code-grounding (F1/F2/F4), engine tuning, agent incentive analysis
 - **Commands** — full reference for every slash command (`/gygax`, `/attune`, `/homebrew`, `/augury`, `/cabal`, `/lore`, `/scry`, `/delve`)
 - **Identity** — persona and voice, the seven refusals, expertise and boundaries
 - **Reference** — the 9 Cabal archetypes, the 6 Augury layers, the 5 Delve frameworks, composition with Arneson and Loa

@@ -1,0 +1,32 @@
+id: damage-formula
+name: "Damage Per Hit"
+type: mechanics
+description: >
+  Core damage rule: dmg = max(1, player_attack - enemy_armor). The max(1, ...)
+  is the engine's MINIMUM-DAMAGE FLOOR — a STRUCTURAL invariant of the combat
+  model, not a sample value. It looks tunable (you could change the "1"), but it
+  is a property of how the engine resolves combat, so the knob report must NEVER
+  propose changing it (K5 + taxonomy L6 clamp / L7 never-propose-structural).
+tradition: roguelike
+tags: [combat, engine, structural-invariant]
+depends_on: [stats/player-attack.yaml, stats/enemy-armor.yaml]
+affects: [progression/encounter-scaling.yaml]
+created_by: attune
+created_at: "2026-06-08T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-06-08T00:00:00Z"
+
+tunability: structural            # invariant — never perturb / never propose as a knob
+
+trigger: "Each attack the player lands"
+resolution:
+  method: deterministic
+  formula: "max(1, player_attack - enemy_armor)"
+  notes: >
+    The max(1, ..) floor is the structural piece (L6 clamp): below it, marginal
+    knob leverage vanishes; it is the engine's guarantee that every hit chips at
+    least 1. A perturbation pass must skip this entity entirely.
+
+interactions:
+  - "Composes player-attack (knob) and enemy-armor (knob) into per-hit damage."
+  - "Feeds time_to_kill = ceil(enemy_hp / damage_per_hit)."

@@ -1,0 +1,25 @@
+id: player-attack
+name: "Player Attack"
+type: stats
+description: >
+  Player's flat attack power. A STATIC additive knob in a field where the enemy
+  side scales — the textbook L1 "flat value you must remember to scale" lever.
+  An engine adopter is expected to replace/scale this for their game.
+tradition: roguelike
+tags: [combat, engine, parametric, tuning-surface]
+depends_on: []
+affects: [mechanics/damage-formula.yaml]
+created_by: attune
+created_at: "2026-06-08T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-06-08T00:00:00Z"
+
+tunability: engine-default        # sample value an adopter replaces
+
+model:
+  variable: wave
+  domain: { min: 1, max: 20 }
+  formula: "12"                   # flat: does not scale with wave
+  notes: >
+    Medium leverage on time-to-kill and a crossover-mover (perturbing it moves
+    the TTK>8 wave 5 -> 7). Flat-in-a-scaling-field (L1).

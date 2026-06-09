@@ -25,6 +25,8 @@ export default defineConfig({
         { text: 'Game Traditions', link: '/concepts/traditions' },
         { text: 'Probability Scripts', link: '/concepts/probability-scripts' },
         { text: 'Code-Grounding', link: '/concepts/code-grounding' },
+        { text: 'Engine Tuning', link: '/concepts/engine-tuning' },
+        { text: 'Agent Incentives', link: '/concepts/agent-incentives' },
       ],
     },
     {

@@ -1,0 +1,64 @@
+id: encounter-scaling
+name: "Encounter Scaling"
+type: progression
+description: >
+  Declares the progression variable (wave) and the DERIVED, composed metrics the
+  sweep engine evaluates over the domain, plus the declared thresholds. These
+  metricDefs are deliberately expressed generically (composition of entity
+  models), not hard-coded — honoring the metric-agnostic substrate (SDD §1.2.4):
+  the same engine could evaluate progression or variance metrics with a different
+  metricDefs set.
+tradition: roguelike
+tags: [progression, engine, parametric, tuning-surface]
+depends_on:
+  - stats/enemy-hp.yaml
+  - stats/enemy-attack.yaml
+  - stats/player-max-hp.yaml
+  - stats/heal-value.yaml
+  - mechanics/damage-formula.yaml
+affects: []
+created_by: attune
+created_at: "2026-06-08T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-06-08T00:00:00Z"
+
+variable: wave
+domain: { min: 1, max: 20 }
+
+# Composed metrics (metric-agnostic: each is a function of the entity models).
+metrics:
+  - id: damage_per_hit
+    formula: "max(1, player_attack - enemy_armor)"
+    role: intermediate
+  - id: time_to_kill            # primary gating metric
+    formula: "ceil(enemy_hp / damage_per_hit)"
+    role: primary
+  - id: incoming_per_kill
+    formula: "time_to_kill * enemy_attack"
+    role: secondary
+  - id: heal_ratio             # only heal-value touches this (weak-knob demo)
+    formula: "heal_value / damage_per_hit"
+    role: secondary
+
+# Declared thresholds (the K2 first-crossing targets).
+thresholds:
+  - metric: time_to_kill
+    test: "> 8"
+    expected_first_crossing: { wave: 5 }
+  - metric: incoming_per_kill
+    test: "> 120"             # > player-max-hp
+    expected_first_crossing: { wave: 16 }
+
+# Threshold-free spike expectation (K3): documented here for the golden check.
+spike_expectations:
+  - metric: time_to_kill
+    expect_spike_at: { wave: 16 }
+    reason: "enemy-hp surge (+200) -> Δttk +28, vs largest non-surge kink +2"
+  - metric: enemy_armor
+    expect_spike: false
+    reason: "pure unit-step stair then flat cap — no drastic jump (K3 negative)"
+
+scaling_notes:
+  - "time_to_kill rises smoothly 6 -> 17 over waves 1-15 with small armor kinks (<=+2)."
+  - "At wave 16 the enemy-hp surge spikes time_to_kill to 45 (+28): the envelope spike."
+  - "Knob leverage (ΣTTK, +1 perturbation): enemy_armor +51 > player_attack -40 >> heal_value 0."

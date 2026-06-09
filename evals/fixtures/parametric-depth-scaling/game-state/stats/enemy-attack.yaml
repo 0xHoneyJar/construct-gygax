@@ -1,0 +1,23 @@
+id: enemy-attack
+name: "Enemy Attack"
+type: stats
+description: >
+  Per-hit damage the enemy deals to the player. Feeds the derived
+  incoming-damage-per-kill metric (a second declared threshold against player
+  max HP). Secondary tuning knob.
+tradition: roguelike
+tags: [combat, engine, parametric, tuning-surface]
+depends_on: []
+affects: [progression/encounter-scaling.yaml]
+created_by: attune
+created_at: "2026-06-08T00:00:00Z"
+last_modified_by: attune
+last_modified_at: "2026-06-08T00:00:00Z"
+
+tunability: engine-default
+
+model:
+  variable: wave
+  domain: { min: 1, max: 20 }
+  formula: "3 + floor(wave / 5)"   # 3,3,3,3,4(w5),...,6(w15-19),7(w20)
+  notes: "Stepwise-rising enemy offense; feeds incoming_per_kill = TTK * enemy_attack."
