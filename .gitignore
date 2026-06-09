@@ -22,3 +22,7 @@ node_modules/
 .vocs/
 dist/
 src/pages.gen.ts
+
+# awareness-ladder generated batches (cycle-007) + python bytecode from scorer re-runs
+evals/awareness-ladder/runs/
+__pycache__/

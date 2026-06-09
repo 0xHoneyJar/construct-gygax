@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "private": true,
   "type": "module",
-  "description": "Gygax construct — game systems analyst skill-pack; code-grounded analysis libs under scripts/lib/codegrounding/",
+  "description": "Gygax construct \u2014 game systems analyst skill-pack; code-grounded analysis libs under scripts/lib/codegrounding/",
   "scripts": {
     "dev": "vocs dev",
     "build": "vocs build",
@@ -11,8 +11,10 @@
     "test:codegrounding": "for f in scripts/lib/codegrounding/*.test.ts; do tsx \"$f\" || exit 1; done",
     "test:parametric": "for f in scripts/lib/parametric/*.test.ts; do tsx \"$f\" || exit 1; done",
     "test:payoff": "for f in scripts/lib/payoff/*.test.ts; do tsx \"$f\" || exit 1; done",
+    "test:trace": "for f in scripts/lib/trace/*.test.ts; do tsx \"$f\" || exit 1; done",
+    "test:ladder": "for f in scripts/lib/ladder/*.test.ts; do tsx \"$f\" || exit 1; done",
     "test:evals": "bash evals/harness.sh --structural",
-    "test": "npm run test:codegrounding && npm run test:parametric && npm run test:payoff && npm run test:evals"
+    "test": "npm run test:codegrounding && npm run test:parametric && npm run test:payoff && npm run test:trace && npm run test:ladder && npm run test:evals"
   },
   "devDependencies": {
     "tsx": "4.19.2",

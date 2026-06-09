@@ -66,6 +66,36 @@ honest framing — this is a **forecast** of where the incentive *will* be gamed
 observation of a live agent (agent-incentive-analysis.md §9). When the engine recommends a structural
 fix (whack-a-mole), say so: penalizing one hack just moves the agents to the next.
 
+## Observed-Trace Mode (`--observed`) — cycle-007
+
+`/cabal --observed <batch-dir>` is the **measurement** companion to `--incentives` (which is a
+*forecast*). Where `--incentives` predicts where an incentive *will* be gamed, `--observed`
+reports what real agents *actually did* against a runnable task — classified from artifacts
+(file diffs + a re-run of the test), never from the agent's self-report.
+
+This mode is a **thin shell to the observed-trace seam** — no new archetype machinery. Run the
+ingest and read its claim-tagged report; the report is the ground truth the panel reasons from:
+
+```bash
+# ingest a kept batch of sidecars → predicted-vs-observed diff, cliff, severity, claim tags
+npx tsx scripts/lib/trace/index.ts <batch-dir-or-sidecar-dir> [--incentive-state <dir>] [--context <n>]
+```
+
+Produce the runnable batch first with the awareness-ladder harness (real agents per rung × trial):
+
+```bash
+npx tsx scripts/lib/ladder/index.ts run --fixture evals/awareness-ladder --trials 5   # spawns real agents
+npx tsx scripts/lib/ladder/index.ts run --fixture evals/awareness-ladder --dry-run     # plan only, no spend
+npx tsx scripts/lib/ladder/index.ts score --batch <dir>                                # re-score, no re-spawn
+```
+
+**Claim-strength discipline (carry it into every finding):** observed > simulation-derived >
+forecast. An `--observed` finding is `real-agent-observed`; an `--incentives` finding is
+`model-forecast`. Never blend them — the report's first line is the claim tag, always. A
+**no-hack** observed run is a **finding, not a failure** ("the model's training dominated the
+stated incentive"), reported as-is. See `grimoires/gygax/designs/awareness-ladder-experiment.md`
+and the first run's findings in `grimoires/gygax/playtest-reports/awareness-ladder-2026-06-09.md`.
+
 ## Archetype Roster
 
 9 archetypes, each testing a distinct dimension of the design. Full behavioral profiles with per-tradition weightings are in `skills/cabal/resources/archetypes.yaml`.
