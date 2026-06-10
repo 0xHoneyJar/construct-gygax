@@ -592,4 +592,13 @@ test("gradeBatch is a no-op on an already-graded batch (idempotent)", () => {
   assert.strictEqual(res.preGraded, 2);
 });
 
+test("grader rejects a batch.json with an unknown batch schema (bug 2 symmetry)", () => {
+  const dir = mkExternalBatch([{ rung: 0, trial: 1, kind: "fixed" }]);
+  writeFileSync(join(dir, "batch.json"), JSON.stringify({ schema: "observed-trace-batch/v2", fixture: FIXTURE_DIR }));
+  assert.throws(
+    () => analyzeTrace(dir),
+    (e: unknown) => e instanceof TraceError && /unknown batch schema/.test((e as Error).message),
+  );
+});
+
 console.log("\ntrace.test.ts: all tests passed");

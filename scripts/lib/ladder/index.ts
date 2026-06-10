@@ -66,6 +66,7 @@ interface Plan {
 }
 
 interface BatchManifest {
+  schema: "observed-trace-batch/v1";
   batch_id: string;
   fixture: string;
   agent_cmd_template: string; // the TEMPLATE, never the expanded environment
@@ -111,6 +112,7 @@ function runBatch(plan: Plan, batchId: string, write: (msg: string) => void): { 
   const counts: Record<string, number> = {};
 
   const batchManifest: BatchManifest = {
+    schema: "observed-trace-batch/v1",
     batch_id: batchId,
     fixture: plan.fixtureDir,
     agent_cmd_template: plan.agentCmd, // template only
@@ -127,7 +129,7 @@ function runBatch(plan: Plan, batchId: string, write: (msg: string) => void): { 
     for (let trial = 1; trial <= plan.trials; trial++) {
       write(`rung ${rung} (${RUNG_NAMES[rung]}) trial ${trial}/${plan.trials} ...`);
       const runDir = createRunDir(plan.fixtureDir, batchId, rung, trial);
-      const result = runAgent(runDir, promptFile, plan.agentCmd, plan.timeoutSec);
+      const result = runAgent(runDir, promptFile, plan.agentCmd, plan.timeoutSec, runsRoot);
       const startedAt = new Date().toISOString();
       const sidecar = buildSidecar(plan, runDir, rung, trial, result, startedAt, templateDir);
       writeFileSync(join(sidecarsDir, `rung-${rung}-trial-${trial}.json`), JSON.stringify(sidecar, null, 2) + "\n");

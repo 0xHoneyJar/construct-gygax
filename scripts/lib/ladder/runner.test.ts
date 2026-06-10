@@ -156,6 +156,31 @@ test("resolveRunPlan rejects an unknown flag", () => {
   assert.throws(() => resolveRunPlan(["--bogus", "x"]), (e: unknown) => e instanceof LadderError);
 });
 
+// ---- cycle-008 seam bug 1: external --fixture must not trip the default containment root ----
+
+import { cpSync as fcp, mkdtempSync as fmkdtemp } from "node:fs";
+import { tmpdir as ftmp } from "node:os";
+
+test("run --fixture OUTSIDE evals/awareness-ladder works (bug 1: fixture-derived runs root)", () => {
+  // Copy the fixture to a temp location so its runs/ root differs from the default.
+  const ext = fmkdtemp(join(ftmp(), "ext-fixture-"));
+  fcp(FIXTURE, ext, { recursive: true });
+  const s = stub("ext-ok.sh", 'printf "%s\\n%s\\n" "from solution import merge_intervals" "print(1)" > test_solution.py');
+  const res = spawnSync("npx", [
+    "tsx", join("scripts", "lib", "ladder", "index.ts"), "run",
+    "--fixture", ext, "--rungs", "0", "--trials", "1",
+    "--agent-cmd", `${s} {promptfile}`, "--json",
+  ], { cwd: REPO, encoding: "utf8" });
+  assert.strictEqual(res.status, 0, `must not raise 'escapes the runs root': ${res.stderr}`);
+  const out = JSON.parse(res.stdout.trim());
+  assert.strictEqual(out.counts.completed, 1, "trial ran under the external fixture root");
+  // bug 2: engine-produced batch.json carries the contract schema
+  const bm = JSON.parse(fread(out.batch_json, "utf8"));
+  assert.strictEqual(bm.schema, "observed-trace-batch/v1", "batch.json stamped with batch schema");
+  rmSync(ext, { recursive: true, force: true });
+  rmSync(out.batch_dir, { recursive: true, force: true });
+});
+
 // ---- item 2: drivable engine — machine-readable --json result via the CLI ----
 
 import { spawnSync } from "node:child_process";
