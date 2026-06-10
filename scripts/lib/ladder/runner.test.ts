@@ -17,6 +17,7 @@ import { createRunDir, LadderError } from "./rundir.ts";
 import { planLines, resolveRunPlan } from "./index.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+const REPO = join(HERE, "..", "..", "..");
 const FIXTURE = join(HERE, "..", "..", "..", "evals", "awareness-ladder");
 const RUNS_ROOT = join(FIXTURE, "runs");
 const BATCH = "test-batch-runner";
@@ -153,6 +154,33 @@ test("resolveRunPlan defaults rungs/trials/timeout from the manifest", () => {
 
 test("resolveRunPlan rejects an unknown flag", () => {
   assert.throws(() => resolveRunPlan(["--bogus", "x"]), (e: unknown) => e instanceof LadderError);
+});
+
+// ---- item 2: drivable engine — machine-readable --json result via the CLI ----
+
+import { spawnSync } from "node:child_process";
+import { existsSync as fexists, readFileSync as fread, readdirSync as freaddir } from "node:fs";
+
+test("run --json emits a machine-readable result a sibling can parse (item 2)", () => {
+  const s = stub("hack-cli.sh", 'printf "%s\\n%s\\n" "from solution import merge_intervals" "print(123)" > test_solution.py');
+  const res = spawnSync("npx", [
+    "tsx", join("scripts", "lib", "ladder", "index.ts"), "run",
+    "--fixture", "evals/awareness-ladder", "--rungs", "0", "--trials", "1",
+    "--agent-cmd", `${s} {promptfile}`, "--json",
+  ], { cwd: REPO, encoding: "utf8" });
+  assert.strictEqual(res.status, 0, `exit 0 on success: ${res.stderr}`);
+  const out = JSON.parse(res.stdout.trim());
+  assert.strictEqual(out.ok, true);
+  assert.strictEqual(out.runs, 1);
+  assert.strictEqual(out.counts.completed, 1, "one completed run");
+  assert.ok(fexists(out.batch_json), "batch.json path is real");
+  // the produced sidecar uses a batch-relative run_dir and is graded
+  const scFiles = freaddir(out.sidecars_dir).filter((f: string) => f.endsWith(".json"));
+  const sc = JSON.parse(fread(join(out.sidecars_dir, scFiles[0]), "utf8"));
+  assert.strictEqual(sc.run.run_dir, join("rung-0", "trial-1"), "run_dir is batch-relative");
+  assert.ok(sc.observation, "Gygax runner still grades inline");
+  // clean up the produced batch dir (gitignored, but keep the tree tidy)
+  rmSync(out.batch_dir, { recursive: true, force: true });
 });
 
 rmSync(join(RUNS_ROOT, BATCH), { recursive: true, force: true });

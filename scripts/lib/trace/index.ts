@@ -12,6 +12,7 @@
  */
 import { basename, resolve } from "node:path";
 import { loadBatch, type Batch } from "./ingest.ts";
+import { gradeBatch } from "./grade.ts";
 import { diffPredictedVsObserved, type PolicyDiff } from "./diff.ts";
 import { detectCliff, type CliffResult } from "./cliff.ts";
 import { renderTraceReport, type BatchMeta } from "./report.ts";
@@ -23,13 +24,23 @@ export interface TraceAnalysis {
   diff: PolicyDiff;
   cliff: CliffResult;
   report: string;
+  graded: number; // runs graded on ingest this pass (cycle-008)
 }
 
-export function analyzeTrace(
-  batchDir: string,
-  opts: { incentiveState?: string; context?: number } = {},
-): TraceAnalysis {
+export interface TraceOpts {
+  incentiveState?: string;
+  context?: number;
+  /** Fixture dir for grade-on-ingest (template + reward command). Default: batch.json / sidecar. */
+  fixtureDir?: string;
+  /** Re-grade already-graded real-agent runs from artifacts (enforce the trust rule). */
+  regrade?: boolean;
+}
+
+export function analyzeTrace(batchDir: string, opts: TraceOpts = {}): TraceAnalysis {
   const batch = loadBatch(batchDir);
+  // Grade-on-ingest: fill `observation` for any ungraded completed run by re-running the reward
+  // command against its artifacts (cycle-008). No-op when the batch is already fully graded.
+  const grade = gradeBatch(batchDir, batch, { fixtureDir: opts.fixtureDir, regrade: opts.regrade });
   const ref = batch.sidecars[0] ?? batch.excluded[0]; // loadBatch guarantees ≥ 1 record
   const incentiveState = opts.incentiveState ?? ref.experiment.incentive_state;
   const context = opts.context ?? ref.experiment.context.value;
@@ -58,17 +69,19 @@ export function analyzeTrace(
     claims: [...new Set<SidecarClaim>(all.map((s) => s.claim_strength))],
   };
   const report = renderTraceReport(diff, cliff, meta);
-  return { batch, diff, cliff, report };
+  return { batch, diff, cliff, report, graded: grade.graded };
 }
 
 // CLI: `npx tsx scripts/lib/trace/index.ts <dir> [--incentive-state <dir>] [--context <n>]`
 if (process.argv[1]?.endsWith("index.ts") && process.argv[1]?.includes("trace")) {
   const args = process.argv.slice(2);
   let dir: string | undefined;
-  const opts: { incentiveState?: string; context?: number } = {};
+  const opts: TraceOpts = {};
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--incentive-state") opts.incentiveState = args[++i];
     else if (args[i] === "--context") opts.context = Number(args[++i]);
+    else if (args[i] === "--fixture") opts.fixtureDir = args[++i];
+    else if (args[i] === "--regrade") opts.regrade = true;
     else if (!dir) dir = args[i];
     else {
       process.stderr.write(`unexpected argument: ${args[i]}\n`);
@@ -76,14 +89,14 @@ if (process.argv[1]?.endsWith("index.ts") && process.argv[1]?.includes("trace"))
     }
   }
   if (!dir || (opts.context !== undefined && !Number.isFinite(opts.context))) {
-    process.stderr.write("usage: index.ts <sidecar-dir-or-batch-dir> [--incentive-state <dir>] [--context <n>]\n");
+    process.stderr.write("usage: index.ts <sidecar-dir-or-batch-dir> [--incentive-state <dir>] [--context <n>] [--fixture <dir>] [--regrade]\n");
     process.exit(2);
   }
   process.stderr.write(`ingesting ${dir} ...\n`);
   const result = analyzeTrace(dir, opts);
   process.stderr.write(
     `${result.batch.sidecars.length} completed + ${result.batch.excluded.length} excluded records; ` +
-      `severity=${result.cliff.severity}\n`,
+      `graded-on-ingest=${result.graded}; severity=${result.cliff.severity}\n`,
   );
   process.stdout.write(result.report + "\n");
 }

@@ -99,3 +99,29 @@ that field, so the two converge for free when Gygax adopts it.
 Agreed — that is this document. Net: **no objections; two exact spellings locked
 (`real-agent-observed`, `simulation-derived`); `forecast` is fine because it can never be a
 sidecar; seq/id needs only stable+unique+seq-ordered.**
+
+---
+
+## cycle-008 delivered (2026-06-09): Split Run from Grade
+
+The directional change in `construct-arneson/.../gygax-changes-brief.md` is implemented. Gygax is
+now the analyst (grades + diffs); the running can move to Arneson's sandbox.
+
+| Brief item | Status | Where |
+|------------|--------|-------|
+| 1. Grade-on-ingest | ✅ | `scripts/lib/trace/grade.ts` — `analyzeTrace(<batch>)` grades ungraded completed runs from artifacts, then diffs. Acceptance test green. |
+| 2. Drivable runner | ✅ | `scripts/lib/ladder/index.ts run … --json` (machine-readable result, exit-code contract); `scripts/lib/ladder/README.md`. No runner relocation. |
+| 3. Batch-dir contract | ✅ | `schemas/observed-trace-batch.v1.md` (versioned, beside the record schema). `run_dir` is batch-relative. |
+| 4. Sibling-readable fixtures | ✅ | `evals/awareness-ladder/README.md` — plain files, reference by path+checksum; ownership unchanged. |
+
+**Contract change Arneson must vendor:** `observed-trace/v1` is unchanged on the wire for graded
+records, but the `completed → observation required` coupling is **relaxed** — `observation` is now
+the *grading marker* (absent on a completed run = ungraded). Re-vendor `observed-trace.v1.schema.json`
++ read `observed-trace-batch.v1.md`. Producer rules for Arneson:
+- **real mode** → emit completed sidecars **without** `observation` + artifacts under `run_dir`
+  (batch-relative); Gygax grades them. `producer.kind: real-agent`, `claim_strength: real-agent-observed`.
+- **simulated mode** → emit **graded** sidecars (carry your own `observation`);
+  `producer.kind: simulation`, `claim_strength: simulation-derived`. Gygax trusts-but-labels; an
+  *ungraded* simulation sidecar is rejected (Gygax won't fabricate a simulation grade).
+
+**Still owed to Arneson:** the canonical signal taxonomy (awaiting your 9-value list).

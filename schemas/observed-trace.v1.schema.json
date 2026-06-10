@@ -3,7 +3,7 @@
   "$id": "https://constructs.network/gygax/schemas/observed-trace.v1.schema.json",
   "title": "Observed Trace Sidecar (observed-trace/v1)",
   "description": "One artifact-grounded observation record per agent run. Ground truth = the `observation` block (file diffs + the scorer's own test re-run exit code); `narration` is a secondary field, never an input to classification. Gygax owns this contract; external producers (e.g. Arneson) emit records tagged `simulation-derived` against this same schema.",
-  "$comment": "EVOLUTION POLICY (additive-only): observed-trace/v1 fields are never removed, renamed, or re-typed. New OPTIONAL fields may be added in minor revisions of v1. Any breaking change requires a new schema string (observed-trace/v2) and a new schema file; consumers hard-reject unknown schema versions. CONSUMER POSTURE: this schema file is the strict producer-side contract (additionalProperties: false at the current revision); the reference TS consumer (scripts/lib/trace/sidecar.ts) is deliberately lenient on unknown fields - it ignores and drops them on load - so older consumers keep working when optional fields are added in v1 minor revisions.",
+  "$comment": "EVOLUTION POLICY (additive-only): observed-trace/v1 fields are never removed, renamed, or re-typed. New OPTIONAL fields may be added in minor revisions of v1. Any breaking change requires a new schema string (observed-trace/v2) and a new schema file; consumers hard-reject unknown schema versions. CONSUMER POSTURE: this schema file is the strict producer-side contract (additionalProperties: false at the current revision); the reference TS consumer (scripts/lib/trace/sidecar.ts) is deliberately lenient on unknown fields - it ignores and drops them on load - so older consumers keep working when optional fields are added in v1 minor revisions. GRADING MARKER (cycle-008): `observation` present = graded; absent on a completed run = ran-but-ungraded (Gygax fills it on ingest from artifacts). The on-disk BATCH layout that carries ungraded sidecars + artifacts is pinned separately in schemas/observed-trace-batch.v1.md (run_dir is relative to the batch directory).",
   "type": "object",
   "required": [
     "schema",
@@ -127,7 +127,8 @@
         },
         "run_dir": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "description": "Path to this run's artifact directory, RELATIVE TO THE BATCH DIRECTORY (the dir holding batch.json + sidecars/). The grader resolves artifacts at <batch-dir>/<run_dir>."
         },
         "started_at": {
           "type": "string",
@@ -252,7 +253,7 @@
       }
     },
     {
-      "$comment": "A completed run MUST carry an observation; a harness-failed run (runner-error/timeout) MUST NOT.",
+      "$comment": "Grading marker (cycle-008, Split Run from Grade): `observation` is OPTIONAL on a completed run \u2014 present = graded by Gygax's scorer; absent = ran but not yet graded (an external producer like Arneson hands over artifacts + ungraded sidecars, and Gygax fills `observation` on ingest by re-running the reward command). A non-completed run (runner-error/timeout) MUST NOT carry an observation \u2014 nothing ran.",
       "if": {
         "properties": {
           "run": {
@@ -264,11 +265,7 @@
           }
         }
       },
-      "then": {
-        "required": [
-          "observation"
-        ]
-      },
+      "then": {},
       "else": {
         "not": {
           "required": [

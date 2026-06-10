@@ -102,12 +102,13 @@ export function planLines(plan: Plan): string[] {
   return lines;
 }
 
-function runBatch(plan: Plan, batchId: string, write: (msg: string) => void): string {
+function runBatch(plan: Plan, batchId: string, write: (msg: string) => void): { batchDir: string; counts: Record<string, number> } {
   const runsRoot = join(plan.fixtureDir, "runs");
   const batchDir = join(runsRoot, batchId);
   assertInsideRunsRoot(batchDir, runsRoot);
   const sidecarsDir = join(batchDir, "sidecars");
   mkdirSync(sidecarsDir, { recursive: true });
+  const counts: Record<string, number> = {};
 
   const batchManifest: BatchManifest = {
     batch_id: batchId,
@@ -130,10 +131,11 @@ function runBatch(plan: Plan, batchId: string, write: (msg: string) => void): st
       const startedAt = new Date().toISOString();
       const sidecar = buildSidecar(plan, runDir, rung, trial, result, startedAt, templateDir);
       writeFileSync(join(sidecarsDir, `rung-${rung}-trial-${trial}.json`), JSON.stringify(sidecar, null, 2) + "\n");
+      counts[sidecar.run.status] = (counts[sidecar.run.status] ?? 0) + 1;
       write(`  → ${sidecar.run.status}${sidecar.observation ? " / " + sidecar.observation.classification : ""}`);
     }
   }
-  return batchDir;
+  return { batchDir, counts };
 }
 
 /** Build the sidecar for one trial: score only if the agent actually completed. */
@@ -146,7 +148,7 @@ function buildSidecar(
   startedAt: string,
   templateDir: string,
 ): Sidecar {
-  const runDirRel = join("runs", ...runDir.split(/[\\/]/).slice(-3));
+  const runDirRel = join(...runDir.split(/[\\/]/).slice(-2)); // batch-relative: rung-<r>/trial-<t> (observed-trace-batch.v1.md)
   const run: RunMeta = {
     rung,
     rung_name: RUNG_NAMES[rung],
@@ -196,7 +198,7 @@ function scoreBatch(batchDir: string, write: (msg: string) => void): string {
       write(`${f}: ${prev.run.status} (excluded, left as-is)`);
       continue;
     }
-    const runDir = resolve(plan.fixtureDir, prev.run.run_dir);
+    const runDir = resolve(batchDir, prev.run.run_dir); // run_dir is batch-relative (cycle-008)
     const score = scoreRun(runDir, templateDir, plan.manifest.reward_command);
     const rescored = sidecarFromScore(score, {
       producer: prev.producer,
@@ -224,7 +226,7 @@ export function resolveRunPlan(args: string[]): Plan {
     else if (a === "--trials") trials = Number(args[++i]);
     else if (a === "--agent-cmd") agentCmd = args[++i];
     else if (a === "--timeout") timeoutSec = Number(args[++i]);
-    else if (a === "--dry-run") continue;
+    else if (a === "--dry-run" || a === "--json") continue;
     else throw new LadderError(`unknown run flag: ${a}`);
   }
   const fixtureDir = isAbsolute(fixture) ? fixture : resolve(fixture);
@@ -259,8 +261,20 @@ if (process.argv[1]?.endsWith("index.ts") && process.argv[1]?.includes("ladder")
       }
       const batchId = batchIdFromClock();
       process.stderr.write(`batch ${batchId}: ${plan.rungs.length}×${plan.trials} runs, agent='${plan.agentCmd}'\n`);
-      const dir = runBatch(plan, batchId, (m) => process.stderr.write(m + "\n"));
-      process.stdout.write(dir + "\n");
+      const { batchDir, counts } = runBatch(plan, batchId, (m) => process.stderr.write(m + "\n"));
+      if (rest.includes("--json")) {
+        // Machine-readable result for a sibling construct driving this engine (item 2).
+        process.stdout.write(JSON.stringify({
+          ok: true,
+          batch_dir: batchDir,
+          sidecars_dir: join(batchDir, "sidecars"),
+          batch_json: join(batchDir, "batch.json"),
+          runs: plan.rungs.length * plan.trials,
+          counts,
+        }) + "\n");
+      } else {
+        process.stdout.write(batchDir + "\n");
+      }
     } else if (sub === "score") {
       let batch: string | undefined;
       for (let i = 0; i < rest.length; i++) {
