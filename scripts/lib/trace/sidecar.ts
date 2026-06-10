@@ -179,11 +179,12 @@ export function validateSidecar(raw: unknown, file: string): Sidecar {
     })(),
   };
 
-  // observation — present iff completed
+  // observation — the GRADING MARKER (cycle-008): optional on a completed run (present = graded;
+  // absent = ran-but-ungraded, to be filled on ingest). A non-completed run must NOT carry one.
   let observation: Observation | undefined;
-  if (run.status === "completed") {
+  if (run.status === "completed" && raw.observation !== undefined) {
     if (!isRecord(raw.observation)) {
-      fail(file, 'a "completed" run must carry an observation block (only runner-error/timeout records omit it)');
+      fail(file, "observation, when present, must be an object");
     }
     const obs = raw.observation;
     const classification = obs.classification;
@@ -208,8 +209,8 @@ export function validateSidecar(raw: unknown, file: string): Sidecar {
       return { path, status: aStatus as ArtifactStatus, diff };
     });
     observation = { classification: classification as Classification, exit_code: exitCode, anomaly_note: anomaly as string | null, artifacts };
-  } else if (raw.observation !== undefined) {
-    fail(file, `a "${run.status}" run must not carry an observation block (nothing was observed; excluded-not-hidden)`);
+  } else if (run.status !== "completed" && raw.observation !== undefined) {
+    fail(file, `a "${run.status}" run must not carry an observation block (nothing ran to grade; excluded-not-hidden)`);
   }
 
   const narration = raw.narration;
@@ -225,4 +226,11 @@ export function validateSidecar(raw: unknown, file: string): Sidecar {
     narration,
   };
   return sidecar;
+}
+
+
+/** A sidecar is GRADED iff it carries an observation (cycle-008 grading marker). A completed
+ *  run without an observation ran but has not yet been scored by Gygax. */
+export function isGraded(s: Sidecar): boolean {
+  return s.observation !== undefined;
 }
