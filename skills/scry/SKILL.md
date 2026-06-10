@@ -33,6 +33,15 @@ Also triggered by natural language:
 
 ## Workflow
 
+**Convergence is coherence, not correctness.** When comparing forks (or any panel of
+analyses/playtest reads), agreement between readings is a *compression* signal — the
+thing is well-defined enough that independent eyes parse it the same — never proof
+the reading is right. The findings worth keeping live in the DIVERGENCE: design the
+comparison (and any operator seam) to maximize informative disagreement, and report
+convergence and divergence separately rather than blending them into one verdict.
+The method is symmetric — it applies to designers and players, humans and agents
+alike. (clew lrn-20260609-gygax-e72fbd, operator reframe at a live ratify-seam.)
+
 ### Step 1: Parse Invocation
 
 Determine which subcommand the user is invoking:
