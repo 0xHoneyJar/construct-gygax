@@ -135,13 +135,15 @@ For games where combat math and resource economy don't apply — journaling RPGs
 
 ## Workflow
 
-**Named ground files outrank the ritual.** When the invocation (a composition stage,
-a task brief) NAMES files to ground in, read those FIRST — before game-state, before
-identity, before any onboarding. An analysis built from generic frameworks without
-the named corpus's numbers pushes the grounding cost downstream to whoever consumes
-it; specific numbers from the named files are the product, not a garnish. (clew
-lrn-20260609-gygax-d823e2: a full run produced framework prose while the
-task-mandated ground files went unread.)
+Named ground files outrank the ritual — see Step 0 (clew lrn-20260609-gygax-d823e2).
+
+### Step 0: Ground in Named Files
+
+If the task names specific files to ground in, read them in full now — before
+game-state, before identity, before anything else. An analysis built from generic
+frameworks without the named corpus's numbers pushes the grounding cost downstream;
+specific numbers from the named files are the product, not a garnish. Then go to
+Step 1.
 
 ### Step 1: Load Game-State and Determine Analysis Scope
 
