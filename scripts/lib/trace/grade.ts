@@ -53,6 +53,11 @@ function resolveFixtureDir(batchDir: string, batch: Batch, opts: GradeOpts): str
   const batchJson = join(batchDir, "batch.json");
   if (existsSync(batchJson)) {
     const bm = JSON.parse(readFileSync(batchJson, "utf8")) as Record<string, unknown>;
+    // Fail-fast on an unknown batch schema, mirroring the sidecar-level hard-reject
+    // (observed-trace-batch.v1.md). A missing schema is tolerated for fixture resolution only.
+    if (bm.schema !== undefined && bm.schema !== "observed-trace-batch/v1") {
+      throw new TraceError(`${batchJson}: unknown batch schema ${JSON.stringify(bm.schema)} (expected "observed-trace-batch/v1")`);
+    }
     if (typeof bm.fixture === "string") return resolve(bm.fixture);
   }
   const ref = batch.sidecars[0] ?? batch.excluded[0];

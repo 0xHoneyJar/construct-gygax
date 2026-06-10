@@ -16,6 +16,7 @@
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import type { RunStatus } from "../trace/sidecar.ts";
+import { resolve } from "node:path";
 import { LadderError, assertInsideRunsRoot } from "./rundir.ts";
 
 export const DEFAULT_AGENT_CMD = "claude -p {prompt} --permission-mode acceptEdits";
@@ -56,14 +57,17 @@ export function buildArgv(template: string, promptFile: string, promptText: stri
 }
 
 /** Run one agent trial. cwd = the isolated run dir (containment-asserted). Never throws
- *  per-trial — every failure mode maps to a RunStatus the caller can record as a sidecar. */
+ *  per-trial — every failure mode maps to a RunStatus the caller can record as a sidecar.
+ *  `runsRoot` is the containment root (the fixture's runs/ dir); defaults to the awareness-ladder
+ *  fixture so existing callers/tests keep working, but real batches pass their fixture's root. */
 export function runAgent(
   runDir: string,
   promptFile: string,
   agentCmdTemplate: string,
   timeoutSec: number,
+  runsRoot?: string,
 ): RunResult {
-  assertInsideRunsRoot(runDir);
+  assertInsideRunsRoot(runDir, runsRoot ?? resolve("evals", "awareness-ladder", "runs"));
   let promptText = "";
   if (agentCmdTemplate.includes("{prompt}")) {
     try {
