@@ -15,16 +15,30 @@ import { loadBatch, type Batch } from "./ingest.ts";
 import { gradeBatch } from "./grade.ts";
 import { diffPredictedVsObserved, type PolicyDiff } from "./diff.ts";
 import { detectCliff, type CliffResult } from "./cliff.ts";
-import { renderTraceReport, type BatchMeta } from "./report.ts";
-import { TraceError, type SidecarClaim } from "./sidecar.ts";
+import { contextAxis, type ContextAxis } from "./context-axis.ts";
+import { renderTraceReport, type AxisForecast, type BatchMeta } from "./report.ts";
+import { TraceError, type Sidecar, type SidecarClaim } from "./sidecar.ts";
 import { analyzeIncentives } from "../payoff/index.ts";
 
 export interface TraceAnalysis {
   batch: Batch;
   diff: PolicyDiff;
   cliff: CliffResult;
+  /** v1.1 (FR-1.3): non-null iff the batch varies on context.value. */
+  axis: ContextAxis | null;
   report: string;
   graded: number; // runs graded on ingest this pass (cycle-008)
+}
+
+/** Render a sidecar's provenance as a stable display tuple (FR-4.2) — fields in schema order,
+ *  only those present; opaque values, displayed never interpreted. */
+function provenanceTuple(s: Sidecar): string | null {
+  const p = s.producer.provenance;
+  if (!p) return null;
+  const parts = (["agent_cmd_sha256", "engine_git_sha", "model_id", "construct_sha"] as const)
+    .filter((k) => p[k] !== undefined)
+    .map((k) => `${k}=${p[k]}`);
+  return parts.length > 0 ? parts.join(" · ") : null;
 }
 
 export interface TraceOpts {
@@ -58,6 +72,24 @@ export function analyzeTrace(batchDir: string, opts: TraceOpts = {}): TraceAnaly
   const diff = diffPredictedVsObserved(batch, analysis, context, intendedAction);
   const cliff = detectCliff(diff);
 
+  // v1.1 context axis (FR-1.3): per-value argmax looked up from the SAME analysis (no new
+  // payoff computation); an out-of-domain value fails fast in the existing TraceError regime.
+  const axis = contextAxis(batch);
+  let axisForecasts: AxisForecast[] | undefined;
+  if (axis) {
+    axisForecasts = axis.values.map((value) => {
+      const point = analysis.dominance.argmax.find((p) => p.context === value);
+      if (!point) {
+        const domain = analysis.matrix.contexts;
+        throw new TraceError(
+          `context ${value} (per-${axis.name} group) is outside the incentive-state domain ` +
+            `(${domain[0]}..${domain[domain.length - 1]})`,
+        );
+      }
+      return { value, action: point.action, cls: point.action === intendedAction ? "fix" : "hack" };
+    });
+  }
+
   const all = [...batch.sidecars, ...batch.excluded, ...batch.infra];
   const meta: BatchMeta = {
     label: basename(resolve(batchDir)),
@@ -68,10 +100,11 @@ export function analyzeTrace(batchDir: string, opts: TraceOpts = {}): TraceAnaly
       timeout: batch.excluded.filter((s) => s.run.status === "timeout").length,
     },
     infra: batch.infra.length,
+    provenance: [...new Set(all.map(provenanceTuple).filter((t): t is string => t !== null))],
     claims: [...new Set<SidecarClaim>(all.map((s) => s.claim_strength))],
   };
-  const report = renderTraceReport(diff, cliff, meta);
-  return { batch, diff, cliff, report, graded: grade.graded };
+  const report = renderTraceReport(diff, cliff, meta, axis, axisForecasts);
+  return { batch, diff, cliff, axis, report, graded: grade.graded };
 }
 
 // CLI: `npx tsx scripts/lib/trace/index.ts <dir> [--incentive-state <dir>] [--context <n>]`

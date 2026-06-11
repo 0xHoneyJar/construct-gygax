@@ -11,12 +11,14 @@
  * progress to stderr, machine/plan to stdout (Nakamoto convention, sdd.md §4.1).
  */
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { isAbsolute, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createRunDir, assertInsideRunsRoot, LadderError } from "./rundir.ts";
 import { runAgent, DEFAULT_AGENT_CMD, type RunResult } from "./runner.ts";
 import { scoreRun, sidecarFromScore } from "./scorer.ts";
-import type { ExperimentMeta, Producer, RunMeta, Sidecar } from "../trace/sidecar.ts";
+import type { ExperimentMeta, Producer, ProducerProvenance, RunMeta, Sidecar } from "../trace/sidecar.ts";
 
 interface Manifest {
   id: string;
@@ -63,6 +65,10 @@ interface Plan {
   trials: number;
   agentCmd: string;
   timeoutSec: number;
+  /** v1.1 (FR-1.2): explicit per-batch context override (`--context-value` / `--difficulty`).
+   *  Only this flag selects a value — the manifest `difficulty:` block stays inert to the
+   *  engine (difficulty sweeping is the producer's instrument, not the runner's). */
+  contextValue?: number;
 }
 
 interface BatchManifest {
@@ -74,18 +80,44 @@ interface BatchManifest {
   trials_per_rung: number;
   timeout_seconds: number;
   created_at: string;
+  /** v1.1, informational: present when the batch ran under an explicit --context-value. */
+  context_value?: number;
 }
 
-function producer(agentCmd: string): Producer {
-  return { kind: "real-agent", id: "claude-cli", detail: agentCmd };
+/** v1.1 (FR-4.2): provenance for this batch, computed once. `agent_cmd_sha256` hashes the
+ *  command TEMPLATE (never the expanded environment — same posture as batch.json's
+ *  agent_cmd_template). `engine_git_sha` is best-effort: omitted on ANY failure — provenance
+ *  must never fail a paid run. `model_id`/`construct_sha` are never stamped: the runner cannot
+ *  know which model `claude` resolves to; omitting beats guessing. */
+export function buildProvenance(agentCmd: string, gitCwd?: string): ProducerProvenance {
+  const prov: ProducerProvenance = {
+    agent_cmd_sha256: createHash("sha256").update(agentCmd).digest("hex"),
+  };
+  try {
+    const cwd = gitCwd ?? dirname(fileURLToPath(import.meta.url));
+    const sha = execFileSync("git", ["rev-parse", "HEAD"], { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    if (sha) prov.engine_git_sha = sha;
+  } catch {
+    // omitted — availability over completeness
+  }
+  return prov;
 }
 
-function experimentMeta(plan: Plan): ExperimentMeta {
+function producer(agentCmd: string, provenance: ProducerProvenance): Producer {
+  return { kind: "real-agent", id: "claude-cli", detail: agentCmd, provenance };
+}
+
+/** Stamp the experiment meta; an explicit `--context-value` overrides the manifest value
+ *  (the name stays the manifest's — the convention generalizes to any context axis). */
+export function experimentMeta(plan: Plan): ExperimentMeta {
   return {
     id: plan.manifest.id,
     fixture: plan.fixtureDir,
     incentive_state: resolve(plan.fixtureDir, plan.manifest.incentive_state),
-    context: plan.manifest.context,
+    context: {
+      name: plan.manifest.context.name,
+      value: plan.contextValue ?? plan.manifest.context.value,
+    },
   };
 }
 
@@ -94,6 +126,9 @@ export function planLines(plan: Plan): string[] {
   const lines: string[] = [];
   lines.push(`fixture: ${plan.fixtureDir}`);
   lines.push(`agent command: ${plan.agentCmd}`);
+  if (plan.contextValue !== undefined) {
+    lines.push(`context override: ${plan.manifest.context.name}=${plan.contextValue} (manifest default ${plan.manifest.context.value})`);
+  }
   lines.push(`timeout: ${plan.timeoutSec}s · ${plan.rungs.length} rungs × ${plan.trials} trials = ${plan.rungs.length * plan.trials} runs`);
   for (const rung of plan.rungs) {
     for (let trial = 1; trial <= plan.trials; trial++) {
@@ -120,9 +155,11 @@ function runBatch(plan: Plan, batchId: string, write: (msg: string) => void): { 
     trials_per_rung: plan.trials,
     timeout_seconds: plan.timeoutSec,
     created_at: new Date().toISOString(),
+    ...(plan.contextValue !== undefined ? { context_value: plan.contextValue } : {}),
   };
   writeFileSync(join(batchDir, "batch.json"), JSON.stringify(batchManifest, null, 2) + "\n");
 
+  const provenance = buildProvenance(plan.agentCmd); // once per batch (FR-4.2)
   const templateDir = join(plan.fixtureDir, "task-template");
   for (const rung of plan.rungs) {
     const promptFile = resolve(plan.fixtureDir, plan.manifest.rungs[rung]);
@@ -131,7 +168,7 @@ function runBatch(plan: Plan, batchId: string, write: (msg: string) => void): { 
       const runDir = createRunDir(plan.fixtureDir, batchId, rung, trial);
       const result = runAgent(runDir, promptFile, plan.agentCmd, plan.timeoutSec, runsRoot);
       const startedAt = new Date().toISOString();
-      const sidecar = buildSidecar(plan, runDir, rung, trial, result, startedAt, templateDir);
+      const sidecar = buildSidecar(plan, runDir, rung, trial, result, startedAt, templateDir, provenance);
       writeFileSync(join(sidecarsDir, `rung-${rung}-trial-${trial}.json`), JSON.stringify(sidecar, null, 2) + "\n");
       counts[sidecar.run.status] = (counts[sidecar.run.status] ?? 0) + 1;
       write(`  → ${sidecar.run.status}${sidecar.observation ? " / " + sidecar.observation.classification : ""}`);
@@ -149,6 +186,7 @@ function buildSidecar(
   result: RunResult,
   startedAt: string,
   templateDir: string,
+  provenance: ProducerProvenance,
 ): Sidecar {
   const runDirRel = join(...runDir.split(/[\\/]/).slice(-2)); // batch-relative: rung-<r>/trial-<t> (observed-trace-batch.v1.md)
   const run: RunMeta = {
@@ -164,7 +202,7 @@ function buildSidecar(
     return {
       schema: "observed-trace/v1",
       claim_strength: "real-agent-observed",
-      producer: producer(plan.agentCmd),
+      producer: producer(plan.agentCmd, provenance),
       experiment: experimentMeta(plan),
       run,
       narration: result.narration,
@@ -172,7 +210,7 @@ function buildSidecar(
   }
   const score = scoreRun(runDir, templateDir, plan.manifest.reward_command);
   return sidecarFromScore(score, {
-    producer: producer(plan.agentCmd),
+    producer: producer(plan.agentCmd, provenance),
     experiment: experimentMeta(plan),
     run,
     narration: result.narration,
@@ -221,6 +259,7 @@ export function resolveRunPlan(args: string[]): Plan {
   let trials: number | undefined;
   let agentCmd = DEFAULT_AGENT_CMD;
   let timeoutSec: number | undefined;
+  let contextValue: number | undefined;
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
     if (a === "--fixture") fixture = args[++i];
@@ -228,8 +267,12 @@ export function resolveRunPlan(args: string[]): Plan {
     else if (a === "--trials") trials = Number(args[++i]);
     else if (a === "--agent-cmd") agentCmd = args[++i];
     else if (a === "--timeout") timeoutSec = Number(args[++i]);
+    else if (a === "--context-value" || a === "--difficulty") contextValue = Number(args[++i]);
     else if (a === "--dry-run" || a === "--json") continue;
     else throw new LadderError(`unknown run flag: ${a}`);
+  }
+  if (contextValue !== undefined && !Number.isFinite(contextValue)) {
+    throw new LadderError("--context-value/--difficulty must be a finite number");
   }
   const fixtureDir = isAbsolute(fixture) ? fixture : resolve(fixture);
   const manifest = loadManifest(fixtureDir);
@@ -240,6 +283,7 @@ export function resolveRunPlan(args: string[]): Plan {
     trials: trials ?? manifest.trials_default,
     agentCmd,
     timeoutSec: timeoutSec ?? manifest.timeout_seconds,
+    ...(contextValue !== undefined ? { contextValue } : {}),
   };
 }
 
@@ -287,7 +331,7 @@ if (process.argv[1]?.endsWith("index.ts") && process.argv[1]?.includes("ladder")
       const dir = scoreBatch(resolve(batch!), (m) => process.stderr.write(m + "\n"));
       process.stdout.write(dir + "\n");
     } else {
-      err("usage: index.ts run [--fixture d --rungs 0,1,2 --trials 5 --agent-cmd '...{promptfile}...' --timeout 300 --dry-run]\n       index.ts score --batch <dir>");
+      err("usage: index.ts run [--fixture d --rungs 0,1,2 --trials 5 --agent-cmd '...{promptfile}...' --timeout 300 --context-value 8 --dry-run]\n       index.ts score --batch <dir>\n       (--difficulty is an alias for --context-value; it overrides manifest context.value for the batch)");
     }
   } catch (e) {
     if (e instanceof LadderError) err(`LadderError: ${e.message}`);

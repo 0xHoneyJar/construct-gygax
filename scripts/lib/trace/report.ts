@@ -11,6 +11,15 @@ import type { SidecarClaim } from "./sidecar.ts";
 import type { PolicyDiff, RungDiff } from "./diff.ts";
 import type { CliffResult } from "./cliff.ts";
 import { CLIFF_THRESHOLD } from "./cliff.ts";
+import type { ContextAxis } from "./context-axis.ts";
+
+/** Per-value forecast argmax (looked up from the existing analysis.dominance.argmax —
+ *  no new payoff computation; sdd §5.2). */
+export interface AxisForecast {
+  value: number;
+  action: string;
+  cls: "hack" | "fix";
+}
 
 export interface BatchMeta {
   label: string; // batch id / dir name
@@ -20,6 +29,9 @@ export interface BatchMeta {
   /** Infra-failure non-runs (v1.1): rendered only when > 0 — infra-free batches stay
    *  byte-identical to pre-v1.1 reports (sdd §7.1). */
   infra: number;
+  /** Unique rendered provenance tuples across records (v1.1, FR-4.2): "Produced by:" lines,
+   *  rendered only when non-empty. */
+  provenance: string[];
   claims: SidecarClaim[]; // unique claim strengths present across ALL records
 }
 
@@ -44,7 +56,16 @@ function verdictCell(r: RungDiff, forecastCls: "hack" | "fix"): string {
   return r.withinNoise ? `mixed — within noise (n=${r.completed})` : "mixed";
 }
 
-export function renderTraceReport(diff: PolicyDiff, cliff: CliffResult, meta: BatchMeta): string {
+export function renderTraceReport(
+  diff: PolicyDiff,
+  cliff: CliffResult,
+  meta: BatchMeta,
+  /** v1.1 context axis (FR-1.3): null/omitted = no difficulty variance, sections absent. */
+  axis?: ContextAxis | null,
+  /** Per-value forecast argmax for the axis section (computed by the caller from the
+   *  existing analysis; required iff axis is present). */
+  axisForecasts?: AxisForecast[],
+): string {
   const lines: string[] = [];
   lines.push(tagLine(meta.claims));
   lines.push("");
@@ -57,6 +78,10 @@ export function renderTraceReport(diff: PolicyDiff, cliff: CliffResult, meta: Ba
     `Batch \`${meta.label}\` · ${diff.perRung.length} rungs · ${meta.completed} completed, ` +
       `${exc.runnerError} runner-error + ${exc.timeout} timeout${infraClause} (excluded from ratios, counted here)`,
   );
+  // v1.1 (FR-4.2): provenance lines render only when a producer attached provenance
+  for (const p of meta.provenance) {
+    lines.push(`Produced by: ${p}`);
+  }
   lines.push("");
 
   // Forecast — stays model-derived (K5 honesty: never blended into observed framing)
@@ -85,6 +110,31 @@ export function renderTraceReport(diff: PolicyDiff, cliff: CliffResult, meta: Ba
   }
   lines.push("");
 
+  // Observed per difficulty (v1.1, FR-1.3) — renders ONLY when the batch varies on
+  // context.value (≥2 distinct values). Rows keyed (value × rung): pooling rungs would
+  // conflate the awareness axis with the difficulty axis (sdd §4.2).
+  if (axis) {
+    lines.push(`## Observed per ${axis.name}`);
+    lines.push("");
+    lines.push(`_axis: experiment.context "${axis.name}" (contract convention, v1.1)_`);
+    lines.push("");
+    if (axisForecasts && axisForecasts.length > 0) {
+      const parts = axisForecasts.map((f) => `${f.value} → \`${f.action}\` (${f.cls})`);
+      lines.push(`argmax by ${axis.name}: ${parts.join(" · ")}`);
+      lines.push("");
+    }
+    lines.push(`| ${axis.name} | rung | fixed | hacked | failed | infra | hack-ratio |`);
+    lines.push("|------|------|-------|--------|--------|-------|------------|");
+    for (const c of axis.cells) {
+      lines.push(
+        `| ${c.value} | ${c.rung} ${c.rungName} | ${c.counts.fixed}/${c.completed} | ` +
+          `${c.counts.hacked}/${c.completed} | ${c.counts.failed}/${c.completed} | ${c.infra} | ` +
+          `${fmtRatio(c.hackRatio)} |`,
+      );
+    }
+    lines.push("");
+  }
+
   // Cliff
   lines.push("## Cliff");
   lines.push("");
@@ -97,6 +147,17 @@ export function renderTraceReport(diff: PolicyDiff, cliff: CliffResult, meta: Ba
       `hack-ratio first reaches ${CLIFF_THRESHOLD} at rung ${cliff.cliffRung}${name} → ` +
         `**cliff at rung ${cliff.cliffRung}**.`,
     );
+  }
+  if (axis) {
+    lines.push("");
+    lines.push(`**Cliff vs ${axis.name}** (per rung, hack-ratio ≥ ${CLIFF_THRESHOLD}):`);
+    for (const c of axis.cliffByRung) {
+      lines.push(
+        c.cliffValue === null
+          ? `- rung ${c.rung} (${c.rungName}): no crossing`
+          : `- rung ${c.rung} (${c.rungName}): cliff at ${axis.name} ${c.cliffValue}`,
+      );
+    }
   }
   lines.push("");
 
