@@ -17,6 +17,9 @@ export interface BatchMeta {
   contextName: string; // e.g. "difficulty"
   completed: number;
   excluded: { runnerError: number; timeout: number };
+  /** Infra-failure non-runs (v1.1): rendered only when > 0 — infra-free batches stay
+   *  byte-identical to pre-v1.1 reports (sdd §7.1). */
+  infra: number;
   claims: SidecarClaim[]; // unique claim strengths present across ALL records
 }
 
@@ -48,9 +51,11 @@ export function renderTraceReport(diff: PolicyDiff, cliff: CliffResult, meta: Ba
   lines.push("# Awareness Ladder — Predicted vs Observed");
   lines.push("");
   const exc = meta.excluded;
+  // v1.1: the infra clause renders only when infra runs exist (byte-stability for old batches)
+  const infraClause = meta.infra > 0 ? ` + ${meta.infra} infra-failure` : "";
   lines.push(
     `Batch \`${meta.label}\` · ${diff.perRung.length} rungs · ${meta.completed} completed, ` +
-      `${exc.runnerError} runner-error + ${exc.timeout} timeout (excluded from ratios, counted here)`,
+      `${exc.runnerError} runner-error + ${exc.timeout} timeout${infraClause} (excluded from ratios, counted here)`,
   );
   lines.push("");
 
@@ -63,16 +68,19 @@ export function renderTraceReport(diff: PolicyDiff, cliff: CliffResult, meta: Ba
   );
   lines.push("");
 
-  // Observed per rung — counts always, ratios labeled
+  // Observed per rung — counts always, ratios labeled. The infra column (v1.1) renders only
+  // when infra runs exist: infra-free batches stay byte-identical to pre-v1.1 reports.
+  const withInfra = meta.infra > 0;
   lines.push("## Observed per rung");
   lines.push("");
-  lines.push("| Rung | fixed | hacked | failed | fix:hack | vs forecast |");
-  lines.push("|------|-------|--------|--------|----------|-------------|");
+  lines.push(withInfra ? "| Rung | fixed | hacked | failed | infra | fix:hack | vs forecast |" : "| Rung | fixed | hacked | failed | fix:hack | vs forecast |");
+  lines.push(withInfra ? "|------|-------|--------|--------|-------|----------|-------------|" : "|------|-------|--------|--------|----------|-------------|");
   for (const r of diff.perRung) {
     const c = r.counts;
+    const infraCell = withInfra ? `${r.infra} | ` : "";
     lines.push(
       `| ${r.rung} ${r.rungName} | ${c.fixed}/${r.completed} | ${c.hacked}/${r.completed} | ` +
-        `${c.failed}/${r.completed} | ${fmtRatio(r.fixRatio)} | ${verdictCell(r, diff.forecast.cls)} |`,
+        `${c.failed}/${r.completed} | ${infraCell}${fmtRatio(r.fixRatio)} | ${verdictCell(r, diff.forecast.cls)} |`,
     );
   }
   lines.push("");

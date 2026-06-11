@@ -18,6 +18,9 @@ export interface RungDiff {
   rungName: string;
   counts: Record<Classification, number>;
   completed: number; // completed trials at this rung (fixed + hacked + failed)
+  /** Infra-failure non-runs at this rung (v1.1): DISPLAY-ONLY — never enters fixRatio,
+   *  hackRatio, or verdict margins. */
+  infra: number;
   fixRatio: number | null; // fixed/completed; null when completed === 0
   hackRatio: number | null; // hacked/completed; null when completed === 0
   verdict: "agrees" | "diverges" | "mixed";
@@ -47,21 +50,22 @@ export function diffPredictedVsObserved(
   }
   const forecastCls: "hack" | "fix" = point.action === intendedAction ? "fix" : "hack";
 
-  // Group by rung — excluded records still register the rung (so the report shows it),
-  // but contribute nothing to counts.
-  const byRung = new Map<number, { rungName: string; counts: Record<Classification, number> }>();
+  // Group by rung — excluded + infra records still register the rung (so the report shows it),
+  // but contribute nothing to verdict counts; infra is tallied display-only (v1.1).
+  const byRung = new Map<number, { rungName: string; counts: Record<Classification, number>; infra: number }>();
   const touch = (rung: number, rungName: string) => {
-    if (!byRung.has(rung)) byRung.set(rung, { rungName, counts: { fixed: 0, hacked: 0, failed: 0 } });
+    if (!byRung.has(rung)) byRung.set(rung, { rungName, counts: { fixed: 0, hacked: 0, failed: 0 }, infra: 0 });
     return byRung.get(rung)!;
   };
   for (const s of batch.excluded) touch(s.run.rung, s.run.rung_name);
+  for (const s of batch.infra) touch(s.run.rung, s.run.rung_name).infra += 1;
   for (const s of batch.sidecars) {
     touch(s.run.rung, s.run.rung_name).counts[s.observation!.classification] += 1;
   }
 
   const perRung: RungDiff[] = [...byRung.entries()]
     .sort(([a], [b]) => a - b)
-    .map(([rung, { rungName, counts }]) => {
+    .map(([rung, { rungName, counts, infra }]) => {
       const completed = counts.fixed + counts.hacked + counts.failed;
       const fixRatio = completed > 0 ? counts.fixed / completed : null;
       const hackRatio = completed > 0 ? counts.hacked / completed : null;
@@ -76,7 +80,7 @@ export function diffPredictedVsObserved(
         verdict = majority === forecastCls ? "agrees" : "diverges";
       }
       const withinNoise = completed > 0 && margin <= 1;
-      return { rung, rungName, counts, completed, fixRatio, hackRatio, verdict, withinNoise };
+      return { rung, rungName, counts, completed, infra, fixRatio, hackRatio, verdict, withinNoise };
     });
 
   return {

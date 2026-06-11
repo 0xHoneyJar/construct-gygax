@@ -1,6 +1,6 @@
 # Observed-Trace Batch Layout — `observed-trace-batch/v1`
 
-**Status:** pinned · **Cycle:** cycle-008 (Split Run from Grade) · **Companion to:** `observed-trace.v1.schema.json`
+**Status:** pinned · **Cycle:** cycle-008 (Split Run from Grade); v1.1 sections added cycle-009 (Seam Alignment) · **Companion to:** `observed-trace.v1.schema.json`
 
 The sidecar *record* schema is pinned in `observed-trace.v1.schema.json`. This document pins the
 *on-disk batch* around it — the filesystem layout a producer (Arneson's sandbox, or Gygax's own
@@ -83,6 +83,73 @@ Rules (enforced by `validateSidecar`):
   `simulation`→`simulation-derived`. Inconsistent pairs are rejected.
 - A **non-completed** run (`runner-error` / `timeout`) MUST omit `observation` (nothing ran).
 - A **completed** run MAY omit `observation` (ungraded) or carry one (already graded).
+
+## Difficulty convention (v1.1)
+
+A run executed under a difficulty value carries it as
+`experiment.context: { "name": "difficulty", "value": <number> }`. Producers sweeping
+difficulty (Arneson `difficulty.knob: context.value`) stamp the **per-run swept value** here,
+not the manifest default. Consumers group on `context.value` when records in a batch vary on
+it. Fixtures whose scaling axis is not difficulty use their own `context.name`; the analysis
+generalizes to any context axis.
+
+No new field exists for difficulty — a second location could silently disagree with
+`context.value` (the drifting-twins failure mode this convention exists to avoid).
+
+## Infrastructure failures + canonical triage order (v1.1)
+
+A run where the **producer's wrapper/infrastructure** failed (not the agent, not the task) is a
+**non-run, never a verdict**. Two producer-side signals, in contract order:
+
+1. **`run.status: "infra-failure"`** — conforming v1.1 producers set this at sidecar-assembly
+   time.
+2. **Narration marker fallback** (for batches produced before v1.1): a line in `narration`
+   (agent/wrapper stderr) matching
+
+   ```
+   INFRA_MARKER = ERROR: \[[A-Za-z0-9_-]*(?:agent|wrapper)\]
+   ```
+
+   This regex is byte-equal to Arneson's `validate_batch.py` / `sweep_report.py` so the two
+   sides can never triage the same sidecar differently. The `-agent`/`-wrapper` suffix anchor
+   means generic prose like `ERROR: [x]` does **not** match.
+
+**Canonical triage order** (pinned; both sides MUST implement it exactly):
+
+```
+run.status (runner-error / timeout / infra-failure)
+  → narration INFRA_MARKER
+    → observation present (fixed | hacked | failed)
+      → ungraded (completed, no observation, no marker)
+```
+
+The marker **wins over a producer-supplied observation**: a completed sidecar whose narration
+matches `INFRA_MARKER` is triaged infra and is never graded. Infra runs are excluded from all
+ratios and margins and appear in their own report column (`fixed | hacked | failed | infra`),
+matching Arneson's sweep-table semantics.
+
+An `infra-failure` sidecar MUST NOT carry an `observation` (nothing ran — the existing
+non-completed rule covers it).
+
+## Producer provenance (v1.1, optional)
+
+A producer MAY attach opaque provenance to `producer.provenance` — consumers display, never
+interpret:
+
+```json
+"producer": {
+  "kind": "real-agent", "id": "arneson", "detail": "playout --sweep",
+  "provenance": {
+    "agent_cmd_sha256": "ab12…",
+    "engine_git_sha": "e775274",
+    "model_id": "gemma3:12b",
+    "construct_sha": "44148a4"
+  }
+}
+```
+
+All fields optional strings; unknown keys inside `provenance` are rejected.
+`agent_cmd_sha256` hashes the command **template**, never the expanded environment.
 
 ### real-agent vs simulation
 

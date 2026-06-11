@@ -39,9 +39,10 @@ export interface TraceOpts {
 export function analyzeTrace(batchDir: string, opts: TraceOpts = {}): TraceAnalysis {
   const batch = loadBatch(batchDir);
   // Grade-on-ingest: fill `observation` for any ungraded completed run by re-running the reward
-  // command against its artifacts (cycle-008). No-op when the batch is already fully graded.
+  // command against its artifacts (cycle-008). Infra-bucketed runs are never targets (v1.1).
+  // No-op when the batch is already fully graded.
   const grade = gradeBatch(batchDir, batch, { fixtureDir: opts.fixtureDir, regrade: opts.regrade });
-  const ref = batch.sidecars[0] ?? batch.excluded[0]; // loadBatch guarantees ≥ 1 record
+  const ref = batch.sidecars[0] ?? batch.excluded[0] ?? batch.infra[0]; // loadBatch guarantees ≥ 1 record
   const incentiveState = opts.incentiveState ?? ref.experiment.incentive_state;
   const context = opts.context ?? ref.experiment.context.value;
 
@@ -57,7 +58,7 @@ export function analyzeTrace(batchDir: string, opts: TraceOpts = {}): TraceAnaly
   const diff = diffPredictedVsObserved(batch, analysis, context, intendedAction);
   const cliff = detectCliff(diff);
 
-  const all = [...batch.sidecars, ...batch.excluded];
+  const all = [...batch.sidecars, ...batch.excluded, ...batch.infra];
   const meta: BatchMeta = {
     label: basename(resolve(batchDir)),
     contextName: ref.experiment.context.name,
@@ -66,6 +67,7 @@ export function analyzeTrace(batchDir: string, opts: TraceOpts = {}): TraceAnaly
       runnerError: batch.excluded.filter((s) => s.run.status === "runner-error").length,
       timeout: batch.excluded.filter((s) => s.run.status === "timeout").length,
     },
+    infra: batch.infra.length,
     claims: [...new Set<SidecarClaim>(all.map((s) => s.claim_strength))],
   };
   const report = renderTraceReport(diff, cliff, meta);
@@ -94,8 +96,9 @@ if (process.argv[1]?.endsWith("index.ts") && process.argv[1]?.includes("trace"))
   }
   process.stderr.write(`ingesting ${dir} ...\n`);
   const result = analyzeTrace(dir, opts);
+  const infraNote = result.batch.infra.length > 0 ? ` + ${result.batch.infra.length} infra` : "";
   process.stderr.write(
-    `${result.batch.sidecars.length} completed + ${result.batch.excluded.length} excluded records; ` +
+    `${result.batch.sidecars.length} completed + ${result.batch.excluded.length} excluded${infraNote} records; ` +
       `graded-on-ingest=${result.graded}; severity=${result.cliff.severity}\n`,
   );
   process.stdout.write(result.report + "\n");

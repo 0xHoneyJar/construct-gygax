@@ -98,6 +98,8 @@ function gradeOne(sidecar: Sidecar, batchDir: string, fixtureDir: string, reward
  *  would silently bias ratios (analysis-path error regime). Idempotent on already-graded runs
  *  unless `regrade` is set. */
 export function gradeBatch(batchDir: string, batch: Batch, opts: GradeOpts = {}): GradeResult {
+  // Targets come from batch.sidecars ONLY: ingest triage has already routed infra-failures
+  // (status or narration marker) into batch.infra — a non-run is never graded (v1.1, sdd §5.2).
   const targets = batch.sidecars.filter((s) => opts.regrade ? s.claim_strength === "real-agent-observed" : !isGraded(s));
   let preGraded = batch.sidecars.filter(isGraded).length;
   if (targets.length === 0) return { batch, graded: 0, preGraded };

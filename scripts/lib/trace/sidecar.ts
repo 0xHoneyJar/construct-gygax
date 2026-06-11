@@ -17,7 +17,7 @@
 export type ClaimStrength = "real-agent-observed" | "simulation-derived" | "model-forecast";
 export type SidecarClaim = Exclude<ClaimStrength, "model-forecast">;
 export type Classification = "fixed" | "hacked" | "failed";
-export type RunStatus = "completed" | "runner-error" | "timeout";
+export type RunStatus = "completed" | "runner-error" | "timeout" | "infra-failure";
 export type ArtifactStatus = "intact" | "modified" | "added" | "deleted";
 export type ProducerKind = "real-agent" | "simulation";
 
@@ -27,10 +27,19 @@ export interface ArtifactDiff {
   diff: string; // unified diff vs template ("" for intact)
 }
 
+/** v1.1: opaque producer-side provenance — displayed, never interpreted (FR-4.1). */
+export interface ProducerProvenance {
+  agent_cmd_sha256?: string;
+  engine_git_sha?: string;
+  model_id?: string;
+  construct_sha?: string;
+}
+
 export interface Producer {
   kind: ProducerKind;
   id: string;
   detail?: string;
+  provenance?: ProducerProvenance;
 }
 
 export interface ExperimentMeta {
@@ -83,7 +92,8 @@ const CLAIM_BY_PRODUCER: Record<ProducerKind, SidecarClaim> = {
 };
 
 const RUNG_NAMES = ["blind", "reward-aware", "adversarial"] as const;
-const STATUSES: RunStatus[] = ["completed", "runner-error", "timeout"];
+const STATUSES: RunStatus[] = ["completed", "runner-error", "timeout", "infra-failure"];
+const PROVENANCE_KEYS = ["agent_cmd_sha256", "engine_git_sha", "model_id", "construct_sha"] as const;
 const CLASSIFICATIONS: Classification[] = ["fixed", "hacked", "failed"];
 const ARTIFACT_STATUSES: ArtifactStatus[] = ["intact", "modified", "added", "deleted"];
 
@@ -125,6 +135,21 @@ export function validateSidecar(raw: unknown, file: string): Sidecar {
   const producerId = reqString(file, raw.producer, "id", "producer");
   const detail = raw.producer.detail;
   if (detail !== undefined && typeof detail !== "string") fail(file, "producer.detail must be a string when present");
+
+  // producer.provenance (v1.1, optional): opaque strings, unknown keys rejected (schema parity)
+  let provenance: ProducerProvenance | undefined;
+  if (raw.producer.provenance !== undefined) {
+    const prov = raw.producer.provenance;
+    if (!isRecord(prov)) fail(file, "producer.provenance must be an object when present");
+    for (const k of Object.keys(prov)) {
+      if (!(PROVENANCE_KEYS as readonly string[]).includes(k)) {
+        fail(file, `producer.provenance.${k} is not a known provenance field (${PROVENANCE_KEYS.join(" | ")})`);
+      }
+      const v = prov[k];
+      if (typeof v !== "string" || v.length === 0) fail(file, `producer.provenance.${k} must be a non-empty string when present`);
+    }
+    provenance = prov as ProducerProvenance;
+  }
 
   const expectedClaim = CLAIM_BY_PRODUCER[kind];
   if (raw.claim_strength !== expectedClaim) {
@@ -219,7 +244,7 @@ export function validateSidecar(raw: unknown, file: string): Sidecar {
   const sidecar: Sidecar = {
     schema: SCHEMA_VERSION,
     claim_strength: expectedClaim,
-    producer: { kind, id: producerId, ...(detail !== undefined ? { detail } : {}) },
+    producer: { kind, id: producerId, ...(detail !== undefined ? { detail } : {}), ...(provenance !== undefined ? { provenance } : {}) },
     experiment,
     run,
     ...(observation !== undefined ? { observation } : {}),
