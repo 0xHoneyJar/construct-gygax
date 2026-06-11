@@ -185,4 +185,35 @@ test("drift report shows the Tunability section only when a value is tagged", ()
   assert.ok(md.includes("engine-default"), "tunability value not surfaced");
 });
 
+// ---- FR-3 real-code hardening (cycle-006): object-property propagation + formula capture ----
+
+const inCarmack = (n: { source: string }) => n.source.includes("carmack-patterns");
+
+test("hardening: DEFAULT_ object's direct numeric props are tagged engine-default", () => {
+  for (const p of ["maxHP", "attack", "defense"]) {
+    const f = map.numbers.find((n) => n.name === p && inCarmack(n));
+    assert.strictEqual(f?.tunability, "engine-default", `${p} (DEFAULT_PLAYER) not tagged engine-default`);
+  }
+});
+
+test("hardening: deeply-nested sample-data coords are NOT over-tagged", () => {
+  const xs = map.numbers.filter((n) => n.name === "x" && inCarmack(n));
+  assert.ok(xs.length >= 2, "expected nested x coords from DEFAULT_DEMO_LEVEL");
+  assert.ok(xs.every((n) => n.tunability === undefined), "nested coords wrongly inherited engine-default");
+});
+
+test("hardening: scaling formulas are captured (previously invisible to F1)", () => {
+  const names = map.formulas.filter(inCarmack).map((f) => f.name);
+  for (const n of ["enemyDEF", "enemyHP", "bruteHP"]) {
+    assert.ok(names.includes(n), `${n} formula not captured`);
+  }
+  const enemyDEF = map.formulas.find((f) => f.name === "enemyDEF" && inCarmack(f));
+  assert.match(enemyDEF!.formula, /floor/, "formula text not preserved");
+});
+
+test("hardening: formula facts stay OUT of `numbers` (drift reconciliation unaffected)", () => {
+  // Formulas are a separate collection — they must never leak into the literal-value facts.
+  assert.ok(!map.numbers.some((n) => n.name === "enemyDEF"), "a formula leaked into numbers[]");
+});
+
 console.log("\nAll F1 analyzer + reconciler tests passed.\n");
