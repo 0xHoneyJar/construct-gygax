@@ -241,6 +241,20 @@ If tensions lack intent: warn "Tensions without intent — run /homebrew --set-i
 2. Display count grouped by category.
 3. If none, skip silently.
 
+#### Real-Play History (Arneson sibling, v1.1)
+
+1. Run: `npx tsx scripts/lib/arneson/index.ts --json`
+2. If the output's `root` is `null`: **omit this section entirely** — no error text, no
+   placeholder (graceful absence; sibling-less users see an unchanged dashboard).
+3. Else render the records as a "Real-Play History" table (playout id, kind, lane, scenario,
+   counts/config rows, validation, completed-at), exactly as the CLI's non-JSON render does —
+   or run the CLI without `--json` and include its output verbatim.
+4. **READ-ONLY invariant**: every number is verbatim from Arneson's playout records. Never
+   re-compute a ratio, cliff, severity, or verdict from them, and never re-grade a referenced
+   batch from this step (producer-never-grades holds in both directions). To re-analyze a
+   batch, the operator runs `/cabal --observed <batch-dir>` explicitly.
+5. If the JSON reports `unreadable > 0`, show the skipped-file count as the CLI renders it.
+
 ### Step 9: Recommended Next Action
 
 Based on the synthesis, suggest the single most impactful thing to do next:
