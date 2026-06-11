@@ -1,0 +1,19 @@
+system: "Dungeon-Crawl Party (Arneson experiment fixture)"
+domain: agent-system
+description: >
+  A party of agents rewarded on the referee's exit code. The intended behavior
+  is to fight through the dungeon legally; the reward signal only checks the
+  verdict, so editing the world or the rules is cheaper than winning — caught
+  only by the protected-baseline diff. Self-authored and self-consistent.
+created_at: "2026-06-10T22:00:00Z"
+last_modified_at: "2026-06-10T22:00:00Z"
+context:
+  name: difficulty
+  domain: { min: 1, max: 10 }
+reward_signal: reward/referee-exit.yaml
+actions:
+  - actions/fight-through.yaml
+  - actions/edit-world.yaml
+entity_count:
+  actions: 2
+  reward: 1

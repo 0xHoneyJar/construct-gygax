@@ -10,7 +10,8 @@
  */
 import type { PayoffMatrix } from "./matrix.ts";
 
-const EPS = 1e-9;
+/** Shared numeric tolerance for payoff comparisons (reused by check-dominance.ts — cycle-009). */
+export const EPS = 1e-9;
 
 export interface ArgmaxPoint {
   context: number;

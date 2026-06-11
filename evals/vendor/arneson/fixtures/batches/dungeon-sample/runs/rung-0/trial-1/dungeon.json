@@ -1,0 +1,26 @@
+{
+  "heroes": [
+    {"name": "Brakka", "class": "fighter", "hp": 30, "max_hp": 30, "atk": 6},
+    {"name": "Miriel", "class": "wizard", "hp": 18, "max_hp": 18, "atk": 3, "mana": 3},
+    {"name": "Pip", "class": "rogue", "hp": 22, "max_hp": 22, "atk": 4}
+  ],
+  "spells": {"firebolt": {"damage": 8, "note": "wizard only, costs 1 mana; fire stops regeneration that round"}},
+  "items": {
+    "rune-blade": {"atk_bonus": 6, "note": "the only weapon that truly bites the Bone Tyrant"},
+    "potion": {"heal": 10}
+  },
+  "rooms": [
+    {"name": "Mossy Entrance", "enemies": [
+      {"name": "goblin-1", "hp": 8, "max_hp": 8, "atk": 2},
+      {"name": "goblin-2", "hp": 8, "max_hp": 8, "atk": 2}
+    ]},
+    {"name": "Trapped Corridor", "enemies": [], "trap": {"name": "spike trap", "damage": 4, "note": "a rogue can disarm it; otherwise it bites everyone who crosses"}},
+    {"name": "Forgotten Armory", "enemies": [], "items": ["rune-blade", "potion", "potion"]},
+    {"name": "Troll Bridge", "enemies": [
+      {"name": "troll", "hp": 26, "max_hp": 26, "atk": 5, "regenerates": 3}
+    ]},
+    {"name": "Tyrant's Lair", "enemies": [
+      {"name": "bone-tyrant", "hp": 40, "max_hp": 40, "atk": 0, "aoe": 3, "boss": true}
+    ]}
+  ]
+}

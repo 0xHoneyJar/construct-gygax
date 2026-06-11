@@ -1,0 +1,73 @@
+# VENDOR.yaml — the pin for vendored Arneson conformance fixtures (cycle-009 Sprint 3,
+# OQ-1 vendor-with-pin; sdd.md §3.3).
+#
+# These files are byte-exact copies of Arneson's dungeon-crawl fixture slice and its
+# dungeon-sample conformance batch. They are ARNESON'S FILES, never edited here. The
+# vendor.test.ts self-check recomputes every sha256 against this pin and fails on
+# mismatch — edits to vendored bytes cannot land silently. The skip-if-absent live leg
+# additionally byte-diffs these copies against a sibling checkout and fails loudly on
+# drift (the exact mechanism Arneson applies to our schema files, in reverse).
+#
+# To re-vendor: copy the upstream files byte-exact, update upstream.git_sha +
+# vendored_at + every sha256 here, and re-derive the pinned conformance verdict in
+# evals/vendor/conformance.test.ts against the new bytes before relying on it.
+#
+# Layout note (sdd.md §3.3 path wrinkle): batches/dungeon-sample/batch.json declares
+# `"fixture": "../../dungeon-crawl"` — the vendored layout preserves that `../..`
+# geometry (batches/ and dungeon-crawl/ siblings under fixtures/), and tests pass
+# `--fixture` explicitly so they stay cwd-independent.
+
+upstream:
+  repo: 0xHoneyJar/construct-arneson
+  git_sha: 5e2e3a1c4c8b5267058b3971db99dc64057182f4
+  vendored_at: "2026-06-10"
+
+files:
+  - vendored: evals/vendor/arneson/fixtures/batches/dungeon-sample/batch.json
+    upstream_path: domains/agent-systems/resources/fixtures/batches/dungeon-sample/batch.json
+    sha256: b152a283cd089a410f1c26b0aeb45c1714bfd96c0b624b933cbe93f4f2737e2b
+  - vendored: evals/vendor/arneson/fixtures/batches/dungeon-sample/runs/rung-0/trial-1/dungeon.json
+    upstream_path: domains/agent-systems/resources/fixtures/batches/dungeon-sample/runs/rung-0/trial-1/dungeon.json
+    sha256: da82152ea69c597e8b6248f21399f7846e686c658ed6449990c1a39717303d98
+  - vendored: evals/vendor/arneson/fixtures/batches/dungeon-sample/runs/rung-0/trial-1/moves.json
+    upstream_path: domains/agent-systems/resources/fixtures/batches/dungeon-sample/runs/rung-0/trial-1/moves.json
+    sha256: 9536c04d5039557a072877a4ec1f969f048bb39e6f8b3c2a14a6ebb1c507b6ed
+  - vendored: evals/vendor/arneson/fixtures/batches/dungeon-sample/runs/rung-0/trial-1/referee.py
+    upstream_path: domains/agent-systems/resources/fixtures/batches/dungeon-sample/runs/rung-0/trial-1/referee.py
+    sha256: 152cb3db222e4002f8a18312d53a8cfd97c90e9a2a0eb2aa2be6c4e2c03b822b
+  - vendored: evals/vendor/arneson/fixtures/batches/dungeon-sample/sidecars/rung-0-trial-1.json
+    upstream_path: domains/agent-systems/resources/fixtures/batches/dungeon-sample/sidecars/rung-0-trial-1.json
+    sha256: 6be9437acacd3bbe76c8bdec7bd41aa32f7cf31def24a8ca15b9998434c1efe8
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/incentive-state/actions/edit-world.yaml
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/incentive-state/actions/edit-world.yaml
+    sha256: 8ab8ddeac6e650ead70834ad7d9e02d047d513c7dd80b9fa7cb1407fe1a5c5ff
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/incentive-state/actions/fight-through.yaml
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/incentive-state/actions/fight-through.yaml
+    sha256: 292d395b1673832fb3b544f8be86ef587470b2d709c26faf1792d18506d48330
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/incentive-state/index.yaml
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/incentive-state/index.yaml
+    sha256: e8398f36b11b21eadfff9fed697184667c7cf54fee19caf89614d41d3126e0e8
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/incentive-state/reward/referee-exit.yaml
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/incentive-state/reward/referee-exit.yaml
+    sha256: 0e6fdf7ebd427695d1243749a00f3ac079d4d106f759f364192ea497fc9dc824
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/manifest.yaml
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/manifest.yaml
+    sha256: 45d81bc83e5bcde5e2b768caf3e1d12cfee1f0af6f6c87427c0addba5e822a45
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/rungs/rung-0-blind.md
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/rungs/rung-0-blind.md
+    sha256: 1ece7518fc477d6d4956ad9cc4e8d669baac84c4a929df829c2b5fe264bd2c6c
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/rungs/rung-1-reward-aware.md
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/rungs/rung-1-reward-aware.md
+    sha256: d080d187e04227ed80aa7aef69d9b7d1f198fb0036064d08479dacbaa260283f
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/rungs/rung-2-adversarial.md
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/rungs/rung-2-adversarial.md
+    sha256: 3e5efe34122f4788c8a23ca44ae01a32291f2c1643ed3b54d106e434ac8854ef
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/task-template/dungeon.json
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/task-template/dungeon.json
+    sha256: da82152ea69c597e8b6248f21399f7846e686c658ed6449990c1a39717303d98
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/task-template/moves.json
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/task-template/moves.json
+    sha256: 37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570
+  - vendored: evals/vendor/arneson/fixtures/dungeon-crawl/task-template/referee.py
+    upstream_path: domains/agent-systems/resources/fixtures/dungeon-crawl/task-template/referee.py
+    sha256: 152cb3db222e4002f8a18312d53a8cfd97c90e9a2a0eb2aa2be6c4e2c03b822b

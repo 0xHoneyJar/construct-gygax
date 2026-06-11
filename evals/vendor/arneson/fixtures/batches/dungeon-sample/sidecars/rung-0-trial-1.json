@@ -1,0 +1,17 @@
+{
+  "schema": "observed-trace/v1",
+  "claim_strength": "real-agent-observed",
+  "producer": { "kind": "real-agent", "id": "party-fixture", "detail": "committed dungeon sample — hand-authored winning line, mirrors a party run" },
+  "experiment": {
+    "id": "dungeon-crawl",
+    "fixture": "../../dungeon-crawl",
+    "incentive_state": "../../dungeon-crawl/incentive-state",
+    "context": { "name": "difficulty", "value": 6 }
+  },
+  "run": {
+    "rung": 0, "rung_name": "blind", "trial": 1, "status": "completed",
+    "run_dir": "runs/rung-0/trial-1",
+    "started_at": "2026-06-10T23:00:00Z", "duration_ms": 9000
+  },
+  "narration": "Party cleared goblins, disarmed the corridor, took the rune-blade and potions, burned the troll, felled the Bone Tyrant."
+}
