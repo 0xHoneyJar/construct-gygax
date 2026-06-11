@@ -66,6 +66,21 @@ export function renderDriftReportMarkdown(map: StructuralMap, report: DriftRepor
     lines.push("");
   }
 
+  // Formulas (FR-3 real-code hardening) — the tuning surface: values defined by a formula, not a
+  // literal. Additive: only rendered when present, so the report is byte-identical otherwise.
+  const formulas = map.formulas ?? [];
+  if (formulas.length > 0) {
+    lines.push(`## Tuning Surface — formulas (${formulas.length})`);
+    lines.push("");
+    lines.push("_Values defined by a formula (a candidate `model:` block for `/augury --sweep`)._");
+    lines.push("");
+    for (const f of formulas) {
+      const tag = f.tunability ? ` [${f.tunability}]` : "";
+      lines.push(`- \`${f.name}\` = \`${f.formula.replace(/\s+/g, " ")}\`${tag} (\`${f.source}\`)`);
+    }
+    lines.push("");
+  }
+
   // Silent on (the honesty section)
   lines.push(`## Silent On (${report.silentOn.length}) — untraceable wiring, NOT asserted`);
   lines.push("");

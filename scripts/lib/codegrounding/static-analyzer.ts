@@ -35,6 +35,19 @@ export interface NumberFact {
   tunability?: "engine-default" | "structural";
 }
 
+/**
+ * FR-3 (cycle-006 real-code hardening): a const whose value is a *formula* (a numeric expression,
+ * not a literal) — e.g. `const enemyDEF = floor((depth-9)/4)`. These are the engine's tuning
+ * surface and were previously invisible to F1 (only literals were captured). Kept SEPARATE from
+ * `numbers` so drift reconciliation (which compares literal values) is unaffected.
+ */
+export interface FormulaFact {
+  name: string;
+  formula: string; // the initializer text, verbatim
+  source: string; // "relpath:line"
+  tunability?: "engine-default" | "structural";
+}
+
 /** FR-3: const names that read as replaceable sample/config values → engine-default. */
 const ENGINE_DEFAULT_NAME = /^(DEFAULT|SAMPLE|EXAMPLE|DEMO|STARTER|PLACEHOLDER)_|_DEFAULTS?$/i;
 /** FR-3: function names that read as the core simulation loop → numbers inside them are structural. */
@@ -61,6 +74,7 @@ export interface StructuralMap {
   repo: string;
   commit: string;
   numbers: NumberFact[];
+  formulas: FormulaFact[];
   loops: LoopEdge[];
   untraceable: UntraceableSite[];
 }
@@ -134,6 +148,44 @@ function loc(sf: ts.SourceFile, node: ts.Node, repoPath: string): string {
   return `${relative(repoPath, sf.fileName)}:${line + 1}`;
 }
 
+// ---- FR-3 real-code hardening: detect numeric *formula* initializers (not plain literals) ----
+const ARITH_OPS = new Set<ts.SyntaxKind>([
+  ts.SyntaxKind.PlusToken,
+  ts.SyntaxKind.MinusToken,
+  ts.SyntaxKind.AsteriskToken,
+  ts.SyntaxKind.SlashToken,
+  ts.SyntaxKind.PercentToken,
+]);
+
+function hasNumericLiteral(node: ts.Node): boolean {
+  if (ts.isNumericLiteral(node)) return true;
+  let found = false;
+  node.forEachChild((c) => {
+    if (!found && hasNumericLiteral(c)) found = true;
+  });
+  return found;
+}
+
+/** A `Math.floor(...)` / `floor(...)`-style call (the math we'd express in a `model:` formula). */
+function isMathCall(node: ts.Node): boolean {
+  if (!ts.isCallExpression(node)) return false;
+  const c = node.expression;
+  if (ts.isPropertyAccessExpression(c) && ts.isIdentifier(c.expression) && c.expression.text === "Math") return true;
+  if (ts.isIdentifier(c) && /^(floor|ceil|round|min|max|abs|sqrt|pow)$/i.test(c.text)) return true;
+  return false;
+}
+
+/** Is `node` a numeric *formula* — an arithmetic/conditional/math expression with a numeric literal? */
+function isNumericFormula(node: ts.Node): boolean {
+  if (ts.isNumericLiteral(node)) return false; // a plain literal — captured as a NumberFact, not a formula
+  const kindOk =
+    (ts.isBinaryExpression(node) && ARITH_OPS.has(node.operatorToken.kind)) ||
+    ts.isConditionalExpression(node) ||
+    isMathCall(node) ||
+    (ts.isParenthesizedExpression(node) && isNumericFormula(node.expression));
+  return kindOk && hasNumericLiteral(node);
+}
+
 /**
  * Analyze a repo into a StructuralMap. `repoPath` is the engine root (or a subdir like src/).
  */
@@ -152,6 +204,7 @@ export function analyze(repoPath: string): StructuralMap {
   const checker = program.getTypeChecker();
 
   const numbers: NumberFact[] = [];
+  const formulas: FormulaFact[] = [];
   const loops: LoopEdge[] = [];
   const untraceable: UntraceableSite[] = [];
   const seenLoop = new Set<string>();
@@ -203,9 +256,28 @@ export function analyze(repoPath: string): StructuralMap {
     const sf = program.getSourceFile(fileName);
     if (!sf) continue;
 
-    // `enclosingFn` carries the nearest sim-loop-candidate function name down the walk (FR-3).
+    // The DIRECT numeric properties of a `const DEFAULT_*/config = { ... }` object — these are the
+    // tunable params (e.g. DEFAULT_STATS.maxHP). Deeply-nested numbers (sample-data coordinates in a
+    // demo level) are deliberately NOT included, to avoid over-tagging bulk content (FR-3 hardening).
+    const directDefaultProps = new Set<ts.Node>();
+    const collectDefaultProps = (node: ts.Node): void => {
+      if (
+        ts.isVariableDeclaration(node) &&
+        ts.isIdentifier(node.name) &&
+        ENGINE_DEFAULT_NAME.test(node.name.text) &&
+        node.initializer &&
+        ts.isObjectLiteralExpression(node.initializer)
+      ) {
+        for (const p of node.initializer.properties) {
+          if (ts.isPropertyAssignment(p) && numericValue(p.initializer) !== null) directDefaultProps.add(p);
+        }
+      }
+      ts.forEachChild(node, collectDefaultProps);
+    };
+    collectDefaultProps(sf);
+
+    // `enclosingFn` carries the nearest sim-loop fn name down the walk (FR-3).
     const visitForNumbers = (node: ts.Node, enclosingFn: string | null): void => {
-      // Update the enclosing-function context when entering a named function/arrow/method.
       let fnHere = enclosingFn;
       if (ts.isFunctionDeclaration(node) && node.name) {
         fnHere = node.name.text;
@@ -220,7 +292,7 @@ export function analyze(repoPath: string): StructuralMap {
         fnHere = node.name.text;
       }
 
-      // const NAME = <number>
+      // const NAME = <number literal | numeric formula>
       if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
         const v = numericValue(node.initializer);
         if (v !== null) {
@@ -228,18 +300,21 @@ export function analyze(repoPath: string): StructuralMap {
           const t = inferTunability(node.name.text, enclosingFn);
           if (t) fact.tunability = t;
           numbers.push(fact);
+        } else if (isNumericFormula(node.initializer)) {
+          // The tuning surface: a value defined by a formula (previously invisible to F1).
+          const ff: FormulaFact = { name: node.name.text, formula: node.initializer.getText(sf), source: loc(sf, node.name, repoPath) };
+          const t = inferTunability(node.name.text, enclosingFn);
+          if (t) ff.tunability = t;
+          formulas.push(ff);
         }
       }
-      // { name: <number> }
-      if (
-        ts.isPropertyAssignment(node) &&
-        (ts.isIdentifier(node.name) || ts.isStringLiteral(node.name))
-      ) {
+      // { name: <number> } — tagged engine-default only if a DIRECT property of a DEFAULT_* config object.
+      if (ts.isPropertyAssignment(node) && (ts.isIdentifier(node.name) || ts.isStringLiteral(node.name))) {
         const v = numericValue(node.initializer);
         if (v !== null) {
-          const key = ts.isIdentifier(node.name) ? node.name.text : node.name.text;
+          const key = node.name.text;
           const fact: NumberFact = { name: key, value: v, source: loc(sf, node.name, repoPath), kind: "literal" };
-          const t = inferTunability(key, enclosingFn);
+          const t = inferTunability(key, enclosingFn) ?? (directDefaultProps.has(node) ? "engine-default" : undefined);
           if (t) fact.tunability = t;
           numbers.push(fact);
         }
@@ -330,6 +405,7 @@ export function analyze(repoPath: string): StructuralMap {
     repo: basename(repoPath),
     commit: gitCommit(repoPath),
     numbers,
+    formulas,
     loops,
     untraceable,
   };
