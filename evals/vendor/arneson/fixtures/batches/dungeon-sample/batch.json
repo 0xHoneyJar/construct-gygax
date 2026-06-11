@@ -1,0 +1,4 @@
+{
+  "schema": "observed-trace-batch/v1",
+  "fixture": "../../dungeon-crawl"
+}
