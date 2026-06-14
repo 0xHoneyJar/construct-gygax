@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://constructs.network/gygax/schemas/signal-taxonomy.v1.schema.json",
+  "title": "Signal Classification Taxonomy (signal-taxonomy/v1)",
+  "description": "The canonical signal.classification taxonomy: the closed set of practitioner/persona signal classes a playtest or session may flag. Gygax publishes this contract; producers (e.g. Arneson) vendor a pinned copy and validate signal.classification against it. The values originate from Arneson's session-events contract (the practitioner-facing signal vocabulary); Gygax holds the published canonical list so the two sides converge on one enum instead of drifting parallel copies (the same publish/vendor direction as observed-trace, inverted owner).",
+  "$comment": "EVOLUTION POLICY (additive-only): signal-taxonomy/v1 values are never removed, renamed, or re-typed. New values MAY be added in minor revisions of v1; any removal or rename requires a new schema string (signal-taxonomy/v2) and a new schema file, and consumers hard-reject unknown taxonomy versions. PROVENANCE: the 9 values are sourced VERBATIM (value set + canonical order) from construct-arneson schemas/core/session-events-base.schema.yaml (signal.classification), per the 2026-06-13 seam reply. Gygax publishes the list without inventing per-value semantics — the enum is the normative surface; semantics remain the practitioner-facing meanings in the source session-events contract. NOT IN THIS TAXONOMY: `bottleneck` is an Arneson digest-side grouping key (domains/ttrpg/schemas/digest-ttrpg.schema.yaml), explicitly NOT a signal class — recorded here so it is never inherited into the canonical list.",
+  "type": "object",
+  "properties": {
+    "classification": {
+      "$ref": "#/$defs/signalClassification"
+    }
+  },
+  "$defs": {
+    "signalClassification": {
+      "description": "Closed enum of canonical signal classes. Order is canonical (from the source contract). Validate a signal.classification string against this $def.",
+      "enum": [
+        "safety",
+        "insight",
+        "concern",
+        "friction",
+        "praise",
+        "confusion",
+        "delight",
+        "surprise",
+        "boredom"
+      ]
+    }
+  }
+}
