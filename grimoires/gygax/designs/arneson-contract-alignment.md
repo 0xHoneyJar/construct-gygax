@@ -75,13 +75,14 @@ without a v2 of anything on your side.
 
 ## 3. What stays open (and who owes what)
 
-- **Canonical signal taxonomy (your 9 values vs the doc's "8-signal")**: not answered by
-  cycle-007 — the awareness-ladder sidecar has no signal field. Gygax owes the canonical
-  list, and wants to derive it from your actual 9-value list rather than invent in parallel:
-  **please send the list**; Gygax will publish the canonical taxonomy in the
-  Arneson-integration cycle and you vendor it from there.
-- **Entity-ref namespace** and **session/event-level ingest granularity**: deferred to the
-  same future cycle. Nothing shipped constrains them.
+- ~~**Canonical signal taxonomy (your 9 values vs the doc's "8-signal")**: Gygax owes the
+  canonical list, derived from your actual 9-value list rather than invented in parallel.~~
+  **CLOSED 2026-06-13** — Arneson sent the list (seam reply v1.1); Gygax published it as
+  `schemas/signal-taxonomy.v1.schema.json` (the 9 values verbatim, canonical order, no
+  invented per-value semantics). Arneson vendors a pinned copy from there. See the cycle-010
+  section below.
+- **Entity-ref namespace** and **session/event-level ingest granularity**: deferred to a
+  future cycle. Nothing shipped constrains them.
 
 ## 4. Item 1 (host provenance envelope): welcomed, with a landing zone
 
@@ -124,4 +125,24 @@ the *grading marker* (absent on a completed run = ungraded). Re-vendor `observed
   `producer.kind: simulation`, `claim_strength: simulation-derived`. Gygax trusts-but-labels; an
   *ungraded* simulation sidecar is rejected (Gygax won't fabricate a simulation grade).
 
-**Still owed to Arneson:** the canonical signal taxonomy (awaiting your 9-value list).
+**Still owed to Arneson:** ~~the canonical signal taxonomy~~ — nothing. All seam debts settled
+(see cycle-010 below).
+
+---
+
+## cycle-010 delivered (2026-06-13): Signal Taxonomy Published
+
+Arneson's seam reply (`construct-arneson/grimoires/loa/discovery/gygax-seam-reply-v1.1.md`)
+adopted observed-trace v1.1 in full and answered the three open asks. Gygax's only return
+action — publish the canonical signal taxonomy — is done.
+
+| Reply item | Status | Where |
+|------------|--------|-------|
+| Signal taxonomy (the 9 values) | ✅ **published** | `schemas/signal-taxonomy.v1.schema.json` — `[safety, insight, concern, friction, praise, confusion, delight, surprise, boredom]`, verbatim + canonical order, additive-only evolution policy, `bottleneck` explicitly excluded (their digest-side key, on the record so it is never inherited). Arneson vendors a pinned copy. |
+| check-dominance adoption | ✅ their call, settled | Arneson keeps `check_payoff_dominance.py` behind Gygax's conformance pin (standalone-plus-composable; no hard runtime dep on the Gygax CLI). AGREE result is the seam proof. |
+| OQ-B fixture resolution | ⏳ their vote recorded | Arneson votes **batch-relative** for a future batch-contract rev (absolute paths today, so no breakage to race). No change this cycle; honored when the batch contract is next touched. |
+
+**Carried (not blocking):** missing-intent exit-code alignment (Gygax `indeterminate`/exit 0 vs
+Arneson exit 1) — Arneson follows whatever Gygax pins in a future rev; sub-integer payoff-crossing
+fixtures — Arneson commits to flagging any such fixture explicitly rather than let sampling
+diverge silently.
