@@ -44,7 +44,17 @@ parametric-depth-scaling/
 │   │                             #   enemy-attack, player-max-hp, heal-value
 │   ├── mechanics/damage-formula.yaml   # STRUCTURAL: max(1, atk - def)
 │   └── progression/encounter-scaling.yaml  # variable, metric defs, thresholds
-└── expected/sweep-report.md      # hand-derived + code-verified golden output
+├── expected/sweep-report.md      # hand-derived + code-verified golden output (the derivation proof)
+└── expected/sweep-render.md      # cycle-011: byte-exact `renderSweepReport()` output (incl. FR-1 SVG/Mermaid)
 ```
 
 See `expected/sweep-report.md` for the full swept table and the derivation proof.
+
+Two distinct goldens, on purpose:
+- **`sweep-report.md`** is the *hand-derived* expectation (Models table, Δttk, K2–K5, derivation
+  block) — a human-readable proof the engine's numbers are correct. Not a renderer snapshot.
+- **`sweep-render.md`** is the *byte-exact output* of `renderSweepReport()` (cycle-011, FR-1),
+  including the deterministic inline-SVG curves and the Mermaid structure diagram. It is
+  byte-compared in `parametric.test.ts`; regenerate it (and review the diff) whenever the renderer
+  changes intentionally:
+  `tsx -e 'import {runSweep} from "./scripts/lib/parametric/index.ts"; import {renderSweepReport} from "./scripts/lib/parametric/report.ts"; import {writeFileSync} from "node:fs"; writeFileSync("evals/fixtures/parametric-depth-scaling/expected/sweep-render.md", renderSweepReport(runSweep("evals/fixtures/parametric-depth-scaling/game-state")))'`

@@ -8,13 +8,19 @@
 import assert from "node:assert";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { readFileSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { runSweep, loadGameState } from "./index.ts";
 import { sweepMetrics, validateDomain, DomainError } from "./sweep.ts";
 import { detectSpikes } from "./crossover.ts";
 import { rankKnobs } from "./sensitivity.ts";
+import { renderSweepReport, type SweepResult } from "./report.ts";
+import { renderSparkline } from "./svg.ts";
+import { renderStructureDiagram } from "./mermaid.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURE = join(HERE, "..", "..", "..", "evals", "fixtures", "parametric-depth-scaling", "game-state");
+const RENDER_GOLDEN = join(HERE, "..", "..", "..", "evals", "fixtures", "parametric-depth-scaling", "expected", "sweep-render.md");
 
 function test(name: string, fn: () => void) {
   try {
@@ -165,6 +171,63 @@ test("structural invariants are never proposed as knobs", () => {
 test("low-primary-leverage knobs are flagged, not buried (FR-4 bridge)", () => {
   const ea = result.knobs!.knobs.find((x) => x.id === "enemy-attack")!;
   assert.ok(ea.secondaryNote && ea.secondaryNote.includes("incoming_per_kill"), "secondary leverage not flagged");
+});
+
+// ── FR-1 visualizations (cycle-011): inline SVG curves + Mermaid structure ──────────────────────
+
+test("report carries ≥1 inline <svg> curve and ≥1 mermaid block (FR-1.1/FR-1.2)", () => {
+  const md = renderSweepReport(runSweep(FIXTURE));
+  assert.ok(md.includes("<svg"), "expected at least one inline <svg> curve");
+  assert.ok(md.includes("```mermaid"), "expected at least one fenced mermaid block");
+});
+
+test("renderer is byte-deterministic across runs (double-run equality, FR-1.3)", () => {
+  const a = renderSweepReport(runSweep(FIXTURE));
+  const b = renderSweepReport(runSweep(FIXTURE));
+  assert.strictEqual(a, b, "two renders of the same input must be byte-identical");
+});
+
+test("renderer output matches the regenerated golden byte-for-byte (FR-1.4)", () => {
+  const md = renderSweepReport(runSweep(FIXTURE));
+  const golden = readFileSync(RENDER_GOLDEN, "utf8");
+  assert.strictEqual(md, golden, "renderer output drifted from sweep-render.md — regenerate the golden and review the diff");
+});
+
+test("a no-`model:` game-state leaves the existing throw path unaffected (FR-1.5)", () => {
+  // A game-state dir with YAML but no `model:` blocks → runSweep still throws MissingModelError as
+  // before (the normal /augury breakpoint path runs instead). The visuals never reach such a sweep.
+  const dir = mkdtempSync(join(tmpdir(), "no-model-"));
+  try {
+    writeFileSync(join(dir, "stat.yaml"), "id: plain-stat\nvalue: 12\n");
+    assert.throws(() => runSweep(dir), /model/i, "expected the existing missing-model throw to be preserved");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("degenerate series render gracefully and never throw (FR-1.5)", () => {
+  // flat + single-point series, no crossings/spikes
+  const flat: SweepResult = {
+    variable: "wave",
+    domain: { min: 1, max: 2 },
+    series: [
+      { id: "flat", kind: "metric", samples: [{ x: 1, value: 5 }, { x: 2, value: 5 }] },
+      { id: "single", kind: "metric", samples: [{ x: 1, value: 7 }] },
+      { id: "empty", kind: "metric", samples: [] },
+    ],
+    crossovers: [],
+    spikes: [],
+    tags: [],
+  };
+  let md = "";
+  assert.doesNotThrow(() => {
+    md = renderSweepReport(flat);
+  });
+  assert.ok(md.includes("<svg"), "flat/single series should still emit an <svg>");
+  assert.ok(md.includes("No crossings or spikes"), "empty structure should emit the no-crossings note");
+  // direct unit checks on the degenerate helpers
+  assert.ok(renderSparkline(flat.series[2]).includes("_no samples_"), "empty series should render a note, not crash");
+  assert.ok(renderStructureDiagram({ variable: "wave", crossovers: [], spikes: [] }).includes("No crossings or spikes"));
 });
 
 console.log("\nAll parametric golden-capability tests passed.\n");

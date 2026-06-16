@@ -8,6 +8,8 @@
 import type { MetricSeries } from "./sweep.ts";
 import type { Crossover, Spike } from "./crossover.ts";
 import type { KnobRanking } from "./sensitivity.ts";
+import { renderSparkline } from "./svg.ts";
+import { renderStructureDiagram } from "./mermaid.ts";
 
 export interface TunabilityTag {
   id: string;
@@ -119,6 +121,22 @@ export function renderSweepReport(result: SweepResult): string {
       lines.push("");
     }
   }
+
+  // FR-1 visualizations (cycle-011) — additive; deterministic inline SVG curves + Mermaid structure.
+  // The math above is untouched: these render the already-computed series, crossovers, and spikes.
+  lines.push("## Visualizations");
+  lines.push("");
+  lines.push("### Metric curves");
+  lines.push("");
+  for (const s of result.series) {
+    const markers = result.crossovers.filter((c) => c.metric === s.id && c.x !== null).map((c) => c.x as number);
+    lines.push(renderSparkline(s, { markers }));
+    lines.push("");
+  }
+  lines.push("### Structure");
+  lines.push("");
+  lines.push(renderStructureDiagram({ variable: result.variable, crossovers: result.crossovers, spikes: result.spikes }));
+  lines.push("");
 
   return lines.join("\n");
 }
