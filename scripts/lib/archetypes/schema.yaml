@@ -1,0 +1,89 @@
+# Cabal Archetype Schema (cycle-011, FR-2)
+#
+# The structural contract for a Cabal player archetype. Derived VERBATIM from the shape of the 9
+# built-ins in `skills/cabal/resources/archetypes.yaml` — the built-ins are ground truth. If a
+# built-in ever fails to validate against this schema, the SCHEMA is wrong (too narrow): widen the
+# schema to fit reality, never edit a built-in to fit the schema (PRD FR-2.1, SDD §3.1).
+#
+# Enum value sets below are the COMPLETE distinct sets observed across all 9 built-ins (extracted,
+# not guessed). `validate.ts` reads this file and interprets the mini-schema generically — enums
+# live here, not hard-coded in TypeScript, so the schema stays the single source of truth.
+#
+# Mini-schema node types interpreted by validate.ts:
+#   object: { required: [..], fields: { <name>: <node> } }   — extra keys allowed (forward-compat)
+#   list:   { item: <node>, min_items: <n?> }
+#   map:    { value: <node>, required_keys: [..?] }            — arbitrary string keys
+#   enum:   { values: [..] }
+#   string: { pattern: <regex?> }
+
+schema_version: 1
+
+root:
+  type: object
+  required: [id, name, description, motivation, blind_spots, tests_for, behavioral_weightings]
+  fields:
+    id:
+      type: string
+      # kebab-case: matches every built-in id (optimizer, rules-lawyer, anxious-player, …)
+      pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+    name:
+      type: string
+    description:
+      type: string
+    motivation:
+      type: string
+    blind_spots:
+      type: list
+      min_items: 1
+      item:
+        type: string
+    tests_for:
+      type: list
+      min_items: 1
+      item:
+        type: object
+        required: [severity, category, description]
+        fields:
+          severity:
+            type: enum
+            values: [critical, major, minor, observation, non-obvious]
+          category:
+            type: string
+          description:
+            type: string
+    behavioral_weightings:
+      type: map
+      # every built-in defines a `default` weighting; tradition-specific keys (d20, pbta, …) are optional
+      required_keys: [default]
+      value:
+        type: object
+        required:
+          - risk_tolerance
+          - optimization_drive
+          - system_engagement
+          - primary_focus
+          - secondary_focus
+          - engagement_style
+        fields:
+          risk_tolerance:
+            type: enum
+            values: [very_low, low, medium, high, very_high]
+          optimization_drive:
+            type: enum
+            values: [very_low, low, medium, high, very_high]
+          system_engagement:
+            type: enum
+            # complete observed set across the 9 built-ins
+            values: [surface, cautious, moderate, experiential, narrative, broad, holistic, deep, exhaustive]
+          primary_focus:
+            type: string
+          secondary_focus:
+            type: string
+          engagement_style:
+            type: string
+          # key_questions is optional (present in tradition blocks, absent in `default`)
+          key_questions:
+            type: list
+            min_items: 1
+            item:
+              type: string

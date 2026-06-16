@@ -114,6 +114,28 @@ and the first run's findings in `grimoires/gygax/playtest-reports/awareness-ladd
 
 **For non-traditional games**: Archetypes adapt to ANY game. In a journaling RPG, the Optimizer finds prompt sequences that produce the most dramatic entries. In a GMless game, the Rules Lawyer probes authority distribution. If an archetype genuinely cannot engage (e.g., Optimizer in a game with no mechanical choices), report that explicitly -- "The Optimizer has nothing to optimize, which may indicate the game lacks mechanical depth for players who want it" -- that IS a finding.
 
+### Custom Archetypes (cycle-011, FR-2)
+
+The 9 built-ins are fixed, but designers can **extend** the roster with their own player archetypes —
+"The Speedrunner", "The Lapsed Veteran", "The Backseat Optimizer" — without editing the built-ins.
+
+- **Where:** one archetype per file in `grimoires/gygax/archetypes/<id>.yaml`. A worked example ships
+  at `grimoires/gygax/archetypes/speedrunner.yaml`.
+- **Shape:** identical to a built-in (`id, name, description, motivation, blind_spots[], tests_for[]
+  {severity, category, description}, behavioral_weightings{default, …}`). The structural contract is
+  `scripts/lib/archetypes/schema.yaml`, derived verbatim from the built-ins.
+- **Validate before use:**
+  ```bash
+  tsx scripts/lib/archetypes/validate.ts grimoires/gygax/archetypes/speedrunner.yaml   # one file
+  tsx scripts/lib/archetypes/validate.ts                                               # whole roster + merge
+  ```
+  Exit 0 = valid; exit 1 = a field-level error (`<file>: <field path> — <expected vs found>`).
+- **Rules:** the `id` is kebab-case and must **not collide** with a built-in or another user file —
+  collisions are **rejected loud**, never silently shadowed. An invalid file is **excluded** from the
+  panel and **reported**, never silently dropped.
+- **Selection:** a valid user archetype is selectable by its id flag (e.g. `--speedrunner`) and is
+  included in `--all`, exactly like a built-in.
+
 ## Panel Selection
 
 ### User-Composed Panels
@@ -147,7 +169,7 @@ The panel selection and rationale are documented in every report header.
 
 1. Check that `grimoires/gygax/game-state/index.yaml` exists. If not: "No game attuned yet. Run `/attune` first."
 2. Read `index.yaml` for the full entity manifest, graph integrity, and **design parameters**.
-3. Load archetype definitions from `skills/cabal/resources/archetypes.yaml`. Adjust behavioral weightings based on the game's tradition.
+3. Load archetype definitions from `skills/cabal/resources/archetypes.yaml`. **Then merge any custom archetypes** from `grimoires/gygax/archetypes/` by running `tsx scripts/lib/archetypes/validate.ts` — valid user archetypes join the selectable roster; invalid or id-colliding files are excluded and their errors surfaced to the user (never silently dropped). Adjust behavioral weightings based on the game's tradition.
 4. Glob `grimoires/gygax/playtest-reports/*.md` for previous reports. Read them for regression baseline.
 5. If first run, note: "No regression baseline."
 6. Read `design_parameters` from `index.yaml`. Use for panel selection weighting (Step 2) and signal sensitivity (Step 5).
