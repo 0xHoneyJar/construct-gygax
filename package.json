@@ -15,9 +15,10 @@
     "test:ladder": "for f in scripts/lib/ladder/*.test.ts; do tsx \"$f\" || exit 1; done",
     "test:arneson": "for f in scripts/lib/arneson/*.test.ts; do tsx \"$f\" || exit 1; done",
     "test:archetypes": "for f in scripts/lib/archetypes/*.test.ts; do tsx \"$f\" || exit 1; done",
+    "test:check": "for f in scripts/lib/check/*.test.ts; do tsx \"$f\" || exit 1; done",
     "test:vendor": "for f in evals/vendor/*.test.ts; do tsx \"$f\" || exit 1; done",
     "test:evals": "bash evals/harness.sh --structural",
-    "test": "npm run test:codegrounding && npm run test:parametric && npm run test:payoff && npm run test:trace && npm run test:ladder && npm run test:arneson && npm run test:archetypes && npm run test:vendor && npm run test:evals"
+    "test": "npm run test:codegrounding && npm run test:parametric && npm run test:payoff && npm run test:trace && npm run test:ladder && npm run test:arneson && npm run test:archetypes && npm run test:check && npm run test:vendor && npm run test:evals"
   },
   "devDependencies": {
     "tsx": "4.19.2",

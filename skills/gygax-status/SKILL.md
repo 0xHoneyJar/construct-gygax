@@ -13,11 +13,28 @@ Health dashboard for the Gygax construct. Shows the current state of the attuned
 
 ## Trigger
 
-`/gygax`
+`/gygax` — the dashboard for the current project state.
 
-No arguments. Always produces the dashboard for the current project state.
+`/gygax check` — the analyst's own diagnostic health (see Step 0). Distinct from the game dashboard:
+`check` reports whether *Gygax itself* is healthy, building designer trust in every other finding.
 
 ## Workflow
+
+### Step 0: Diagnostic Health Subcommand (`/gygax check`) — cycle-011, FR-3
+
+If the invocation argument is `check`:
+
+1. Run the curated diagnostic subset (fast, self-contained — no sandbox/network):
+   ```bash
+   tsx scripts/lib/check/check.ts
+   ```
+2. Relay its plain-text health summary **verbatim** — the four sub-checks (`golden-integrity`,
+   `expected-findings`, `archetype-schema`, `game-state-sanity`), their PASS/FAIL detail, and the
+   overall verdict. The script exits 0 on PASS, 1 on FAIL.
+3. On FAIL, surface the failing check's message as the actionable next step. **Stop here** — do not
+   build the game dashboard.
+
+If the argument is absent (plain `/gygax`), skip Step 0 and continue to Step 1.
 
 ### Step 1: Check Game-State Existence
 
