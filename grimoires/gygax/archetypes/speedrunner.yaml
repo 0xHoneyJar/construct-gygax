@@ -1,0 +1,62 @@
+# Example user-authored Cabal archetype (cycle-011, FR-2).
+#
+# Drop additional archetypes in this directory as `<id>.yaml`. Each file holds ONE archetype
+# (top-level keys below) and is validated against `scripts/lib/archetypes/schema.yaml`. The id must
+# be kebab-case and must not collide with a built-in (optimizer, explorer, storyteller,
+# rules-lawyer, newcomer, veteran, gm, anxious-player, chaos-agent) or another user file.
+#
+# Validate before running /cabal:  tsx scripts/lib/archetypes/validate.ts grimoires/gygax/archetypes/speedrunner.yaml
+
+id: speedrunner
+name: "The Speedrunner"
+description: >
+  Treats the game as a route to be optimized for completion time, not a space to be explored or a
+  story to be told. Skips, sequence-breaks, and clips through intended progression. Asks "what is
+  the fastest path to the win condition, and which rules can I exploit to shorten it?" — and counts
+  any developer-intended pacing gate as an obstacle to be bypassed rather than respected.
+motivation: "Reach the win/end state in the least time possible. Intended pacing is a suggestion."
+blind_spots:
+  - "Ignores content, narrative, and systems that do not shorten the route"
+  - "Mistakes a deliberate pacing gate for a design flaw to be skipped"
+  - "Assumes execution is frame-perfect; undervalues consistency for typical players"
+  - "May not notice that the fastest route trivializes the experience the game is selling"
+tests_for:
+  - severity: critical
+    category: "Sequence break"
+    description: "A path that reaches the win condition while skipping content the design assumes is mandatory"
+  - severity: major
+    category: "Pacing-gate bypass"
+    description: "A mechanic intended to slow or gate progression that can be skipped entirely"
+  - severity: major
+    category: "Sacrifice-for-speed exploit"
+    description: "Deliberately losing resources/health to save time in a way the economy did not anticipate"
+  - severity: minor
+    category: "Redundant content"
+    description: "Systems or areas an optimal route never needs to engage with"
+  - severity: observation
+    category: "Route variance"
+    description: "How many meaningfully different fast routes the design supports"
+  - severity: non-obvious
+    category: "Timer-economy interaction"
+    description: "Where a time-pressure mechanic interacts with the resource economy to reward degenerate rushing"
+
+behavioral_weightings:
+  default:
+    risk_tolerance: very_high
+    optimization_drive: very_high
+    system_engagement: broad
+    primary_focus: "Time-to-completion"
+    secondary_focus: "Sequence breaks and skippable gates"
+    engagement_style: "Map the critical path to the win condition, then attack every gate on it for a faster bypass"
+  roguelike:
+    risk_tolerance: very_high
+    optimization_drive: very_high
+    system_engagement: broad
+    primary_focus: "Fastest viable run, not safest run"
+    secondary_focus: "Skip-heavy item paths and floor-rush thresholds"
+    engagement_style: "Trade survivability for descent speed; identify the minimum power needed to rush each floor"
+    key_questions:
+      - "What is the fastest descent that still clears the final boss?"
+      - "Which rooms or floors can be skipped entirely without breaking the run?"
+      - "Is there a build that reaches kill-threshold fast enough to ignore defense?"
+      - "Do meta-progression unlocks open earlier skips than intended?"
