@@ -96,6 +96,43 @@ forecast. An `--observed` finding is `real-agent-observed`; an `--incentives` fi
 stated incentive"), reported as-is. See `grimoires/gygax/designs/awareness-ladder-experiment.md`
 and the first run's findings in `grimoires/gygax/playtest-reports/awareness-ladder-2026-06-09.md`.
 
+## Revealed-Strategy Mode (`--observed --strategy`) — cycle-012
+
+`/cabal --observed --strategy <corpus-dir>` is the **strategy-axis** companion to `--observed` (which
+classifies reward-hacking). Where `--observed` asks *did an agent cheat the metric*, `--strategy` asks
+*of the choices the design offers, which does real play reveal as live — and which collapse to one
+dominant line wearing a costume?* It is the **Reality Plane for the decision axis** (evolution-roadmap
+§4): it validates the forecast **Decision Point Map** (Step 2.7d) against how strong players actually choose.
+
+This mode is a **thin shell to the trace seam** — no new archetype machinery. Run the lens and read its
+claim-tagged report; fold its **Revealed Strategy** section into the playtest report beside the Decision
+Point Map:
+
+```bash
+# corpus → revealed preference → reconcile vs forecast (+ optional candidate policy) → claim-tagged report
+npx tsx scripts/lib/trace/strategy.ts <corpus-dir> [--forecast <dpm.json>] [--policy <policy.json>] [--n-floor <n>]
+```
+
+**Inputs:**
+- `<corpus-dir>` — a directory of **decision-trace/v1** records (`schemas/decision-trace.v1.schema.json`):
+  one record per decision, `{context.segment, offered[], chosen[]}`. Source-agnostic (found telemetry, a
+  real-agent batch, or a sim); the producer kind **binds the claim strength** (a simulation may not tag
+  itself observed).
+- `--forecast <dpm.json>` (optional) — the Decision Point Map as `{points:[{call: dominant|false-choice|
+  balanced, options:[…]}], claim:"model-forecast"}`. Reconciliation reports **confirmed / missed
+  false-choice / over-called dominant**.
+- `--policy <policy.json>` (optional) — a candidate ordering `{id, ordering:[…]}`; the report ranks its
+  largest **rank divergences** vs observed play.
+
+**Claim discipline (carry it into every finding):** observed > simulation-derived > model-forecast. The
+observed ordering is from real play; the forecast and candidate-policy lines are `model-forecast` and are
+**never blended** into it. **Revealed ≠ optimal:** the lens reports the empirical equilibrium of the
+corpus, not a proof of best play (calling it optimal is the intransitive engine's job). A **no-divergence**
+result is a finding, not a failure. Small samples (`n < --n-floor`, default 5) are tagged *within-noise*
+and assert no direction. The **Optimizer** archetype may cite the *observed* dominant line instead of
+forecasting one. Design + golden fixture: `grimoires/gygax/designs/revealed-strategy-lens.md`,
+`scripts/lib/trace/__fixtures__/ptcg-revealed/`.
+
 ## Archetype Roster
 
 9 archetypes, each testing a distinct dimension of the design. Full behavioral profiles with per-tradition weightings are in `skills/cabal/resources/archetypes.yaml`.

@@ -1,0 +1,17 @@
+{
+  "points": [
+    {
+      "id": "main-turn",
+      "description": "the main-phase action choice",
+      "call": "balanced",
+      "options": [
+        "ATTACH",
+        "EVOLVE",
+        "PLAY",
+        "ABILITY",
+        "ATTACK"
+      ]
+    }
+  ],
+  "claim": "model-forecast"
+}

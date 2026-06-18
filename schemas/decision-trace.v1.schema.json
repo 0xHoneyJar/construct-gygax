@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://constructs.network/gygax/schemas/decision-trace.v1.schema.json",
+  "title": "Decision Trace (decision-trace/v1)",
+  "description": "One real decision per record: of the options the system OFFERED, which the actor CHOSE, and in what context. The unit the revealed-strategy lens (cycle-012) reasons over. A SIBLING to observed-trace/v1 — that schema is reward-hack-shaped (rungs, fixed/hacked/failed, file diffs); this is decision-shaped — but it shares the producer-bound claim rule: a `simulation` producer may not tag its output as observed.",
+  "$comment": "EVOLUTION POLICY (additive-only): fields are never removed/renamed/re-typed; new OPTIONAL fields may be added in v1 minor revisions; a breaking change requires decision-trace/v2. The reference TS consumer (scripts/lib/trace/decision.ts) is the authoritative validator; this file is the cross-repo contract. `context.segment` is the conditioning key the extractor groups by; `offered`/`chosen` carry option TYPES (the primary unit of analysis) plus optional ids.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "claim_strength", "producer", "corpus", "actor_id", "episode_id", "t", "context", "offered", "chosen"],
+  "properties": {
+    "schema": { "const": "decision-trace/v1", "description": "Versioned contract identifier. Consumers fail fast on any other value." },
+    "claim_strength": {
+      "enum": ["real-agent-observed", "simulation-derived"],
+      "description": "Producer-bound: real-agent → real-agent-observed, simulation → simulation-derived. A simulation may not launder its output as observed."
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "enum": ["real-agent", "simulation"] },
+        "id": { "type": "string", "minLength": 1 },
+        "detail": { "type": "string" },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "agent_cmd_sha256": { "type": "string", "minLength": 1 },
+            "engine_git_sha": { "type": "string", "minLength": 1 },
+            "model_id": { "type": "string", "minLength": 1 },
+            "construct_sha": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "corpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "game"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "game": { "type": "string", "minLength": 1 }
+      }
+    },
+    "actor_id": { "type": "string", "minLength": 1, "description": "Who made the decision (player/agent id)." },
+    "episode_id": { "type": "string", "minLength": 1 },
+    "t": { "type": "integer", "minimum": 0, "description": "Decision index within the episode." },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["segment"],
+      "properties": {
+        "segment": { "type": "string", "minLength": 1, "description": "The conditioning key the extractor groups by (e.g. tier:expert, turn>=3)." },
+        "phase": { "type": "string" },
+        "digest": {
+          "type": "object",
+          "description": "Opaque, display-only context (board/resources). Never interpreted.",
+          "additionalProperties": { "type": ["string", "number"] }
+        }
+      }
+    },
+    "offered": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The legal option set the system presented.",
+      "items": { "$ref": "#/$defs/option" }
+    },
+    "chosen": {
+      "type": "array",
+      "minItems": 1,
+      "description": "What the actor selected. Each must be in `offered` (matched by type, and id when present).",
+      "items": { "$ref": "#/$defs/option" }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional. When present, also enables pick×win on the existing Reality Plane.",
+      "properties": { "result": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1, "description": "The option type — the primary unit of revealed-preference analysis." },
+        "id": { "type": "string", "minLength": 1, "description": "Optional specific option id within a type." },
+        "label": { "type": "string", "description": "Optional human label (display only)." }
+      }
+    }
+  }
+}

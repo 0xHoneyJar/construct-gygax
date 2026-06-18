@@ -1,0 +1,39 @@
+{
+  "schema": "decision-trace/v1",
+  "claim_strength": "real-agent-observed",
+  "producer": {
+    "kind": "real-agent",
+    "id": "ptcg-top-pilots",
+    "detail": "onechan1+Kyo_s_s replays via mine_pilot_policy"
+  },
+  "corpus": {
+    "id": "ptcg-bellibolt-pilots",
+    "game": "ptcg-abc"
+  },
+  "actor_id": "kyo_s_s",
+  "episode_id": "ep-1",
+  "t": 2,
+  "context": {
+    "segment": "tier:expert",
+    "phase": "main"
+  },
+  "offered": [
+    {
+      "type": "ATTACH"
+    },
+    {
+      "type": "EVOLVE"
+    },
+    {
+      "type": "ABILITY"
+    },
+    {
+      "type": "ATTACK"
+    }
+  ],
+  "chosen": [
+    {
+      "type": "ATTACH"
+    }
+  ]
+}

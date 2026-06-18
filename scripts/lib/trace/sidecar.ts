@@ -86,7 +86,10 @@ export class TraceError extends Error {
 
 export const SCHEMA_VERSION = "observed-trace/v1";
 
-const CLAIM_BY_PRODUCER: Record<ProducerKind, SidecarClaim> = {
+/** The producer-bound claim rule — the single source of truth for "a simulation may not launder its
+ *  output as observed data". Exported so sibling schemas (e.g. decision-trace/v1, cycle-012) bind
+ *  claim strength identically. */
+export const CLAIM_BY_PRODUCER: Record<ProducerKind, SidecarClaim> = {
   "real-agent": "real-agent-observed",
   simulation: "simulation-derived",
 };
