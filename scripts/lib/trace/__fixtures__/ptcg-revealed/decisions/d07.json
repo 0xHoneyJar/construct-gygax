@@ -1,0 +1,33 @@
+{
+  "schema": "decision-trace/v1",
+  "claim_strength": "real-agent-observed",
+  "producer": {
+    "kind": "real-agent",
+    "id": "ptcg-top-pilots",
+    "detail": "onechan1+Kyo_s_s replays via mine_pilot_policy"
+  },
+  "corpus": {
+    "id": "ptcg-bellibolt-pilots",
+    "game": "ptcg-abc"
+  },
+  "actor_id": "onechan1",
+  "episode_id": "ep-4",
+  "t": 7,
+  "context": {
+    "segment": "tier:expert",
+    "phase": "main"
+  },
+  "offered": [
+    {
+      "type": "PLAY"
+    },
+    {
+      "type": "ABILITY"
+    }
+  ],
+  "chosen": [
+    {
+      "type": "PLAY"
+    }
+  ]
+}
